@@ -1,0 +1,13 @@
+{
+  "name": "listing-seo-analyzer",
+  "version": "1.0.0",
+  "description": "Analyze and optimize marketplace product listings for SEO",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}

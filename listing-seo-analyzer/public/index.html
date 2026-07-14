@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listing SEO Analyzer</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #171717;
+      --border: #262626;
+      --text: #e5e5e5;
+      --text-dim: #737373;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --blue: #3b82f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+    .topbar span { font-size: 12px; color: var(--text-dim); background: var(--border); padding: 2px 8px; border-radius: 4px; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
+
+    /* Quick examples bar */
+    .examples {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .ex-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .ex-btn:hover { background: #222; color: var(--text); border-color: #333; }
+    .ex-btn:active { background: #2a2a2a; }
+
+    /* Suggestions panel */
+    .suggestions {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--text-dim);
+      display: none;
+    }
+    .suggestions.active { display: block; }
+    .suggestions strong { color: var(--yellow); }
+    .suggestions ul { margin: 4px 0 0 16px; }
+    .suggestions li { margin-bottom: 2px; cursor: pointer; transition: color 0.15s; }
+    .suggestions li:hover { color: var(--text); }
+
+    /* Form */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .card h2 {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+    .gen-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      float: right;
+      transition: all 0.15s;
+    }
+    .gen-btn:hover { background: #222; border-color: #333; }
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+      overflow: hidden;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      margin-bottom: 10px;
+      transition: border-color 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    input.error, textarea.error {
+      border-color: var(--red);
+    }
+    .error-msg {
+      color: var(--red);
+      font-size: 11px;
+      margin: -8px 0 8px 0;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:active { background: #1e40af; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn.done { background: #166534; }
+
+    /* Results */
+    #results { display: none; }
+    #results.success { border-left: 2px solid var(--green); }
+    .empty-state {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+    .grade-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .grade {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: monospace;
+      width: 60px;
+      text-align: center;
+    }
+    .grade-meta { font-size: 13px; color: var(--text-dim); }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .bar-label {
+      width: 120px;
+      font-size: 12px;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+    .bar-track {
+      flex: 1;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+    .bar-val {
+      width: 32px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: monospace;
+    }
+    .bar-detail {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-left: 128px;
+      margin-bottom: 8px;
+    }
+    .apply-btn {
+      background: #1a2a1a;
+      border: 1px solid #2a4a2a;
+      color: var(--green);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 8px;
+      width: 100%;
+      transition: background 0.15s;
+    }
+    .apply-btn:hover { background: #2a3a2a; }
+    .apply-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .tip {
+      background: var(--bg);
+      border-left: 2px solid var(--yellow);
+      padding: 8px 12px;
+      margin-bottom: 4px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .keyword-tag {
+      display: inline-block;
+      background: #161628;
+      border: 1px solid #262640;
+      color: #7c7cff;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      margin: 2px 3px 2px 0;
+    }
+    .stat-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .stat {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: monospace;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+    @media (max-width: 640px) {
+      .row { grid-template-columns: 1fr; }
+      .bar-label { width: 90px; }
+      .bar-detail { margin-left: 98px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Listing SEO Analyzer</h1>
+    <span>Marketplace Indonesia</span>
+  </div>
+
+  <div class="wrap">
+    <!-- Quick examples -->
+    <div class="examples">
+      <span style="font-size:12px;color:var(--text-dim);padding:5px 0">Contoh:</span>
+      <button class="ex-btn" onclick="loadExample('kaos')">Kaos Polos</button>
+      <button class="ex-btn" onclick="loadExample('hp')">Case HP</button>
+      <button class="ex-btn" onclick="loadExample('skincare')">Skincare</button>
+      <button class="ex-btn" onclick="loadExample('sepatu')">Sepatu Sneakers</button>
+      <button class="ex-btn" onclick="loadExample('laptop')">Laptop Bekas</button>
+    </div>
+
+    <!-- Suggestions (context-aware) -->
+    <div class="suggestions" id="suggestions">
+      <strong>Saran:</strong>
+      <ul id="suggestionList"></ul>
+    </div>
+
+    <div class="card">
+      <h2>Input Listing</h2>
+      <label for="platform">Marketplace</label>
+      <select id="platform" onchange="updateSuggestions()">
+        <option value="tokopedia">Tokopedia</option>
+        <option value="shopee">Shopee</option>
+        <option value="tiktokshop">TikTok Shop</option>
+        <option value="lazada">Lazada</option>
+        <option value="bukalapak">Bukalapak</option>
+        <option value="blibli">Blibli</option>
+      </select>
+
+      <label for="title">Judul Produk <span id="titleCount" style="float:right;font-family:monospace;font-size:11px;color:var(--text-dim)">0/200</span></label>
+      <input type="text" id="title" placeholder="Ketik judul, saran muncul otomatis" maxlength="200" oninput="onTitleInput()">
+      <div class="error-msg" id="titleError">Isi judul produk.</div>
+
+      <label for="description">Deskripsi Produk <button class="gen-btn" id="genBtn" onclick="generateDesc()">Auto-generate dari judul</button></label>
+      <textarea id="description" placeholder="Ketik deskripsi, atau klik Auto-generate..." oninput="$('description').classList.remove('error');$('descriptionError').classList.remove('show')"></textarea>
+      <div class="error-msg" id="descriptionError">Isi deskripsi produk.</div>
+
+      <div class="row">
+        <div>
+          <label for="price">Harga (Rp)</label>
+          <input type="number" id="price" placeholder="150000" min="1" oninput="onPriceInput()">
+          <div class="error-msg" id="priceError">Isi harga produk.</div>
+        </div>
+        <div>
+          <label for="category">Kategori</label>
+          <select id="category">
+            <option value="general">Umum</option>
+            <option value="fashion">Fashion</option>
+            <option value="electronics">Elektronik</option>
+            <option value="food">Makanan</option>
+            <option value="beauty">Kecantikan</option>
+            <option value="home">Rumah</option>
+            <option value="automotive">Otomotif</option>
+            <option value="books">Buku</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn" id="analyzeBtn" onclick="analyze()">Analisa</button>
+    </div>
+
+    <div id="emptyState" class="card">
+      <div class="empty-state">Isi form di atas, lalu klik Analisa untuk melihat skor SEO listing.</div>
+    </div>
+
+    <div id="results">
+      <div class="card">
+        <h2>Skor</h2>
+        <div class="grade-row">
+          <div class="grade" id="grade">-</div>
+          <div class="grade-meta" id="gradeMeta"></div>
+        </div>
+        <div class="stat-row" id="statsRow"></div>
+      </div>
+
+      <div class="card">
+        <h2>Judul</h2>
+        <div id="titleScores"></div>
+      </div>
+
+      <div class="card">
+        <h2>Deskripsi</h2>
+        <div id="descScores"></div>
+      </div>
+
+      <div class="card">
+        <h2>Harga</h2>
+        <div id="priceScores"></div>
+      </div>
+
+      <div class="card">
+        <h2>Perbaikan</h2>
+        <div id="tips"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    // Example data
+    const EXAMPLES = {
+      kaos: {
+        platform: 'tokopedia', category: 'fashion', price: 89999,
+        title: 'Kaos Polos Premium Cotton Combed 30s - Hitam - Best Seller',
+        description: `Kaos polos premium bahan cotton combed 30s. Adem, nyaman, tidak mudah melar.
+
+Spesifikasi:
+- Bahan: Cotton Combed 30s
+- Ketebalan: 30s (medium)
+- Jahitan: rantai, rapi
+- Tersedia: S, M, L, XL, XXL
+
+Warna: Hitam, Putih, Navy, Abu, Merah
+
+Keunggulan:
+✅ Bahan adem dan menyerap keringat
+✅ Tidak mudah melar setelah dicuci
+✅ Jahitan rapi dan kuat
+✅ Cocok untuk sablon DTG, polyflex, bordir
+
+Packing aman + bubble wrap.
+Garansi 30 hari tukar ukuran.
+
+Chat sebelum order untuk konsultasi ukuran!`
+      },
+      hp: {
+        platform: 'shopee', category: 'electronics', price: 49999,
+        title: 'Case HP Samsung A16 Anti Shock Clear Softcase Transparan Tipis',
+        description: `Softcase Samsung A16 transparan, tipis, dan anti shock.
+
+Kompatibel: Samsung Galaxy A16 4G / 5G
+
+Fitur:
+- Material: TPU premium flexibel
+- Ketebalan: 0.6mm (tipis tapi kuat)
+- Anti yellowing (tidak menguning)
+- Corner airbag (pelindung sudut)
+- Tombol responsif, pas di semua port
+
+Tersedia juga untuk: A15, A25, A35, A55, S24, S25
+
+Packing bubble wrap + kardus.
+Same day shipping untuk order sebelum 14:00.
+
+Chat dulu untuk cek stok warna!`
+      },
+      skincare: {
+        platform: 'shopee', category: 'beauty', price: 125000,
+        title: 'Serum Niacinamide 10% + Zinc 1% - Mencerahkan Kulit Berminyak',
+        description: `Serum wajah dengan Niacinamide 10% dan Zinc 1%. Formulasi ringan untuk kulit berminyak dan berjerawat.
+
+Manfaat:
+✅ Mencerahkan kulit kusam
+✅ Menyamarkan noda hitam
+✅ Mengontrol minyak berlebih
+✅ Mengecilkan pori-pori
+✅ Mengurangi jerawat
+
+Cara pakai:
+1. Bersihkan wajah
+2. Teteskan 2-3 tetes serum
+3. Ratakan ke seluruh wajah
+4. Tunggu menyerap, lanjut pelembab
+5. Pagi: lanjut sunscreen
+
+Ingredients: Aqua, Niacinamide, Zinc PCA, Hyaluronic Acid, Glycerin
+Volume: 30ml
+BPOM: NC1234567890
+
+Free pouch untuk pembelian 2 botol.
+Stok terbatas, order sekarang!`
+      },
+      sepatu: {
+        platform: 'tokopedia', category: 'fashion', price: 349999,
+        title: 'Sepatu Sneakers Pria Casual Sport Running - Hitam Putih Original',
+        description: `Sneakers pria model terbaru. Cocok untuk olahraga, jalan, dan daily use.
+
+Spesifikasi:
+- Upper: Mesh breathable + synthetic leather
+- Sole: Rubber anti slip
+- Insole: Memory foam cushion
+- Weight: 280g (ringan)
+
+Size tersedia: 39, 40, 41, 42, 43, 44
+
+Fitur:
+✅ Ringan dan nyaman seharian
+✅ Breathable (kaki tidak bau)
+✅ Sole anti slip
+✅ Cocok untuk lari, gym, jalan
+
+Perawatan: Sikat lembut, jemur tidak langsung kena matahari.
+
+Garansi 7 hari tukar ukuran.
+Packing double kardus.
+
+Tanya ukuran via chat sebelum order!`
+      },
+      laptop: {
+        platform: 'tokopedia', category: 'electronics', price: 4500000,
+        title: 'Laptop Bekas ThinkPad T14 Gen 2 - i5 1135G7 - 16GB - 256GB SSD',
+        description: `Laptop bekas ThinkPad T14 Gen 2. Kondisi mulus, berfungsi normal 100%.
+
+Spesifikasi:
+- Processor: Intel Core i5-1135G7 (4C/8T, up to 4.2GHz)
+- RAM: 16GB DDR4 3200MHz
+- Storage: 256GB NVMe SSD
+- Display: 14" FHD IPS Anti-Glare
+- OS: Windows 11 Pro (activated)
+- Battery: 3-4 jam pemakaian normal
+
+Kondisi:
+✅ LCD mulus, no dead pixel
+✅ Keyboard berfungsi semua
+✅ Touchpad responsif
+✅ WiFi, Bluetooth, Webcam OK
+✅ Bodi ada gores pemakaian wajar (foto real)
+
+Kelengkapan: Unit + Charger original + Tas sleeve
+
+Garansi 7 hari uang kembali.
+COD area Jakarta Selatan / Kirim via JNE.
+
+Chat untuk foto detail dan video test!`
+      }
+    };
+
+    const POWER_WORDS = [
+      'original', 'ori', 'premium', 'terbaru', 'best seller', 'hot', 'laris',
+      'murah', 'gratis ongkir', 'diskon', 'promo', 'limited', 'eksklusif',
+      'branded', 'import', 'lokal', 'berkualitas', 'tahan lama', 'garansi',
+      'resmi', 'authentic', 'new arrival', 'trendy', 'aesthetic', 'viral',
+      'anti air', 'waterproof', 'multifungsi', 'praktis', 'simple', 'elegan',
+    ];
+
+    const PLATFORM_TIPS = {
+      tokopedia: { titleMax: 100, tips: ['Judul Tokopedia: maks 100 char, optimal 40-70', 'Gunakan keyword di 3 kata pertama', 'Tokopedia suka judul deskriptif, bukan clickbait'] },
+      shopee: { titleMax: 120, tips: ['Shopee: maks 120 char, optimal 50-80', 'Shopee ranking = keyword + sales velocity', 'Tambahkan "Gratis Ongkir" di judul kalau bisa'] },
+      tiktokshop: { titleMax: 200, tips: ['TikTok Shop: maks 200 char', 'Judul pendek + catchy lebih bagus di TikTok', 'Gunakan trending keywords'] },
+      lazada: { titleMax: 200, tips: ['Lazada: maks 200 char, optimal 50-80', 'Lazada ranking = keyword relevance + rating', 'Gunakan brand name di awal'] },
+      bukalapak: { titleMax: 70, tips: ['Bukalapak: maks 70 char — SINGKAT', 'Langsung ke keyword utama', 'Tidak perlu deskripsi panjang di judul'] },
+      blibli: { titleMax: 100, tips: ['Blibli: maks 100 char, optimal 40-70', 'Blibli kurang populer = less competition', 'Fokus keyword niche'] },
+    };
+
+    async function generateDesc() {
+      const title = $('title').value.trim();
+      if (!title) {
+        alert('Isi judul dulu.');
+        return;
+      }
+      const btn = $('genBtn');
+      btn.textContent = 'Generating...';
+      btn.disabled = true;
+      try {
+        const resp = await fetch('/api/suggest-description', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            category: $('category').value,
+            platform: $('platform').value,
+          }),
+        });
+        const data = await resp.json();
+        if (data.description) {
+          $('description').value = data.description;
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+      } finally {
+        btn.textContent = 'Auto-generate dari judul';
+        btn.disabled = false;
+      }
+    }
+
+    function loadExample(key) {
+      const ex = EXAMPLES[key];
+      $('platform').value = ex.platform;
+      $('category').value = ex.category;
+      $('price').value = ex.price;
+      $('title').value = ex.title;
+      $('description').value = ex.description;
+      $('titleCount').textContent = `${ex.title.length}/200`;
+      $('titleCount').style.color = ex.title.length > 150 ? 'var(--yellow)' : 'var(--text-dim)';
+      clearErrors();
+      updateSuggestions();
+    }
+
+    function onTitleInput() {
+      $('title').classList.remove('error');
+      $('titleError').classList.remove('show');
+      const title = $('title').value.trim();
+      $('titleCount').textContent = `${title.length}/200`;
+      $('titleCount').style.color = title.length > 150 ? 'var(--yellow)' : 'var(--text-dim)';
+      const platform = $('platform').value;
+      const sug = $('suggestions');
+      const list = $('suggestionList');
+      const tips = [];
+
+      if (title.length > 0 && title.length < 20) {
+        tips.push(`Judul terlalu pendek (${title.length} char). Tambahkan keyword.`);
+      }
+      if (title.length > PLATFORM_TIPS[platform].titleMax) {
+        tips.push(`Judul terlalu panjang untuk ${platform} (maks ${PLATFORM_TIPS[platform].titleMax}).`);
+      }
+
+      // Check if missing power words
+      const lower = title.toLowerCase();
+      const found = POWER_WORDS.filter(pw => lower.includes(pw));
+      if (found.length === 0 && title.length > 10) {
+        tips.push('Belum ada power words. Coba tambah: premium, original, best seller, garansi.');
+      }
+
+      // Platform-specific tips
+      PLATFORM_TIPS[platform].tips.forEach(t => tips.push(t));
+
+      if (tips.length > 0) {
+        list.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+        sug.classList.add('active');
+      } else {
+        sug.classList.remove('active');
+      }
+    }
+
+    function onPriceInput() {
+      $('price').classList.remove('error');
+      $('priceError').classList.remove('show');
+      const price = parseInt($('price').value, 10);
+      const sug = $('suggestions');
+      const list = $('suggestionList');
+      const tips = [];
+
+      if (price > 0) {
+        const lastThree = price % 1000;
+        const isX999 = (lastThree === 999 || lastThree === 990 || lastThree === 900);
+        const isMultipleOf5k = price % 5000 === 0;
+
+        if (!isX999 && price % 1000 === 0 && price >= 10000) {
+          const suggested = price - 1;
+          tips.push(`Psikologis: ${suggested.toLocaleString('id-ID')} lebih menarik dari ${price.toLocaleString('id-ID')}`);
+        }
+        if (!isMultipleOf5k && !isX999) {
+          const nearest = Math.round(price / 5000) * 5000;
+          tips.push(`Bulatkan ke Rp ${nearest.toLocaleString('id-ID')} (kelipatan Rp 5.000).`);
+        }
+        if (price < 10000) {
+          tips.push('Harga < Rp 10.000 sering dianggap murahan. Pertimbangkan bundle.');
+        }
+      }
+
+      if (tips.length > 0) {
+        list.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+        sug.classList.add('active');
+      } else {
+        sug.classList.remove('active');
+      }
+    }
+
+    function updateSuggestions() {
+      const platform = $('platform').value;
+      const tips = PLATFORM_TIPS[platform].tips;
+      const sug = $('suggestions');
+      const list = $('suggestionList');
+      list.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+      sug.classList.add('active');
+    }
+
+    function getScoreColor(score) {
+      if (score >= 80) return 'var(--green)';
+      if (score >= 60) return 'var(--yellow)';
+      if (score >= 40) return '#f59e0b';
+      return 'var(--red)';
+    }
+
+    function renderBars(container, scores) {
+      container.innerHTML = scores.map(s => `
+        <div class="bar-row">
+          <span class="bar-label">${s.name}</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${s.score}%;background:${getScoreColor(s.score)}"></div>
+          </div>
+          <span class="bar-val" style="color:${getScoreColor(s.score)}">${s.score}</span>
+        </div>
+        <div class="bar-detail">${s.detail}</div>
+      `).join('');
+    }
+
+    function clearErrors() {
+      ['title', 'description', 'price'].forEach(id => {
+        $(id).classList.remove('error');
+        $(id + 'Error').classList.remove('show');
+      });
+    }
+
+    async function analyze() {
+      clearErrors();
+      const btn = $('analyzeBtn');
+      let hasError = false;
+
+      const title = $('title').value.trim();
+      const description = $('description').value.trim();
+      const price = $('price').value;
+
+      if (!title) {
+        $('title').classList.add('error');
+        $('titleError').classList.add('show');
+        hasError = true;
+      }
+      if (!description) {
+        $('description').classList.add('error');
+        $('descriptionError').classList.add('show');
+        hasError = true;
+      }
+      if (!price) {
+        $('price').classList.add('error');
+        $('priceError').classList.add('show');
+        hasError = true;
+      }
+      if (hasError) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Menganalisa...';
+
+      try {
+        const resp = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, description, price, category: $('category').value, platform: $('platform').value }),
+        });
+        const data = await resp.json();
+        if (data.error) {
+          $('title').classList.add('error');
+          $('titleError').textContent = data.error;
+          $('titleError').classList.add('show');
+          return;
+        }
+        renderResults(data);
+        btn.textContent = 'Selesai';
+        btn.classList.add('done');
+        setTimeout(() => btn.classList.remove('done'), 2000);
+      } catch (e) {
+        $('titleError').textContent = 'Error: ' + e.message;
+        $('titleError').classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Analisa';
+      }
+    }
+
+    function renderResults(data) {
+      $('emptyState').style.display = 'none';
+      $('results').style.display = 'block';
+      $('results').classList.add('success');
+      const o = data.overall;
+
+      $('grade').textContent = o.grade;
+      $('grade').style.color = o.gradeColor;
+      $('gradeMeta').textContent = `${o.percentage}% (${o.totalScore}/${o.maxScore} poin)`;
+
+      const stats = [
+        { val: data.title.scores.length, lbl: 'Kriteria Judul' },
+        { val: data.description.scores.length, lbl: 'Kriteria Deskripsi' },
+        { val: data.title.foundPowerWords.length, lbl: 'Power Words' },
+        { val: data.description.topKeywords.length, lbl: 'Top Keywords' },
+      ];
+      $('statsRow').innerHTML = stats.map(s => `
+        <div class="stat">
+          <div class="stat-val" style="color:var(--blue)">${s.val}</div>
+          <div class="stat-lbl">${s.lbl}</div>
+        </div>
+      `).join('');
+
+      renderBars($('titleScores'), data.title.scores);
+      renderBars($('descScores'), data.description.scores);
+      renderBars($('priceScores'), data.price.scores);
+
+      if (data.description.topKeywords.length > 0) {
+        $('descScores').innerHTML += `<div style="margin-top:8px"><span style="font-size:11px;color:var(--text-dim)">Keywords:</span> ${
+          data.description.topKeywords.map(([w, c]) => `<span class="keyword-tag">${w} x${c}</span>`).join('')
+        }</div>`;
+      }
+
+      if (o.allTips.length > 0) {
+        $('tips').innerHTML = o.allTips.map(t => `<div class="tip">${t}</div>`).join('')
+          + '<button class="apply-btn" onclick="applyTips()">Terapkan Saran & Analisa Ulang</button>';
+        window._lastTips = o.allTips;
+        window._lastData = data;
+      } else {
+        $('tips').innerHTML = '<div style="color:var(--green);font-size:13px">Listing sudah optimal.</div>';
+      }
+
+      $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function applyTips() {
+      const tips = window._lastTips || [];
+      if (!tips.length) return;
+
+      let title = $('title').value.trim();
+      let desc = $('description').value.trim();
+
+      // Add power words to title if missing
+      if (tips.some(t => t.includes('power words'))) {
+        const lower = title.toLowerCase();
+        const hasPremium = lower.includes('premium');
+        const hasBestSeller = lower.includes('best seller');
+        const hasOriginal = lower.includes('original');
+        if (!hasPremium && !hasBestSeller && !hasOriginal) {
+          title = '[PREMIUM] ' + title;
+        }
+      }
+
+      // Add bullet points to description if missing
+      if (tips.some(t => t.includes('bullet points')) && !desc.includes('- ') && !desc.includes('* ')) {
+        // Find a good place to add bullets - after first paragraph
+        const lines = desc.split('\n');
+        const firstEmpty = lines.findIndex(l => l.trim() === '');
+        if (firstEmpty > 0) {
+          lines.splice(firstEmpty + 1, 0, 'Spesifikasi:', '- ', '- ', '- ');
+          desc = lines.join('\n');
+        } else {
+          desc += '\n\nSpesifikasi:\n- \n- \n- ';
+        }
+      }
+
+      // Add CTA if missing
+      if (tips.some(t => t.includes('CTA')) && !desc.toLowerCase().includes('chat') && !desc.toLowerCase().includes('order')) {
+        desc = desc.trimEnd() + '\n\nChat sebelum order!';
+      }
+
+      // Add emoji if missing
+      if (tips.some(t => t.includes('emoji'))) {
+        const hasEmoji = /[\u{1F300}-\u{1F9FF}]/u.test(desc) || /[✅❌⭐🔥💡📦🎨]/u.test(desc);
+        if (!hasEmoji) {
+          // Add emoji to bullet points
+          desc = desc.replace(/^- /gm, '✅ ');
+          // Add packing emoji at end if not there
+          if (!desc.includes('📦')) {
+            desc = desc.trimEnd() + '\n📦 Packing aman + bubble wrap.';
+          }
+        }
+      }
+
+      // Improve structure if needed
+      if (tips.some(t => t.includes('Hook'))) {
+        // If description doesn't have clear sections, add a hook at the beginning
+        if (!desc.includes('Keunggulan:') && !desc.includes('Fitur:')) {
+          const firstLine = desc.split('\n')[0];
+          if (firstLine.length < 50) {
+            // First line is too short, it's probably not a good hook
+            desc = title.split(' - ')[0] + '. ' + desc;
+          }
+        }
+      }
+
+      $('title').value = title;
+      $('description').value = desc;
+      $('titleCount').textContent = `${title.length}/200`;
+      $('titleCount').style.color = title.length > 150 ? 'var(--yellow)' : 'var(--text-dim)';
+
+      // Auto re-analyze
+      analyze();
+    }
+
+    // Init: show platform tips
+    updateSuggestions();
+
+    // Enter key on title triggers analyze
+    $('title').addEventListener('keydown', e => { if (e.key === 'Enter') analyze(); });
+
+    // Escape key clears form
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        $('title').value = '';
+        $('description').value = '';
+        $('price').value = '';
+        $('titleCount').textContent = '0/200';
+        clearErrors();
+        $('results').style.display = 'none';
+        $('results').classList.remove('success');
+        $('emptyState').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
