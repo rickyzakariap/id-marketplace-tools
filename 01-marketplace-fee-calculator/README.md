@@ -1,6 +1,6 @@
 # Marketplace Fee Calculator CLI
 
-Hitung net profit setelah fee dari semua marketplace Indonesia. Tanpa dependency, pure Node.js.
+Calculate net profit after fees across all Indonesian marketplaces. Zero dependencies, pure Node.js.
 
 ## Supported Marketplaces
 
@@ -36,11 +36,11 @@ node index.js --help
 
 | Flag | Description |
 |------|-------------|
-| `--price <amount>` | Harga jual (wajib) |
-| `--cost <amount>` | Harga modal (untuk hitung profit) |
+| `--price <amount>` | Selling price (required) |
+| `--cost <amount>` | Cost price (for profit calculation) |
 | `--marketplace <name>` | tokopedia, shopee, tiktokshop, lazada, bukalapak, blibli |
 | `--category <name>` | default, electronics, fashion, food, beauty, home, automotive, books |
-| `--compare` | Bandingkan semua marketplace |
+| `--compare` | Compare all marketplaces |
 
 ## How It Works
 

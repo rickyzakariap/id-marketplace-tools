@@ -14,7 +14,7 @@ Analyze and optimize product listings for Indonesian marketplaces (Tokopedia, Sh
 ## Usage
 
 ```bash
-cd ~/marketplace-projects/listing-seo-analyzer
+cd ~/marketplace-projects/02-listing-seo-analyzer
 npm install
 npm start
 # Open http://localhost:3456
@@ -43,7 +43,7 @@ Returns JSON with scores, tips, and overall grade.
 
 - Node.js + Express (1 dependency)
 - Vanilla HTML/CSS/JS frontend
-- Dark theme, glassmorphic UI
+- Dark theme UI
 - No frameworks, no external CSS libraries
 
 ## Supported Marketplaces
