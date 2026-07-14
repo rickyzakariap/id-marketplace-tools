@@ -55,3 +55,7 @@ Returns JSON with scores, tips, and overall grade.
 | Lazada | 200 | 50-80 |
 | Bukalapak | 70 | 30-60 |
 | Blibli | 100 | 40-70 |
+
+## Contributing
+
+Feel free to open issues or submit PRs.

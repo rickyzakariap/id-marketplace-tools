@@ -59,3 +59,7 @@ Then subtracts from selling price to get net amount, and optionally subtracts co
 ## Disclaimer
 
 Fee rates are approximate based on publicly available data (2024-2026). Actual fees vary by seller tier, promotions, and category. Always check official marketplace seller center for current rates.
+
+## Contributing
+
+Feel free to open issues or submit PRs.

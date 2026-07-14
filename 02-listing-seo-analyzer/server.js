@@ -100,6 +100,10 @@ function analyzeTitle(title, platform) {
   return { scores, tips, foundPowerWords };
 }
 
+function sanitize(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 function analyzeDescription(desc, platform) {
   const scores = [];
   const tips = [];
@@ -145,7 +149,7 @@ function analyzeDescription(desc, platform) {
     .filter(([w]) => !FILLER_WORDS.includes(w));
 
   if (topKeywords.length > 0) {
-    scores.push({ name: 'Keyword Density', score: 80, max: 100, detail: `Top keywords: ${topKeywords.map(([w, c]) => `${w}(${c}x)`).join(', ')}` });
+    scores.push({ name: 'Keyword Density', score: 80, max: 100, detail: `Top keywords: ${topKeywords.map(([w, c]) => `${sanitize(w)}(${c}x)`).join(', ')}` });
   } else {
     scores.push({ name: 'Keyword Density', score: 30, max: 100, detail: 'Tidak ditemukan keyword dominan.' });
     tips.push('Ulangi keyword utama 2-3x di deskripsi secara natural.');
@@ -170,7 +174,7 @@ function analyzeDescription(desc, platform) {
     tips.push('Tambahkan CTA: "Chat sekarang!", "Stok terbatas, beli sekarang!"');
   }
 
-  return { scores, tips, topKeywords };
+  return { scores, tips, topKeywords: topKeywords.map(([w, c]) => [sanitize(w), c]) };
 }
 
 function analyzePrice(price, category) {
