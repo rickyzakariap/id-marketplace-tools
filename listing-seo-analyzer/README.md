@@ -4,12 +4,12 @@ Analyze and optimize product listings for Indonesian marketplaces (Tokopedia, Sh
 
 ## What It Does
 
-- **Title Analysis** — length, keyword variety, power words, capitalization, duplicate detection
-- **Description Analysis** — length, bullet points, structure, keyword density, emoji usage, CTA presence
-- **Price Analysis** — psychological pricing (X999), goceng pricing (Rp 5000 increments), range check
-- **Overall SEO Score** — letter grade A+ to F with percentage breakdown
-- **Actionable Tips** — prioritized recommendations to improve listing rank
-- **Platform-Specific** — optimal lengths per marketplace (Shopee vs Tokopedia vs others)
+- **Title Analysis** - length, keyword variety, power words, capitalization, duplicate detection
+- **Description Analysis** - length, bullet points, structure, keyword density, emoji usage, CTA presence
+- **Price Analysis** - psychological pricing (X999), goceng pricing (Rp 5000 increments), range check
+- **Overall SEO Score** - letter grade A+ to F with percentage breakdown
+- **Actionable Tips** - prioritized recommendations to improve listing rank
+- **Platform-Specific** - optimal lengths per marketplace (Shopee vs Tokopedia vs others)
 
 ## Usage
 

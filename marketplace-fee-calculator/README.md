@@ -45,10 +45,10 @@ node index.js --help
 ## How It Works
 
 Calculates total seller fees by combining:
-1. **Commission** — percentage based on product category
-2. **Platform fee** — fixed 0.5% across all platforms
-3. **Payment processing** — 1.5-2% depending on marketplace
-4. **Admin fee** — some platforms charge per-transaction
+1. **Commission** - percentage based on product category
+2. **Platform fee** - fixed 0.5% across all platforms
+3. **Payment processing** - 1.5-2% depending on marketplace
+4. **Admin fee** - some platforms charge per-transaction
 
 Then subtracts from selling price to get net amount, and optionally subtracts cost to get profit.
 
