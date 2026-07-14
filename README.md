@@ -1,6 +1,6 @@
 # id-marketplace-tools
 
-Tools for Indonesian marketplace sellers. One project built per day.
+Tools for Indonesian marketplace sellers. Automated project builder powered by cron.
 
 ## Projects
 
