@@ -1,34 +1,34 @@
-# Catatan Perbaikan Project
+# Project Lessons
 
-> Baca file ini SEBELUM mulai project baru. Jangan ulangi kesalahan yang sama.
+> Read this file BEFORE starting a new project. Don't repeat the same mistakes.
 
 ---
 
 ## 2026-07-14 - Marketplace Fee Calculator CLI
-- Berhasil: Tanpa dependency, murni Node.js, output CLI yang rapi
-- Berhasil: Mode perbandingan bisa adu profit dari semua marketplace sekaligus
-- Berhasil: Struktur fee berdasarkan data marketplace asli
-- Bermasalah: Tidak ada kendala berat - project pertama, jadi patokan awal
-- Umpan balik: Belum ada (project pertama)
-- Rencana perbaikan: Tambahkan mode interaktif (input berbasis prompt)
+- Works: Zero dependencies, pure Node.js, clean CLI output
+- Works: Compare mode ranks profit across all marketplaces
+- Works: Fee structures based on real marketplace data
+- Issues: None major - first project, baseline established
+- Feedback: N/A (first project)
+- Next: Add interactive mode (prompt-based input)
 
 ## 2026-07-14 - Listing SEO Analyzer
-- Berhasil: Web UI dark theme - pengalaman pengguna lebih baik dari CLI untuk visualisasi data
-- Berhasil: Batang skor dengan warna (hijau/kuning/merah) bikin hasil gampang dibaca
-- Berhasil: Batas per-platform (judul Tokopedia beda panjangnya dari Shopee)
-- Berhasil: Deteksi kata kunci power words marketplace Indonesia
-- Berhasil: Analisis harga psikologis (X999, harga goceng) - fitur unik
-- Bermasalah: Analisis kepadatan kata kunci masih dasar - belum bisa handle sinonim atau stemming
-- Bermasalah: Belum ada data marketplace asli - analisis masih pakai perkiraan
-- Umpan balik: Belum ada (dibuat sendiri)
-- Rencana perbaikan: Tambahkan deteksi sinonim sederhana untuk bahasa Indonesia
+- Works: Web UI dark theme - better UX than CLI for data visualization
+- Works: Color-coded score bars (green/yellow/red) make results scannable
+- Works: Platform-specific limits (different title max lengths per marketplace)
+- Works: Power words detection with Indonesian marketplace keywords
+- Works: Price psychology analysis (X999, goceng pricing) - unique feature
+- Issues: Keyword density analysis is basic - no synonym or stemming support
+- Issues: No real marketplace data - analysis is heuristic-based
+- Feedback: N/A (self-built)
+- Next: Add simple synonym detection for Indonesian language
 
-## 2026-07-14 - Listing SEO Analyzer (perbaikan)
-- Bermasalah: Tombol Analisa macet karena ID tidak cocok (`descError` vs `descriptionError`)
-- Bermasalah: Saran harga bertentangan (20000 disuruh pakai 19999, tapi juga disuruh bulatkan ke 5000)
-- Perbaikan: Samakan ID, logika saran harga cek X999 dulu sebelum sarankan pembulatan
-- Pelajaran: WAJIB cek di browser, jangan cuma andalkan tes backend. ID tidak cocok = crash diam-diam.
-- Pelajaran: clearErrors() harus menangani semua ID secara konsisten, jangan pakai singkatan.
-- Bermasalah: Harga 11999 (sudah X999) tetap disuruh "bulatkan ke Rp 5.000" karena pemeriksaan Goceng berjalan terpisah
-- Perbaikan: Lewati saran Goceng kalau sudah X999, naikkan skor dari 60 ke 80
-- Pelajaran: Jangan beri saran yang bertentangan. Kalau harga sudah X999, jangan suruh bulatkan ke 5000.
+## 2026-07-14 - Listing SEO Analyzer (fixes)
+- Issues: Analyze button stuck due to ID mismatch (`descError` vs `descriptionError`)
+- Issues: Contradictory price suggestions (20000 suggests 19999, but also suggests rounding to 5000)
+- Fix: Standardize IDs, price suggestion logic checks X999 before suggesting rounding
+- Lesson: MUST test in browser, don't rely on backend tests only. ID mismatch = silent crash.
+- Lesson: clearErrors() must handle all IDs consistently, no abbreviations.
+- Issues: Price 11999 (already X999) still suggests "round to Rp 5.000" because Goceng check runs separately
+- Fix: Skip Goceng tip if already X999, bump score from 60 to 80
+- Lesson: Don't give contradictory suggestions. If price is X999, don't suggest rounding to 5000.
