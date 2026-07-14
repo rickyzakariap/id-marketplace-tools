@@ -41,10 +41,9 @@ Returns JSON with scores, tips, and overall grade.
 
 ## Tech
 
-- Node.js + Express (1 dependency)
-- Vanilla HTML/CSS/JS frontend
+- Node.js + Express (backend)
+- Tailwind CSS + Material Design 3 (frontend)
 - Dark theme UI
-- No frameworks, no external CSS libraries
 
 ## Supported Marketplaces
 
