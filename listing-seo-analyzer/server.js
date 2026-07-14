@@ -51,7 +51,7 @@ function analyzeTitle(title, platform) {
   } else if (len >= limits.titleOptimal[0] && len <= limits.titleOptimal[1]) {
     scores.push({ name: 'Panjang Judul', score: 95, max: 100, detail: `Optimal (${len} karakter, range ${limits.titleOptimal[0]}-${limits.titleOptimal[1]}).` });
   } else {
-    scores.push({ name: 'Panjang Judul', score: 70, max: 100, detail: `${len} karakter — bisa lebih optimal (${limits.titleOptimal[0]}-${limits.titleOptimal[1]}).` });
+    scores.push({ name: 'Panjang Judul', score: 70, max: 100, detail: `${len} karakter - bisa lebih optimal (${limits.titleOptimal[0]}-${limits.titleOptimal[1]}).` });
   }
 
   // Keyword density in title
@@ -78,7 +78,7 @@ function analyzeTitle(title, platform) {
   const hasProperCase = /^[A-Z0-9]/.test(title);
   const hasAllCaps = title === title.toUpperCase() && title.length > 10;
   if (hasAllCaps) {
-    scores.push({ name: 'Kapitalisasi', score: 30, max: 100, detail: 'Semua huruf kapital — terlihat spam.' });
+    scores.push({ name: 'Kapitalisasi', score: 30, max: 100, detail: 'Semua huruf kapital - terlihat spam.' });
     tips.push('JANGAN PAKAI SEMUA KAPITAL. Gunakan Title Case atau biasa.');
   } else if (hasProperCase) {
     scores.push({ name: 'Kapitalisasi', score: 90, max: 100, detail: 'Dimulai dengan huruf kapital.' });
@@ -120,7 +120,7 @@ function analyzeDescription(desc, platform) {
   // Bullet points check
   const hasBullets = /^[•\-\*]\s|^\d+[\.\)]\s/m.test(desc);
   if (hasBullets) {
-    scores.push({ name: 'Format Bullet', score: 95, max: 100, detail: 'Menggunakan bullet points — bagus!' });
+    scores.push({ name: 'Format Bullet', score: 95, max: 100, detail: 'Menggunakan bullet points - bagus!' });
   } else {
     scores.push({ name: 'Format Bullet', score: 40, max: 100, detail: 'Tidak ada bullet points.' });
     tips.push('Gunakan bullet points untuk spesifikasi. Pembeli scan, bukan baca.');
@@ -129,9 +129,9 @@ function analyzeDescription(desc, platform) {
   // Paragraphs check
   const paragraphs = desc.split(/\n\s*\n|\n/).filter(p => p.trim().length > 0);
   if (paragraphs.length >= 3) {
-    scores.push({ name: 'Struktur', score: 90, max: 100, detail: `${paragraphs.length} paragraf — terstruktur.` });
+    scores.push({ name: 'Struktur', score: 90, max: 100, detail: `${paragraphs.length} paragraf - terstruktur.` });
   } else {
-    scores.push({ name: 'Struktur', score: 45, max: 100, detail: `${paragraphs.length} paragraf — perlu lebih terstruktur.` });
+    scores.push({ name: 'Struktur', score: 45, max: 100, detail: `${paragraphs.length} paragraf - perlu lebih terstruktur.` });
     tips.push('Pisahkan jadi: Hook → Spesifikasi → Keunggulan → Cara Pakai.');
   }
 
@@ -154,7 +154,7 @@ function analyzeDescription(desc, platform) {
   // Has emoji or symbols
   const hasEmoji = /[\u{1F300}-\u{1F9FF}]/u.test(desc) || /[✅❌⭐🔥💡📦🎨]/u.test(desc);
   if (hasEmoji) {
-    scores.push({ name: 'Visual Appeal', score: 85, max: 100, detail: 'Menggunakan emoji — eye-catching.' });
+    scores.push({ name: 'Visual Appeal', score: 85, max: 100, detail: 'Menggunakan emoji - eye-catching.' });
   } else {
     scores.push({ name: 'Visual Appeal', score: 50, max: 100, detail: 'Tidak ada emoji/simbol.' });
     tips.push('Tambahkan emoji (✅📦⭐) untuk break up text dan menarik perhatian.');
@@ -164,7 +164,7 @@ function analyzeDescription(desc, platform) {
   const ctaWords = ['beli', 'order', 'pesan', 'chat', 'keranjang', 'checkout', 'sekarang', 'hari ini', 'stok terbatas', 'jangan sampai kehabisan'];
   const hasCTA = ctaWords.some(w => desc.toLowerCase().includes(w));
   if (hasCTA) {
-    scores.push({ name: 'Call to Action', score: 90, max: 100, detail: 'Ada CTA — bagus!' });
+    scores.push({ name: 'Call to Action', score: 90, max: 100, detail: 'Ada CTA - bagus!' });
   } else {
     scores.push({ name: 'Call to Action', score: 35, max: 100, detail: 'Tidak ada Call to Action.' });
     tips.push('Tambahkan CTA: "Chat sekarang!", "Stok terbatas, beli sekarang!"');
@@ -181,17 +181,17 @@ function analyzePrice(price, category) {
   const lastThree = price % 1000;
   const isX999 = (lastThree === 999 || lastThree === 990 || lastThree === 900);
   if (isX999) {
-    scores.push({ name: 'Harga Psikologis', score: 90, max: 100, detail: `Rp ${price.toLocaleString('id-ID')} — menggunakan pricing X999.` });
+    scores.push({ name: 'Harga Psikologis', score: 90, max: 100, detail: `Rp ${price.toLocaleString('id-ID')} - menggunakan pricing X999.` });
   } else if (price % 1000 === 0) {
-    scores.push({ name: 'Harga Psikologis', score: 75, max: 100, detail: `Rp ${price.toLocaleString('id-ID')} — bulat. Pertimbangkan X999.` });
+    scores.push({ name: 'Harga Psikologis', score: 75, max: 100, detail: `Rp ${price.toLocaleString('id-ID')} - bulat. Pertimbangkan X999.` });
     tips.push('Harga X999 (misal 149.999 vs 150.000) lebih menarik secara psikologis.');
   } else {
-    scores.push({ name: 'Harga Psikologis', score: 60, max: 100, detail: `Rp ${price.toLocaleString('id-ID')} — tidak bulat atau X999.` });
+    scores.push({ name: 'Harga Psikologis', score: 60, max: 100, detail: `Rp ${price.toLocaleString('id-ID')} - tidak bulat atau X999.` });
   }
 
-  // Goceng pricing (Rp 5.000 increments) — skip tip if already X999
+  // Goceng pricing (Rp 5.000 increments) - skip tip if already X999
   if (price % 5000 === 0) {
-    scores.push({ name: 'Goceng Pricing', score: 90, max: 100, detail: 'Kelipatan Rp 5.000 — sesuai kebiasaan Indonesia.' });
+    scores.push({ name: 'Goceng Pricing', score: 90, max: 100, detail: 'Kelipatan Rp 5.000 - sesuai kebiasaan Indonesia.' });
   } else {
     scores.push({ name: 'Goceng Pricing', score: isX999 ? 80 : 60, max: 100, detail: isX999 ? 'Bukan kelipatan Rp 5.000, tapi X999 sudah oke.' : 'Bukan kelipatan Rp 5.000.' });
     if (!isX999) {
@@ -201,10 +201,10 @@ function analyzePrice(price, category) {
 
   // Price range check
   if (price < 10000) {
-    scores.push({ name: 'Range Harga', score: 50, max: 100, detail: 'Harga sangat rendah — pembeli mungkin ragu kualitasnya.' });
+    scores.push({ name: 'Range Harga', score: 50, max: 100, detail: 'Harga sangat rendah - pembeli mungkin ragu kualitasnya.' });
     tips.push('Harga < Rp 10.000 sering dianggap murahan. Pertimbangkan bundle.');
   } else if (price > 5000000) {
-    scores.push({ name: 'Range Harga', score: 60, max: 100, detail: 'Harga tinggi — pastikan deskripsi meyakinkan.' });
+    scores.push({ name: 'Range Harga', score: 60, max: 100, detail: 'Harga tinggi - pastikan deskripsi meyakinkan.' });
     tips.push('Produk mahal butuh: foto profesional, garansi, review, dan deskripsi detail.');
   } else {
     scores.push({ name: 'Range Harga', score: 85, max: 100, detail: 'Range harga wajar.' });

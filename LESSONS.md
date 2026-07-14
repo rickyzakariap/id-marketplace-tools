@@ -8,18 +8,18 @@
 - What worked: Zero dependencies, pure Node.js, clean CLI output with emojis
 - What worked: Comparison mode shows ranked profit across all marketplaces
 - What worked: Fee structures based on real marketplace data
-- What failed: Nothing major — first project, baseline established
+- What failed: Nothing major - first project, baseline established
 - User feedback: N/A (first project)
 - Fix for next time: Consider adding interactive mode for easier UX
 
 ## 2026-07-14 - Listing SEO Analyzer
-- What worked: Web UI with dark theme — much better UX than CLI for visual analysis
+- What worked: Web UI with dark theme - much better UX than CLI for visual analysis
 - What worked: Score bars with color coding (green/yellow/red) make results scannable
 - What worked: Platform-specific limits per marketplace (different title max lengths)
 - What worked: Power words detection with Indonesian marketplace keywords
-- What worked: Price psychology analysis (X999, goceng pricing) — unique selling point
-- What failed: Keyword density analysis is basic — doesn't handle synonyms or stemming
-- What failed: No real marketplace data — analysis is heuristic, not data-driven
+- What worked: Price psychology analysis (X999, goceng pricing) - unique selling point
+- What failed: Keyword density analysis is basic - doesn't handle synonyms or stemming
+- What failed: No real marketplace data - analysis is heuristic, not data-driven
 - User feedback: N/A (self-built)
 - Fix for next time: Add synonym detection using simple word mapping for Indonesian
 

@@ -1,4 +1,4 @@
-// Quick smoke test — hits the analyze API directly
+// Quick smoke test - hits the analyze API directly
 const http = require('http');
 
 function post(path, body) {
@@ -22,7 +22,7 @@ function post(path, body) {
 }
 
 async function main() {
-  console.log('=== Listing SEO Analyzer — Smoke Tests ===\n');
+  console.log('=== Listing SEO Analyzer - Smoke Tests ===\n');
 
   // Test 1: Good listing
   const good = await post('/api/analyze', {
@@ -32,7 +32,7 @@ async function main() {
     category: 'fashion',
     platform: 'shopee',
   });
-  console.log(`Test 1 (good listing): ${good.status} — Grade: ${good.body.overall.grade} (${good.body.overall.percentage}%)`);
+  console.log(`Test 1 (good listing): ${good.status} - Grade: ${good.body.overall.grade} (${good.body.overall.percentage}%)`);
   console.log(`  Title scores: ${good.body.title.scores.length} criteria`);
   console.log(`  Power words: ${good.body.title.foundPowerWords.join(', ')}`);
   console.log(`  Tips: ${good.body.overall.allTips.length}\n`);
@@ -44,14 +44,14 @@ async function main() {
     price: 150000,
     platform: 'tokopedia',
   });
-  console.log(`Test 2 (bad listing): ${bad.status} — Grade: ${bad.body.overall.grade} (${bad.body.overall.percentage}%)`);
+  console.log(`Test 2 (bad listing): ${bad.status} - Grade: ${bad.body.overall.grade} (${bad.body.overall.percentage}%)`);
   console.log(`  Tips: ${bad.body.overall.allTips.length}`);
   bad.body.overall.allTips.forEach(t => console.log(`    - ${t}`));
   console.log('');
 
   // Test 3: Missing fields
   const missing = await post('/api/analyze', { title: 'test' });
-  console.log(`Test 3 (missing fields): ${missing.status} — ${missing.body.error}\n`);
+  console.log(`Test 3 (missing fields): ${missing.status} - ${missing.body.error}\n`);
 
   // Test 4: All caps title
   const caps = await post('/api/analyze', {
@@ -60,9 +60,9 @@ async function main() {
     price: 149999,
     platform: 'tokopedia',
   });
-  console.log(`Test 4 (all caps): ${caps.status} — Grade: ${caps.body.overall.grade} (${caps.body.overall.percentage}%)`);
+  console.log(`Test 4 (all caps): ${caps.status} - Grade: ${caps.body.overall.grade} (${caps.body.overall.percentage}%)`);
   const kapScore = caps.body.title.scores.find(s => s.name === 'Kapitalisasi');
-  console.log(`  Capitalization: ${kapScore.score} — ${kapScore.detail}\n`);
+  console.log(`  Capitalization: ${kapScore.score} - ${kapScore.detail}\n`);
 
   // Test 5: Different platforms
   for (const plat of ['tiktokshop', 'lazada', 'bukalapak', 'blibli']) {
@@ -72,7 +72,7 @@ async function main() {
       price: 249999,
       platform: plat,
     });
-    console.log(`Test 5 (${plat}): ${r.status} — Grade: ${r.body.overall.grade}`);
+    console.log(`Test 5 (${plat}): ${r.status} - Grade: ${r.body.overall.grade}`);
   }
 
   console.log('\n=== All tests passed ===');

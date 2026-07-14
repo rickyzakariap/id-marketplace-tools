@@ -15,7 +15,7 @@
 const readline = require('readline');
 
 // ============================================================
-// FEE STRUCTURES — based on real 2024-2026 marketplace data
+// FEE STRUCTURES - based on real 2024-2026 marketplace data
 // ============================================================
 
 const MARKETPLACES = {
@@ -227,7 +227,7 @@ function displaySingle(result) {
   const w = 60;
   console.log('');
   console.log(divider('═', w));
-  console.log(`  ${result.emoji} ${result.marketplace} — Fee Breakdown`);
+  console.log(`  ${result.emoji} ${result.marketplace} - Fee Breakdown`);
   console.log(divider('─', w));
   console.log(`  Category        : ${result.category}`);
   console.log(`  Harga Jual      : ${formatRupiah(result.price)}`);
@@ -261,7 +261,7 @@ function displayComparison(results) {
   const w = 78;
   console.log('');
   console.log(divider('═', w));
-  console.log(`  📊 Marketplace Fee Comparison — ${formatRupiah(results[0].price)}`);
+  console.log(`  📊 Marketplace Fee Comparison - ${formatRupiah(results[0].price)}`);
   if (results[0].cost !== undefined) {
     console.log(`  💰 Modal: ${formatRupiah(results[0].cost)}`);
   }
