@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-07-15 - Review Sentiment Extension (Chrome MV3)
+- Works: Chrome MV3 extension + Express backend + Supabase
+- Works: `chrome.scripting.executeScript({ func })` untuk inject scraping langsung
+- Works: Supabase connected, insert/delete works
+- Issues: Shopee DOM selector ga stabil, review tidak ditemukan
+- Issues: Content script auto-injection ga reliable di MV3
+- Issues: CSP blokir `new Function()` / eval
+- Issues: Tailwind CDN ga bisa dimuat di extension popup
+- Fix: Pakai `chrome.scripting.executeScript({ func })` langsung
+- Fix: Inline CSS, bukan CDN
+- Fix: Broader selector strategy (class pattern matching)
+- Lesson: Chrome extension CSP KETAT. Ga boleh eval, ga boleh CDN
+- Lesson: Content script injection harus manual via scripting API
+- Lesson: Shopee selector sering berubah, perlu robust detection
+- Lesson: .env jangan ke-commit (credentials leak)
+
+---
+
 ## 2026-07-15 - Review Sentiment Analyzer (Web Upgrade)
 - Works: Converted CLI Python to Web (Express + vanilla JS)
 - Works: Dark theme, flat design, no AI slop
