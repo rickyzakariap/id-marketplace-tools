@@ -264,18 +264,69 @@ function scrapeTokopediaReviews() {
 // ============================================================
 function scrapeTokopediaSearch() {
   const products = [];
-  const items = document.querySelectorAll('[data-testid="div-product-card"], [class*="css-1gk63xk"], [class*="product-card"]');
+
+  // Try specific selectors first, then broad fallback
+  let items = document.querySelectorAll('[data-testid="div-product-card"], [class*="product-card"]');
+  if (items.length === 0) {
+    // Fallback: find elements that look like product cards (contain price + link)
+    items = document.querySelectorAll('a[href*="/promo/"], a[href*="-i."], a[href*="/product/"]');
+    // Group by parent card
+    const cards = new Set();
+    items.forEach(a => {
+      // Walk up to find the card container (usually 3-4 levels up)
+      let el = a;
+      for (let i = 0; i < 5; i++) {
+        el = el.parentElement;
+        if (!el) break;
+        if (el.querySelectorAll('a').length >= 2 && el.textContent.includes('Rp')) {
+          cards.add(el);
+          break;
+        }
+      }
+    });
+    items = cards;
+  }
 
   for (const item of items) {
-    const name = item.querySelector('[data-testid="linkProductName"], [class*="product-name"], a[title]')?.getAttribute('title') || item.querySelector('a')?.textContent?.trim() || '';
-    const price = item.querySelector('[data-testid="linkProductPrice"], [class*="price"]')?.textContent?.trim() || '';
-    const stars = item.querySelectorAll('svg[fill="#FD973B"], [class*="star"][class*="active"]').length;
-    const sales = item.querySelector('[class*="sold"], [class*="terjual"]')?.textContent?.trim() || '';
-    const shop = item.querySelector('[data-testid="linkProductShop"], [class*="shop-name"]')?.textContent?.trim() || '';
-    const location = item.querySelector('[class*="location"]')?.textContent?.trim() || '';
-    const url = item.querySelector('a')?.href || '';
+    const text = item.textContent || '';
+    if (text.length < 20) continue;
 
-    if (name) products.push({ name, price, stars, sales, shop, location, url });
+    // Name: link with title attribute, or first substantial link text
+    const titleLink = item.querySelector('a[title]');
+    let name = titleLink?.getAttribute('title') || '';
+    if (!name) {
+      const links = item.querySelectorAll('a');
+      for (const a of links) {
+        const t = a.textContent?.trim() || '';
+        if (t.length > 15 && !t.startsWith('Rp')) { name = t; break; }
+      }
+    }
+    if (!name) continue; // skip if no name found
+
+    // Price: find "Rp" pattern
+    const priceMatch = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+    const price = priceMatch ? `Rp${priceMatch[1]}` : '';
+
+    // Sales: find "terjual" pattern
+    const salesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i)
+      || text.match(/([\d.,]+\s*terjual)/i);
+    const sales = salesMatch ? salesMatch[1] : '';
+
+    // Stars
+    const stars = item.querySelectorAll('svg[fill="#FD973B"], [class*="star"][class*="active"]').length;
+
+    // Shop name
+    const shopEl = item.querySelector('[data-testid="linkProductShop"], [class*="shop-name"]');
+    const shop = shopEl?.textContent?.trim() || '';
+
+    // Location
+    const locEl = item.querySelector('[class*="location"]');
+    const location = locEl?.textContent?.trim() || '';
+
+    // URL
+    const url = titleLink?.href || item.querySelector('a')?.href || '';
+
+    products.push({ name, price, stars, sales, shop, location, url });
   }
 
   return { products, marketplace: 'tokopedia', query: document.querySelector('input[name="q"], input[type="search"]')?.value || '' };
