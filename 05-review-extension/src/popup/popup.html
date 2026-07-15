@@ -24,12 +24,22 @@ a:hover { text-decoration: underline; }
 
 /* Glass panel */
 .glass {
-  background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-top-color: rgba(255,255,255,0.2);
-  border-left-color: rgba(255,255,255,0.15);
+  background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-top-color: rgba(255,255,255,0.28);
+  border-left-color: rgba(255,255,255,0.2);
   border-radius: 12px;
-  box-shadow: 0 1px 0 0 rgba(255,255,255,0.08) inset, 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 0 0 rgba(255,255,255,0.1) inset, 0 4px 24px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+}
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.3) 70%, transparent 100%);
+  pointer-events: none;
 }
 
 .btn {
