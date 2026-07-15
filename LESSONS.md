@@ -17,7 +17,10 @@
 - Fix: Broader selector strategy (class pattern matching)
 - Lesson: Chrome extension CSP KETAT. Ga boleh eval, ga boleh CDN
 - Lesson: Content script injection harus manual via scripting API
-- Lesson: Shopee selector sering berubah, perlu robust detection
+- Lesson: Shopee selector: `.product-ratings__list` > children = individual reviews
+- Lesson: `.shopee-rating-stars__lit` = filled stars
+- Lesson: Shopee lazy-load reviews, perlu scroll/pagination buat ambil semua
+- Lesson: Debug Page button = cara terbaik inspect DOM dari extension
 - Lesson: .env jangan ke-commit (credentials leak)
 
 ---
