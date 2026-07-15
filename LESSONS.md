@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-07-15 - Review Sentiment Analyzer (Web Upgrade)
+- Works: Converted CLI Python to Web (Express + vanilla JS)
+- Works: Dark theme, flat design, no AI slop
+- Works: CSV upload, paste input, auto-fill sample data
+- Works: Theme analysis, keyword extraction, actionable insights
+- Issues: User rightfully called out CLI bias - seller awam ga mau pakai terminal
+- Lesson: BIKIN UNTUK USER, BUKAN UNTUK KENYAMANAN SENDIRI
+- Lesson: Jangan default ke CLI/Python karena "gampang buat gue"
+- Lesson: Web > CLI untuk tools yang targetnya seller non-teknis
+- Lesson: Minta approval format sebelum build, jangan asumsi
+
+---
+
 ## 2026-07-15 - Marketplace Fee Breakdown Calculator
 - Works: Data-driven ide from real seller pain points (research via DuckDuckGo)
 - Works: 6 marketplaces, 6 categories, accurate 2026 fee structures
