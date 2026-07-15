@@ -167,6 +167,73 @@ app.post('/api/save', async (req, res) => {
   }
 });
 
+// Save products (search results) to Supabase
+app.post('/api/save-products', async (req, res) => {
+  const { products, query } = req.body;
+  if (!products?.length) return res.status(400).json({ error: 'products required' });
+
+  try {
+    const rows = products.map(p => ({
+      product_name: p.name || '',
+      price: p.price || '',
+      sales: p.sales || '',
+      shop: p.shop || '',
+      location: p.location || '',
+      product_url: p.url || '',
+      search_query: query || '',
+      scraped_at: new Date().toISOString(),
+    }));
+
+    const { data, error } = await supabase.from('products').insert(rows).select();
+    if (error) throw error;
+    res.json({ success: true, count: data?.length || 0 });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Export to Google Sheets (via Sheets API)
+app.post('/api/sheets', async (req, res) => {
+  const { headers, rows, title } = req.body;
+  if (!headers?.length || !rows?.length) return res.status(400).json({ error: 'headers and rows required' });
+
+  const sheetsKey = process.env.GOOGLE_SHEETS_KEY;
+  const sheetsId = process.env.GOOGLE_SHEETS_ID;
+
+  if (!sheetsKey || !sheetsId) {
+    return res.status(501).json({ error: 'Google Sheets not configured. Set GOOGLE_SHEETS_KEY and GOOGLE_SHEETS_ID in .env' });
+  }
+
+  try {
+    const { google } = require('googleapis');
+    const auth = new google.auth.GoogleAuth({
+      credentials: JSON.parse(sheetsKey),
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    const sheets = google.sheets({ version: 'v4', auth });
+
+    // Create new tab
+    const tabName = title || `Export ${new Date().toISOString().slice(0,16)}`;
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: sheetsId,
+      requestBody: { requests: [{ addSheet: { properties: { title: tabName } } }] },
+    }).catch(() => {}); // ignore if tab exists
+
+    // Write data
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: sheetsId,
+      range: `${tabName}!A1`,
+      valueInputOption: 'RAW',
+      requestBody: { values: [headers, ...rows] },
+    });
+
+    const url = `https://docs.google.com/spreadsheets/d/${sheetsId}/edit#gid=0`;
+    res.json({ success: true, url });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 3458;
 app.listen(PORT, () => {
   console.log(`Backend running at http://localhost:${PORT}`);
