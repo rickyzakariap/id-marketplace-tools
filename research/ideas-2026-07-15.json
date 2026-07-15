@@ -1,0 +1,124 @@
+{
+  "date": "2026-07-15",
+  "sources": [
+    "duckduckgo",
+    "twitter",
+    "news",
+    "forums"
+  ],
+  "pain_points": [
+    {
+      "category": "Fee & Pricing",
+      "description": "Potongan fee marketplace makin gila. Seller jual Rp6 juta, rugi Rp463rb karena potongan Rp963rb. Brand owner berbondong-bondong tutup dari Shopee/Tokopedia.",
+      "frequency": "HIGH",
+      "sources": [
+        "mediakonsumen.com - Jual Barang Rp6 Juta di Tokopedia, Malah Rugi Rp463 Ribu",
+        "sentrasoft.co.id - Brand Owners Tutup dari Shopee & Tokopedia",
+        "idntimes.com - Kenaikan Biaya Layanan Tekan Seller",
+        "beritasatu.com - Seller Ramai-ramai Kabur dari Marketplace"
+      ],
+      "ideas": [
+        "Fee Comparison Dashboard - bandingkan fee real-time lintas marketplace per kategori",
+        "Profit Calculator v2 - hitung profit SETELAH semua potongan (komisi, layanan, ongkir subsidi)",
+        "Break-Even Analyzer - berapa minimum harga jual biar ga rugi per marketplace"
+      ]
+    },
+    {
+      "category": "Komplain & CS",
+      "description": "Seller kewalahan handle komplain pembeli. Banyak yang ga tahu cara komplain ke Shopee. Komplain jadi negatif bias.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "rekapcepat.id - Cara Menangani Komplain Pembeli",
+        "idntimes.com - Fenomena Komplain di Marketplace",
+        "bigseller.com - Cara Menghubungi CS Shopee Seller Center"
+      ],
+      "ideas": [
+        "Template Balasan Komplain - auto-generate response untuk tipe komplain umum",
+        "Komplain Tracker - track semua komplain, status, dan follow-up"
+      ]
+    },
+    {
+      "category": "Stok & Inventory",
+      "description": "Stok ga sinkron antar marketplace. Seller butuh manajemen stok real-time.",
+      "frequency": "HIGH",
+      "sources": [
+        "bigseller.com - 3 Tools Penting Seller Aktif",
+        "jubelio.com - 12 Aplikasi Integrasi Marketplace",
+        "mekari.com - Aplikasi Integrasi Marketplace"
+      ],
+      "ideas": [
+        "Stock Sync Checker - cek perbedaan stok antar marketplace",
+        "Low Stock Alert - notifikasi stok menipis via Telegram/WA"
+      ]
+    },
+    {
+      "category": "Riset & Analisis",
+      "description": "Seller butuh riset produk terlaris dan analisis kompetitor.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "datapinter.com - Tools Riset Produk Terlaris",
+        "marketingampuh.com - 5 Kesalahan Seller yang Bangkrut"
+      ],
+      "ideas": [
+        "Product Trend Scanner - scan produk trending per kategori marketplace",
+        "Competitor Price Monitor - pantau harga kompetitor otomatis"
+      ]
+    },
+    {
+      "category": "Dropship & Reseller",
+      "description": "Tools dropship dan reseller banyak tapi mahal. Butuh yang gratis/sederhana.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "qlobot.com - Tools Dropship Marketplace Terbaik",
+        "qontak.com - 10 Aplikasi Reseller Terbaik",
+        "dropshipaja.com - 13 Aplikasi Reseller Dropshipper"
+      ],
+      "ideas": [
+        "Dropship Margin Calculator - hitung margin dropship per supplier x marketplace",
+        "Supplier Scorer - rate supplier berdasarkan rating, waktu kirim, retur"
+      ]
+    },
+    {
+      "category": "Multi-Marketplace",
+      "description": "Seller aktif di banyak marketplace butuh integrasi. Tools existing mahal (Jubelio, BigSeller).",
+      "frequency": "HIGH",
+      "sources": [
+        "equiperp.com - 13 Aplikasi Integrasi Marketplace",
+        "bigseller.com - Tools Wajib Seller Aktif Multi-Channel"
+      ],
+      "ideas": [
+        "Multi-Marketplace Order Dashboard - satu dashboard untuk semua pesanan",
+        "Listing Sync Checker - cek konsistensi listing (harga, judul, foto) lintas marketplace"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Marketplace Fee Breakdown Calculator",
+      "type": "CLI",
+      "tech": "Python (stdlib only)",
+      "description": "Hitung semua potongan marketplace (komisi, layanan, ongkir subsidi, admin) dan tampilkan profit bersih. Bisa compare lintas marketplace. Input harga, kategori, berat -> output breakdown lengkap.",
+      "category": "Fee & Pricing",
+      "priority": 1,
+      "why": "Pain point PALING SERING muncul. Seller rugi ratusan ribu karena ga tahu breakdown fee."
+    },
+    {
+      "name": "Listing Consistency Checker",
+      "type": "CLI",
+      "tech": "Go",
+      "description": "CLI buat cek konsistensi listing multi-marketplace. Input data listing per platform, diff harga/judul/deskripsi, highlight yang beda. Output table format.",
+      "category": "Multi-Marketplace",
+      "priority": 2,
+      "why": "Seller multi-channel sering lupa update harga di salah satu marketplace."
+    },
+    {
+      "name": "Komplain Response Generator",
+      "type": "Web",
+      "tech": "Rust + Actix Web",
+      "description": "Backend API + simple frontend. Pilih tipe komplain, generate template balasan profesional. Bahasa Indonesia. Bisa custom tone (sopan, tegas, permintaan maaf).",
+      "category": "Komplain & CS",
+      "priority": 3,
+      "why": "Seller baru sering panik handle komplain, butuh template yang benar."
+    }
+  ]
+}
