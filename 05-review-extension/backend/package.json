@@ -1,0 +1,14 @@
+{
+  "name": "review-analyzer-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.0",
+    "@supabase/supabase-js": "^2.49.0"
+  }
+}

@@ -1,0 +1,19 @@
+/* inject.css - minimal overlay for scrape feedback */
+#review-analyzer-status {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: #171f33;
+  color: #dae2fd;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #424754;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  z-index: 99999;
+  display: none;
+}
+
+#review-analyzer-status.show {
+  display: block;
+}

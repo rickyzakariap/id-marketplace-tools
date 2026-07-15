@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 380px;
+  min-height: 400px;
+  background: #0b1326;
+  color: #dae2fd;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 16px;
+}
+.label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8c909f;
+  margin-bottom: 6px;
+}
+.btn {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.85; }
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary {
+  background: #4d8eff;
+  color: #00285d;
+}
+.btn-save {
+  background: rgba(34,197,94,0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34,197,94,0.3);
+}
+.btn-text {
+  background: none;
+  color: #adc6ff;
+  border: none;
+  font-size: 12px;
+  width: auto;
+  padding: 4px 0;
+  text-decoration: underline;
+}
+.hint {
+  font-size: 12px;
+  color: #8c909f;
+  margin-bottom: 12px;
+}
+.status { font-size: 11px; color: #8c909f; margin-top: 8px; }
+.error { font-size: 11px; color: #ffb4ab; margin-top: 8px; }
+.hidden { display: none; }
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.stat {
+  background: #131b2e;
+  border: 1px solid #424754;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+}
+.stat .stat-label {
+  font-size: 10px;
+  color: #8c909f;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.stat .stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: monospace;
+}
+.green { color: #22c55e; }
+.yellow { color: #eab308; }
+.red { color: #ef4444; }
+
+.dist-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+.dist-label { width: 48px; color: #8c909f; }
+.dist-track {
+  flex: 1;
+  height: 6px;
+  background: #2d3449;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.dist-fill { height: 100%; border-radius: 3px; }
+.dist-count { width: 70px; text-align: right; font-family: monospace; font-size: 11px; color: #8c909f; }
+
+.theme-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+.theme-name { width: 100px; color: #8c909f; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.theme-track { flex: 1; height: 6px; background: #2d3449; border-radius: 3px; overflow: hidden; }
+.theme-fill { height: 100%; border-radius: 3px; }
+.theme-count { width: 24px; text-align: right; font-family: monospace; font-size: 11px; color: #8c909f; }
+
+.insight-list { list-style: none; }
+.insight-item {
+  font-size: 12px;
+  background: #131b2e;
+  border-left: 2px solid #4d8eff;
+  padding: 6px 10px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 4px;
+}
+
+.section-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8c909f;
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+
+.product-name {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 340px;
+}
+
+#saveStatus {
+  font-size: 11px;
+  color: #8c909f;
+  text-align: center;
+  margin-top: 6px;
+}
+</style>
+</head>
+<body>
+
+<div id="idle">
+  <div class="hint">Klik tombol di bawah untuk scrape review dari halaman produk ini.</div>
+  <button id="scrapeBtn" class="btn btn-primary">Scrape Review</button>
+  <button id="debugBtn" class="btn btn-save" style="margin-top:6px;font-size:11px;padding:6px 0">Debug Page</button>
+  <div id="status" class="status hidden"></div>
+  <div id="error" class="error hidden"></div>
+</div>
+
+<div id="results" class="hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div class="label" style="margin:0">Hasil Scrape</div>
+    <button onclick="resetUI()" class="btn-text">Baru</button>
+  </div>
+  <div id="productName" class="product-name"></div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Review</div>
+      <div class="stat-value" id="statTotal">-</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Sentimen</div>
+      <div class="stat-value" id="statSentiment">-</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Skor</div>
+      <div class="stat-value" id="statScore">-</div>
+    </div>
+  </div>
+
+  <div class="section-title">Distribusi</div>
+  <div id="distBars"></div>
+
+  <div class="section-title">Tema</div>
+  <div id="themes"></div>
+
+  <div class="section-title">Insight</div>
+  <ul class="insight-list" id="insights"></ul>
+
+  <div style="margin-top:14px">
+    <button id="saveBtn" class="btn btn-save" onclick="saveToSupabase()">Simpan ke Database</button>
+    <div id="saveStatus" class="hidden"></div>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
