@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-07-15 - Marketplace Fee Breakdown Calculator
+- Works: Data-driven ide from real seller pain points (research via DuckDuckGo)
+- Works: 6 marketplaces, 6 categories, accurate 2026 fee structures
+- Works: Comparison mode ranks by profit, shows savings vs worst option
+- Works: Pre-order + free ongkir toggle for real-world scenarios
+- Works: Zero dependencies, Python stdlib only
+- Issues: Fee data is approximate, marketplace can change rates anytime
+- Lesson: Research before building. Real pain points > guessing.
+- Lesson: User wants tech stack variety. Don't default to HTML/JS.
+- Next: Add fee update checker, link to official marketplace fee pages
+
+---
+
 ## 2026-07-14 - Marketplace Fee Calculator CLI
 - Works: Zero dependencies, pure Node.js, clean CLI output
 - Works: Compare mode ranks profit across all marketplaces
