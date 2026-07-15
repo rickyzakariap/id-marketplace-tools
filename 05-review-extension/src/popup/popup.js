@@ -180,6 +180,86 @@ function scrapeShopeeSearch() {
 }
 
 // ============================================================
+// Scrape Tokopedia product details (from product detail page)
+// ============================================================
+function scrapeTokopediaProduct() {
+  const bodyText = document.body.innerText;
+
+  // Product name
+  const name = document.querySelector('[data-testid="lbl-product-name"], h1')?.textContent?.trim()
+    || document.title.split('|')[0].trim() || '';
+
+  // Price
+  const priceEl = document.querySelector('[data-testid="lbl-price-product"], [class*="price"]');
+  let price = priceEl?.textContent?.trim() || '';
+  const priceMatch = price.match(/Rp\s?([\d.,]+)/);
+  if (priceMatch) price = `Rp${priceMatch[1]}`;
+
+  // Rating
+  const ratingMatch = bodyText.match(/(\d\.\d)\s*dari\s*5/);
+  const rating = ratingMatch ? ratingMatch[1] : '';
+
+  // Sales: "terjual" or "terjual 61"
+  const salesMatch = bodyText.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
+  const sales = salesMatch ? salesMatch[1] : '';
+
+  // Shop name: Tokopedia uses data-testid or shop link
+  const shopEl = document.querySelector('[data-testid="llbPDPFooterShopName"], [data-testid="linkProductShop"], a[href*="/shop/"] span, [class*="shop-name"]');
+  let shop = shopEl?.textContent?.trim() || '';
+  if (!shop) {
+    // Fallback: find "Toko" section
+    const shopMatch = bodyText.match(/Toko[:\s]*([^\n]+)/i);
+    shop = shopMatch ? shopMatch[1].trim() : '';
+  }
+
+  // Location: "Dikirim dari" or city
+  const locMatch = bodyText.match(/(?:Dikirim\s*dari|Dikirim Dari)\s*([^\n]+)/i);
+  let location = locMatch ? locMatch[1].trim() : '';
+  if (!location) {
+    const cities = 'Jakarta|Surabaya|Bandung|Tangerang|Bekasi|Semarang|Yogyakarta|Solo|Malang|Medan|Makassar|Denpasar|Bali|Depok|Bogor|Palembang|Batam|Pekanbaru|Balikpapan|Samarinda';
+    const cityMatch = bodyText.match(new RegExp(`KOTA\\s+(${cities})`, 'i'));
+    if (cityMatch) location = cityMatch[1];
+  }
+
+  // Availability
+  const stockMatch = bodyText.match(/(Stok\s*Tersedia|Stok\s*Habis|Sisa\s*\d+)/i);
+  const availability = stockMatch ? stockMatch[1] : 'Tersedia';
+
+  return {
+    product: { name, price, rating, sales, shop, location, availability, url: window.location.href },
+    marketplace: 'tokopedia',
+  };
+}
+
+// ============================================================
+// Scrape Tokopedia product reviews (from product detail page)
+// ============================================================
+function scrapeTokopediaReviews() {
+  const reviews = [];
+  const items = document.querySelectorAll(
+    '[data-testid="review-card"], [data-testid="comment-review-card"], [class*="review-item"], [class*="css-1k1a7gr"]'
+  );
+
+  items.forEach(item => {
+    const textEl = item.querySelector(
+      '[data-testid="review-content"], [data-testid="comment-review"], [class*="content"], [class*="text"], [class*="comment"]'
+    );
+    const text = textEl?.textContent?.trim() || item.textContent?.trim() || '';
+    const stars = item.querySelectorAll(
+      '[data-testid="star-icon"].active, svg[fill="#FD973B"], [class*="star"][class*="active"]'
+    );
+    const rating = stars.length || null;
+
+    if (text && text.length > 10 && text.length < 2000) {
+      reviews.push({ text: text.substring(0, 500), rating });
+    }
+  });
+
+  const name = document.querySelector('[data-testid="lbl-product-name"], h1')?.textContent?.trim() || document.title.split('|')[0].trim();
+  return { reviews, product: { name, url: window.location.href }, marketplace: 'tokopedia' };
+}
+
+// ============================================================
 // Scrape Tokopedia search results
 // ============================================================
 function scrapeTokopediaSearch() {
@@ -384,16 +464,18 @@ async function scrape() {
     } else if (isProduct) {
       // Product detail page - scrape both product info and reviews
       status.textContent = 'Mengambil data produk...';
-      const productInfo = await runInPage(scrapeShopeeProduct);
+      const productFn = isTokopedia ? scrapeTokopediaProduct : scrapeShopeeProduct;
+      const productInfo = await runInPage(productFn);
 
       status.textContent = 'Mengambil review...';
-      const reviewData = await runInPage(scrapeShopeeReviews);
+      const reviewFn = isTokopedia ? scrapeTokopediaReviews : scrapeShopeeReviews;
+      const reviewData = await runInPage(reviewFn);
 
       // Combine
       result = {
         product: productInfo.product,
         reviews: reviewData.reviews,
-        marketplace: 'shopee',
+        marketplace: isTokopedia ? 'tokopedia' : 'shopee',
       };
 
       if (result.reviews.length > 0) {
@@ -500,71 +582,78 @@ function truncate(str, len) {
 }
 
 // ============================================================
+// Export helpers
+// ============================================================
+function showExportMsg(msg, isError) {
+  ['exportStatus', 'exportStatus2'].forEach(id => {
+    const el = $(id);
+    if (el) {
+      el.classList.remove('hidden');
+      el.textContent = msg;
+      el.style.color = isError ? '#f85149' : 'rgba(255,255,255,0.4)';
+      if (!isError) setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+  });
+}
+
+// ============================================================
 // Export: CSV download
 // ============================================================
 function exportCSV() {
-  const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
-  if (!data.length) return;
+  try {
+    const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
+    if (!data.length) { showExportMsg('Tidak ada data'); return; }
 
-  const showExport = (msg) => {
-    ['exportStatus', 'exportStatus2'].forEach(id => {
-      const el = $(id);
-      if (el) { el.classList.remove('hidden'); el.textContent = msg; setTimeout(() => el.classList.add('hidden'), 2000); }
-    });
-  };
+    const isSearch = searchProducts.length > 0;
+    const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi'] : ['Review','Rating','Sentimen','Score','Tema'];
+    const rows = data.map((d, i) => isSearch
+      ? [i+1, `"${(d.name||'').replace(/"/g,'""')}"`, d.price||'', d.sales||'', d.location||'']
+      : [`"${(d.text||'').replace(/"/g,'""')}"`, d.rating||'', d.sentiment||'', d.score||'', (d.themes||[]).join('; ')]
+    );
 
-  const isSearch = searchProducts.length > 0;
-  const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi'] : ['Review','Rating','Sentimen','Score','Tema'];
-  const rows = data.map((d, i) => isSearch
-    ? [i+1, `"${(d.name||'').replace(/"/g,'""')}"`, d.price||'', d.sales||'', d.location||'']
-    : [`"${(d.text||'').replace(/"/g,'""')}"`, d.rating||'', d.sentiment||'', d.score||'', (d.themes||[]).join('; ')]
-  );
-
-  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `review-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showExport('CSV downloaded');
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `review-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showExportMsg('CSV downloaded');
+  } catch (err) {
+    showExportMsg('CSV error: ' + err.message, true);
+  }
 }
 
 // ============================================================
 // Export: Google Sheets (via backend proxy)
 // ============================================================
 async function exportSheets() {
-  const showExport = (msg, isError) => {
-    ['exportStatus', 'exportStatus2'].forEach(id => {
-      const el = $(id);
-      if (el) { el.classList.remove('hidden'); el.textContent = msg; if (!isError) setTimeout(() => el.classList.add('hidden'), 3000); }
-    });
-  };
-
-  const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
-  if (!data.length) return;
-
-  const isSearch = searchProducts.length > 0;
-  const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi','URL'] : ['Review','Rating','Sentimen','Score','Tema'];
-  const rows = data.map((d, i) => isSearch
-    ? [String(i+1), d.name||'', d.price||'', d.sales||'', d.location||'', d.url||'']
-    : [d.text||'', String(d.rating||''), d.sentiment||'', String(d.score||''), (d.themes||[]).join(', ')]
-  );
-
-  showExport('Mengirim ke Sheets...');
   try {
+    const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
+    if (!data.length) { showExportMsg('Tidak ada data'); return; }
+
+    const isSearch = searchProducts.length > 0;
+    const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi','URL'] : ['Review','Rating','Sentimen','Score','Tema'];
+    const rows = data.map((d, i) => isSearch
+      ? [String(i+1), d.name||'', d.price||'', d.sales||'', d.location||'', d.url||'']
+      : [d.text||'', String(d.rating||''), d.sentiment||'', String(d.score||''), (d.themes||[]).join(', ')]
+    );
+
+    showExportMsg('Mengirim ke Sheets...');
     const resp = await fetch(`${BACKEND}/api/sheets`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ headers, rows, title: isSearch ? `Search: ${$('searchQuery')?.textContent || ''}` : `Product: ${lastResults?.product?.name || ''}` }),
     });
-    if (!resp.ok) throw new Error(resp.status);
+    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error || resp.status); }
     const result = await resp.json();
-    showExport(`Sheets: ${result.url ? 'berhasil' : 'ok'}`);
+    showExportMsg('Sheets: berhasil');
     if (result.url) window.open(result.url, '_blank');
   } catch (err) {
-    showExport(`Sheets error: ${err.message}`, true);
+    showExportMsg('Sheets: ' + err.message, true);
   }
 }
 
@@ -572,35 +661,24 @@ async function exportSheets() {
 // Save to Supabase
 // ============================================================
 async function saveToSupabase() {
-  const showExport = (msg, isError) => {
-    ['exportStatus', 'exportStatus2'].forEach(id => {
-      const el = $(id);
-      if (el) { el.classList.remove('hidden'); el.textContent = msg; if (!isError) setTimeout(() => el.classList.add('hidden'), 3000); }
-    });
-  };
-
-  // Search results mode
-  if (searchProducts.length > 0) {
-    showExport('Mengirim produk ke Supabase...');
-    try {
+  try {
+    // Search results mode
+    if (searchProducts.length > 0) {
+      showExportMsg('Mengirim produk ke Supabase...');
       const resp = await fetch(`${BACKEND}/api/save-products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ products: searchProducts, query: document.getElementById('searchQuery')?.textContent || '' }),
       });
-      if (!resp.ok) throw new Error(resp.status);
+      if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error || resp.status); }
       const data = await resp.json();
-      showExport(`Supabase: ${data.count} produk tersimpan`);
-    } catch (err) {
-      showExport(`Error: ${err.message}`, true);
+      showExportMsg(`Supabase: ${data.count} produk tersimpan`);
+      return;
     }
-    return;
-  }
 
-  // Product review mode
-  if (!lastResults) return;
-  showExport('Mengirim review ke Supabase...');
-  try {
+    // Product review mode
+    if (!lastResults) { showExportMsg('Tidak ada data', true); return; }
+    showExportMsg('Mengirim review ke Supabase...');
     const resp = await fetch(`${BACKEND}/api/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -612,11 +690,11 @@ async function saveToSupabase() {
         stats: { total: lastResults.total, pos: lastResults.pos, neg: lastResults.neg, neu: lastResults.neu, avgScore: lastResults.avgScore, themes: lastResults.themes },
       }),
     });
-    if (!resp.ok) throw new Error('Save failed: ' + resp.status);
+    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error || resp.status); }
     const data = await resp.json();
-    showExport(`Supabase: ${data.count} review tersimpan`);
+    showExportMsg(`Supabase: ${data.count} review tersimpan`);
   } catch (err) {
-    showExport(`Error: ${err.message}`, true);
+    showExportMsg('Supabase: ' + err.message, true);
   }
 }
 
