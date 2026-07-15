@@ -1,0 +1,16 @@
+{
+  "name": "03-review-sentiment-analyzer",
+  "version": "1.0.0",
+  "description": "CLI tool that analyzes marketplace product reviews for sentiment, extracts themes, and generates actionable insights. Supports Indonesian and English reviews.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

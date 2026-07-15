@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sentiment Analyzer</title>
+<style>
+:root {
+  --bg: #111;
+  --surface: #1a1a1a;
+  --border: #2a2a2a;
+  --text: #e5e5e5;
+  --text-dim: #737373;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --green: #22c55e;
+  --yellow: #eab308;
+  --red: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+/* Input area */
+.input-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.input-section label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 160px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: monospace;
+  font-size: 13px;
+  padding: 10px;
+  resize: vertical;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+textarea.error {
+  border-color: var(--red);
+}
+
+.error-msg {
+  color: var(--red);
+  font-size: 11px;
+  margin-top: 4px;
+  display: none;
+}
+
+.error-msg.show { display: block; }
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn:hover { background: var(--accent-hover); }
+.btn:active { background: #1e40af; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn.secondary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.btn.secondary:hover {
+  border-color: var(--text-dim);
+  color: var(--text);
+}
+
+.btn.secondary.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+/* Results */
+#results {
+  display: none;
+}
+
+#results.visible {
+  display: block;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.stat-value.green { color: var(--green); }
+.stat-value.yellow { color: var(--yellow); }
+.stat-value.red { color: var(--red); }
+
+/* Distribution bars */
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  margin-top: 20px;
+}
+
+.dist-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.dist-label {
+  width: 70px;
+  font-family: monospace;
+}
+
+.dist-track {
+  flex: 1;
+  height: 16px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0 8px;
+}
+
+.dist-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.dist-fill.green { background: var(--green); }
+.dist-fill.yellow { background: var(--yellow); }
+.dist-fill.red { background: var(--red); }
+
+.dist-count {
+  width: 90px;
+  text-align: right;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Theme table */
+.theme-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.theme-row:last-child { border-bottom: none; }
+
+.theme-icon {
+  width: 20px;
+  font-family: monospace;
+  color: var(--text-dim);
+}
+
+.theme-name {
+  width: 160px;
+}
+
+.theme-bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0 8px;
+}
+
+.theme-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+.theme-status {
+  width: 16px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.theme-status.positive { color: var(--green); }
+.theme-status.negative { color: var(--red); }
+.theme-status.neutral { color: var(--yellow); }
+
+.theme-count {
+  width: 60px;
+  text-align: right;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Keywords */
+.keywords-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.keyword-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.keyword-word {
+  width: 130px;
+  font-family: monospace;
+}
+
+.keyword-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0 8px;
+}
+
+.keyword-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+.keyword-bar-fill.green { background: var(--green); }
+.keyword-bar-fill.red { background: var(--red); }
+
+.keyword-count {
+  width: 30px;
+  text-align: right;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Insights */
+.insight-list {
+  list-style: none;
+  padding: 0;
+}
+
+.insight-list li {
+  padding: 8px 12px;
+  background: var(--bg);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+/* Review samples */
+.review-sample {
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.review-score {
+  font-family: monospace;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+.review-score.pos { color: var(--green); }
+.review-score.neg { color: var(--red); }
+.review-score.neu { color: var(--yellow); }
+
+.review-meta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: 4px;
+}
+
+.review-text {
+  margin-top: 4px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* All reviews table */
+.reviews-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.reviews-table th {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10px;
+}
+
+.reviews-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.reviews-table tr:hover td {
+  background: var(--surface);
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.badge.positive { background: #1a2e1a; color: var(--green); }
+.badge.negative { background: #2e1a1a; color: var(--red); }
+.badge.neutral { background: #2e2e1a; color: var(--yellow); }
+
+/* Two column layout */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  body { padding: 12px; }
+  .two-col { grid-template-columns: 1fr; }
+  .keywords-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<h1>Review Sentiment Analyzer</h1>
+<p class="subtitle">Analisa sentimen review marketplace Indonesia. Paste review atau upload CSV.</p>
+
+<div class="input-section">
+  <label>Reviews <span id="lineCount" style="float:right;font-family:monospace;font-size:11px;color:var(--text-dim)">0 baris</span></label>
+  <textarea id="reviewInput" placeholder="Paste review di sini, satu per baris. Bisa juga format: rating|review (contoh: 5|Barang bagus banget)"></textarea>
+  <div id="inputError" class="error-msg">Masukkan minimal 1 review</div>
+  <div class="btn-row">
+    <button class="btn" id="analyzeBtn" onclick="analyze()">Analisa</button>
+    <button class="btn secondary" onclick="loadSample()">Contoh Data</button>
+    <button class="btn secondary" onclick="document.getElementById('csvFile').click()">Upload CSV</button>
+    <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleCSV(this)">
+  </div>
+  <p class="hint">Format: satu review per baris, atau rating|teks (contoh: 5|Barang bagus)</p>
+</div>
+
+<div id="results">
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Review</div>
+      <div class="stat-value" id="statTotal">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Sentimen</div>
+      <div class="stat-value" id="statSentiment">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Skor Rata-rata</div>
+      <div class="stat-value" id="statScore">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rating Rata-rata</div>
+      <div class="stat-value" id="statRating">-</div>
+    </div>
+  </div>
+
+  <div class="section-title">Distribusi Sentimen</div>
+  <div id="distBars"></div>
+
+  <div class="section-title">Analisa Tema</div>
+  <div id="themeSection"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="section-title">Kata Positif</div>
+      <div id="posKeywords"></div>
+    </div>
+    <div>
+      <div class="section-title">Kata Negatif</div>
+      <div id="negKeywords"></div>
+    </div>
+  </div>
+
+  <div class="section-title">Insight</div>
+  <ul class="insight-list" id="insightList"></ul>
+
+  <div class="two-col">
+    <div>
+      <div class="section-title" style="color:var(--red)">Review Terburuk</div>
+      <div id="worstReviews"></div>
+    </div>
+    <div>
+      <div class="section-title" style="color:var(--green)">Review Terbaik</div>
+      <div id="bestReviews"></div>
+    </div>
+  </div>
+
+  <div class="section-title">Semua Review</div>
+  <div style="overflow-x:auto">
+    <table class="reviews-table">
+      <thead>
+        <tr><th>No</th><th>Sentimen</th><th>Skor</th><th>Rating</th><th>Tema</th><th>Review</th></tr>
+      </thead>
+      <tbody id="allReviews"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const SAMPLE_REVIEWS = [
+  '5|Barang bagus banget, sesuai gambar. Pengiriman cepat, packing rapi. Recommended seller!',
+  '1|Kualitas jelek, bahan tipis. Kecewa beli di sini. Ga sesuai ekspektasi.',
+  '3|Pengiriman lambat, 5 hari baru sampai. Tapi barangnya oke sih, sesuai harga.',
+  '5|Mantap! Original, harga murah dibanding toko lain. Pasti repeat order.',
+  '2|Ukuran kekecilan, padahal udah pilih yang XL. Kainnya juga agak kasar.',
+  '5|Seller ramah, fast response. Barang cepat sampai dan kemasan aman banget.',
+  '1|Produk rusak waktu sampai, pecah di bagian atas. Udah komplain tapi ga ada solusi.',
+  '3|Lumayan lah untuk harga segini. Ga jelek ga bagus juga. Standar aja.',
+  '4|Barangnya bagus, tapi bubble wrapnya tipis. Untung ga rusak di jalan.',
+  '1|PALSU! Ini bukan original, kualitas kw banget. Mau refund susah.',
+  '5|Pengiriman super cepat, semalam langsung sampai. Barang sesuai deskripsi.',
+  '3|Warna beda dari foto, lebih gelap. Tapi materialnya lumayan kuat.',
+  '5|Worth it banget! Diskon 50% dapat barang berkualitas. Thank you seller!',
+  '2|Lambat banget responnya, nunggu 2 hari baru dibales. Kurir juga lama.',
+  '5|Sempurna! Pas banget ukurannya, bahan adem, harga terjangkau.',
+  '1|Barang sampai sobek, kemasan berantakan. Kecewa berat.',
+  '3|Oke aja sih, sesuai harga. Jangan berharap banyak untuk harga segini.',
+  '5|Adminnya helpful banget, bantu pilih ukuran yang pas. Barangnya juga bagus.',
+  '1|Ini barang KW, jelas beda dari yang di foto. Penipu nih seller.',
+  '4|Packing aman, bubble wrap tebal. Barang utuh tidak ada cacat. Puas!',
+];
+
+$('reviewInput').addEventListener('input', function() {
+  const lines = this.value.trim().split('\n').filter(l => l.trim());
+  $('lineCount').textContent = lines.length + ' baris';
+  this.classList.remove('error');
+  $('inputError').classList.remove('show');
+});
+
+$('reviewInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.ctrlKey) analyze();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    $('reviewInput').value = '';
+    $('results').classList.remove('visible');
+    $('lineCount').textContent = '0 baris';
+  }
+});
+
+function loadSample() {
+  $('reviewInput').value = SAMPLE_REVIEWS.join('\n');
+  $('lineCount').textContent = SAMPLE_REVIEWS.length + ' baris';
+  $('reviewInput').classList.remove('error');
+  $('inputError').classList.remove('show');
+  analyze();
+}
+
+function handleCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result;
+    const lines = text.trim().split('\n');
+    // Try to detect header
+    const first = lines[0].toLowerCase();
+    const hasHeader = first.includes('review') || first.includes('text') || first.includes('rating') || first.includes('ulasan');
+    const dataLines = hasHeader ? lines.slice(1) : lines;
+    $('reviewInput').value = dataLines.join('\n');
+    $('lineCount').textContent = dataLines.length + ' baris';
+    analyze();
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function parseReviews(raw) {
+  const lines = raw.trim().split('\n').filter(l => l.trim());
+  return lines.map(line => {
+    const parts = line.split('|');
+    if (parts.length >= 2) {
+      const rating = parseInt(parts[0]);
+      if (!isNaN(rating) && rating >= 1 && rating <= 5) {
+        return { text: parts.slice(1).join('|').trim(), rating };
+      }
+    }
+    return { text: line.trim() };
+  }).filter(r => r.text);
+}
+
+async function analyze() {
+  const raw = $('reviewInput').value.trim();
+  if (!raw) {
+    $('reviewInput').classList.add('error');
+    $('inputError').classList.add('show');
+    return;
+  }
+
+  const reviews = parseReviews(raw);
+  if (reviews.length === 0) {
+    $('reviewInput').classList.add('error');
+    $('inputError').classList.add('show');
+    return;
+  }
+
+  const btn = $('analyzeBtn');
+  btn.disabled = true;
+  btn.textContent = 'Loading...';
+
+  try {
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reviews }),
+    });
+    const data = await resp.json();
+    renderResults(data);
+    $('results').classList.add('visible');
+  } catch (err) {
+    alert('Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Analisa';
+  }
+}
+
+function renderResults(data) {
+  // Stats
+  $('statTotal').textContent = data.total;
+
+  const sentEl = $('statSentiment');
+  if (data.avgScore > 0.15) {
+    sentEl.textContent = 'Positif';
+    sentEl.className = 'stat-value green';
+  } else if (data.avgScore < -0.15) {
+    sentEl.textContent = 'Negatif';
+    sentEl.className = 'stat-value red';
+  } else {
+    sentEl.textContent = 'Campur';
+    sentEl.className = 'stat-value yellow';
+  }
+
+  const scoreEl = $('statScore');
+  scoreEl.textContent = (data.avgScore >= 0 ? '+' : '') + data.avgScore.toFixed(3);
+  scoreEl.className = 'stat-value ' + (data.avgScore > 0.15 ? 'green' : data.avgScore < -0.15 ? 'red' : 'yellow');
+
+  $('statRating').textContent = data.avgRating ? data.avgRating.toFixed(1) + '/5' : '-';
+
+  // Distribution
+  $('distBars').innerHTML = [
+    { label: 'Positif', count: data.pos, cls: 'green' },
+    { label: 'Netral', count: data.neu, cls: 'yellow' },
+    { label: 'Negatif', count: data.neg, cls: 'red' },
+  ].map(d => {
+    const pct = data.total > 0 ? (d.count / data.total * 100) : 0;
+    return `<div class="dist-bar">
+      <span class="dist-label">${d.label}</span>
+      <div class="dist-track"><div class="dist-fill ${d.cls}" style="width:${pct}%"></div></div>
+      <span class="dist-count">${d.count} (${pct.toFixed(1)}%)</span>
+    </div>`;
+  }).join('');
+
+  // Themes
+  if (data.themes.length) {
+    const maxCount = Math.max(...data.themes.map(t => t.count));
+    $('themeSection').innerHTML = data.themes.map(t => {
+      const pct = maxCount > 0 ? (t.count / maxCount * 100) : 0;
+      const color = t.status === 'positive' ? 'var(--green)' : t.status === 'negative' ? 'var(--red)' : 'var(--yellow)';
+      const symbol = t.status === 'positive' ? '+' : t.status === 'negative' ? '-' : '~';
+      return `<div class="theme-row">
+        <span class="theme-icon">${t.icon}</span>
+        <span class="theme-name">${t.name}</span>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <span class="theme-status ${t.status}">${symbol}</span>
+        <span class="theme-count">${t.count}</span>
+      </div>`;
+    }).join('');
+  } else {
+    $('themeSection').innerHTML = '<div style="color:var(--text-dim);font-size:13px;padding:8px 0">Tidak ada tema terdeteksi</div>';
+  }
+
+  // Keywords
+  const kwMax = data.topPos.length ? data.topPos[0][1] : 1;
+  $('posKeywords').innerHTML = data.topPos.length
+    ? data.topPos.map(([w, c]) => `<div class="keyword-row"><span class="keyword-word">${w}</span><div class="keyword-bar"><div class="keyword-bar-fill green" style="width:${c/kwMax*100}%"></div></div><span class="keyword-count">${c}</span></div>`).join('')
+    : '<div style="color:var(--text-dim);font-size:12px">Tidak ada</div>';
+
+  const kwNegMax = data.topNeg.length ? data.topNeg[0][1] : 1;
+  $('negKeywords').innerHTML = data.topNeg.length
+    ? data.topNeg.map(([w, c]) => `<div class="keyword-row"><span class="keyword-word">${w}</span><div class="keyword-bar"><div class="keyword-bar-fill red" style="width:${c/kwNegMax*100}%"></div></div><span class="keyword-count">${c}</span></div>`).join('')
+    : '<div style="color:var(--text-dim);font-size:12px">Tidak ada</div>';
+
+  // Insights
+  $('insightList').innerHTML = data.insights.map(i => `<li>${i}</li>`).join('');
+
+  // Best/worst
+  $('worstReviews').innerHTML = data.worst3.map(r => renderSample(r, 'neg')).join('');
+  $('bestReviews').innerHTML = data.best3.map(r => renderSample(r, 'pos')).join('');
+
+  // All reviews table
+  $('allReviews').innerHTML = data.results.map((r, i) => {
+    const cls = r.sentiment === 'positive' ? 'positive' : r.sentiment === 'negative' ? 'negative' : 'neutral';
+    const rating = r.rating != null ? r.rating + '/5' : '-';
+    const themes = r.themes.join(', ') || '-';
+    const text = r.text.length > 100 ? r.text.slice(0, 100) + '...' : r.text;
+    return `<tr>
+      <td style="color:var(--text-dim)">${i + 1}</td>
+      <td><span class="badge ${cls}">${r.sentiment}</span></td>
+      <td style="font-family:monospace">${(r.score >= 0 ? '+' : '') + r.score.toFixed(3)}</td>
+      <td style="font-family:monospace">${rating}</td>
+      <td style="color:var(--text-dim);font-size:11px">${themes}</td>
+      <td>${text}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderSample(r, type) {
+  const rating = r.rating != null ? ` [${r.rating}/5]` : '';
+  const text = r.text.length > 120 ? r.text.slice(0, 120) + '...' : r.text;
+  return `<div class="review-sample">
+    <span class="review-score ${type}">${(r.score >= 0 ? '+' : '') + r.score.toFixed(2)}</span>${rating}
+    <div class="review-text">${text}</div>
+  </div>`;
+}
+</script>
+</body>
+</html>
