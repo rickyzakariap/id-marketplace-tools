@@ -120,13 +120,27 @@ app.post('/api/analyze', (req, res) => {
   res.json({ total, pos, neg, neu, avgScore, themes, insights, results });
 });
 
-// Save to Supabase
+// Save to Supabase (with dedup)
 app.post('/api/save', async (req, res) => {
   const { marketplace, product, url, reviews, stats } = req.body;
 
   try {
-    // Insert batch
-    const rows = reviews.map(r => ({
+    // Check for existing reviews from this product
+    const { data: existing } = await supabase
+      .from('reviews')
+      .select('review_text')
+      .eq('product_url', url || '');
+
+    const existingTexts = new Set((existing || []).map(r => r.review_text));
+
+    // Filter out duplicates
+    const newReviews = reviews.filter(r => !existingTexts.has(r.text));
+
+    if (newReviews.length === 0) {
+      return res.json({ success: true, count: 0, skipped: reviews.length, message: 'Semua review sudah ada di database' });
+    }
+
+    const rows = newReviews.map(r => ({
       marketplace,
       product_name: product?.name || '',
       product_url: url || '',
@@ -147,7 +161,7 @@ app.post('/api/save', async (req, res) => {
 
     if (error) throw error;
 
-    res.json({ success: true, count: data?.length || 0 });
+    res.json({ success: true, count: data?.length || 0, skipped: reviews.length - newReviews.length });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
