@@ -3,72 +3,164 @@ const BACKEND = 'http://localhost:3458';
 
 let lastResults = null;
 
-// Scraping functions - run directly via chrome.scripting.executeScript({ func })
-function scrapeShopee() {
+// ============================================================
+// Scrape Shopee product reviews (from product detail page)
+// ============================================================
+function scrapeShopeeReviews() {
   const reviews = [];
-
-  // Primary: .product-ratings__list contains individual reviews
   const list = document.querySelector('.product-ratings__list, [class*="ratings__list"]');
   if (list) {
-    const items = list.children;
-    for (const item of items) {
+    for (const item of list.children) {
       const text = item.textContent?.trim() || '';
-      // Count lit stars (filled = user's rating)
       const stars = item.querySelectorAll('.shopee-rating-stars__lit, [class*="star"][class*="lit"]').length;
-      if (text.length > 10 && text.length < 1000) {
-        reviews.push({ text: text.substring(0, 500), rating: stars || null });
-      }
+      if (text.length > 10 && text.length < 1000) reviews.push({ text: text.substring(0, 500), rating: stars || null });
     }
   }
-
-  // Fallback: broader selectors
   if (reviews.length === 0) {
     const container = document.querySelector('.product-ratings, [class*="product-rating"]');
     if (container) {
-      const items = container.querySelectorAll('[class*="item"], [class*="card"], [class*="comment"], div[class]');
-      items.forEach(item => {
-        if (item.textContent.length < 20) return;
-        if (item.classList.contains('product-rating-overview')) return;
+      container.querySelectorAll('[class*="item"], [class*="card"], div[class]').forEach(item => {
+        if (item.textContent.length < 20 || item.classList.contains('product-rating-overview')) return;
         const text = item.textContent?.trim() || '';
         const stars = item.querySelectorAll('.shopee-rating-stars__lit, [class*="star"][class*="lit"]').length;
         if (text.length > 20 && text.length < 1000) reviews.push({ text: text.substring(0, 500), rating: stars || null });
       });
     }
   }
-
-  if (reviews.length === 0) {
-    const lists = document.querySelectorAll('ul, ol, [class*="list"]');
-    for (const list of lists) {
-      const children = list.children;
-      if (children.length < 3) continue;
-      const first = children[0];
-      if (first.querySelector('[class*="star"], svg[fill*="FF"]') && first.textContent?.length > 20) {
-        for (const child of children) {
-          const text = child.textContent?.trim() || '';
-          const starCount = child.querySelectorAll('[class*="star"][class*="on"], svg[fill="#EE4D2D"]').length;
-          if (text.length > 10 && text.length < 2000) reviews.push({ text: text.substring(0, 500), rating: starCount || null });
-        }
-        break;
-      }
-    }
-  }
-
-  const name = document.querySelector('h1[class*="product"], [class*="product-title"], [class*="vWBHjg"], [class*="attKMx"]')?.textContent?.trim() || document.title.split('|')[0].trim();
+  const name = document.querySelector('h1[class*="product"], [class*="product-title"], [class*="vWBHjg"]')?.textContent?.trim() || document.title.split('|')[0].trim();
   return { reviews, product: { name, url: window.location.href }, marketplace: 'shopee' };
 }
 
-function scrapeTokopedia() {
-  const reviews = [];
-  const items = document.querySelectorAll('[data-testid="review-card"], [class*="review-item"], [class*="css-1k1a7gr"]');
-  items.forEach(item => {
-    const text = item.querySelector('[data-testid="review-content"], [class*="content"], [class*="text"], [class*="comment"]')?.textContent?.trim() || item.textContent?.trim() || '';
-    const stars = item.querySelectorAll('[data-testid="star-icon"].active, svg[fill="#FD973B"], [class*="star"][class*="active"]').length;
-    if (text && text.length > 10 && text.length < 2000) reviews.push({ text: text.substring(0, 500), rating: stars || null });
-  });
-  const name = document.querySelector('[data-testid="lbl-product-name"], h1')?.textContent?.trim() || document.title.split('|')[0].trim();
-  return { reviews, product: { name, url: window.location.href }, marketplace: 'tokopedia' };
+// ============================================================
+// Scrape Shopee product details (from product detail page)
+// ============================================================
+function scrapeShopeeProduct() {
+  const name = document.querySelector('h1[class*="product"], [class*="product-title"], [class*="vWBHjg"]')?.textContent?.trim() || document.title.split('|')[0].trim();
+
+  // Price
+  const priceEl = document.querySelector('[class*="product-price"], [class*="price"], .pqTWjA');
+  let price = priceEl?.textContent?.trim() || '';
+  // Clean price: remove "Rp" prefix and dots
+  price = price.replace(/[^0-9.,]/g, '').replace(/\./g, '');
+
+  // Rating
+  const ratingEl = document.querySelector('[class*="product-rating-overview__rating-score"]');
+  const rating = ratingEl?.textContent?.trim() || '';
+
+  // Sales count
+  const salesEl = document.querySelector('[class*="product-rating-overview__buying"]');
+  let sales = salesEl?.textContent?.trim() || '';
+  if (!sales) {
+    // Fallback: look for "terjual" text
+    const allText = document.body.innerText;
+    const salesMatch = allText.match(/(\d[\d.,]+[kK+]?\s*terjual)/i);
+    sales = salesMatch ? salesMatch[1] : '';
+  }
+
+  // Shop name
+  const shopEl = document.querySelector('[class*="shop-profile"] [class*="name"], [class*="seller-info"] [class*="name"], a[href*="/shop/"] span');
+  const shop = shopEl?.textContent?.trim() || '';
+
+  // Location
+  const locEl = document.querySelector('[class*="product-location"], [class*="seller-location"]');
+  let location = locEl?.textContent?.trim() || '';
+  if (!location) {
+    // Fallback: look for location in seller info
+    const allText = document.body.innerText;
+    const locMatch = allText.match(/(Dikirim dari\s+[^\n]+)/i);
+    location = locMatch ? locMatch[1] : '';
+  }
+
+  // Availability
+  const stockEl = document.querySelector('[class*="stock"], [class*="availability"]');
+  let availability = stockEl?.textContent?.trim() || 'Tersedia';
+
+  return {
+    product: {
+      name, price, rating, sales, shop, location, availability,
+      url: window.location.href,
+    },
+    marketplace: 'shopee',
+  };
 }
 
+// ============================================================
+// Scrape Shopee search results (from search page)
+// ============================================================
+function scrapeShopeeSearch() {
+  const products = [];
+
+  const items = document.querySelectorAll('.shopee-search-item-result__item, li[class*="col-"][class*="item"]');
+
+  for (const item of items) {
+    const text = item.textContent || '';
+    if (text.length < 20) continue;
+
+    // Product name: .whitespace-normal.line-clamp-2
+    const nameEl = item.querySelector('.whitespace-normal.line-clamp-2, [class*="line-clamp-2"]');
+    let name = nameEl?.textContent?.trim() || '';
+    if (!name) {
+      const match = text.match(/^(.+?)(?=Rp)/);
+      name = match ? match[1].trim().substring(0, 100) : '';
+    }
+
+    // Price: Indonesian format "Rp29.000" or "Rp1.500.000" (dots as thousands separators)
+    const priceMatch = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+    const price = priceMatch ? `Rp${priceMatch[1]}` : '';
+
+    // Rating: NOT available in search results (only on product page)
+    const stars = 0;
+
+    // Sales: "4.91RB+ terjual", "5.0464 terjual", "4.98RB+ terjual"
+    const salesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
+    const sales = salesMatch ? salesMatch[1] : '';
+
+    // Shop name: usually before the product name or in a specific element
+    const shopEl = item.querySelector('[class*="shop"], [class*="seller"], [class*="item__shop"]');
+    let shop = shopEl?.textContent?.trim() || '';
+
+    // Location: just capture the city name
+    const cities = 'Jakarta|Surabaya|Bandung|Tangerang|Bekasi|Semarang|Yogyakarta|Solo|Malang|Medan|Makassar|Denpasar|Bali|Depok|Bogor|Palembang|Batam|Pekanbaru|Balikpapan|Samarinda|Manado|Pontianak|Banjarmasin|Cimahi|Cirebon|Tasikmalaya|Serang|Karawang|Purwokerto|Madiun|Kediri|Blitar|Probolinggo|Pasuruan|Jember|Banyuwangi|Kudus|Pati|Rembang|Tuban|Lamongan|Gresik|Sidoarjo|Bangkalan|Pamekasan|Sumenep|Mataram|Lombok|Kupang|Ambon|Ternate|Jayapura|Sorong|Manokwari|Timika|Nabire|Fakfak|Bau-Bau|Kendari|Palu|Gorontalo|Mamuju|Palopo|Parepare|Bontang|Tarakan|Tanjung Selor|Singkawang';
+    const locMatch = text.match(new RegExp(`(${cities})(?:\\s|Produk|$)`, 'i'));
+    const location = locMatch ? locMatch[1] : '';
+
+    // Product URL
+    const linkEl = item.querySelector('a[href*="-i."]') || item.querySelector('a');
+    const url = linkEl?.href || '';
+
+    if (name && name.length > 3) {
+      products.push({ name, price, stars, sales, shop, location, url });
+    }
+  }
+
+  return { products, marketplace: 'shopee', query: document.querySelector('input[name="keyword"], input[type="search"], input.shopee-searchbar-input__input')?.value || '' };
+}
+
+// ============================================================
+// Scrape Tokopedia search results
+// ============================================================
+function scrapeTokopediaSearch() {
+  const products = [];
+  const items = document.querySelectorAll('[data-testid="div-product-card"], [class*="css-1gk63xk"], [class*="product-card"]');
+
+  for (const item of items) {
+    const name = item.querySelector('[data-testid="linkProductName"], [class*="product-name"], a[title]')?.getAttribute('title') || item.querySelector('a')?.textContent?.trim() || '';
+    const price = item.querySelector('[data-testid="linkProductPrice"], [class*="price"]')?.textContent?.trim() || '';
+    const stars = item.querySelectorAll('svg[fill="#FD973B"], [class*="star"][class*="active"]').length;
+    const sales = item.querySelector('[class*="sold"], [class*="terjual"]')?.textContent?.trim() || '';
+    const shop = item.querySelector('[data-testid="linkProductShop"], [class*="shop-name"]')?.textContent?.trim() || '';
+    const location = item.querySelector('[class*="location"]')?.textContent?.trim() || '';
+    const url = item.querySelector('a')?.href || '';
+
+    if (name) products.push({ name, price, stars, sales, shop, location, url });
+  }
+
+  return { products, marketplace: 'tokopedia', query: document.querySelector('input[name="q"], input[type="search"]')?.value || '' };
+}
+
+// ============================================================
+// Debug page structure
+// ============================================================
 function debugPage() {
   const reviewEls = document.querySelectorAll('[class*="review"], [class*="rating"], [class*="comment"]');
   const reviewInfo = Array.from(reviewEls).slice(0, 15).map(el => ({
@@ -76,7 +168,6 @@ function debugPage() {
     textLen: el.textContent?.length || 0, hasStars: !!el.querySelector('svg, [class*="star"]'),
   }));
 
-  // Deep dive into .product-ratings container
   const container = document.querySelector('.product-ratings, [class*="product-rating"]');
   let containerChildren = [];
   if (container) {
@@ -87,7 +178,6 @@ function debugPage() {
     }));
   }
 
-  // Find elements with substantial text that could be reviews
   const textBlocks = document.querySelectorAll('div, span, p');
   const candidates = [];
   for (const el of textBlocks) {
@@ -101,9 +191,33 @@ function debugPage() {
     }
   }
 
-  return { reviewElementCount: reviewEls.length, reviewElements: reviewInfo, textCandidates: candidates, containerChildren };
+  // Search results detection
+  const searchItems = document.querySelectorAll('.shopee-search-item-result__item, li[class*="col-"][class*="item"]');
+  const searchInfo = Array.from(searchItems).slice(0, 3).map(el => {
+    // Get all child elements with their classes and text
+    const children = Array.from(el.querySelectorAll('[class]')).slice(0, 20).map(c => ({
+      tag: c.tagName, cls: c.className.toString().substring(0, 60), text: c.textContent?.substring(0, 80) || '',
+    }));
+    return {
+      tag: el.tagName, cls: el.className.toString().substring(0, 80), textLen: el.textContent?.length || 0,
+      sampleText: el.textContent?.substring(0, 200) || '',
+      children,
+    };
+  });
+
+  return {
+    reviewElementCount: reviewEls.length,
+    reviewElements: reviewInfo,
+    textCandidates: candidates,
+    containerChildren,
+    searchItemCount: searchItems.length,
+    searchItems: searchInfo,
+  };
 }
 
+// ============================================================
+// Execute function in page context
+// ============================================================
 async function runInPage(fn) {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const results = await chrome.scripting.executeScript({
@@ -113,6 +227,9 @@ async function runInPage(fn) {
   return results[0]?.result;
 }
 
+// ============================================================
+// Detect page type and scrape accordingly
+// ============================================================
 async function scrape() {
   const btn = $('scrapeBtn');
   const status = $('status');
@@ -122,43 +239,74 @@ async function scrape() {
   btn.textContent = 'Scraping...';
   error.classList.add('hidden');
   status.classList.remove('hidden');
-  status.textContent = 'Mengambil review...';
+  status.textContent = 'Mendeteksi halaman...';
 
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const url = tab.url || '';
+    const isShopee = url.includes('shopee.co.id');
+    const isTokopedia = url.includes('tokopedia.com');
+    const isSearch = url.includes('/search') || url.includes('keyword=');
+    const isProduct = url.includes('-i.') || url.includes('/product/');
+
+    if (!isShopee && !isTokopedia) {
+      throw new Error('Buka halaman Shopee atau Tokopedia dulu.');
+    }
 
     let result;
-    if (url.includes('shopee.co.id')) {
-      result = await runInPage(scrapeShopee);
-    } else if (url.includes('tokopedia.com')) {
-      result = await runInPage(scrapeTokopedia);
+
+    if (isSearch) {
+      // Search results page
+      status.textContent = 'Mengambil data produk dari hasil pencarian...';
+      if (isShopee) result = await runInPage(scrapeShopeeSearch);
+      else result = await runInPage(scrapeTokopediaSearch);
+
+      if (!result || result.products.length === 0) {
+        throw new Error('Tidak ditemukan produk. Pastikan halaman hasil pencarian terbuka.');
+      }
+
+      status.textContent = `${result.products.length} produk ditemukan. Menampilkan...`;
+      renderSearchResults(result);
+
+    } else if (isProduct) {
+      // Product detail page - scrape both product info and reviews
+      status.textContent = 'Mengambil data produk...';
+      const productInfo = await runInPage(scrapeShopeeProduct);
+
+      status.textContent = 'Mengambil review...';
+      const reviewData = await runInPage(scrapeShopeeReviews);
+
+      // Combine
+      result = {
+        product: productInfo.product,
+        reviews: reviewData.reviews,
+        marketplace: 'shopee',
+      };
+
+      if (result.reviews.length > 0) {
+        // Send reviews for analysis
+        status.textContent = `${result.reviews.length} review ditemukan. Analisa...`;
+        const resp = await fetch(`${BACKEND}/api/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reviews: result.reviews,
+            marketplace: result.marketplace,
+            product: result.product,
+            url: result.product.url,
+          }),
+        });
+        if (!resp.ok) throw new Error('Backend error: ' + resp.status);
+        const data = await resp.json();
+        lastResults = { ...data, marketplace: result.marketplace, product: result.product, url: result.product.url };
+        renderProductResults(data, result.product);
+      } else {
+        renderProductResults(null, result.product);
+      }
+
     } else {
-      throw new Error('Buka halaman produk Shopee atau Tokopedia dulu.');
+      throw new Error('Buka halaman produk atau hasil pencarian Shopee/Tokopedia.');
     }
-
-    if (!result || result.reviews.length === 0) {
-      throw new Error('Tidak ditemukan review. Scroll ke bagian review, lalu coba lagi.');
-    }
-
-    status.textContent = `${result.reviews.length} review ditemukan. Analisa...`;
-
-    const resp = await fetch(`${BACKEND}/api/analyze`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        reviews: result.reviews,
-        marketplace: result.marketplace,
-        product: result.product,
-        url: result.product.url,
-      }),
-    });
-
-    if (!resp.ok) throw new Error('Backend error: ' + resp.status);
-
-    const data = await resp.json();
-    lastResults = { ...data, marketplace: result.marketplace, product: result.product, url: result.product.url };
-    renderResults(data, result.product);
 
   } catch (err) {
     error.textContent = err.message;
@@ -166,49 +314,83 @@ async function scrape() {
     status.classList.add('hidden');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Scrape Review';
+    btn.textContent = 'Scrape';
   }
 }
 
-function renderResults(data, product) {
+// ============================================================
+// Render search results
+// ============================================================
+function renderSearchResults(data) {
   $('idle').classList.add('hidden');
-  $('results').classList.remove('hidden');
+  $('searchResults').classList.remove('hidden');
+  $('productResults').classList.add('hidden');
 
-  $('productName').textContent = product?.name || '-';
-  $('statTotal').textContent = data.total;
+  $('searchQuery').textContent = data.query ? `Hasil pencarian: "${data.query}"` : 'Hasil pencarian';
+  $('searchCount').textContent = `${data.products.length} produk`;
 
-  const sentEl = $('statSentiment');
-  if (data.avgScore > 0.15) { sentEl.textContent = '+'; sentEl.className = 'stat-value green'; }
-  else if (data.avgScore < -0.15) { sentEl.textContent = '-'; sentEl.className = 'stat-value red'; }
-  else { sentEl.textContent = '~'; sentEl.className = 'stat-value yellow'; }
-
-  const scoreEl = $('statScore');
-  scoreEl.textContent = (data.avgScore >= 0 ? '+' : '') + data.avgScore.toFixed(2);
-  scoreEl.className = 'stat-value ' + (data.avgScore > 0.15 ? 'green' : data.avgScore < -0.15 ? 'red' : 'yellow');
-
-  $('distBars').innerHTML = [
-    { label: 'Positif', count: data.pos, color: '#22c55e' },
-    { label: 'Netral', count: data.neu, color: '#eab308' },
-    { label: 'Negatif', count: data.neg, color: '#ef4444' },
-  ].map(d => {
-    const pct = data.total > 0 ? (d.count / data.total * 100) : 0;
-    return `<div class="dist-row"><span class="dist-label">${d.label}</span><div class="dist-track"><div class="dist-fill" style="width:${pct}%;background:${d.color}"></div></div><span class="dist-count">${d.count} (${Math.round(pct)}%)</span></div>`;
+  const tbody = $('searchTable');
+  tbody.innerHTML = data.products.map((p, i) => {
+    return `<tr>
+      <td style="color:var(--text-dim)">${i + 1}</td>
+      <td><a href="${p.url}" target="_blank" style="color:var(--primary);text-decoration:none">${truncate(p.name, 50)}</a></td>
+      <td style="font-family:monospace">${p.price || '-'}</td>
+      <td>${p.sales || '-'}</td>
+      <td style="color:var(--text-dim)">${p.location || '-'}</td>
+    </tr>`;
   }).join('');
-
-  if (data.themes?.length) {
-    const max = Math.max(...data.themes.map(t => t.count));
-    $('themes').innerHTML = data.themes.map(t => {
-      const pct = max > 0 ? (t.count / max * 100) : 0;
-      const color = t.status === 'positive' ? '#22c55e' : t.status === 'negative' ? '#ef4444' : '#eab308';
-      return `<div class="theme-row"><span class="theme-name">${t.name}</span><div class="theme-track"><div class="theme-fill" style="width:${pct}%;background:${color}"></div></div><span class="theme-count">${t.count}</span></div>`;
-    }).join('');
-  } else {
-    $('themes').innerHTML = '<div style="font-size:12px;color:#8c909f">Tidak ada tema</div>';
-  }
-
-  $('insights').innerHTML = (data.insights || []).map(i => `<li class="insight-item">${i}</li>`).join('');
 }
 
+// ============================================================
+// Render product detail results
+// ============================================================
+function renderProductResults(data, product) {
+  $('idle').classList.add('hidden');
+  $('productResults').classList.remove('hidden');
+  $('searchResults').classList.add('hidden');
+
+  // Product info
+  $('prodName').textContent = product.name || '-';
+  $('prodPrice').textContent = product.price ? `Rp ${product.price}` : '-';
+  $('prodRating').textContent = product.rating || '-';
+  $('prodSales').textContent = product.sales || '-';
+  $('prodShop').textContent = product.shop || '-';
+  $('prodLocation').textContent = product.location || '-';
+  $('prodAvailability').textContent = product.availability || '-';
+
+  if (data) {
+    $('prodReviewCount').textContent = data.total;
+    const sentEl = $('prodSentiment');
+    if (data.avgScore > 0.15) { sentEl.textContent = 'Positif'; sentEl.className = 'green'; }
+    else if (data.avgScore < -0.15) { sentEl.textContent = 'Negatif'; sentEl.className = 'red'; }
+    else { sentEl.textContent = 'Campur'; sentEl.className = 'yellow'; }
+
+    // Themes
+    if (data.themes?.length) {
+      const max = Math.max(...data.themes.map(t => t.count));
+      $('prodThemes').innerHTML = data.themes.map(t => {
+        const pct = max > 0 ? (t.count / max * 100) : 0;
+        const color = t.status === 'positive' ? '#22c55e' : t.status === 'negative' ? '#ef4444' : '#eab308';
+        return `<div class="theme-row"><span class="theme-name">${t.name}</span><div class="theme-track"><div class="theme-fill" style="width:${pct}%;background:${color}"></div></div><span class="theme-count">${t.count}</span></div>`;
+      }).join('');
+    }
+
+    $('prodInsights').innerHTML = (data.insights || []).map(i => `<li class="insight-item">${i}</li>`).join('');
+  } else {
+    $('prodReviewCount').textContent = '0';
+    $('prodSentiment').textContent = '-';
+    $('prodThemes').innerHTML = '';
+    $('prodInsights').innerHTML = '';
+  }
+}
+
+function truncate(str, len) {
+  return str.length > len ? str.substring(0, len) + '...' : str;
+}
+
+// ============================================================
+// Save to Supabase
+// ============================================================
 async function saveToSupabase() {
   const btn = $('saveBtn');
   const status = $('saveStatus');
@@ -242,6 +424,9 @@ async function saveToSupabase() {
   }
 }
 
+// ============================================================
+// Debug handler
+// ============================================================
 async function debugPageHandler() {
   const status = $('status');
   const error = $('error');
@@ -251,10 +436,19 @@ async function debugPageHandler() {
 
   try {
     const info = await runInPage(debugPage);
-    status.innerHTML = `<b>Review elements:</b> ${info.reviewElementCount}<br>` +
-      `<b>Container children:</b><br>${info.containerChildren.map(c => `${c.tag}.${c.cls} (${c.textLen}chars, stars:${c.hasStars}) "${c.sampleText}"`).join('<br>')}<br>` +
-      `<b>Review classes:</b><br>${info.reviewElements.map(e => `${e.tag}.${e.cls} (${e.textLen}chars, stars:${e.hasStars})`).join('<br>')}<br>` +
-      `<b>Text candidates:</b><br>${info.textCandidates.map(c => `${c.tag}.${c.cls}: "${c.text}"`).join('<br>')}`;
+    let html = `<b>Review elements:</b> ${info.reviewElementCount}<br>`;
+    html += `<b>Search items:</b> ${info.searchItemCount}<br>`;
+    if (info.searchItemCount > 0) {
+      html += `<b>Search samples:</b><br>${info.searchItems.map(s =>
+        `<div style="margin-bottom:8px"><b>${s.tag}.${s.cls}</b> (${s.textLen}chars)<br>` +
+        `<div style="font-size:10px;color:#666;margin-left:8px">${s.sampleText}</div>` +
+        `<div style="margin-left:8px">Children:<br>${s.children.map(c => `${c.tag}.${c.cls}: "${c.text}"`).join('<br>')}</div></div>`
+      ).join('')}<br>`;
+    }
+    html += `<b>Container children:</b><br>${info.containerChildren.map(c => `${c.tag}.${c.cls} (${c.textLen}chars, stars:${c.hasStars}) "${c.sampleText}"`).join('<br>')}<br>`;
+    html += `<b>Review classes:</b><br>${info.reviewElements.map(e => `${e.tag}.${e.cls} (${e.textLen}chars, stars:${e.hasStars})`).join('<br>')}<br>`;
+    html += `<b>Text candidates:</b><br>${info.textCandidates.map(c => `${c.tag}.${c.cls}: "${c.text}"`).join('<br>')}`;
+    status.innerHTML = html;
   } catch (err) {
     error.textContent = err.message;
     error.classList.remove('hidden');
@@ -262,9 +456,13 @@ async function debugPageHandler() {
   }
 }
 
+// ============================================================
+// Reset UI
+// ============================================================
 function resetUI() {
   $('idle').classList.remove('hidden');
-  $('results').classList.add('hidden');
+  $('searchResults').classList.add('hidden');
+  $('productResults').classList.add('hidden');
   $('saveStatus').classList.add('hidden');
   $('saveBtn').textContent = 'Simpan ke Database';
   $('status').classList.add('hidden');
