@@ -103,8 +103,8 @@ function scrapeShopeeSearch() {
     let price = '';
     if (priceEl) {
       const priceText = priceEl.textContent.trim();
-      const pm = priceText.match(/Rp\s?([\d.,]+)/);
-      price = pm ? `Rp${pm[1]}` : priceText;
+      const pm = priceText.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+      price = pm ? `Rp${pm[1]}` : '';
     }
     if (!price) {
       const priceMatch = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
@@ -134,10 +134,10 @@ function scrapeShopeeSearch() {
 
     // Fallback: parse from concatenated text
     if (!sales) {
-      // Large sales with RB/K/M suffix (e.g. "4.91RB+ terjual")
-      const largeSalesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i);
-      if (largeSalesMatch) {
-        sales = largeSalesMatch[1];
+      // Rating+Sales with suffix (e.g. "4.81RB+ terjual" — rating is always 1-5)
+      const ratedSalesMatch = text.match(/([1-5]\.\d{1,2}(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i);
+      if (ratedSalesMatch) {
+        sales = ratedSalesMatch[1];
       } else {
         // Split "X.XNNN terjual" into rating + sales (e.g. "4.8111 terjual")
         const splitMatch = text.match(/([1-5]\.\d)(\d+\s*terjual)/);
@@ -145,7 +145,7 @@ function scrapeShopeeSearch() {
           ratingText = ratingText || splitMatch[1];
           sales = splitMatch[2];
         } else {
-          // Just sales count (e.g. "464 terjual")
+          // Plain sales count (e.g. "464 terjual")
           const salesOnly = text.match(/([\d.,]+\s*terjual)/i);
           sales = salesOnly ? salesOnly[1] : '';
         }
