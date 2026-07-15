@@ -461,6 +461,9 @@ async function scrape() {
       status.textContent = `${result.products.length} produk ditemukan. Menampilkan...`;
       renderSearchResults(result);
 
+      // Auto-save to Supabase
+      autoSaveProducts(result.products, result.query);
+
     } else if (isProduct) {
       // Product detail page - scrape both product info and reviews
       status.textContent = 'Mengambil data produk...';
@@ -495,6 +498,10 @@ async function scrape() {
         const data = await resp.json();
         lastResults = { ...data, marketplace: result.marketplace, product: result.product, url: result.product.url };
         renderProductResults(data, result.product);
+
+        // Auto-save to Supabase
+        autoSaveReviews(result.marketplace, result.product, result.product.url, data);
+
       } else {
         renderProductResults(null, result.product);
       }
@@ -582,17 +589,58 @@ function truncate(str, len) {
 }
 
 // ============================================================
-// Export helpers
+// Auto-save: products to Supabase (fire and forget)
 // ============================================================
-function showExportMsg(msg, isError) {
-  ['exportStatus', 'exportStatus2'].forEach(id => {
-    const el = $(id);
-    if (el) {
-      el.classList.remove('hidden');
-      el.textContent = msg;
-      el.style.color = isError ? '#f85149' : 'rgba(255,255,255,0.4)';
-      if (!isError) setTimeout(() => el.classList.add('hidden'), 3000);
-    }
+async function autoSaveProducts(products, query) {
+  const indicator = $('saveIndicator');
+  if (indicator) indicator.textContent = 'Menyimpan...';
+  try {
+    const resp = await fetch(`${BACKEND}/api/save-products`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ products, query }),
+    });
+    if (!resp.ok) throw new Error(resp.status);
+    const data = await resp.json();
+    if (indicator) indicator.textContent = `${data.count} produk tersimpan`;
+  } catch (err) {
+    if (indicator) indicator.textContent = 'Gagal simpan: ' + err.message;
+  }
+}
+
+// ============================================================
+// Auto-save: reviews to Supabase (fire and forget)
+// ============================================================
+async function autoSaveReviews(marketplace, product, url, data) {
+  const indicator = $('saveIndicator2');
+  if (indicator) indicator.textContent = 'Menyimpan...';
+  try {
+    const resp = await fetch(`${BACKEND}/api/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        marketplace, product, url,
+        reviews: data.results,
+        stats: { total: data.total, pos: data.pos, neg: data.neg, neu: data.neu, avgScore: data.avgScore, themes: data.themes },
+      }),
+    });
+    if (!resp.ok) throw new Error(resp.status);
+    const result = await resp.json();
+    if (indicator) indicator.textContent = `${result.count} review tersimpan`;
+  } catch (err) {
+    if (indicator) indicator.textContent = 'Gagal simpan: ' + err.message;
+  }
+}
+
+// ============================================================
+// Filter table by search input
+// ============================================================
+function filterTable() {
+  const q = ($('filterInput')?.value || '').toLowerCase();
+  const rows = document.querySelectorAll('#searchTable tr');
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = q && !text.includes(q) ? 'none' : '';
   });
 }
 
@@ -602,12 +650,12 @@ function showExportMsg(msg, isError) {
 function exportCSV() {
   try {
     const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
-    if (!data.length) { showExportMsg('Tidak ada data'); return; }
+    if (!data.length) return;
 
     const isSearch = searchProducts.length > 0;
-    const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi'] : ['Review','Rating','Sentimen','Score','Tema'];
+    const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi','URL'] : ['Review','Rating','Sentimen','Score','Tema'];
     const rows = data.map((d, i) => isSearch
-      ? [i+1, `"${(d.name||'').replace(/"/g,'""')}"`, d.price||'', d.sales||'', d.location||'']
+      ? [i+1, `"${(d.name||'').replace(/"/g,'""')}"`, d.price||'', d.sales||'', d.location||'', d.url||'']
       : [`"${(d.text||'').replace(/"/g,'""')}"`, d.rating||'', d.sentiment||'', d.score||'', (d.themes||[]).join('; ')]
     );
 
@@ -621,80 +669,8 @@ function exportCSV() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showExportMsg('CSV downloaded');
   } catch (err) {
-    showExportMsg('CSV error: ' + err.message, true);
-  }
-}
-
-// ============================================================
-// Export: Google Sheets (via backend proxy)
-// ============================================================
-async function exportSheets() {
-  try {
-    const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
-    if (!data.length) { showExportMsg('Tidak ada data'); return; }
-
-    const isSearch = searchProducts.length > 0;
-    const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi','URL'] : ['Review','Rating','Sentimen','Score','Tema'];
-    const rows = data.map((d, i) => isSearch
-      ? [String(i+1), d.name||'', d.price||'', d.sales||'', d.location||'', d.url||'']
-      : [d.text||'', String(d.rating||''), d.sentiment||'', String(d.score||''), (d.themes||[]).join(', ')]
-    );
-
-    showExportMsg('Mengirim ke Sheets...');
-    const resp = await fetch(`${BACKEND}/api/sheets`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ headers, rows, title: isSearch ? `Search: ${$('searchQuery')?.textContent || ''}` : `Product: ${lastResults?.product?.name || ''}` }),
-    });
-    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error || resp.status); }
-    const result = await resp.json();
-    showExportMsg('Sheets: berhasil');
-    if (result.url) window.open(result.url, '_blank');
-  } catch (err) {
-    showExportMsg('Sheets: ' + err.message, true);
-  }
-}
-
-// ============================================================
-// Save to Supabase
-// ============================================================
-async function saveToSupabase() {
-  try {
-    // Search results mode
-    if (searchProducts.length > 0) {
-      showExportMsg('Mengirim produk ke Supabase...');
-      const resp = await fetch(`${BACKEND}/api/save-products`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ products: searchProducts, query: document.getElementById('searchQuery')?.textContent || '' }),
-      });
-      if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error || resp.status); }
-      const data = await resp.json();
-      showExportMsg(`Supabase: ${data.count} produk tersimpan`);
-      return;
-    }
-
-    // Product review mode
-    if (!lastResults) { showExportMsg('Tidak ada data', true); return; }
-    showExportMsg('Mengirim review ke Supabase...');
-    const resp = await fetch(`${BACKEND}/api/save`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        marketplace: lastResults.marketplace,
-        product: lastResults.product,
-        url: lastResults.url,
-        reviews: lastResults.results,
-        stats: { total: lastResults.total, pos: lastResults.pos, neg: lastResults.neg, neu: lastResults.neu, avgScore: lastResults.avgScore, themes: lastResults.themes },
-      }),
-    });
-    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error || resp.status); }
-    const data = await resp.json();
-    showExportMsg(`Supabase: ${data.count} review tersimpan`);
-  } catch (err) {
-    showExportMsg('Supabase: ' + err.message, true);
+    console.error('CSV export error:', err);
   }
 }
 
