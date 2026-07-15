@@ -288,19 +288,23 @@ function scrapeTokopediaSearch() {
     const text = item.textContent || '';
     if (text.length < 10) continue;
 
-    // Skip non-product elements (banners, navigation)
+    // Skip non-product elements
     if (text.includes('Gratis Ongkir') && text.length > 200) continue;
     if (text.includes('Daftar') && text.includes('Masuk')) continue;
+    if (text.includes('Lihat selengkapnya') && text.length < 50) continue;
+    if (text.includes('Filter') && text.includes('Harga')) continue;
+    if (text.includes('Jenis toko') || text.includes('Kondisi')) continue;
 
-    // Name: data-testid="product-title" or a[title] or first substantial link
-    const nameEl = item.querySelector('[data-testid="product-title"], a[title]');
-    let name = nameEl?.getAttribute('title') || nameEl?.textContent?.trim() || '';
-    if (!name) {
-      const links = item.querySelectorAll('a');
-      for (const a of links) {
-        const t = a.textContent?.trim() || '';
-        if (t.length > 10 && !t.startsWith('Rp') && !t.includes('Gratis Ongkir')) { name = t; break; }
-      }
+    // Must have a product link (href with -i.)
+    const productLink = item.querySelector('a[href*="-i."]') || item.querySelector('a[href*="/promo/"]');
+    if (!productLink) continue;
+
+    // Name: from product link title or text
+    let name = productLink.getAttribute('title') || productLink.textContent?.trim() || '';
+    if (name.length < 5) {
+      // Try data-testid
+      const titleEl = item.querySelector('[data-testid="product-title"]');
+      name = titleEl?.textContent?.trim() || '';
     }
     if (!name) continue;
 
@@ -342,7 +346,7 @@ function scrapeTokopediaSearch() {
     const location = '';
 
     // URL
-    const url = nameEl?.href || item.querySelector('a')?.href || '';
+    const url = productLink.href || '';
 
     products.push({ name, price, stars, sales, shop, location, url });
   }
