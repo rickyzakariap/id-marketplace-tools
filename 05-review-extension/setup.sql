@@ -17,3 +17,20 @@ CREATE TABLE reviews (
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow all" ON reviews FOR ALL USING (true) WITH CHECK (true);
+
+CREATE TABLE products (
+  id BIGSERIAL PRIMARY KEY,
+  product_name TEXT,
+  price TEXT,
+  sales TEXT,
+  shop TEXT,
+  location TEXT,
+  product_url TEXT,
+  search_query TEXT,
+  scraped_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow all" ON products FOR ALL USING (true) WITH CHECK (true);

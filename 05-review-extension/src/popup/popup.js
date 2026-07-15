@@ -265,42 +265,41 @@ function scrapeTokopediaReviews() {
 function scrapeTokopediaSearch() {
   const products = [];
 
-  // Primary: data-testid="product-card" (current Tokopedia)
+  // Try multiple selector strategies
   let items = document.querySelectorAll('[data-testid="product-card"]');
+  if (items.length === 0) items = document.querySelectorAll('[data-testid="div-product-card"]');
+  if (items.length === 0) items = document.querySelectorAll('[class*="product-card"]:not([class*="container"])');
+  if (items.length === 0) items = document.querySelectorAll('[data-testid="master-product-card"]');
+  if (items.length === 0) items = document.querySelectorAll('div[data-testid]');
   if (items.length === 0) {
-    // Fallback: older selectors
-    items = document.querySelectorAll('[data-testid="div-product-card"], [class*="product-card"]');
-  }
-  if (items.length === 0) {
-    // Last resort: find product links and walk up to card containers
-    const links = document.querySelectorAll('a[href*="/promo/"], a[href*="-i."]');
-    const cards = new Set();
-    links.forEach(a => {
-      let el = a;
-      for (let i = 0; i < 6; i++) {
-        el = el.parentElement;
-        if (!el) break;
-        if (el.querySelectorAll('a').length >= 2 && el.textContent.includes('Rp')) {
-          cards.add(el);
-          break;
-        }
+    // Last resort: find all divs that contain product-like links
+    const allDivs = document.querySelectorAll('div');
+    const candidates = [];
+    allDivs.forEach(div => {
+      const links = div.querySelectorAll(':scope > a[href*="-i."]');
+      if (links.length === 1 && div.textContent.includes('Rp') && div.textContent.includes('terjual')) {
+        candidates.push(div);
       }
     });
-    items = cards;
+    items = candidates;
   }
 
   for (const item of items) {
     const text = item.textContent || '';
     if (text.length < 10) continue;
 
-    // Name: data-testid="product-title" or a[title]
+    // Skip non-product elements (banners, navigation)
+    if (text.includes('Gratis Ongkir') && text.length > 200) continue;
+    if (text.includes('Daftar') && text.includes('Masuk')) continue;
+
+    // Name: data-testid="product-title" or a[title] or first substantial link
     const nameEl = item.querySelector('[data-testid="product-title"], a[title]');
     let name = nameEl?.getAttribute('title') || nameEl?.textContent?.trim() || '';
     if (!name) {
       const links = item.querySelectorAll('a');
       for (const a of links) {
         const t = a.textContent?.trim() || '';
-        if (t.length > 10 && !t.startsWith('Rp')) { name = t; break; }
+        if (t.length > 10 && !t.startsWith('Rp') && !t.includes('Gratis Ongkir')) { name = t; break; }
       }
     }
     if (!name) continue;
@@ -317,16 +316,14 @@ function scrapeTokopediaSearch() {
       price = pm ? `Rp${pm[1]}` : '';
     }
 
-    // Sales + Rating: data-testid="product-sales" contains "4.6 500+ terjual"
+    // Sales + Rating: data-testid="product-sales"
     const salesEl = item.querySelector('[data-testid="product-sales"]');
     let sales = '';
     let stars = 0;
     if (salesEl) {
       const st = salesEl.textContent || '';
-      // Rating: first number like "4.6"
-      const ratingMatch = st.match(/^(\d\.\d)/);
+      const ratingMatch = st.match(/(\d\.\d)/);
       if (ratingMatch) stars = Math.round(parseFloat(ratingMatch[1]));
-      // Sales: "500+ terjual" or "50rb+ terjual"
       const salesMatch = st.match(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)\+?\s*terjual)/i)
         || st.match(/([\d.,]+\+?\s*terjual)/i);
       sales = salesMatch ? salesMatch[1] : '';
@@ -341,7 +338,7 @@ function scrapeTokopediaSearch() {
     const shopEl = item.querySelector('[data-testid="product-shop-name"]');
     const shop = shopEl?.textContent?.trim() || '';
 
-    // Location: NOT available on Tokopedia product cards
+    // Location: not available on Tokopedia product cards
     const location = '';
 
     // URL
