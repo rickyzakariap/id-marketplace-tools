@@ -500,18 +500,106 @@ function truncate(str, len) {
 }
 
 // ============================================================
+// Export: CSV download
+// ============================================================
+function exportCSV() {
+  const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
+  if (!data.length) return;
+
+  const showExport = (msg) => {
+    ['exportStatus', 'exportStatus2'].forEach(id => {
+      const el = $(id);
+      if (el) { el.classList.remove('hidden'); el.textContent = msg; setTimeout(() => el.classList.add('hidden'), 2000); }
+    });
+  };
+
+  const isSearch = searchProducts.length > 0;
+  const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi'] : ['Review','Rating','Sentimen','Score','Tema'];
+  const rows = data.map((d, i) => isSearch
+    ? [i+1, `"${(d.name||'').replace(/"/g,'""')}"`, d.price||'', d.sales||'', d.location||'']
+    : [`"${(d.text||'').replace(/"/g,'""')}"`, d.rating||'', d.sentiment||'', d.score||'', (d.themes||[]).join('; ')]
+  );
+
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `review-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showExport('CSV downloaded');
+}
+
+// ============================================================
+// Export: Google Sheets (via backend proxy)
+// ============================================================
+async function exportSheets() {
+  const showExport = (msg, isError) => {
+    ['exportStatus', 'exportStatus2'].forEach(id => {
+      const el = $(id);
+      if (el) { el.classList.remove('hidden'); el.textContent = msg; if (!isError) setTimeout(() => el.classList.add('hidden'), 3000); }
+    });
+  };
+
+  const data = searchProducts.length > 0 ? searchProducts : (lastResults?.results || []);
+  if (!data.length) return;
+
+  const isSearch = searchProducts.length > 0;
+  const headers = isSearch ? ['No','Produk','Harga','Terjual','Lokasi','URL'] : ['Review','Rating','Sentimen','Score','Tema'];
+  const rows = data.map((d, i) => isSearch
+    ? [String(i+1), d.name||'', d.price||'', d.sales||'', d.location||'', d.url||'']
+    : [d.text||'', String(d.rating||''), d.sentiment||'', String(d.score||''), (d.themes||[]).join(', ')]
+  );
+
+  showExport('Mengirim ke Sheets...');
+  try {
+    const resp = await fetch(`${BACKEND}/api/sheets`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ headers, rows, title: isSearch ? `Search: ${$('searchQuery')?.textContent || ''}` : `Product: ${lastResults?.product?.name || ''}` }),
+    });
+    if (!resp.ok) throw new Error(resp.status);
+    const result = await resp.json();
+    showExport(`Sheets: ${result.url ? 'berhasil' : 'ok'}`);
+    if (result.url) window.open(result.url, '_blank');
+  } catch (err) {
+    showExport(`Sheets error: ${err.message}`, true);
+  }
+}
+
+// ============================================================
 // Save to Supabase
 // ============================================================
 async function saveToSupabase() {
-  const btn = $('saveBtn');
-  const status = $('saveStatus');
+  const showExport = (msg, isError) => {
+    ['exportStatus', 'exportStatus2'].forEach(id => {
+      const el = $(id);
+      if (el) { el.classList.remove('hidden'); el.textContent = msg; if (!isError) setTimeout(() => el.classList.add('hidden'), 3000); }
+    });
+  };
+
+  // Search results mode
+  if (searchProducts.length > 0) {
+    showExport('Mengirim produk ke Supabase...');
+    try {
+      const resp = await fetch(`${BACKEND}/api/save-products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ products: searchProducts, query: document.getElementById('searchQuery')?.textContent || '' }),
+      });
+      if (!resp.ok) throw new Error(resp.status);
+      const data = await resp.json();
+      showExport(`Supabase: ${data.count} produk tersimpan`);
+    } catch (err) {
+      showExport(`Error: ${err.message}`, true);
+    }
+    return;
+  }
+
+  // Product review mode
   if (!lastResults) return;
-
-  btn.disabled = true;
-  btn.textContent = 'Menyimpan...';
-  status.classList.remove('hidden');
-  status.textContent = 'Mengirim ke Supabase...';
-
+  showExport('Mengirim review ke Supabase...');
   try {
     const resp = await fetch(`${BACKEND}/api/save`, {
       method: 'POST',
@@ -526,12 +614,9 @@ async function saveToSupabase() {
     });
     if (!resp.ok) throw new Error('Save failed: ' + resp.status);
     const data = await resp.json();
-    status.textContent = `Tersimpan (${data.count} review)`;
-    btn.textContent = 'Tersimpan';
+    showExport(`Supabase: ${data.count} review tersimpan`);
   } catch (err) {
-    status.textContent = 'Error: ' + err.message;
-  } finally {
-    btn.disabled = false;
+    showExport(`Error: ${err.message}`, true);
   }
 }
 
@@ -574,10 +659,10 @@ function resetUI() {
   $('idle').classList.remove('hidden');
   $('searchResults').classList.add('hidden');
   $('productResults').classList.add('hidden');
-  $('saveStatus').classList.add('hidden');
-  $('saveBtn').textContent = 'Simpan ke Database';
+  ['exportStatus', 'exportStatus2'].forEach(id => { const el = $(id); if (el) el.classList.add('hidden'); });
   $('status').classList.add('hidden');
   $('error').classList.add('hidden');
+  searchProducts = [];
   lastResults = null;
 }
 
