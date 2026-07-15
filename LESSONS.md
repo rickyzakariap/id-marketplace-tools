@@ -21,6 +21,9 @@
 - Lesson: `.shopee-rating-stars__lit` = filled stars
 - Lesson: Shopee lazy-load reviews, perlu scroll/pagination buat ambil semua
 - Lesson: Debug Page button = cara terbaik inspect DOM dari extension
+- Lesson: Price regex Indonesia: `\d{1,3}(?:\.\d{3})` (dots as thousands)
+- Lesson: Location regex: capture city name only, jangan makan suffix
+- Lesson: Rating dan toko TIDAK ada di Shopee search results
 - Lesson: .env jangan ke-commit (credentials leak)
 
 ---
