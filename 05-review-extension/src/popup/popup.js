@@ -98,21 +98,33 @@ function scrapeShopeeSearch() {
       name = match ? match[1].trim().substring(0, 100) : '';
     }
 
-    // Rating: NOT available in search results (extract first to remove from text)
-    const ratingMatch = text.match(/\b(\d\.\d)\b/);
-    const ratingText = ratingMatch ? ratingMatch[0] : '';
-    const textWithoutRating = ratingMatch ? text.replace(ratingText, '') : text;
+    // Rating + Sales: handle concatenated "4.8111 terjual" (rating 4.8 + sales 111)
+    let ratingText = '';
+    let sales = '';
 
-    // Price: Indonesian format "Rp29.000" or "Rp1.500.000"
+    // Check if it's a large sales number with RB/K/M suffix (e.g. "4.91RB+ terjual")
+    const largeSalesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i);
+    if (largeSalesMatch) {
+      sales = largeSalesMatch[1];
+    } else {
+      // Try to split "X.XNNN terjual" into rating + sales (e.g. "4.8111 terjual" → rating=4.8, sales=111)
+      const splitMatch = text.match(/([1-5]\.\d)(\d+\s*terjual)/);
+      if (splitMatch) {
+        ratingText = splitMatch[1];
+        sales = splitMatch[2];
+      } else {
+        // Just sales count (e.g. "464 terjual")
+        const salesOnly = text.match(/([\d.,]+\s*terjual)/i);
+        sales = salesOnly ? salesOnly[1] : '';
+      }
+    }
+
+    // Remove rating from text for price extraction
+    const textWithoutRating = ratingText ? text.replace(ratingText, '') : text;
+
+    // Price: Indonesian format "Rp29.000"
     const priceMatch = textWithoutRating.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
     const price = priceMatch ? `Rp${priceMatch[1]}` : '';
-
-    // Remove price from text before extracting sales
-    const textClean = priceMatch ? textWithoutRating.replace(priceMatch[0], '') : textWithoutRating;
-
-    // Sales: "4.91RB+ terjual", "464 terjual"
-    const salesMatch = textClean.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
-    const sales = salesMatch ? salesMatch[1] : '';
 
     // Stars: 0 (not available in search)
     const stars = 0;
