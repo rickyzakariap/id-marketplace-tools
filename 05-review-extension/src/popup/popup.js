@@ -6,16 +6,35 @@ let lastResults = null;
 // Scraping functions - run directly via chrome.scripting.executeScript({ func })
 function scrapeShopee() {
   const reviews = [];
-  const candidates = document.querySelectorAll(
-    '.shopee-product-rating__list-item, [class*="product-rating"] [class*="item"], [class*="rating__list"] > div, [class*="review-item"], [class*="comment-item"], .e2R4YJ, .Zmy311, [class*="karmaj5"], [class*="DqQJiB"], [class*="shopee-rating"]'
-  );
-  candidates.forEach(item => {
-    const textEl = item.querySelector('[class*="content"], [class*="text"], [class*="comment"], .shopee-product-rating__content, .Zmy311, [class*="karmaj5"]');
-    const text = textEl?.textContent?.trim() || item.textContent?.trim() || '';
-    const stars = item.querySelectorAll('[class*="star"][class*="active"], [class*="star"][class*="on"], .icon-rating-solid--on, svg[fill="#EE4D2D"], svg[fill*="FF"]');
-    const rating = stars.length || null;
-    if (text && text.length > 10 && text.length < 2000) reviews.push({ text: text.substring(0, 500), rating });
-  });
+
+  // Primary: .product-ratings__list contains individual reviews
+  const list = document.querySelector('.product-ratings__list, [class*="ratings__list"]');
+  if (list) {
+    const items = list.children;
+    for (const item of items) {
+      const text = item.textContent?.trim() || '';
+      // Count lit stars (filled = user's rating)
+      const stars = item.querySelectorAll('.shopee-rating-stars__lit, [class*="star"][class*="lit"]').length;
+      if (text.length > 10 && text.length < 1000) {
+        reviews.push({ text: text.substring(0, 500), rating: stars || null });
+      }
+    }
+  }
+
+  // Fallback: broader selectors
+  if (reviews.length === 0) {
+    const container = document.querySelector('.product-ratings, [class*="product-rating"]');
+    if (container) {
+      const items = container.querySelectorAll('[class*="item"], [class*="card"], [class*="comment"], div[class]');
+      items.forEach(item => {
+        if (item.textContent.length < 20) return;
+        if (item.classList.contains('product-rating-overview')) return;
+        const text = item.textContent?.trim() || '';
+        const stars = item.querySelectorAll('.shopee-rating-stars__lit, [class*="star"][class*="lit"]').length;
+        if (text.length > 20 && text.length < 1000) reviews.push({ text: text.substring(0, 500), rating: stars || null });
+      });
+    }
+  }
 
   if (reviews.length === 0) {
     const lists = document.querySelectorAll('ul, ol, [class*="list"]');
@@ -56,6 +75,19 @@ function debugPage() {
     tag: el.tagName, cls: el.className.toString().substring(0, 80), childCount: el.children.length,
     textLen: el.textContent?.length || 0, hasStars: !!el.querySelector('svg, [class*="star"]'),
   }));
+
+  // Deep dive into .product-ratings container
+  const container = document.querySelector('.product-ratings, [class*="product-rating"]');
+  let containerChildren = [];
+  if (container) {
+    containerChildren = Array.from(container.children).slice(0, 10).map(el => ({
+      tag: el.tagName, cls: el.className.toString().substring(0, 80), textLen: el.textContent?.length || 0,
+      hasStars: !!el.querySelector('.shopee-rating-stars__lit, [class*="star"][class*="lit"]'),
+      sampleText: el.textContent?.substring(0, 100) || '',
+    }));
+  }
+
+  // Find elements with substantial text that could be reviews
   const textBlocks = document.querySelectorAll('div, span, p');
   const candidates = [];
   for (const el of textBlocks) {
@@ -68,7 +100,8 @@ function debugPage() {
       }
     }
   }
-  return { reviewElementCount: reviewEls.length, reviewElements: reviewInfo, textCandidates: candidates };
+
+  return { reviewElementCount: reviewEls.length, reviewElements: reviewInfo, textCandidates: candidates, containerChildren };
 }
 
 async function runInPage(fn) {
@@ -219,6 +252,7 @@ async function debugPageHandler() {
   try {
     const info = await runInPage(debugPage);
     status.innerHTML = `<b>Review elements:</b> ${info.reviewElementCount}<br>` +
+      `<b>Container children:</b><br>${info.containerChildren.map(c => `${c.tag}.${c.cls} (${c.textLen}chars, stars:${c.hasStars}) "${c.sampleText}"`).join('<br>')}<br>` +
       `<b>Review classes:</b><br>${info.reviewElements.map(e => `${e.tag}.${e.cls} (${e.textLen}chars, stars:${e.hasStars})`).join('<br>')}<br>` +
       `<b>Text candidates:</b><br>${info.textCandidates.map(c => `${c.tag}.${c.cls}: "${c.text}"`).join('<br>')}`;
   } catch (err) {
