@@ -265,17 +265,19 @@ function scrapeTokopediaReviews() {
 function scrapeTokopediaSearch() {
   const products = [];
 
-  // Try specific selectors first, then broad fallback
-  let items = document.querySelectorAll('[data-testid="div-product-card"], [class*="product-card"]');
+  // Primary: data-testid="product-card" (current Tokopedia)
+  let items = document.querySelectorAll('[data-testid="product-card"]');
   if (items.length === 0) {
-    // Fallback: find elements that look like product cards (contain price + link)
-    items = document.querySelectorAll('a[href*="/promo/"], a[href*="-i."], a[href*="/product/"]');
-    // Group by parent card
+    // Fallback: older selectors
+    items = document.querySelectorAll('[data-testid="div-product-card"], [class*="product-card"]');
+  }
+  if (items.length === 0) {
+    // Last resort: find product links and walk up to card containers
+    const links = document.querySelectorAll('a[href*="/promo/"], a[href*="-i."]');
     const cards = new Set();
-    items.forEach(a => {
-      // Walk up to find the card container (usually 3-4 levels up)
+    links.forEach(a => {
       let el = a;
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 6; i++) {
         el = el.parentElement;
         if (!el) break;
         if (el.querySelectorAll('a').length >= 2 && el.textContent.includes('Rp')) {
@@ -289,42 +291,61 @@ function scrapeTokopediaSearch() {
 
   for (const item of items) {
     const text = item.textContent || '';
-    if (text.length < 20) continue;
+    if (text.length < 10) continue;
 
-    // Name: link with title attribute, or first substantial link text
-    const titleLink = item.querySelector('a[title]');
-    let name = titleLink?.getAttribute('title') || '';
+    // Name: data-testid="product-title" or a[title]
+    const nameEl = item.querySelector('[data-testid="product-title"], a[title]');
+    let name = nameEl?.getAttribute('title') || nameEl?.textContent?.trim() || '';
     if (!name) {
       const links = item.querySelectorAll('a');
       for (const a of links) {
         const t = a.textContent?.trim() || '';
-        if (t.length > 15 && !t.startsWith('Rp')) { name = t; break; }
+        if (t.length > 10 && !t.startsWith('Rp')) { name = t; break; }
       }
     }
-    if (!name) continue; // skip if no name found
+    if (!name) continue;
 
-    // Price: find "Rp" pattern
-    const priceMatch = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
-    const price = priceMatch ? `Rp${priceMatch[1]}` : '';
+    // Price: data-testid="product-price" or Rp pattern
+    const priceEl = item.querySelector('[data-testid="product-price"]');
+    let price = '';
+    if (priceEl) {
+      const pm = priceEl.textContent.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+      price = pm ? `Rp${pm[1]}` : '';
+    }
+    if (!price) {
+      const pm = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+      price = pm ? `Rp${pm[1]}` : '';
+    }
 
-    // Sales: find "terjual" pattern
-    const salesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i)
-      || text.match(/([\d.,]+\s*terjual)/i);
-    const sales = salesMatch ? salesMatch[1] : '';
+    // Sales + Rating: data-testid="product-sales" contains "4.6 500+ terjual"
+    const salesEl = item.querySelector('[data-testid="product-sales"]');
+    let sales = '';
+    let stars = 0;
+    if (salesEl) {
+      const st = salesEl.textContent || '';
+      // Rating: first number like "4.6"
+      const ratingMatch = st.match(/^(\d\.\d)/);
+      if (ratingMatch) stars = Math.round(parseFloat(ratingMatch[1]));
+      // Sales: "500+ terjual" or "50rb+ terjual"
+      const salesMatch = st.match(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)\+?\s*terjual)/i)
+        || st.match(/([\d.,]+\+?\s*terjual)/i);
+      sales = salesMatch ? salesMatch[1] : '';
+    }
+    if (!sales) {
+      const salesMatch = text.match(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)\+?\s*terjual)/i)
+        || text.match(/([\d.,]+\+?\s*terjual)/i);
+      sales = salesMatch ? salesMatch[1] : '';
+    }
 
-    // Stars
-    const stars = item.querySelectorAll('svg[fill="#FD973B"], [class*="star"][class*="active"]').length;
-
-    // Shop name
-    const shopEl = item.querySelector('[data-testid="linkProductShop"], [class*="shop-name"]');
+    // Shop: data-testid="product-shop-name"
+    const shopEl = item.querySelector('[data-testid="product-shop-name"]');
     const shop = shopEl?.textContent?.trim() || '';
 
-    // Location
-    const locEl = item.querySelector('[class*="location"]');
-    const location = locEl?.textContent?.trim() || '';
+    // Location: NOT available on Tokopedia product cards
+    const location = '';
 
     // URL
-    const url = titleLink?.href || item.querySelector('a')?.href || '';
+    const url = nameEl?.href || item.querySelector('a')?.href || '';
 
     products.push({ name, price, stars, sales, shop, location, url });
   }
