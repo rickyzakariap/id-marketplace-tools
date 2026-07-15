@@ -98,44 +98,73 @@ function scrapeShopeeSearch() {
       name = match ? match[1].trim().substring(0, 100) : '';
     }
 
-    // Rating + Sales: handle concatenated "4.8111 terjual" (rating 4.8 + sales 111)
+    // Price: extract from dedicated element first, then fallback to regex
+    const priceEl = item.querySelector('[class*="price"]:not([class*="old"]), span[class*="ooOxS"]');
+    let price = '';
+    if (priceEl) {
+      const priceText = priceEl.textContent.trim();
+      const pm = priceText.match(/Rp\s?([\d.,]+)/);
+      price = pm ? `Rp${pm[1]}` : priceText;
+    }
+    if (!price) {
+      const priceMatch = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+      price = priceMatch ? `Rp${priceMatch[1]}` : '';
+    }
+
+    // Rating + Sales: extract from individual elements first
     let ratingText = '';
     let sales = '';
 
-    // Check if it's a large sales number with RB/K/M suffix (e.g. "4.91RB+ terjual")
-    const largeSalesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i);
-    if (largeSalesMatch) {
-      sales = largeSalesMatch[1];
-    } else {
-      // Try to split "X.XNNN terjual" into rating + sales (e.g. "4.8111 terjual" → rating=4.8, sales=111)
-      const splitMatch = text.match(/([1-5]\.\d)(\d+\s*terjual)/);
-      if (splitMatch) {
-        ratingText = splitMatch[1];
-        sales = splitMatch[2];
+    // Try dedicated rating element (Shopee uses aria-hidden spans with score)
+    const ratingEl = item.querySelector('[class*="rating"]:not([class*="count"]), [class*="star-rating"]');
+    if (ratingEl) {
+      const rText = ratingEl.textContent.trim();
+      const rm = rText.match(/^(\d\.\d)/);
+      if (rm) ratingText = rm[1];
+    }
+
+    // Try dedicated sales/terjual element
+    const salesEl = item.querySelector('[class*="sold"], [class*="terjual"]');
+    if (salesEl) {
+      const sText = salesEl.textContent.trim();
+      const sm = sText.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i)
+        || sText.match(/([\d.,]+\s*terjual)/i);
+      if (sm) sales = sm[1];
+    }
+
+    // Fallback: parse from concatenated text
+    if (!sales) {
+      // Large sales with RB/K/M suffix (e.g. "4.91RB+ terjual")
+      const largeSalesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i);
+      if (largeSalesMatch) {
+        sales = largeSalesMatch[1];
       } else {
-        // Just sales count (e.g. "464 terjual")
-        const salesOnly = text.match(/([\d.,]+\s*terjual)/i);
-        sales = salesOnly ? salesOnly[1] : '';
+        // Split "X.XNNN terjual" into rating + sales (e.g. "4.8111 terjual")
+        const splitMatch = text.match(/([1-5]\.\d)(\d+\s*terjual)/);
+        if (splitMatch) {
+          ratingText = ratingText || splitMatch[1];
+          sales = splitMatch[2];
+        } else {
+          // Just sales count (e.g. "464 terjual")
+          const salesOnly = text.match(/([\d.,]+\s*terjual)/i);
+          sales = salesOnly ? salesOnly[1] : '';
+        }
       }
     }
 
-    // Remove rating from text for price extraction
-    const textWithoutRating = ratingText ? text.replace(ratingText, '') : text;
-
-    // Price: Indonesian format "Rp29.000"
-    const priceMatch = textWithoutRating.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
-    const price = priceMatch ? `Rp${priceMatch[1]}` : '';
+    // Remove price text before looking for location to avoid false matches
+    const textClean = price ? text.replace(price, '') : text;
 
     // Stars: 0 (not available in search)
     const stars = 0;
 
-    // Shop name: usually before the product name or in a specific element
+    // Shop name
     const shopEl = item.querySelector('[class*="shop"], [class*="seller"], [class*="item__shop"]');
     let shop = shopEl?.textContent?.trim() || '';
 
-    // Location: just capture the city name
+    // Location: match city names
     const cities = 'Jakarta|Surabaya|Bandung|Tangerang|Bekasi|Semarang|Yogyakarta|Solo|Malang|Medan|Makassar|Denpasar|Bali|Depok|Bogor|Palembang|Batam|Pekanbaru|Balikpapan|Samarinda|Manado|Pontianak|Banjarmasin|Cimahi|Cirebon|Tasikmalaya|Serang|Karawang|Purwokerto|Madiun|Kediri|Blitar|Probolinggo|Pasuruan|Jember|Banyuwangi|Kudus|Pati|Rembang|Tuban|Lamongan|Gresik|Sidoarjo|Bangkalan|Pamekasan|Sumenep|Mataram|Lombok|Kupang|Ambon|Ternate|Jayapura|Sorong|Manokwari|Timika|Nabire|Fakfak|Bau-Bau|Kendari|Palu|Gorontalo|Mamuju|Palopo|Parepare|Bontang|Tarakan|Tanjung Selor|Singkawang';
-    const locMatch = text.match(new RegExp(`(${cities})(?:\\s|Produk|$)`, 'i'));
+    const locMatch = textClean.match(new RegExp(`(${cities})(?:\\s|Produk|$)`, 'i'));
     const location = locMatch ? locMatch[1] : '';
 
     // Product URL
