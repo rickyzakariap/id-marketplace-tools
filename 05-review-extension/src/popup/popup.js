@@ -35,51 +35,43 @@ function scrapeShopeeReviews() {
 // Scrape Shopee product details (from product detail page)
 // ============================================================
 function scrapeShopeeProduct() {
-  const name = document.querySelector('h1[class*="product"], [class*="product-title"], [class*="vWBHjg"]')?.textContent?.trim() || document.title.split('|')[0].trim();
+  const bodyText = document.body.innerText;
+  
+  // Product name: h1 or title
+  const name = document.querySelector('h1[class*="product"], [class*="product-title"], [class*="vWBHjg"]')?.textContent?.trim() 
+    || document.title.split('|')[0].trim() || '';
 
-  // Price
-  const priceEl = document.querySelector('[class*="product-price"], [class*="price"], .pqTWjA');
-  let price = priceEl?.textContent?.trim() || '';
-  // Clean price: remove "Rp" prefix and dots
-  price = price.replace(/[^0-9.,]/g, '').replace(/\./g, '');
+  // Price: find "Rp" pattern in body text
+  const priceMatch = bodyText.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+  const price = priceMatch ? `Rp${priceMatch[1]}` : '';
 
-  // Rating
-  const ratingEl = document.querySelector('[class*="product-rating-overview__rating-score"]');
-  const rating = ratingEl?.textContent?.trim() || '';
+  // Rating: find score like "4.9" near rating section
+  const ratingMatch = bodyText.match(/(\d\.\d)\s*dari\s*5/);
+  const rating = ratingMatch ? ratingMatch[1] : '';
 
-  // Sales count
-  const salesEl = document.querySelector('[class*="product-rating-overview__buying"]');
-  let sales = salesEl?.textContent?.trim() || '';
-  if (!sales) {
-    // Fallback: look for "terjual" text
-    const allText = document.body.innerText;
-    const salesMatch = allText.match(/(\d[\d.,]+[kK+]?\s*terjual)/i);
-    sales = salesMatch ? salesMatch[1] : '';
+  // Sales: find "terjual" pattern
+  const salesMatch = bodyText.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
+  const sales = salesMatch ? salesMatch[1] : '';
+
+  // Shop name: look for shop profile link or seller info
+  const shopEl = document.querySelector('a[href*="/shop/"] span, [class*="shop-profile"] [class*="name"], [class*="seller-info"] [class*="name"]');
+  let shop = shopEl?.textContent?.trim() || '';
+  if (!shop) {
+    // Fallback: look for "Toko" or "Seller" section
+    const shopMatch = bodyText.match(/(?:Toko|Seller)[:\s]*([^\n]+)/i);
+    shop = shopMatch ? shopMatch[1].trim() : '';
   }
 
-  // Shop name
-  const shopEl = document.querySelector('[class*="shop-profile"] [class*="name"], [class*="seller-info"] [class*="name"], a[href*="/shop/"] span');
-  const shop = shopEl?.textContent?.trim() || '';
-
-  // Location
-  const locEl = document.querySelector('[class*="product-location"], [class*="seller-location"]');
-  let location = locEl?.textContent?.trim() || '';
-  if (!location) {
-    // Fallback: look for location in seller info
-    const allText = document.body.innerText;
-    const locMatch = allText.match(/(Dikirim dari\s+[^\n]+)/i);
-    location = locMatch ? locMatch[1] : '';
-  }
+  // Location: find "Dikirim dari" or city names
+  const locMatch = bodyText.match(/(?:Dikirim\s*dari|Dikirim Dari)\s*([^\n]+)/i);
+  let location = locMatch ? locMatch[1].trim() : '';
 
   // Availability
-  const stockEl = document.querySelector('[class*="stock"], [class*="availability"]');
-  let availability = stockEl?.textContent?.trim() || 'Tersedia';
+  const stockMatch = bodyText.match(/(Stok\s*Tersedia|Stok\s*Habis|Sisa\s*\d+)/i);
+  const availability = stockMatch ? stockMatch[1] : 'Tersedia';
 
   return {
-    product: {
-      name, price, rating, sales, shop, location, availability,
-      url: window.location.href,
-    },
+    product: { name, price, rating, sales, shop, location, availability, url: window.location.href },
     marketplace: 'shopee',
   };
 }
@@ -104,15 +96,18 @@ function scrapeShopeeSearch() {
       name = match ? match[1].trim().substring(0, 100) : '';
     }
 
-    // Price: Indonesian format "Rp29.000" or "Rp1.500.000" (dots as thousands separators)
+    // Price: Indonesian format "Rp29.000" or "Rp1.500.000"
     const priceMatch = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
     const price = priceMatch ? `Rp${priceMatch[1]}` : '';
 
-    // Rating: NOT available in search results (only on product page)
+    // Remove price from text before extracting sales
+    const textWithoutPrice = priceMatch ? text.replace(priceMatch[0], '') : text;
+
+    // Rating: NOT available in search results
     const stars = 0;
 
     // Sales: "4.91RB+ terjual", "5.0464 terjual", "4.98RB+ terjual"
-    const salesMatch = text.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
+    const salesMatch = textWithoutPrice.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
     const sales = salesMatch ? salesMatch[1] : '';
 
     // Shop name: usually before the product name or in a specific element
