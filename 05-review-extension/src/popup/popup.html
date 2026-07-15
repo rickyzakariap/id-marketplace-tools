@@ -5,78 +5,88 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  width: 440px;
+  width: 460px;
   min-height: 300px;
   max-height: 580px;
   overflow-y: auto;
-  background: #111;
-  color: #ddd;
-  font-family: -apple-system, system-ui, sans-serif;
+  background: #0a0a0a;
+  color: #ccc;
+  font-family: 'Segoe UI', system-ui, sans-serif;
   font-size: 12px;
-  line-height: 1.5;
-  padding: 12px;
+  line-height: 1.4;
+  padding: 10px;
 }
-a { color: #8ab4f8; text-decoration: none; }
+a { color: #6aa3d9; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 .btn {
-  display: inline-block;
-  padding: 6px 14px;
-  border: 1px solid #333;
-  border-radius: 4px;
-  background: #222;
-  color: #ddd;
-  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  background: #1a1a1a;
+  color: #ccc;
+  font-size: 11px;
   cursor: pointer;
+  font-family: inherit;
 }
-.btn:hover { background: #333; }
+.btn:hover { background: #2a2a2a; border-color: #3a3a3a; }
 .btn:disabled { opacity: 0.3; cursor: default; }
-.btn-primary { background: #264f78; border-color: #264f78; color: #fff; }
-.btn-primary:hover { background: #1a3a5c; }
+.btn-primary { background: #1a3a5c; border-color: #264f78; color: #fff; }
+.btn-primary:hover { background: #264f78; }
 
-.hint { color: #666; font-size: 11px; margin-bottom: 8px; }
-.error { color: #f44; font-size: 11px; margin-top: 6px; }
-.status { color: #666; font-size: 11px; margin-top: 6px; }
+.hint { color: #555; font-size: 11px; margin-bottom: 6px; }
+.error { color: #c44; font-size: 11px; margin-top: 4px; }
+.status { color: #555; font-size: 11px; margin-top: 4px; }
 .hidden { display: none; }
-.label { color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
-
-/* Product info */
-.info-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-.info-item { flex: 1; min-width: 80px; }
-.info-item .label { margin-bottom: 2px; }
-.info-item .value { font-size: 13px; }
 
 /* Table */
-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
-th { text-align: left; padding: 4px 6px; border-bottom: 1px solid #333; color: #666; font-size: 10px; font-weight: 600; text-transform: uppercase; }
-td { padding: 4px 6px; border-bottom: 1px solid #1a1a1a; }
-tr:hover td { background: #1a1a1a; }
-
-/* Theme bars */
-.theme-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 11px; }
-.theme-name { width: 90px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.theme-track { flex: 1; height: 4px; background: #222; border-radius: 2px; overflow: hidden; }
-.theme-fill { height: 100%; border-radius: 2px; }
-.theme-count { width: 20px; text-align: right; font-family: monospace; font-size: 10px; color: #666; }
-
-/* Insights */
-.insight { font-size: 11px; background: #1a1a1a; border-left: 2px solid #264f78; padding: 4px 8px; margin-bottom: 3px; border-radius: 0 3px 3px 0; }
-
-.section { margin-top: 12px; }
-.section-title { color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+th {
+  text-align: left; padding: 3px 5px; border-bottom: 1px solid #222;
+  color: #555; font-size: 10px; font-weight: 600; text-transform: uppercase;
+  cursor: pointer; user-select: none;
+}
+th:hover { color: #888; }
+th.sorted-asc::after { content: ' ^'; color: #6aa3d9; }
+th.sorted-desc::after { content: ' v'; color: #6aa3d9; }
+td { padding: 3px 5px; border-bottom: #111; }
+tr:hover td { background: #111; }
+td.price { font-family: 'Cascadia Code', 'Fira Code', monospace; }
+td.sales { font-family: 'Cascadia Code', 'Fira Code', monospace; }
+td.loc { color: #555; }
+td.no { color: #444; font-family: monospace; }
 
 /* Header */
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.header-title { font-size: 14px; font-weight: 600; }
-.header-link { font-size: 11px; color: #8ab4f8; cursor: pointer; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.header-title { font-size: 13px; font-weight: 600; color: #ddd; }
+.header-link { font-size: 11px; color: #6aa3d9; cursor: pointer; }
+
+/* Product info */
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 6px; }
+.info-box { background: #111; border: 1px solid #1a1a1a; border-radius: 3px; padding: 5px 8px; }
+.info-label { color: #444; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; }
+.info-value { font-size: 13px; font-weight: 600; color: #ccc; }
+
+/* Theme bars */
+.theme-row { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; font-size: 11px; }
+.theme-name { width: 80px; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.theme-track { flex: 1; height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.theme-fill { height: 100%; border-radius: 2px; }
+.theme-count { width: 18px; text-align: right; font-family: monospace; font-size: 10px; color: #444; }
+
+/* Insights */
+.insight { font-size: 11px; background: #111; border-left: 2px solid #264f78; padding: 3px 7px; margin-bottom: 2px; border-radius: 0 2px 2px 0; color: #999; }
+
+.section { margin-top: 8px; }
+.section-title { color: #444; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
 </style>
 </head>
 <body>
 
 <!-- IDLE -->
 <div id="idle">
-  <div class="hint">Buka halaman produk atau hasil pencarian Shopee/Tokopedia, lalu klik Scrape.</div>
-  <div style="display:flex;gap:6px">
+  <div class="hint">Buka halaman produk atau pencarian Shopee/Tokopedia, lalu klik Scrape.</div>
+  <div style="display:flex;gap:4px">
     <button id="scrapeBtn" class="btn btn-primary">Scrape</button>
     <button id="debugBtn" class="btn">Debug</button>
   </div>
@@ -89,12 +99,20 @@ tr:hover td { background: #1a1a1a; }
   <div class="header">
     <div>
       <div id="searchQuery" class="header-title"></div>
-      <div id="searchCount" style="color:#666;font-size:11px"></div>
+      <div id="searchCount" style="color:#444;font-size:11px"></div>
     </div>
     <span class="header-link" onclick="resetUI()">Baru</span>
   </div>
   <table>
-    <thead><tr><th>No</th><th>Produk</th><th>Harga</th><th>Terjual</th><th>Lokasi</th></tr></thead>
+    <thead>
+      <tr>
+        <th class="no" data-sort="no">No</th>
+        <th data-sort="name">Produk</th>
+        <th data-sort="price">Harga</th>
+        <th data-sort="sales">Terjual</th>
+        <th data-sort="location">Lokasi</th>
+      </tr>
+    </thead>
     <tbody id="searchTable"></tbody>
   </table>
 </div>
@@ -106,22 +124,20 @@ tr:hover td { background: #1a1a1a; }
     <span class="header-link" onclick="resetUI()">Baru</span>
   </div>
 
-  <div id="prodName" style="font-size:13px;font-weight:600;margin-bottom:8px"></div>
+  <div id="prodName" style="font-size:12px;font-weight:600;color:#ddd;margin-bottom:6px"></div>
 
-  <div class="info-row">
-    <div class="info-item"><div class="label">Harga</div><div class="value" id="prodPrice">-</div></div>
-    <div class="info-item"><div class="label">Rating</div><div class="value" id="prodRating">-</div></div>
-    <div class="info-item"><div class="label">Terjual</div><div class="value" id="prodSales">-</div></div>
-  </div>
-  <div class="info-row">
-    <div class="info-item"><div class="label">Toko</div><div class="value" id="prodShop">-</div></div>
-    <div class="info-item"><div class="label">Lokasi</div><div class="value" id="prodLocation">-</div></div>
-    <div class="info-item"><div class="label">Stok</div><div class="value" id="prodAvailability">-</div></div>
+  <div class="info-grid">
+    <div class="info-box"><div class="info-label">Harga</div><div class="info-value" id="prodPrice">-</div></div>
+    <div class="info-box"><div class="info-label">Rating</div><div class="info-value" id="prodRating">-</div></div>
+    <div class="info-box"><div class="info-label">Terjual</div><div class="info-value" id="prodSales">-</div></div>
+    <div class="info-box"><div class="info-label">Toko</div><div class="info-value" id="prodShop">-</div></div>
+    <div class="info-box"><div class="info-label">Lokasi</div><div class="info-value" id="prodLocation">-</div></div>
+    <div class="info-box"><div class="info-label">Stok</div><div class="info-value" id="prodAvailability">-</div></div>
   </div>
 
-  <div class="info-row">
-    <div class="info-item"><div class="label">Review</div><div class="value" id="prodReviewCount">-</div></div>
-    <div class="info-item"><div class="label">Sentimen</div><div class="value" id="prodSentiment">-</div></div>
+  <div class="info-grid" style="grid-template-columns:1fr 1fr">
+    <div class="info-box"><div class="info-label">Review</div><div class="info-value" id="prodReviewCount">-</div></div>
+    <div class="info-box"><div class="info-label">Sentimen</div><div class="info-value" id="prodSentiment">-</div></div>
   </div>
 
   <div class="section">
@@ -134,9 +150,9 @@ tr:hover td { background: #1a1a1a; }
     <div id="prodInsights"></div>
   </div>
 
-  <div style="margin-top:10px">
+  <div style="margin-top:8px;display:flex;gap:4px;align-items:center">
     <button id="saveBtn" class="btn" onclick="saveToSupabase()">Simpan</button>
-    <span id="saveStatus" class="hidden" style="margin-left:8px;color:#666;font-size:11px"></span>
+    <span id="saveStatus" class="hidden" style="color:#444;font-size:11px"></span>
   </div>
 </div>
 

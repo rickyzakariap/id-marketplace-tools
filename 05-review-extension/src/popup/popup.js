@@ -2,6 +2,8 @@ const $ = id => document.getElementById(id);
 const BACKEND = 'http://localhost:3458';
 
 let lastResults = null;
+let searchProducts = [];
+let sortState = { col: null, asc: true };
 
 // ============================================================
 // Scrape Shopee product reviews (from product detail page)
@@ -96,19 +98,24 @@ function scrapeShopeeSearch() {
       name = match ? match[1].trim().substring(0, 100) : '';
     }
 
+    // Rating: NOT available in search results (extract first to remove from text)
+    const ratingMatch = text.match(/\b(\d\.\d)\b/);
+    const ratingText = ratingMatch ? ratingMatch[0] : '';
+    const textWithoutRating = ratingMatch ? text.replace(ratingText, '') : text;
+
     // Price: Indonesian format "Rp29.000" or "Rp1.500.000"
-    const priceMatch = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+    const priceMatch = textWithoutRating.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
     const price = priceMatch ? `Rp${priceMatch[1]}` : '';
 
     // Remove price from text before extracting sales
-    const textWithoutPrice = priceMatch ? text.replace(priceMatch[0], '') : text;
+    const textClean = priceMatch ? textWithoutRating.replace(priceMatch[0], '') : textWithoutRating;
 
-    // Rating: NOT available in search results
-    const stars = 0;
-
-    // Sales: "4.91RB+ terjual", "5.0464 terjual", "4.98RB+ terjual"
-    const salesMatch = textWithoutPrice.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
+    // Sales: "4.91RB+ terjual", "464 terjual"
+    const salesMatch = textClean.match(/([\d.,]+(?:RB|rb|Rb|K|k|M|m)?\+?\s*terjual)/i);
     const sales = salesMatch ? salesMatch[1] : '';
+
+    // Stars: 0 (not available in search)
+    const stars = 0;
 
     // Shop name: usually before the product name or in a specific element
     const shopEl = item.querySelector('[class*="shop"], [class*="seller"], [class*="item__shop"]');
@@ -208,6 +215,76 @@ function debugPage() {
     searchItemCount: searchItems.length,
     searchItems: searchInfo,
   };
+}
+
+// ============================================================
+// Sort and render search results
+// ============================================================
+function sortProducts(col) {
+  if (sortState.col === col) {
+    sortState.asc = !sortState.asc;
+  } else {
+    sortState.col = col;
+    sortState.asc = true;
+  }
+
+  const sorted = [...searchProducts].sort((a, b) => {
+    let va, vb;
+    if (col === 'price') {
+      va = parseFloat(a.price.replace(/[^\d]/g, '')) || 0;
+      vb = parseFloat(b.price.replace(/[^\d]/g, '')) || 0;
+    } else if (col === 'sales') {
+      va = parseSales(a.sales);
+      vb = parseSales(b.sales);
+    } else if (col === 'name') {
+      va = a.name.toLowerCase();
+      vb = b.name.toLowerCase();
+      return sortState.asc ? va.localeCompare(vb) : vb.localeCompare(va);
+    } else if (col === 'location') {
+      va = a.location.toLowerCase();
+      vb = b.location.toLowerCase();
+      return sortState.asc ? va.localeCompare(vb) : vb.localeCompare(va);
+    } else {
+      return 0;
+    }
+    return sortState.asc ? va - vb : vb - va;
+  });
+
+  renderSearchTable(sorted);
+  updateSortHeaders(col);
+}
+
+function parseSales(s) {
+  if (!s) return 0;
+  const match = s.match(/([\d.,]+)/);
+  if (!match) return 0;
+  let num = parseFloat(match[1].replace(/,/g, ''));
+  if (s.includes('RB') || s.includes('rb') || s.includes('Rb')) num *= 1000;
+  if (s.includes('K') || s.includes('k')) num *= 1000;
+  if (s.includes('M') || s.includes('m')) num *= 1000000;
+  return num;
+}
+
+function updateSortHeaders(activeCol) {
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.classList.remove('sorted-asc', 'sorted-desc');
+    if (th.dataset.sort === activeCol) {
+      th.classList.add(sortState.asc ? 'sorted-asc' : 'sorted-desc');
+    }
+  });
+}
+
+function renderSearchTable(products) {
+  const tbody = $('searchTable');
+  tbody.innerHTML = products.map((p, i) => {
+    return `<tr>
+      <td class="no">${i + 1}</td>
+      <td><a href="${p.url}" target="_blank">${truncate(p.name, 45)}</a></td>
+      <td class="price">${p.price || '-'}</td>
+      <td class="sales">${p.sales || '-'}</td>
+      <td class="loc">${p.location || '-'}</td>
+    </tr>`;
+  }).join('');
 }
 
 // ============================================================
@@ -321,19 +398,17 @@ function renderSearchResults(data) {
   $('searchResults').classList.remove('hidden');
   $('productResults').classList.add('hidden');
 
-  $('searchQuery').textContent = data.query ? `Hasil pencarian: "${data.query}"` : 'Hasil pencarian';
+  $('searchQuery').textContent = data.query ? `"${data.query}"` : 'Hasil pencarian';
   $('searchCount').textContent = `${data.products.length} produk`;
 
-  const tbody = $('searchTable');
-  tbody.innerHTML = data.products.map((p, i) => {
-    return `<tr>
-      <td style="color:var(--text-dim)">${i + 1}</td>
-      <td><a href="${p.url}" target="_blank" style="color:var(--primary);text-decoration:none">${truncate(p.name, 50)}</a></td>
-      <td style="font-family:monospace">${p.price || '-'}</td>
-      <td>${p.sales || '-'}</td>
-      <td style="color:var(--text-dim)">${p.location || '-'}</td>
-    </tr>`;
-  }).join('');
+  searchProducts = data.products;
+  sortState = { col: null, asc: true };
+  renderSearchTable(data.products);
+
+  // Add sort click handlers
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.onclick = () => sortProducts(th.dataset.sort);
+  });
 }
 
 // ============================================================
