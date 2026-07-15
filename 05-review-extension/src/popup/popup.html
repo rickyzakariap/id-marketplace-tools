@@ -9,76 +9,80 @@ body {
   min-height: 300px;
   max-height: 580px;
   overflow-y: auto;
-  background: #0a0a0a;
-  color: #ccc;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #141414;
+  color: #b8b8b8;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
   font-size: 12px;
-  line-height: 1.4;
-  padding: 10px;
+  line-height: 1.5;
+  padding: 12px;
 }
-a { color: #6aa3d9; text-decoration: none; }
+a { color: #2dd4a8; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 .btn {
-  padding: 5px 12px;
+  padding: 6px 14px;
   border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  background: #1a1a1a;
-  color: #ccc;
+  border-radius: 4px;
+  background: #1e1e1e;
+  color: #b8b8b8;
   font-size: 11px;
-  cursor: pointer;
   font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
-.btn:hover { background: #2a2a2a; border-color: #3a3a3a; }
+.btn:hover { background: #252525; border-color: #3a3a3a; }
 .btn:disabled { opacity: 0.3; cursor: default; }
-.btn-primary { background: #1a3a5c; border-color: #264f78; color: #fff; }
-.btn-primary:hover { background: #264f78; }
+.btn-primary { background: #0d3d2e; border-color: #1a6b50; color: #e0e0e0; }
+.btn-primary:hover { background: #1a6b50; border-color: #2dd4a8; }
 
-.hint { color: #555; font-size: 11px; margin-bottom: 6px; }
-.error { color: #c44; font-size: 11px; margin-top: 4px; }
-.status { color: #555; font-size: 11px; margin-top: 4px; }
+.hint { color: #666; font-size: 11px; margin-bottom: 8px; }
+.error { color: #e55; font-size: 11px; margin-top: 4px; }
+.status { color: #666; font-size: 11px; margin-top: 4px; }
 .hidden { display: none; }
 
 /* Table */
-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
 th {
-  text-align: left; padding: 3px 5px; border-bottom: 1px solid #222;
-  color: #555; font-size: 10px; font-weight: 600; text-transform: uppercase;
-  cursor: pointer; user-select: none;
+  text-align: left; padding: 4px 6px; border-bottom: 1px solid #222;
+  color: #666; font-size: 10px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.03em; cursor: pointer; user-select: none;
 }
-th:hover { color: #888; }
-th.sorted-asc::after { content: ' ^'; color: #6aa3d9; }
-th.sorted-desc::after { content: ' v'; color: #6aa3d9; }
-td { padding: 3px 5px; border-bottom: #111; }
-tr:hover td { background: #111; }
-td.price { font-family: 'Cascadia Code', 'Fira Code', monospace; }
-td.sales { font-family: 'Cascadia Code', 'Fira Code', monospace; }
-td.loc { color: #555; }
-td.no { color: #444; font-family: monospace; }
+th:hover { color: #999; }
+th.sorted-asc::after { content: ' ^'; color: #2dd4a8; }
+th.sorted-desc::after { content: ' v'; color: #2dd4a8; }
+td { padding: 4px 6px; border-bottom: 1px solid #1a1a1a; }
+tr:hover td { background: #1a1a1a; }
+td.price { font-family: 'Cascadia Code', 'Fira Code', 'SF Mono', monospace; font-size: 11px; }
+td.sales { font-family: 'Cascadia Code', 'Fira Code', 'SF Mono', monospace; font-size: 11px; }
+td.loc { color: #666; }
+td.no { color: #444; font-family: monospace; font-size: 10px; }
 
 /* Header */
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.header-title { font-size: 13px; font-weight: 600; color: #ddd; }
-.header-link { font-size: 11px; color: #6aa3d9; cursor: pointer; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.header-title { font-size: 13px; font-weight: 600; color: #e0e0e0; }
+.header-link { font-size: 11px; color: #2dd4a8; cursor: pointer; }
 
 /* Product info */
-.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 6px; }
-.info-box { background: #111; border: 1px solid #1a1a1a; border-radius: 3px; padding: 5px 8px; }
-.info-label { color: #444; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; }
-.info-value { font-size: 13px; font-weight: 600; color: #ccc; }
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 8px; }
+.info-box { background: #1a1a1a; border: 1px solid #222; border-radius: 4px; padding: 6px 8px; }
+.info-label { color: #555; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 500; }
+.info-value { font-size: 13px; font-weight: 600; color: #e0e0e0; }
 
 /* Theme bars */
-.theme-row { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; font-size: 11px; }
-.theme-name { width: 80px; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.theme-track { flex: 1; height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.theme-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 11px; }
+.theme-name { width: 80px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+.theme-track { flex: 1; height: 3px; background: #1e1e1e; border-radius: 2px; overflow: hidden; }
 .theme-fill { height: 100%; border-radius: 2px; }
-.theme-count { width: 18px; text-align: right; font-family: monospace; font-size: 10px; color: #444; }
+.theme-count { width: 20px; text-align: right; font-family: monospace; font-size: 10px; color: #555; }
 
 /* Insights */
-.insight { font-size: 11px; background: #111; border-left: 2px solid #264f78; padding: 3px 7px; margin-bottom: 2px; border-radius: 0 2px 2px 0; color: #999; }
+.insight {
+  font-size: 11px; background: #1a1a1a; border-left: 2px solid #1a6b50;
+  padding: 4px 8px; margin-bottom: 3px; border-radius: 0 3px 3px 0; color: #999;
+}
 
-.section { margin-top: 8px; }
-.section-title { color: #444; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+.section { margin-top: 10px; }
+.section-title { color: #555; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; font-weight: 500; }
 </style>
 </head>
 <body>
@@ -99,7 +103,7 @@ td.no { color: #444; font-family: monospace; }
   <div class="header">
     <div>
       <div id="searchQuery" class="header-title"></div>
-      <div id="searchCount" style="color:#444;font-size:11px"></div>
+      <div id="searchCount" style="color:#555;font-size:11px"></div>
     </div>
     <span class="header-link" onclick="resetUI()">Baru</span>
   </div>
@@ -124,7 +128,7 @@ td.no { color: #444; font-family: monospace; }
     <span class="header-link" onclick="resetUI()">Baru</span>
   </div>
 
-  <div id="prodName" style="font-size:12px;font-weight:600;color:#ddd;margin-bottom:6px"></div>
+  <div id="prodName" style="font-size:12px;font-weight:600;color:#e0e0e0;margin-bottom:8px"></div>
 
   <div class="info-grid">
     <div class="info-box"><div class="info-label">Harga</div><div class="info-value" id="prodPrice">-</div></div>
@@ -150,9 +154,9 @@ td.no { color: #444; font-family: monospace; }
     <div id="prodInsights"></div>
   </div>
 
-  <div style="margin-top:8px;display:flex;gap:4px;align-items:center">
+  <div style="margin-top:10px;display:flex;gap:6px;align-items:center">
     <button id="saveBtn" class="btn" onclick="saveToSupabase()">Simpan</button>
-    <span id="saveStatus" class="hidden" style="color:#444;font-size:11px"></span>
+    <span id="saveStatus" class="hidden" style="color:#555;font-size:11px"></span>
   </div>
 </div>
 
