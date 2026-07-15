@@ -2,115 +2,207 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
 body {
   width: 460px;
   min-height: 300px;
   max-height: 580px;
   overflow-y: auto;
-  background: linear-gradient(135deg, #0f1923 0%, #1a1a2e 50%, #16213e 100%);
-  color: #e0e0e0;
+  background: linear-gradient(135deg, #0c1220 0%, #1a1040 40%, #0d1f3c 70%, #162040 100%);
+  color: #e8e8e8;
   font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
   font-size: 12px;
   line-height: 1.5;
-  padding: 12px;
+  padding: 14px;
+  position: relative;
 }
-a { color: #60a5fa; text-decoration: none; }
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(96,165,250,0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -30px; left: -30px;
+  width: 140px; height: 140px;
+  background: radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a { color: #7dd3fc; text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+/* Glass base */
+.glass {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+
 .btn {
-  padding: 6px 14px;
+  padding: 7px 16px;
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: #e0e0e0;
   font-size: 11px;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: all 0.2s ease;
+  letter-spacing: 0.01em;
 }
-.btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
-.btn:disabled { opacity: 0.3; cursor: default; }
-.btn-primary { background: rgba(96,165,250,0.2); border-color: rgba(96,165,250,0.4); color: #fff; }
-.btn-primary:hover { background: rgba(96,165,250,0.35); border-color: rgba(96,165,250,0.6); }
+.btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: 0.25; cursor: default; transform: none; }
+.btn-primary {
+  background: linear-gradient(135deg, rgba(96,165,250,0.25), rgba(168,85,247,0.2));
+  border-color: rgba(96,165,250,0.35);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(96,165,250,0.1);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgba(96,165,250,0.4), rgba(168,85,247,0.3));
+  border-color: rgba(96,165,250,0.5);
+  box-shadow: 0 0 30px rgba(96,165,250,0.15);
+}
 
-.hint { color: rgba(255,255,255,0.4); font-size: 11px; margin-bottom: 8px; }
-.error { color: #f87171; font-size: 11px; margin-top: 4px; }
-.status { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 4px; }
+.hint { color: rgba(255,255,255,0.35); font-size: 11px; margin-bottom: 10px; line-height: 1.6; }
+.error { color: #fca5a5; font-size: 11px; margin-top: 6px; }
+.status { color: rgba(255,255,255,0.35); font-size: 11px; margin-top: 6px; }
 .hidden { display: none; }
 
+/* Idle state */
+.idle-card {
+  padding: 20px;
+  text-align: center;
+}
+.idle-icon {
+  width: 48px; height: 48px;
+  margin: 0 auto 12px;
+  background: linear-gradient(135deg, rgba(96,165,250,0.15), rgba(168,85,247,0.12));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.idle-title {
+  font-size: 14px; font-weight: 700; color: #fff;
+  margin-bottom: 4px;
+}
+.idle-sub {
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  margin-bottom: 14px;
+}
+.idle-actions { display: flex; gap: 6px; justify-content: center; }
+
 /* Table */
-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px; }
 th {
-  text-align: left; padding: 5px 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.35); font-size: 10px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.04em;
+  text-align: left; padding: 6px 7px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.3); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
   cursor: pointer; user-select: none;
 }
 th:hover { color: rgba(255,255,255,0.6); }
-th.sorted-asc::after { content: ' ^'; color: #60a5fa; }
-th.sorted-desc::after { content: ' v'; color: #60a5fa; }
-td { padding: 5px 6px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+th.sorted-asc::after { content: ' ^'; color: #7dd3fc; }
+th.sorted-desc::after { content: ' v'; color: #7dd3fc; }
+td { padding: 6px 7px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+tr { transition: background 0.15s; }
 tr:hover td { background: rgba(255,255,255,0.04); }
-td.price { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+td.price { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #7dd3fc; }
 td.sales { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-td.loc { color: rgba(255,255,255,0.35); }
-td.no { color: rgba(255,255,255,0.2); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+td.loc { color: rgba(255,255,255,0.3); font-size: 10px; }
+td.no { color: rgba(255,255,255,0.15); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+td a { font-weight: 500; }
 
 /* Header */
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.header-title { font-size: 13px; font-weight: 700; color: #fff; }
-.header-link { font-size: 11px; color: #60a5fa; cursor: pointer; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 0 2px; }
+.header-title { font-size: 14px; font-weight: 700; color: #fff; }
+.header-link { font-size: 11px; color: #7dd3fc; cursor: pointer; font-weight: 500; }
+.header-link:hover { opacity: 0.8; }
 
 /* Product info */
-.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 8px; }
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
 .info-box {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px;
-  padding: 6px 8px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 8px 10px;
+  transition: border-color 0.2s;
 }
-.info-label { color: rgba(255,255,255,0.3); font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-.info-value { font-size: 13px; font-weight: 700; color: #fff; }
+.info-box:hover { border-color: rgba(255,255,255,0.12); }
+.info-label { color: rgba(255,255,255,0.25); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+.info-value { font-size: 14px; font-weight: 700; color: #fff; margin-top: 2px; }
 
 /* Theme bars */
-.theme-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 11px; }
-.theme-name { width: 80px; color: rgba(255,255,255,0.4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
-.theme-track { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
-.theme-fill { height: 100%; border-radius: 2px; }
-.theme-count { width: 20px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.3); }
+.theme-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 11px; }
+.theme-name { width: 80px; color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 500; }
+.theme-track { flex: 1; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+.theme-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+.theme-count { width: 22px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.25); }
 
 /* Insights */
 .insight {
   font-size: 11px;
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-left: 2px solid rgba(96,165,250,0.5);
-  padding: 4px 8px; margin-bottom: 3px;
-  border-radius: 0 6px 6px 0;
-  color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-left: 2px solid rgba(96,165,250,0.4);
+  padding: 6px 10px; margin-bottom: 4px;
+  border-radius: 0 8px 8px 0;
+  color: rgba(255,255,255,0.55);
+  transition: border-color 0.2s;
+}
+.insight:hover { border-left-color: rgba(96,165,250,0.7); }
+
+.section { margin-top: 12px; }
+.section-title {
+  color: rgba(255,255,255,0.25); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 6px; font-weight: 700;
 }
 
-.section { margin-top: 10px; }
-.section-title { color: rgba(255,255,255,0.3); font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; font-weight: 600; }
+/* Scrollbar */
+body::-webkit-scrollbar { width: 4px; }
+body::-webkit-scrollbar-track { background: transparent; }
+body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 </style>
 </head>
 <body>
 
 <!-- IDLE -->
-<div id="idle">
-  <div class="hint">Buka halaman produk atau pencarian Shopee/Tokopedia, lalu klik Scrape.</div>
-  <div style="display:flex;gap:4px">
+<div id="idle" class="glass idle-card">
+  <div class="idle-icon">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+      <path d="M11 8v6M8 11h6" stroke-opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="idle-title">Review Scraper</div>
+  <div class="idle-sub">Scrape review dari Shopee & Tokopedia</div>
+  <div class="hint">Buka halaman produk atau pencarian, lalu klik Scrape.</div>
+  <div class="idle-actions">
     <button id="scrapeBtn" class="btn btn-primary">Scrape</button>
     <button id="debugBtn" class="btn">Debug</button>
   </div>
@@ -123,22 +215,24 @@ td.no { color: rgba(255,255,255,0.2); font-family: 'JetBrains Mono', monospace; 
   <div class="header">
     <div>
       <div id="searchQuery" class="header-title"></div>
-      <div id="searchCount" style="color:rgba(255,255,255,0.35);font-size:11px"></div>
+      <div id="searchCount" style="color:rgba(255,255,255,0.3);font-size:11px;margin-top:2px"></div>
     </div>
     <span class="header-link" onclick="resetUI()">Baru</span>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th class="no" data-sort="no">No</th>
-        <th data-sort="name">Produk</th>
-        <th data-sort="price">Harga</th>
-        <th data-sort="sales">Terjual</th>
-        <th data-sort="location">Lokasi</th>
-      </tr>
-    </thead>
-    <tbody id="searchTable"></tbody>
-  </table>
+  <div class="glass" style="padding:6px 4px">
+    <table>
+      <thead>
+        <tr>
+          <th class="no" data-sort="no">#</th>
+          <th data-sort="name">Produk</th>
+          <th data-sort="price">Harga</th>
+          <th data-sort="sales">Terjual</th>
+          <th data-sort="location">Lokasi</th>
+        </tr>
+      </thead>
+      <tbody id="searchTable"></tbody>
+    </table>
+  </div>
 </div>
 
 <!-- PRODUCT DETAIL -->
@@ -148,7 +242,7 @@ td.no { color: rgba(255,255,255,0.2); font-family: 'JetBrains Mono', monospace; 
     <span class="header-link" onclick="resetUI()">Baru</span>
   </div>
 
-  <div id="prodName" style="font-size:12px;font-weight:700;color:#fff;margin-bottom:8px"></div>
+  <div id="prodName" style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.4"></div>
 
   <div class="info-grid">
     <div class="info-box"><div class="info-label">Harga</div><div class="info-value" id="prodPrice">-</div></div>
@@ -174,9 +268,9 @@ td.no { color: rgba(255,255,255,0.2); font-family: 'JetBrains Mono', monospace; 
     <div id="prodInsights"></div>
   </div>
 
-  <div style="margin-top:10px;display:flex;gap:6px;align-items:center">
+  <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
     <button id="saveBtn" class="btn" onclick="saveToSupabase()">Simpan</button>
-    <span id="saveStatus" class="hidden" style="color:rgba(255,255,255,0.35);font-size:11px"></span>
+    <span id="saveStatus" class="hidden" style="color:rgba(255,255,255,0.3);font-size:11px"></span>
   </div>
 </div>
 
