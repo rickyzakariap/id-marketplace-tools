@@ -186,7 +186,7 @@ function scrapeShopeeSearch() {
     const shopEl = item.querySelector('[class*="shop"], [class*="seller"], [class*="item__shop"]');
     let shop = shopEl?.textContent?.trim() || '';
 
-    // Location: match city names
+    // Location: match city names from text
     const cities = 'Jakarta|Surabaya|Bandung|Tangerang|Bekasi|Semarang|Yogyakarta|Solo|Malang|Medan|Makassar|Denpasar|Bali|Depok|Bogor|Palembang|Batam|Pekanbaru|Balikpapan|Samarinda|Manado|Pontianak|Banjarmasin|Cimahi|Cirebon|Tasikmalaya|Serang|Karawang|Purwokerto|Madiun|Kediri|Blitar|Probolinggo|Pasuruan|Jember|Banyuwangi|Kudus|Pati|Rembang|Tuban|Lamongan|Gresik|Sidoarjo|Bangkalan|Pamekasan|Sumenep|Mataram|Lombok|Kupang|Ambon|Ternate|Jayapura|Sorong|Manokwari|Timika|Nabire|Fakfak|Bau-Bau|Kendari|Palu|Gorontalo|Mamuju|Palopo|Parepare|Bontang|Tarakan|Tanjung Selor|Singkawang';
     const locMatch = textClean.match(new RegExp(`(${cities})(?:\\s|Produk|$)`, 'i'));
     const location = locMatch ? locMatch[1] : '';
@@ -424,9 +424,24 @@ function scrapeTokopediaSearch() {
       sales = allSales[allSales.length - 1][1].trim();
     }
 
-    // Shop name
-    const shopEl = card.querySelector('[data-testid="product-shop-name"]');
-    const shop = shopEl?.textContent?.trim() || '';
+    // Shop name: try multiple selectors (Tokopedia changes frequently)
+    const shopEl = card.querySelector('[data-testid="product-shop-name"]')
+      || card.querySelector('[data-testid="shopName"]')
+      || card.querySelector('a[href*="/shop/"] span')
+      || card.querySelector('[class*="shop-name"]')
+      || card.querySelector('[class*="shopName"]');
+    let shop = shopEl?.textContent?.trim() || '';
+    // Fallback: find shop link in card
+    if (!shop) {
+      const shopLink = card.querySelector('a[href*="tokopedia.com/"][href*="/"]');
+      if (shopLink) {
+        const href = shopLink.href || '';
+        const match = href.match(/tokopedia\.com\/([^/]+)/);
+        if (match && !['search', 'promo', 'cart'].includes(match[1])) {
+          shop = match[1];
+        }
+      }
+    }
 
     // Location: Tokopedia product cards don't show location in search
     const location = '';
