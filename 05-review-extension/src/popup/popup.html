@@ -208,10 +208,10 @@ body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radiu
       <div id="searchQuery" class="header-title"></div>
       <div id="searchCount" style="color:rgba(255,255,255,0.25);font-size:11px;margin-top:2px"></div>
     </div>
-    <span class="header-link" onclick="resetUI()">Baru</span>
+    <span id="newSearchBtn" class="header-link">Baru</span>
   </div>
   <div class="glass filter-bar">
-    <input id="filterInput" class="filter-input" type="text" placeholder="Filter produk..." oninput="filterTable()">
+    <input id="filterInput" class="filter-input" type="text" placeholder="Filter produk...">
   </div>
   <div class="glass" style="padding:4px">
     <table>
@@ -229,7 +229,7 @@ body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radiu
   </div>
   <div class="action-bar glass">
     <div class="action-left">
-      <button class="btn btn-sm" onclick="exportCSV()">Download CSV</button>
+      <button id="exportCsvBtn" class="btn btn-sm">Download CSV</button>
     </div>
     <div class="action-right" id="saveIndicator"></div>
   </div>
@@ -239,7 +239,7 @@ body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radiu
 <div id="productResults" class="hidden">
   <div class="header">
     <div class="header-title">Detail Produk</div>
-    <span class="header-link" onclick="resetUI()">Baru</span>
+    <span id="newSearchBtn2" class="header-link">Baru</span>
   </div>
 
   <div id="prodName" style="font-size:13px;font-weight:700;color:#e6edf3;margin-bottom:10px;line-height:1.4"></div>
@@ -270,7 +270,7 @@ body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radiu
 
   <div class="action-bar glass">
     <div class="action-left">
-      <button class="btn btn-sm" onclick="exportCSV()">Download CSV</button>
+      <button id="exportCsvBtn" class="btn btn-sm">Download CSV</button>
     </div>
     <div class="action-right" id="saveIndicator2"></div>
   </div>

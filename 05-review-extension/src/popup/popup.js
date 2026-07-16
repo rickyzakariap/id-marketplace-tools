@@ -941,5 +941,22 @@ function resetUI() {
 document.addEventListener('DOMContentLoaded', () => {
   $('scrapeBtn').addEventListener('click', scrape);
   $('debugBtn').addEventListener('click', debugPageHandler);
+  
+  // "Baru" buttons (can't use inline onclick in MV3 extensions - CSP blocks it)
+  const resetBtns = ['newSearchBtn', 'newSearchBtn2'];
+  resetBtns.forEach(id => {
+    const el = $(id);
+    if (el) el.addEventListener('click', resetUI);
+  });
+
+  // CSV export buttons
+  document.querySelectorAll('#exportCsvBtn').forEach(btn => {
+    btn.addEventListener('click', exportCSV);
+  });
+
+  // Filter input
+  const filterEl = $('filterInput');
+  if (filterEl) filterEl.addEventListener('input', filterTable);
+
   restoreState(); // restore data from previous session
 });
