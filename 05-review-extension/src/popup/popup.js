@@ -182,9 +182,11 @@ function scrapeShopeeSearch() {
     // Stars: 0 (not available in search)
     const stars = 0;
 
-    // Shop name
-    const shopEl = item.querySelector('[class*="shop"], [class*="seller"], [class*="item__shop"]');
+    // Shop name: use specific selectors, not broad [class*="shop"] which matches entire card
+    const shopEl = item.querySelector('[class*="shop-name"], [class*="shopName"], [class*="item__shop-name"], a[class*="shop"] span');
     let shop = shopEl?.textContent?.trim() || '';
+    // Validate: shop name should be short (under 60 chars), not the full card text
+    if (shop.length > 60) shop = '';
 
     // Location: match city names from text
     const cities = 'Jakarta|Surabaya|Bandung|Tangerang|Bekasi|Semarang|Yogyakarta|Solo|Malang|Medan|Makassar|Denpasar|Bali|Depok|Bogor|Palembang|Batam|Pekanbaru|Balikpapan|Samarinda|Manado|Pontianak|Banjarmasin|Cimahi|Cirebon|Tasikmalaya|Serang|Karawang|Purwokerto|Madiun|Kediri|Blitar|Probolinggo|Pasuruan|Jember|Banyuwangi|Kudus|Pati|Rembang|Tuban|Lamongan|Gresik|Sidoarjo|Bangkalan|Pamekasan|Sumenep|Mataram|Lombok|Kupang|Ambon|Ternate|Jayapura|Sorong|Manokwari|Timika|Nabire|Fakfak|Bau-Bau|Kendari|Palu|Gorontalo|Mamuju|Palopo|Parepare|Bontang|Tarakan|Tanjung Selor|Singkawang';
