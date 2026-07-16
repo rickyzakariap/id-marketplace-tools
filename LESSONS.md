@@ -103,3 +103,20 @@
 - Lesson: Python stdlib is enough for a useful CLI tool, no need for pip packages
 - Lesson: Curated keyword lists work well for domain-specific sentiment in Indonesian
 - Next: Add synonym detection for Indonesian language, consider using a simple stemming approach
+
+---
+
+## 2026-07-16 - Dropship Margin Calculator
+- Works: Python stdlib http.server, zero dependencies, single file
+- Works: Web UI (not CLI) - sellers can use it directly
+- Works: 6 Indonesian marketplaces with category-specific fees
+- Works: Compare mode ranks profit across all marketplaces
+- Works: Break-even price + recommended selling price with X999 variant
+- Works: Free ongkir subsidy calculation
+- Works: Auto-fill example data for quick testing
+- Issues: Fee data is approximate, marketplace rates change quarterly
+- Issues: No persistent storage - calculations lost on refresh
+- Lesson: Python stdlib is enough for a web tool, no need for Flask/Django
+- Lesson: http.server handles simple JSON APIs fine for prototypes
+- Lesson: Go not available on this machine - check toolchain before planning
+- Next: Add save/export functionality, SQLite for history
