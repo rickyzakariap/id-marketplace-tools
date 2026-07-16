@@ -11,6 +11,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 3 | [03-review-sentiment-analyzer](03-review-sentiment-analyzer/) | Web | Node.js + Express | Analyze review sentiment with themes and insights |
 | 4 | [04-fee-breakdown-calculator](04-fee-breakdown-calculator/) | CLI | Python | Fee breakdown calculator for 6 marketplaces with comparison |
 | 5 | [05-review-extension](05-review-extension/) | Extension | Chrome MV3 + Express + Supabase | Shopee/Tokopedia review scraper and sentiment analyzer |
+| 6 | [06-dropship-calculator](06-dropship-calculator/) | Web | Python (stdlib) | Dropship margin calculator across 6 marketplaces |
 
 ## Contributing
 
