@@ -167,16 +167,18 @@ app.post('/api/save', async (req, res) => {
   }
 });
 
-// Save products (search results) to Supabase
+// Save products (search results) to Supabase with dedup
 app.post('/api/save-products', async (req, res) => {
-  const { products, query } = req.body;
+  const { products, query, marketplace } = req.body;
   if (!products?.length) return res.status(400).json({ error: 'products required' });
 
   try {
     const rows = products.map(p => ({
+      marketplace: marketplace || 'unknown',
       product_name: p.name || '',
       price: p.price || '',
       sales: p.sales || '',
+      rating: p.stars || null,
       shop: p.shop || '',
       location: p.location || '',
       product_url: p.url || '',
@@ -184,7 +186,10 @@ app.post('/api/save-products', async (req, res) => {
       scraped_at: new Date().toISOString(),
     }));
 
-    const { data, error } = await supabase.from('products').insert(rows).select();
+    // Upsert: update existing rows by product_url, insert new ones
+    const { data, error } = await supabase.from('products')
+      .upsert(rows, { onConflict: 'product_url', ignoreDuplicates: false })
+      .select();
     if (error) throw error;
     res.json({ success: true, count: data?.length || 0 });
   } catch (err) {
