@@ -363,8 +363,12 @@ function scrapeTokopediaSearch() {
       const titleEl = card.querySelector('[data-testid="product-title"]');
       name = titleEl?.textContent?.trim() || link.textContent?.trim() || '';
     }
-    // Clean up name (remove price/sales that might be inside link text)
-    name = name.replace(/Rp[\d.,]+\s*/g, '').replace(/[\d.,]+(?:rb|RB|Rb|K|k)\+?\s*terjual/gi, '').trim();
+    // Clean up name (remove price/sales/discount that might be inside link text)
+    name = name.replace(/^\d+%\s*/, '')  // strip leading discount "18%"
+      .replace(/Rp[\d.,]+\s*/g, '')
+      .replace(/[\d.,]+(?:rb|RB|Rb|K|k)\+?\s*terjual/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
     if (name.length < 3) continue;
 
     // Price: find Rp pattern in the CARD text, but stop at the price boundary
@@ -386,14 +390,15 @@ function scrapeTokopediaSearch() {
       }
     }
 
-    // Sales: must match after price, use word boundary
-    // Patterns: "500+ terjual", "50rb+ terjual", "10rb+ terjual", "4.81RB+ terjual"
+    // Sales: find the LAST number before "terjual" (earlier numbers are crossed-out prices/ratings)
+    // Card text is concatenated: "Rp185.000225.0004.8750+ terjual"
+    // We need "750+" not "225.0004.8750+"
     let sales = '';
-    // Remove price from text to avoid concatenation
     const textAfterPrice = price ? cardText.slice(cardText.indexOf(price) + price.length) : cardText;
-    const salesMatch = textAfterPrice.match(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)?\+?\s*terjual)/i);
-    if (salesMatch) {
-      sales = salesMatch[1].trim();
+    // Find ALL matches and take the last one
+    const allSales = [...textAfterPrice.matchAll(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)?\+?)\s*terjual/gi)];
+    if (allSales.length > 0) {
+      sales = allSales[allSales.length - 1][1].trim();
     }
 
     // Shop name
