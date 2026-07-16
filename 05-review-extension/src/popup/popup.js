@@ -264,91 +264,93 @@ function scrapeTokopediaReviews() {
 // ============================================================
 function scrapeTokopediaSearch() {
   const products = [];
+  const seen = new Set();
 
-  // Try multiple selector strategies
-  let items = document.querySelectorAll('[data-testid="product-card"]');
-  if (items.length === 0) items = document.querySelectorAll('[data-testid="div-product-card"]');
-  if (items.length === 0) items = document.querySelectorAll('[class*="product-card"]:not([class*="container"])');
-  if (items.length === 0) items = document.querySelectorAll('[data-testid="master-product-card"]');
-  if (items.length === 0) items = document.querySelectorAll('div[data-testid]');
-  if (items.length === 0) {
-    // Last resort: find all divs that contain product-like links
-    const allDivs = document.querySelectorAll('div');
-    const candidates = [];
-    allDivs.forEach(div => {
-      const links = div.querySelectorAll(':scope > a[href*="-i."]');
-      if (links.length === 1 && div.textContent.includes('Rp') && div.textContent.includes('terjual')) {
-        candidates.push(div);
+  // Strategy: find product links first (URL pattern is most stable)
+  // Tokopedia product URLs: /[shop]/[slug]-i.[shop-id].[product-id]
+  const productLinks = document.querySelectorAll('a[href*="-i."]');
+
+  for (const link of productLinks) {
+    const href = link.href || '';
+    // Must be a real Tokopedia product link
+    if (!href.includes('tokopedia.com/') || !href.match(/-i\.\d+\.\d+/)) continue;
+    // Skip duplicate URLs
+    if (seen.has(href)) continue;
+
+    // Walk up to find the card container (usually 2-4 levels up)
+    // The card is the nearest ancestor that contains price info
+    let card = link.parentElement;
+    let cardText = card?.textContent || '';
+    let depth = 0;
+    while (card && depth < 6) {
+      cardText = card.textContent || '';
+      // Card must contain Rp and terjual, but not too much text (filter/sidebar)
+      if (cardText.includes('Rp') && cardText.includes('terjual') && cardText.length < 2000) {
+        break;
       }
-    });
-    items = candidates;
-  }
-
-  for (const item of items) {
-    const text = item.textContent || '';
-    if (text.length < 10) continue;
+      card = card.parentElement;
+      depth++;
+    }
+    if (!card || cardText.length > 2000) continue;
 
     // Skip non-product elements
-    if (text.includes('Gratis Ongkir') && text.length > 200) continue;
-    if (text.includes('Daftar') && text.includes('Masuk')) continue;
-    if (text.includes('Lihat selengkapnya') && text.length < 50) continue;
-    if (text.includes('Filter') && text.includes('Harga')) continue;
-    if (text.includes('Jenis toko') || text.includes('Kondisi')) continue;
+    if (cardText.includes('Gratis Ongkir') && cardText.length > 200) continue;
+    if (cardText.includes('Jenis toko') || cardText.includes('Kondisi')) continue;
+    if (cardText.includes('Harga Minimum') || cardText.includes('Harga Maksimum')) continue;
+    // Skip "Lihat selengkapnya" links (filter pagination, not products)
+    if (cardText.trim() === 'Lihat selengkapnya' || 
+        (cardText.includes('Lihat selengkapnya') && !cardText.includes('Rp'))) continue;
 
-    // Must have a product link (href with -i.)
-    const productLink = item.querySelector('a[href*="-i."]') || item.querySelector('a[href*="/promo/"]');
-    if (!productLink) continue;
+    seen.add(href);
 
-    // Name: from product link title or text
-    let name = productLink.getAttribute('title') || productLink.textContent?.trim() || '';
-    if (name.length < 5) {
-      // Try data-testid
-      const titleEl = item.querySelector('[data-testid="product-title"]');
-      name = titleEl?.textContent?.trim() || '';
+    // Name: prefer title attribute, then link text, then aria-label
+    let name = link.getAttribute('title') || link.getAttribute('aria-label') || '';
+    if (!name || name.length < 5) {
+      // Try data-testid inside card
+      const titleEl = card.querySelector('[data-testid="product-title"]');
+      name = titleEl?.textContent?.trim() || link.textContent?.trim() || '';
     }
-    if (!name) continue;
+    // Clean up name (remove price/sales that might be inside link text)
+    name = name.replace(/Rp[\d.,]+\s*/g, '').replace(/[\d.,]+(?:rb|RB|Rb|K|k)\+?\s*terjual/gi, '').trim();
+    if (name.length < 3) continue;
 
-    // Price: data-testid="product-price" or Rp pattern
-    const priceEl = item.querySelector('[data-testid="product-price"]');
-    let price = '';
-    if (priceEl) {
-      const pm = priceEl.textContent.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
-      price = pm ? `Rp${pm[1]}` : '';
-    }
-    if (!price) {
-      const pm = text.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
-      price = pm ? `Rp${pm[1]}` : '';
-    }
+    // Price: find Rp pattern in the CARD text, but stop at the price boundary
+    // Tokopedia format: "Rp28.000" or "Rp 28.000" or "Rp1.250.000"
+    const priceMatch = cardText.match(/Rp\s?(\d{1,3}(?:\.\d{3})*)/);
+    const price = priceMatch ? `Rp${priceMatch[1]}` : '';
 
-    // Sales + Rating: data-testid="product-sales"
-    const salesEl = item.querySelector('[data-testid="product-sales"]');
-    let sales = '';
+    // Sales + Rating: look for "X.X rating" and "N terjual" patterns
+    // Rating: "4.8" or "4.8 dari 5"
     let stars = 0;
-    if (salesEl) {
-      const st = salesEl.textContent || '';
-      const ratingMatch = st.match(/(\d\.\d)/);
-      if (ratingMatch) stars = Math.round(parseFloat(ratingMatch[1]));
-      const salesMatch = st.match(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)\+?\s*terjual)/i)
-        || st.match(/([\d.,]+\+?\s*terjual)/i);
-      sales = salesMatch ? salesMatch[1] : '';
-    }
-    if (!sales) {
-      const salesMatch = text.match(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)\+?\s*terjual)/i)
-        || text.match(/([\d.,]+\+?\s*terjual)/i);
-      sales = salesMatch ? salesMatch[1] : '';
+    const ratingMatch = cardText.match(/(\d\.\d)\s*(?:dari\s*5|terjual)/);
+    if (ratingMatch) stars = Math.round(parseFloat(ratingMatch[1]));
+    if (!stars) {
+      // Try star elements
+      const starEl = card.querySelector('[class*="star"], [data-testid*="rating"]');
+      if (starEl) {
+        const sm = starEl.textContent.match(/(\d\.\d)/);
+        if (sm) stars = Math.round(parseFloat(sm[1]));
+      }
     }
 
-    // Shop: data-testid="product-shop-name"
-    const shopEl = item.querySelector('[data-testid="product-shop-name"]');
+    // Sales: must match after price, use word boundary
+    // Patterns: "500+ terjual", "50rb+ terjual", "10rb+ terjual", "4.81RB+ terjual"
+    let sales = '';
+    // Remove price from text to avoid concatenation
+    const textAfterPrice = price ? cardText.slice(cardText.indexOf(price) + price.length) : cardText;
+    const salesMatch = textAfterPrice.match(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)?\+?\s*terjual)/i);
+    if (salesMatch) {
+      sales = salesMatch[1].trim();
+    }
+
+    // Shop name
+    const shopEl = card.querySelector('[data-testid="product-shop-name"]');
     const shop = shopEl?.textContent?.trim() || '';
 
-    // Location: not available on Tokopedia product cards
+    // Location: Tokopedia product cards don't show location in search
     const location = '';
 
-    // URL
-    const url = productLink.href || '';
-
-    products.push({ name, price, stars, sales, shop, location, url });
+    products.push({ name, price, stars, sales, shop, location, url: href });
   }
 
   return { products, marketplace: 'tokopedia', query: document.querySelector('input[name="q"], input[type="search"]')?.value || '' };
