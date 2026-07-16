@@ -327,8 +327,6 @@ function scrapeTokopediaSearch() {
 
   for (const link of productLinks) {
     const href = link.href || '';
-    // Must be a real Tokopedia product link
-    if (!href.includes('tokopedia.com/') || !href.match(/-i\.\d+\.\d+/)) continue;
     // Skip duplicate URLs
     if (seen.has(href)) continue;
 
