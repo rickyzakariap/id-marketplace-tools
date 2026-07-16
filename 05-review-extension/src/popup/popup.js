@@ -265,24 +265,50 @@ function scrapeTokopediaReviews() {
 function scrapeTokopediaSearch() {
   const products = [];
   const seen = new Set();
-  const debug = { links_found: 0, links_checked: 0, skipped_reasons: [], sample_hrefs: [] };
+  const debug = { links_found: 0, links_checked: 0, skipped_reasons: [], sample_hrefs: [], total_links: 0, wait_ms: 0 };
 
-  // Strategy: find product links first (URL pattern is most stable)
-  // Tokopedia product URLs: /[shop]/[slug]-i.[shop-id].[product-id]
-  const allLinks = document.querySelectorAll('a[href]');
-  const productLinks = [];
-  
-  for (const a of allLinks) {
-    const href = a.href || '';
-    // Try multiple URL patterns
-    if (href.match(/-i\.\d+\.\d+/) || href.match(/\/i\.\d+/) || href.match(/\/product\//)) {
-      productLinks.push(a);
+  // Wait for product grid to load (Tokopedia uses lazy rendering)
+  // Check every 500ms for up to 5 seconds
+  function findProductLinks() {
+    const allLinks = document.querySelectorAll('a[href]');
+    debug.total_links = allLinks.length;
+    const found = [];
+    
+    for (const a of allLinks) {
+      const href = a.href || '';
+      // Try multiple URL patterns
+      if (href.match(/-i\.\d+\.\d+/) || href.match(/\/i\.\d+/) || href.match(/\/product\//)) {
+        found.push(a);
+      }
+      // Collect sample hrefs for debug (first 20 non-search links)
+      if (debug.sample_hrefs.length < 20 && href.includes('tokopedia.com/') && !href.includes('/search') && !href.includes('/promo')) {
+        debug.sample_hrefs.push(href.substring(0, 120));
+      }
     }
-    // Collect sample hrefs for debug
-    if (debug.sample_hrefs.length < 20 && href.includes('tokopedia.com/') && !href.includes('/search')) {
-      debug.sample_hrefs.push(href.substring(0, 120));
+    return found;
+  }
+
+  // First attempt
+  let productLinks = findProductLinks();
+
+  // If no product links found, wait for lazy-loaded content
+  if (productLinks.length === 0) {
+    // Scroll down to trigger lazy load
+    window.scrollBy(0, 500);
+    
+    // Synchronous wait using a polling approach
+    // We can't use async in executeScript, so we use a busy-wait
+    const startTime = Date.now();
+    const maxWait = 4000; // 4 seconds max
+    while (productLinks.length === 0 && (Date.now() - startTime) < maxWait) {
+      // Busy-wait 300ms (blocking, but acceptable for scraping)
+      const blockUntil = Date.now() + 300;
+      while (Date.now() < blockUntil) { /* spin */ }
+      productLinks = findProductLinks();
+      debug.wait_ms = Date.now() - startTime;
     }
   }
+
   debug.links_found = productLinks.length;
 
   for (const link of productLinks) {
@@ -546,7 +572,7 @@ async function scrape() {
 
       if (!result || result.products.length === 0) {
         const dbg = result?._debug;
-        const info = dbg ? `\n\nDEBUG: ${dbg.links_found} product links found. ${dbg.skipped_reasons.length} skipped.\nSample hrefs: ${dbg.sample_hrefs.slice(0,5).join('\n')}` : '';
+        const info = dbg ? `\n\nDEBUG: ${dbg.links_found} product links / ${dbg.total_links} total links. Waited ${dbg.wait_ms}ms. ${dbg.skipped_reasons.length} skipped.\nSample hrefs:\n${dbg.sample_hrefs.slice(0,8).join('\n')}` : '';
         throw new Error('Tidak ditemukan produk.' + info);
       }
 
