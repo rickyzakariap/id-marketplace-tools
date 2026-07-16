@@ -276,13 +276,27 @@ function scrapeTokopediaSearch() {
     
     for (const a of allLinks) {
       const href = a.href || '';
-      // Try multiple URL patterns
-      if (href.match(/-i\.\d+\.\d+/) || href.match(/\/i\.\d+/) || href.match(/\/product\//)) {
+      if (!href.startsWith('http')) continue; // skip javascript:, mailto:, etc.
+      
+      let segments;
+      try {
+        const path = new URL(href).pathname;
+        segments = path.split('/').filter(s => s.length > 0);
+      } catch { continue; }
+      
+      // Tokopedia product URLs: /[shop]/[product-slug]-[numeric-id]
+      // Must have at least 2 path segments, last segment ends with digits
+      // Exclude known non-product paths
+      const isProduct = segments.length >= 2 
+        && !['search', 'promo', 'cart', 'checkout', 'account', 'chat', 'notifications', 'settings'].includes(segments[0])
+        && /\d{5,}$/.test(segments[segments.length - 1]); // ends with 5+ digit ID
+      
+      if (isProduct) {
         found.push(a);
       }
       // Collect sample hrefs for debug (first 20 non-search links)
       if (debug.sample_hrefs.length < 20 && href.includes('tokopedia.com/') && !href.includes('/search') && !href.includes('/promo')) {
-        debug.sample_hrefs.push(href.substring(0, 120));
+        debug.sample_hrefs.push(href.substring(0, 150));
       }
     }
     return found;
