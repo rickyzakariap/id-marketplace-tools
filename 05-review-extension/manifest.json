@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Scrape and analyze marketplace reviews",
   "manifest_version": 3,
-  "permissions": ["activeTab", "scripting", "downloads"],
+  "permissions": ["activeTab", "scripting", "downloads", "storage"],
   "host_permissions": ["https://shopee.co.id/*", "https://tokopedia.com/*"],
   "action": {
     "default_popup": "src/popup/popup.html",

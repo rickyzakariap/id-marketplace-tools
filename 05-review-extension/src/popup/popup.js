@@ -5,6 +5,30 @@ let lastResults = null;
 let searchProducts = [];
 let sortState = { col: null, asc: true };
 
+// Persist data across popup open/close
+function saveState() {
+  try {
+    chrome.storage.local.set({
+      searchProducts,
+      lastResults,
+      savedAt: Date.now(),
+    });
+  } catch {}
+}
+
+function restoreState(callback) {
+  try {
+    chrome.storage.local.get(['searchProducts', 'lastResults', 'savedAt'], (data) => {
+      if (data.searchProducts?.length && Date.now() - data.savedAt < 3600000) { // 1 hour expiry
+        searchProducts = data.searchProducts;
+        lastResults = data.lastResults;
+        renderSearchResults({ products: searchProducts, query: lastResults?.query || '' });
+      }
+      callback?.();
+    });
+  } catch { callback?.(); }
+}
+
 // ============================================================
 // Scrape Shopee product reviews (from product detail page)
 // ============================================================
@@ -594,6 +618,7 @@ async function scrape() {
 
       status.textContent = `${result.products.length} produk ditemukan. Menampilkan...`;
       renderSearchResults(result);
+      saveState(); // persist across popup close
 
       // Auto-save to Supabase (clean data)
       const marketplace = isShopee ? 'shopee' : 'tokopedia';
@@ -893,4 +918,5 @@ function resetUI() {
 document.addEventListener('DOMContentLoaded', () => {
   $('scrapeBtn').addEventListener('click', scrape);
   $('debugBtn').addEventListener('click', debugPageHandler);
+  restoreState(); // restore data from previous session
 });
