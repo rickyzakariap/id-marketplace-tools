@@ -265,10 +265,25 @@ function scrapeTokopediaReviews() {
 function scrapeTokopediaSearch() {
   const products = [];
   const seen = new Set();
+  const debug = { links_found: 0, links_checked: 0, skipped_reasons: [], sample_hrefs: [] };
 
   // Strategy: find product links first (URL pattern is most stable)
   // Tokopedia product URLs: /[shop]/[slug]-i.[shop-id].[product-id]
-  const productLinks = document.querySelectorAll('a[href*="-i."]');
+  const allLinks = document.querySelectorAll('a[href]');
+  const productLinks = [];
+  
+  for (const a of allLinks) {
+    const href = a.href || '';
+    // Try multiple URL patterns
+    if (href.match(/-i\.\d+\.\d+/) || href.match(/\/i\.\d+/) || href.match(/\/product\//)) {
+      productLinks.push(a);
+    }
+    // Collect sample hrefs for debug
+    if (debug.sample_hrefs.length < 20 && href.includes('tokopedia.com/') && !href.includes('/search')) {
+      debug.sample_hrefs.push(href.substring(0, 120));
+    }
+  }
+  debug.links_found = productLinks.length;
 
   for (const link of productLinks) {
     const href = link.href || '';
@@ -294,12 +309,12 @@ function scrapeTokopediaSearch() {
     if (!card || cardText.length > 2000) continue;
 
     // Skip non-product elements
-    if (cardText.includes('Gratis Ongkir') && cardText.length > 200) continue;
-    if (cardText.includes('Jenis toko') || cardText.includes('Kondisi')) continue;
-    if (cardText.includes('Harga Minimum') || cardText.includes('Harga Maksimum')) continue;
+    if (cardText.includes('Gratis Ongkir') && cardText.length > 200) { debug.skipped_reasons.push('gratis-ongkir'); continue; }
+    if (cardText.includes('Jenis toko') || cardText.includes('Kondisi')) { debug.skipped_reasons.push('filter-nav'); continue; }
+    if (cardText.includes('Harga Minimum') || cardText.includes('Harga Maksimum')) { debug.skipped_reasons.push('harga-input'); continue; }
     // Skip "Lihat selengkapnya" links (filter pagination, not products)
     if (cardText.trim() === 'Lihat selengkapnya' || 
-        (cardText.includes('Lihat selengkapnya') && !cardText.includes('Rp'))) continue;
+        (cardText.includes('Lihat selengkapnya') && !cardText.includes('Rp'))) { debug.skipped_reasons.push('lihat-selengkapnya'); continue; }
 
     seen.add(href);
 
@@ -353,7 +368,7 @@ function scrapeTokopediaSearch() {
     products.push({ name, price, stars, sales, shop, location, url: href });
   }
 
-  return { products, marketplace: 'tokopedia', query: document.querySelector('input[name="q"], input[type="search"]')?.value || '' };
+  return { products, marketplace: 'tokopedia', query: document.querySelector('input[name="q"], input[type="search"]')?.value || '', _debug: debug };
 }
 
 // ============================================================
@@ -530,7 +545,9 @@ async function scrape() {
       else result = await runInPage(scrapeTokopediaSearch);
 
       if (!result || result.products.length === 0) {
-        throw new Error('Tidak ditemukan produk. Pastikan halaman hasil pencarian terbuka.');
+        const dbg = result?._debug;
+        const info = dbg ? `\n\nDEBUG: ${dbg.links_found} product links found. ${dbg.skipped_reasons.length} skipped.\nSample hrefs: ${dbg.sample_hrefs.slice(0,5).join('\n')}` : '';
+        throw new Error('Tidak ditemukan produk.' + info);
       }
 
       status.textContent = `${result.products.length} produk ditemukan. Menampilkan...`;
@@ -586,7 +603,7 @@ async function scrape() {
     }
 
   } catch (err) {
-    error.textContent = err.message;
+    error.innerHTML = err.message.replace(/\n/g, '<br>');
     error.classList.remove('hidden');
     status.classList.add('hidden');
   } finally {
