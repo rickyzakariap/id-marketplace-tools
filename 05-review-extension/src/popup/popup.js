@@ -390,13 +390,12 @@ function scrapeTokopediaSearch() {
       }
     }
 
-    // Sales: find the LAST number before "terjual" (earlier numbers are crossed-out prices/ratings)
-    // Card text is concatenated: "Rp185.000225.0004.8750+ terjual"
-    // We need "750+" not "225.0004.8750+"
+    // Sales: find the LAST number+ before "terjual"
+    // Card text concatenates rating "4.8" with sales "750+" as "4.8750+"
+    // Use (?<!\.) to reject matches starting after a dot (that's the rating decimal)
     let sales = '';
     const textAfterPrice = price ? cardText.slice(cardText.indexOf(price) + price.length) : cardText;
-    // Find ALL matches and take the last one
-    const allSales = [...textAfterPrice.matchAll(/([\d.,]+(?:rb|RB|Rb|K|k|M|m)?\+?)\s*terjual/gi)];
+    const allSales = [...textAfterPrice.matchAll(/(?<!\.)(\d{1,6}(?:\.\d{1,2})?(?:rb|RB|Rb|K|k|M|m)?\+)\s*terjual/gi)];
     if (allSales.length > 0) {
       sales = allSales[allSales.length - 1][1].trim();
     }
