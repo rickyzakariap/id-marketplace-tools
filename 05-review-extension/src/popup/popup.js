@@ -595,8 +595,9 @@ async function scrape() {
       status.textContent = `${result.products.length} produk ditemukan. Menampilkan...`;
       renderSearchResults(result);
 
-      // Auto-save to Supabase
-      autoSaveProducts(result.products, result.query);
+      // Auto-save to Supabase (clean data)
+      const marketplace = isShopee ? 'shopee' : 'tokopedia';
+      autoSaveProducts(result.products, result.query, marketplace);
 
     } else if (isProduct) {
       // Product detail page - scrape both product info and reviews
@@ -725,14 +726,19 @@ function truncate(str, len) {
 // ============================================================
 // Auto-save: products to Supabase (fire and forget)
 // ============================================================
-async function autoSaveProducts(products, query) {
+async function autoSaveProducts(products, query, marketplace) {
   const indicator = $('saveIndicator');
   if (indicator) indicator.textContent = 'Menyimpan...';
   try {
+    // Clean sales data before sending to Supabase
+    const cleaned = products.map(p => ({
+      ...p,
+      sales: cleanSales(p.sales),
+    }));
     const resp = await fetch(`${BACKEND}/api/save-products`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ products, query }),
+      body: JSON.stringify({ products: cleaned, query, marketplace }),
     });
     if (!resp.ok) throw new Error(resp.status);
     const data = await resp.json();
@@ -792,34 +798,34 @@ function exportCSV() {
     const isSearch = searchProducts.length > 0;
     const headers = isSearch ? ['No','Produk','Harga','Terjual','Rating','Toko','URL'] : ['Review','Rating','Sentimen','Score','Tema'];
     const rows = data.map((d, i) => isSearch
-      ? [i+1, `"${(d.name||'').replace(/"/g,'""')}"`, d.price||'', d.sales||'', d.stars||'', d.shop||'', d.url||'']
+      ? [i+1, `"${(d.name||'').replace(/"/g,'""')}"`, d.price||'', cleanSales(d.sales)||'', d.stars||'', d.shop||'', d.url||'']
       : [`"${(d.text||'').replace(/"/g,'""')}"`, d.rating||'', d.sentiment||'', d.score||'', (d.themes||[]).join('; ')]
     );
 
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
 
-    // Method 1: chrome.downloads API
-    if (chrome?.downloads?.download) {
-      chrome.downloads.download({
-        url: url,
-        filename: `products-${new Date().toISOString().slice(0,10)}.csv`,
-        saveAs: true,
-      }, (downloadId) => {
-        if (chrome.runtime.lastError) {
-          // Fallback: open in new tab
-          window.open(url, '_blank');
-        }
-        // Clean up blob URL after a delay
-        setTimeout(() => URL.revokeObjectURL(url), 10000);
-      });
-      showExportMsg(`${data.length} produk - file CSV ter-download`);
-    } else {
-      // Method 2: fallback - open in new tab
-      window.open(url, '_blank');
-      showExportMsg(`${data.length} produk - CSV terbuka di tab baru`);
-    }
+    // Convert to data URL (chrome.downloads needs data: or http: URLs, not blob:)
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (chrome?.downloads?.download) {
+        chrome.downloads.download({
+          url: reader.result,
+          filename: `products-${new Date().toISOString().slice(0,10)}.csv`,
+          saveAs: true,
+        }, (downloadId) => {
+          if (chrome.runtime.lastError) {
+            showExportMsg('Error: ' + chrome.runtime.lastError.message);
+          } else {
+            showExportMsg(`${data.length} produk - CSV ter-download`);
+          }
+        });
+      } else {
+        showExportMsg('Error: chrome.downloads tidak tersedia');
+      }
+    };
+    reader.onerror = () => showExportMsg('Error: gagal membaca file');
+    reader.readAsDataURL(blob);
   } catch (err) {
     console.error('CSV export error:', err);
     showExportMsg('Error: ' + err.message);
@@ -829,6 +835,13 @@ function exportCSV() {
 function showExportMsg(msg) {
   const el = document.getElementById('saveIndicator') || document.getElementById('saveIndicator2');
   if (el) el.textContent = msg;
+}
+
+// Clean sales string: "225.0004.8750+ terjual" -> "750+"
+function cleanSales(raw) {
+  if (!raw) return '';
+  const all = [...raw.matchAll(/(?<!\.)(\d{1,6}(?:\.\d{1,2})?(?:rb|RB|Rb|K|k|M|m)?\+)\s*terjual/gi)];
+  return all.length > 0 ? all[all.length - 1][1].trim() : raw;
 }
 
 // ============================================================
