@@ -20,15 +20,18 @@ CREATE POLICY "Allow all" ON reviews FOR ALL USING (true) WITH CHECK (true);
 
 CREATE TABLE products (
   id BIGSERIAL PRIMARY KEY,
+  marketplace TEXT NOT NULL DEFAULT 'unknown',
   product_name TEXT,
   price TEXT,
   sales TEXT,
+  rating REAL,
   shop TEXT,
   location TEXT,
   product_url TEXT,
   search_query TEXT,
   scraped_at TIMESTAMPTZ DEFAULT NOW(),
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(product_url)
 );
 
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
