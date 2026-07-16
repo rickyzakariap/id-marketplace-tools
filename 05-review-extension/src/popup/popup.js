@@ -605,6 +605,13 @@ async function scrape() {
   status.classList.remove('hidden');
   status.textContent = 'Mendeteksi halaman...';
 
+  // Clear old results immediately
+  searchProducts = [];
+  lastResults = null;
+  $('searchResults').classList.add('hidden');
+  $('productResults').classList.add('hidden');
+  $('idle').classList.remove('hidden');
+
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const url = tab.url || '';
@@ -928,6 +935,7 @@ function resetUI() {
   $('error').classList.add('hidden');
   searchProducts = [];
   lastResults = null;
+  chrome.storage.local.remove(['searchProducts', 'lastResults']); // clear persisted data
 }
 
 document.addEventListener('DOMContentLoaded', () => {
