@@ -158,7 +158,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;l
 h1{font-size:1.4rem;font-weight:600;margin-bottom:2px;color:#1a1a1a}
 .subtitle{color:#666;font-size:0.85rem;margin-bottom:24px}
 .grid{display:grid;grid-template-columns:1fr 2fr;gap:16px}
-@media(max-width:768px){.grid{grid-template-template-columns:1fr}}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.chip-grid{grid-template-columns:repeat(2,1fr)}.fee-grid{grid-template-columns:repeat(2,1fr)}.container{padding:12px}}
 .card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px}
 .section-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:#999;margin-bottom:14px;font-weight:500}
 label{display:block;font-size:0.82rem;color:#555;margin-bottom:4px;margin-top:14px}
