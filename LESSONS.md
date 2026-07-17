@@ -123,6 +123,19 @@
 
 ---
 
+## 2026-07-17 - Listing Description Generator (Go rewrite)
+- Works: Rewrote static HTML to Go 1.26 server
+- Works: MD3 + Tailwind frontend (no AI slop)
+- Works: 6 marketplace-specific generation with proper limits
+- Works: Go single binary, no runtime dependency
+- Issues: Need `go mod init` before build
+- Lesson: Go installed via winget (GoLang.Go 1.26.5)
+- Lesson: Embed HTML as const in separate .go file
+- Lesson: Go net/http is enough for simple JSON APIs
+- Lesson: Don't promise tech stacks without checking what's installed - just install them
+
+---
+
 ## 2026-07-17 - Listing Description Generator
 - Works: Static HTML/CSS/JS, zero dependencies, no backend needed
 - Works: 6 marketplace targets with platform-specific formatting
