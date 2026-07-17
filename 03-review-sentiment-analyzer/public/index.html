@@ -6,16 +6,30 @@
 <title>Review Sentiment Analyzer</title>
 <style>
 :root {
-  --bg: #111;
-  --surface: #1a1a1a;
-  --border: #2a2a2a;
-  --text: #e5e5e5;
-  --text-dim: #737373;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --green: #22c55e;
-  --yellow: #eab308;
-  --red: #ef4444;
+  --bg: #fafafa;
+  --surface: #fff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --text-dim: #666;
+  --text-muted: #999;
+  --accent: #4a9;
+  --accent-hover: #3a8;
+  --green: #16a34a;
+  --yellow: #d97706;
+  --red: #dc2626;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --surface: #242424;
+  --border: #333;
+  --text: #e0e0e0;
+  --text-dim: #aaa;
+  --text-muted: #777;
+  --accent: #4a9;
+  --accent-hover: #5ba8;
+  --green: #4ade80;
+  --yellow: #fbbf24;
+  --red: #f87171;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -430,6 +444,7 @@ textarea.error {
 <body>
 
 <h1>Review Sentiment Analyzer</h1>
+<button onclick="toggleTheme()" id="themeBtn" style="position:fixed;top:16px;right:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.78rem;color:var(--text-dim);z-index:50">Dark</button>
 <p class="subtitle">Analisa sentimen review marketplace Indonesia. Paste review atau upload CSV.</p>
 
 <div class="input-section">
@@ -543,6 +558,18 @@ $('reviewInput').addEventListener('input', function() {
 $('reviewInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && e.ctrlKey) analyze();
 });
+
+// Theme toggle
+const savedTheme = localStorage.getItem('theme') || 'light';
+if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+}
+document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {

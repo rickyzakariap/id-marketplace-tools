@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="id">
+<html lang="id">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -13,36 +13,36 @@
       theme: {
         extend: {
           colors: {
-            primary: "#adc6ff",
-            "on-primary": "#002e6a",
-            "primary-container": "#4d8eff",
-            "on-primary-container": "#00285d",
-            secondary: "#c0c1ff",
-            "secondary-container": "#3131c0",
-            "on-secondary-container": "#b0b2ff",
-            tertiary: "#ffb786",
-            "tertiary-container": "#df7412",
-            "on-tertiary-container": "#461f00",
-            background: "#0b1326",
-            surface: "#0b1326",
-            "surface-dim": "#0b1326",
-            "surface-container-lowest": "#060e20",
-            "surface-container-low": "#131b2e",
-            "surface-container": "#171f33",
-            "surface-container-high": "#222a3d",
-            "surface-container-highest": "#2d3449",
-            "surface-bright": "#31394d",
-            "surface-variant": "#2d3449",
-            "on-surface": "#dae2fd",
-            "on-surface-variant": "#c2c6d6",
-            outline: "#8c909f",
-            "outline-variant": "#424754",
-            error: "#ffb4ab",
-            "error-container": "#93000a",
-            "on-error-container": "#ffdad6",
+            primary: "#2a7",
+            "on-primary": "#fff",
+            "primary-container": "#b8f0d8",
+            "on-primary-container": "#002114",
+            secondary: "#4a6b5c",
+            "secondary-container": "#cce8d8",
+            "on-secondary-container": "#062117",
+            tertiary: "#3d6373",
+            "tertiary-container": "#c1e8fb",
+            "on-tertiary-container": "#001f29",
+            background: "#fafafa",
+            surface: "#fafafa",
+            "surface-dim": "#daded9",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f4f7f2",
+            "surface-container": "#eef1ec",
+            "surface-container-high": "#e8ebe6",
+            "surface-container-highest": "#e3e6e1",
+            "surface-bright": "#fafafa",
+            "surface-variant": "#dee5db",
+            "on-surface": "#191c1a",
+            "on-surface-variant": "#414941",
+            outline: "#717970",
+            "outline-variant": "#c1c9bf",
+            error: "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error-container": "#410002",
           },
           fontFamily: {
-            headline: ["Plus Jakarta Sans", "sans-serif"],
+            headline: ["Inter", "sans-serif"],
             body: ["Inter", "sans-serif"],
             label: ["Inter", "sans-serif"],
           },
@@ -53,12 +53,19 @@
   <style>
     html { scroll-behavior: smooth; }
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0b1326; }
-    ::-webkit-scrollbar-thumb { background: #2d3449; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #424754; }
+    ::-webkit-scrollbar-track { background: #f4f7f2; }
+    ::-webkit-scrollbar-thumb { background: #c1c9bf; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #717970; }
+    .dark ::-webkit-scrollbar-track { background: #191c1a; }
+    .dark ::-webkit-scrollbar-thumb { background: #414941; }
     body { min-height: 100dvh; }
-    .score-bar { height: 6px; border-radius: 3px; background: #2d3449; overflow: hidden; }
+    .score-bar { height: 6px; border-radius: 3px; background: #e8ebe6; overflow: hidden; }
+    .dark .score-bar { background: #414941; }
     .score-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+    .theme-toggle { background: #eef1ec; border: 1px solid #c1c9bf; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 0.78rem; color: #414941; }
+    .theme-toggle:hover { background: #e8ebe6; }
+    .dark .theme-toggle { background: #2d3449; border-color: #424754; color: #c2c6d6; }
+    .dark .theme-toggle:hover { background: #3d4459; }
   </style>
 </head>
 <body class="bg-background text-on-surface font-body min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
@@ -71,6 +78,8 @@
         <h1 class="text-lg font-semibold font-headline text-primary tracking-tight">Listing SEO Analyzer</h1>
       </div>
       <span class="text-xs font-medium text-on-surface-variant bg-surface-container-high px-3 py-1 rounded-full">Marketplace Indonesia</span>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">Dark</button>
     </div>
   </header>
 
@@ -485,6 +494,16 @@
     // Init
     updateSuggestions();
     $('title').addEventListener('keydown', e => { if (e.key === 'Enter') analyze(); });
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') document.documentElement.classList.add('dark');
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeBtn').textContent = isDark ? 'Light' : 'Dark';
+    }
+    document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         $('title').value = ''; $('description').value = ''; $('price').value = '';

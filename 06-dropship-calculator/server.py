@@ -153,62 +153,84 @@ HTML_PAGE = r"""<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5;min-height:100vh;padding:20px}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent:#4a9;--accent-hover:#5ba8;--accent-light:#1a2a25;
+  --green:#4ade80;--red:#f87171;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;padding:20px}
 .container{max-width:1000px;margin:0 auto}
-h1{font-size:1.4rem;font-weight:600;margin-bottom:2px;color:#1a1a1a}
-.subtitle{color:#666;font-size:0.85rem;margin-bottom:24px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+h1{font-size:1.4rem;font-weight:600;color:var(--text)}
+.subtitle{color:var(--text-dim);font-size:0.85rem;margin-bottom:24px}
+.theme-toggle{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;font-size:0.78rem;color:var(--text-dim)}
+.theme-toggle:hover{background:var(--card-alt)}
 .grid{display:grid;grid-template-columns:1fr 2fr;gap:16px}
 @media(max-width:768px){.grid{grid-template-columns:1fr}.chip-grid{grid-template-columns:repeat(2,1fr)}.fee-grid{grid-template-columns:repeat(2,1fr)}.container{padding:12px}}
-.card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px}
-.section-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:#999;margin-bottom:14px;font-weight:500}
-label{display:block;font-size:0.82rem;color:#555;margin-bottom:4px;margin-top:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px}
+.section-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:14px;font-weight:500}
+label{display:block;font-size:0.82rem;color:var(--text-dim);margin-bottom:4px;margin-top:14px}
 label:first-of-type{margin-top:0}
-input,select{width:100%;padding:10px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;color:#1a1a1a;font-size:0.88rem;font-family:inherit}
-input:focus,select:focus{outline:none;border-color:#4a9}
+input,select{width:100%;padding:10px 12px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:6px;color:var(--text);font-size:0.88rem;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
 input[type=number]{font-family:'JetBrains Mono',monospace,'Inter',sans-serif;font-size:0.85rem}
 select{cursor:pointer}
 .check-row{display:flex;align-items:center;gap:8px;margin-top:14px}
-.check-row input[type=checkbox]{width:auto;accent-color:#4a9}
+.check-row input[type=checkbox]{width:auto;accent-color:var(--accent)}
 .check-row label{margin:0;cursor:pointer;font-size:0.85rem}
 .example-row{margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.example-row span{font-size:0.72rem;color:#999}
-.example-btn{padding:3px 10px;background:#fff;border:1px solid #ddd;border-radius:4px;color:#4a9;font-size:0.72rem;cursor:pointer}
-.example-btn:hover{background:#f0f7f5}
+.example-row span{font-size:0.72rem;color:var(--text-muted)}
+.example-btn{padding:3px 10px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--accent);font-size:0.72rem;cursor:pointer}
+.example-btn:hover{background:var(--accent-light)}
 .chip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}
-.chip{padding:8px 0;text-align:center;border:1px solid #ddd;border-radius:6px;font-size:0.78rem;color:#555;cursor:pointer;transition:border-color 0.15s}
-.chip:hover{border-color:#4a9}
-.chip.active{border-color:#4a9;background:#f0f7f5;color:#2a7}
+.chip{padding:8px 0;text-align:center;border:1px solid var(--border);border-radius:6px;font-size:0.78rem;color:var(--text-dim);cursor:pointer;transition:border-color 0.15s}
+.chip:hover{border-color:var(--accent)}
+.chip.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
 .validation{margin-top:10px;padding:8px 12px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:0.82rem;display:none}
-.btn{width:100%;padding:12px;margin-top:14px;background:#4a9;color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:inherit}
-.btn:hover{background:#3a8}
-.btn-sec{background:#fff;color:#1a1a1a;border:1px solid #ddd;margin-top:8px}
-.btn-sec:hover{background:#f5f5f5}
+[data-theme="dark"] .validation{background:#3a1a1a;border-color:#7f1d1d;color:#fca5a5}
+.btn{width:100%;padding:12px;margin-top:14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-hover)}
+.btn-sec{background:var(--card);color:var(--text);border:1px solid var(--border);margin-top:8px}
+.btn-sec:hover{background:var(--card-alt)}
 .results{margin-top:20px}
-.result-card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:16px;margin-bottom:10px}
-.result-card.best{border-left:3px solid #22c55e}
-.result-card.loss{border-left:3px solid #ef4444}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px}
+.result-card.best{border-left:3px solid var(--green)}
+.result-card.loss{border-left:3px solid var(--red)}
 .mp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .mp-name{font-weight:600;font-size:0.95rem}
 .badge{padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:500}
-.badge-green{background:#f0fdf4;color:#16a34a}
-.badge-red{background:#fef2f2;color:#dc2626}
-.badge-gray{background:#f5f5f5;color:#666}
+.badge-green{background:var(--accent-light);color:var(--green)}
+.badge-red{background:#fef2f2;color:var(--red)}
+.badge-gray{background:var(--card-alt);color:var(--text-muted)}
+[data-theme="dark"] .badge-red{background:#3a1a1a}
 .fee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
 .fee-item{font-size:0.75rem}
-.fee-label{color:#999}
-.fee-value{font-family:'JetBrains Mono',monospace,'Inter',sans-serif;font-size:0.82rem;color:#1a1a1a}
-.summary-row{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #eee;margin-top:6px;font-size:0.85rem}
+.fee-label{color:var(--text-muted)}
+.fee-value{font-family:'JetBrains Mono',monospace,'Inter',sans-serif;font-size:0.82rem;color:var(--text)}
+.summary-row{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid var(--border);margin-top:6px;font-size:0.85rem}
 .summary-row.profit{font-weight:600}
-.val-green{color:#16a34a}
-.val-red{color:#dc2626}
-.recommend{margin-top:8px;padding:8px 12px;background:#f8f8f8;border-radius:6px;font-size:0.78rem;color:#555}
-.recommend strong{color:#2a7}
-.empty{text-align:center;padding:60px 20px;color:#ccc;font-size:0.88rem}
+.val-green{color:var(--green)}
+.val-red{color:var(--red)}
+.recommend{margin-top:8px;padding:8px 12px;background:var(--card-alt);border-radius:6px;font-size:0.78rem;color:var(--text-dim)}
+.recommend strong{color:var(--accent)}
+.empty{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.88rem}
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Dropship Margin Calculator</h1>
+  <div class="header">
+    <h1>Dropship Margin Calculator</h1>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">Dark</button>
+  </div>
   <p class="subtitle">Hitung profit dropship lintas marketplace Indonesia</p>
 
   <div class="grid">
@@ -270,6 +292,18 @@ select{cursor:pointer}
 </div>
 
 <script>
+// Theme toggle
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+}
+document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+
 const EXAMPLES = {
   fashion: {supplier:35000,selling:79000,weight:0.3},
   electronics: {supplier:150000,selling:225000,weight:0.8},

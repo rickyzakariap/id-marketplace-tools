@@ -9,45 +9,66 @@ const htmlPage = `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5;min-height:100vh;padding:20px}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent:#4a9;--accent-hover:#5ba8;--accent-light:#1a2a25;
+  --green:#4ade80;--red:#f87171;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;padding:20px}
 .container{max-width:1000px;margin:0 auto}
-h1{font-size:1.4rem;font-weight:600;margin-bottom:2px}
-.subtitle{color:#666;font-size:0.85rem;margin-bottom:24px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+h1{font-size:1.4rem;font-weight:600;color:var(--text)}
+.subtitle{color:var(--text-dim);font-size:0.85rem;margin-bottom:24px}
+.theme-toggle{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;font-size:0.78rem;color:var(--text-dim)}
+.theme-toggle:hover{background:var(--card-alt)}
 .grid{display:grid;grid-template-columns:1fr 2fr;gap:16px}
 @media(max-width:768px){.grid{grid-template-columns:1fr}.container{padding:12px}.tabs{flex-wrap:wrap}.tab{padding:6px 10px;font-size:0.75rem}}
-.card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px}
-.section-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:#999;margin-bottom:14px;font-weight:500}
-label{display:block;font-size:0.82rem;color:#555;margin-bottom:4px;margin-top:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px}
+.section-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:14px;font-weight:500}
+label{display:block;font-size:0.82rem;color:var(--text-dim);margin-bottom:4px;margin-top:14px}
 label:first-of-type{margin-top:0}
-input,select,textarea{width:100%;padding:10px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;color:#1a1a1a;font-size:0.88rem;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#4a9}
+input,select,textarea{width:100%;padding:10px 12px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:6px;color:var(--text);font-size:0.88rem;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 textarea{resize:none}
 select{cursor:pointer}
 .example-row{margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.example-row span{font-size:0.72rem;color:#999}
-.example-btn{padding:3px 10px;background:#fff;border:1px solid #ddd;border-radius:4px;color:#4a9;font-size:0.72rem;cursor:pointer}
-.example-btn:hover{background:#f0f7f5}
+.example-row span{font-size:0.72rem;color:var(--text-muted)}
+.example-btn{padding:3px 10px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--accent);font-size:0.72rem;cursor:pointer}
+.example-btn:hover{background:var(--accent-light)}
 .validation{margin-top:10px;padding:8px 12px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:0.82rem;display:none}
-.btn{width:100%;padding:12px;margin-top:14px;background:#4a9;color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:inherit}
-.btn:hover{background:#3a8}
-.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid #e5e5e5}
-.tab{padding:8px 14px;font-size:0.82rem;color:#999;cursor:pointer;border-bottom:2px solid transparent}
-.tab:hover{color:#555}
-.tab.active{color:#2a7;border-bottom-color:#4a9}
+[data-theme="dark"] .validation{background:#3a1a1a;border-color:#7f1d1d;color:#fca5a5}
+.btn{width:100%;padding:12px;margin-top:14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-hover)}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.tab{padding:8px 14px;font-size:0.82rem;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent}
+.tab:hover{color:var(--text-dim)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .output-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .char-count{font-size:0.72rem;font-family:'JetBrains Mono',monospace,'Inter',sans-serif}
-.char-ok{color:#999}
+.char-ok{color:var(--text-muted)}
 .char-warn{color:#d97706}
-.char-over{color:#dc2626}
-.output-box{background:#f8f8f8;border:1px solid #e5e5e5;border-radius:6px;padding:12px;font-size:0.85rem;white-space:pre-wrap;min-height:80px}
-.copy-btn{margin-top:6px;padding:4px 12px;background:#fff;border:1px solid #ddd;border-radius:4px;color:#4a9;font-size:0.75rem;cursor:pointer}
-.copy-btn:hover{background:#f0f7f5}
-.empty{text-align:center;padding:60px 20px;color:#ccc;font-size:0.88rem}
+.char-over{color:var(--red)}
+.output-box{background:var(--card-alt);border:1px solid var(--border);border-radius:6px;padding:12px;font-size:0.85rem;white-space:pre-wrap;min-height:80px}
+.copy-btn{margin-top:6px;padding:4px 12px;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--accent);font-size:0.75rem;cursor:pointer}
+.copy-btn:hover{background:var(--accent-light)}
+.empty{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.88rem}
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Listing Description Generator</h1>
+  <div class="header">
+    <h1>Listing Description Generator</h1>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">Dark</button>
+  </div>
   <p class="subtitle">Generate deskripsi produk untuk 6 marketplace Indonesia</p>
 
   <div class="grid">
@@ -111,6 +132,18 @@ select{cursor:pointer}
 </div>
 
 <script>
+// Theme toggle
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+}
+document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+
 const EXAMPLES = {
   fashion: {name:'Kaos Polos Premium',category:'fashion',price:'79000',brand:'Uniqlo',features:'100% cotton\nTersedia S-XXL\nWarna tidak luntur\nNyaman dipakai',keywords:'kaos polos\nbaju cotton'},
   electronics: {name:'TWS Bluetooth Earphone',category:'electronics',price:'159000',brand:'Baseus',features:'Bluetooth 5.3\nBattery 30 jam\nNoise cancelling\nIPX5 waterproof',keywords:'earphone bluetooth\ntws murah'},
