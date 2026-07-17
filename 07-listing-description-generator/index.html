@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Description Generator</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-hover: #222632;
+    --border: #2a2e3a;
+    --text: #e4e4e7;
+    --text-dim: #71717a;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --success: #22c55e;
+    --warning: #eab308;
+    --error: #ef4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  header {
+    margin-bottom: 32px;
+  }
+
+  header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  header p {
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .card h2 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    transition: border-color 0.15s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .field { margin-bottom: 16px; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .btn-secondary:hover { background: var(--surface-hover); }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .platform-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .platform-tab {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-dim);
+    transition: all 0.15s;
+  }
+
+  .platform-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .platform-tab:hover:not(.active) {
+    background: var(--surface-hover);
+    color: var(--text);
+  }
+
+  .output-section {
+    margin-top: 20px;
+  }
+
+  .output-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    min-height: 120px;
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+    position: relative;
+  }
+
+  .char-count {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .char-count.warning { color: var(--warning); }
+  .char-count.error { color: var(--error); }
+
+  .copy-feedback {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--success);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .copy-feedback.show { opacity: 1; }
+
+  .keyword-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .keyword-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .keyword-tag .remove {
+    cursor: pointer;
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .keyword-tag .remove:hover { color: var(--error); }
+
+  .hint {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .template-info {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .template-info strong { color: var(--text); }
+
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .feature-input-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .feature-input-row input { flex: 1; }
+
+  .feature-input-row .btn-remove {
+    padding: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .feature-input-row .btn-remove:hover {
+    color: var(--error);
+    border-color: var(--error);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  .empty-state .dot-pattern {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    background: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-size: 8px 8px;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Listing Description Generator</h1>
+    <p>Generate optimized product descriptions for Indonesian marketplaces</p>
+  </header>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>Product Info</h2>
+
+        <div class="field">
+          <label>Product Name</label>
+          <input type="text" id="productName" placeholder="e.g. TWS Bluetooth Earphone T900 Pro">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Category</label>
+            <select id="category">
+              <option value="">Select category</option>
+              <option value="elektronik">Elektronik</option>
+              <option value="fashion">Fashion</option>
+              <option value="fashion_pria">Fashion Pria</option>
+              <option value="fashion_wanita">Fashion Wanita</option>
+              <option value="rumah_tangga">Rumah Tangga</option>
+              <option value="kecantikan">Kecantikan</option>
+              <option value="kesehatan">Kesehatan</option>
+              <option value="makanan">Makanan & Minuman</option>
+              <option value="olahraga">Olahraga & Outdoor</option>
+              <option value="otomotif">Otomotif</option>
+              <option value="bayi_anak">Bayi & Anak</option>
+              <option value="komputer">Komputer & Aksesoris</option>
+              <option value="handphone">Handphone & Aksesoris</option>
+              <option value="gaming">Gaming</option>
+              <option value="hobi">Hobi & Koleksi</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Price (Rp)</label>
+            <input type="text" id="price" placeholder="150000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Key Features</label>
+          <div class="features-list" id="featuresList">
+            <div class="feature-input-row">
+              <input type="text" class="feature-input" placeholder="e.g. Noise cancelling">
+              <button class="btn-remove" onclick="removeFeature(this)">x</button>
+            </div>
+            <div class="feature-input-row">
+              <input type="text" class="feature-input" placeholder="e.g. Battery 8 jam">
+              <button class="btn-remove" onclick="removeFeature(this)">x</button>
+            </div>
+            <div class="feature-input-row">
+              <input type="text" class="feature-input" placeholder="e.g. Waterproof IPX5">
+              <button class="btn-remove" onclick="removeFeature(this)">x</button>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="addFeature()" style="margin-top:8px">+ Add Feature</button>
+        </div>
+
+        <div class="field">
+          <label>Keywords (press Enter to add)</label>
+          <input type="text" id="keywordInput" placeholder="e.g. tws murah, earphone bluetooth">
+          <div class="keyword-tags" id="keywordTags"></div>
+          <div class="hint">Keywords help SEO. Add buyer search terms.</div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Brand (optional)</label>
+            <input type="text" id="brand" placeholder="e.g. Baseus">
+          </div>
+          <div class="field">
+            <label>Condition</label>
+            <select id="condition">
+              <option value="new">Baru</option>
+              <option value="used">Bekas</option>
+              <option value="refurbished">Refurbished</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="loadExample()">Load Example</button>
+          <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:16px">
+        <button class="btn btn-primary" id="generateBtn" onclick="generate()">Generate Descriptions</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Generated Descriptions</h2>
+
+        <div class="platform-tabs" id="platformTabs">
+          <button class="platform-tab active" data-platform="tokopedia" onclick="switchPlatform('tokopedia')">Tokopedia</button>
+          <button class="platform-tab" data-platform="shopee" onclick="switchPlatform('shopee')">Shopee</button>
+          <button class="platform-tab" data-platform="lazada" onclick="switchPlatform('lazada')">Lazada</button>
+          <button class="platform-tab" data-platform="bukalapak" onclick="switchPlatform('bukalapak')">Bukalapak</button>
+          <button class="platform-tab" data-platform="tiktok" onclick="switchPlatform('tiktok')">TikTok Shop</button>
+          <button class="platform-tab" data-platform="blibli" onclick="switchPlatform('blibli')">Blibli</button>
+        </div>
+
+        <div id="outputArea">
+          <div class="empty-state">
+            <div class="dot-pattern"></div>
+            <p>Fill in product info and click Generate</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px" id="titleCard" hidden>
+        <h2>Optimized Titles</h2>
+        <div id="titleOutput"></div>
+      </div>
+
+      <div class="card" style="margin-top:16px" id="bulletCard" hidden>
+        <h2>Bullet Points</h2>
+        <div id="bulletOutput"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const keywords = [];
+let currentPlatform = 'tokopedia';
+let generatedData = {};
+
+const PLATFORM_LIMITS = {
+  tokopedia: { titleMax: 100, descMax: 2000 },
+  shopee: { titleMax: 120, descMax: 3000 },
+  lazada: { titleMax: 255, descMax: 25000 },
+  bukalapak: { titleMax: 70, descMax: 2000 },
+  tiktok: { titleMax: 34, descMax: 1000 },
+  blibli: { titleMax: 150, descMax: 5000 }
+};
+
+const CATEGORY_BENEFITS = {
+  elektronik: ['garansi resmi', 'kualitas terjamin', 'tahan lama', 'hemat energi'],
+  fashion: ['nyaman dipakai', 'bahan premium', 'tidak luntur', 'jahitan rapi'],
+  fashion_pria: ['nyaman dipakai', 'bahan premium', 'cocok untuk sehari-hari', 'size lengkap'],
+  fashion_wanita: ['nyaman dipakai', 'bahan premium', 'elegant', 'cocok untuk semua acara'],
+  rumah_tangga: ['mudah dibersihkan', 'tahan lama', 'praktis', 'hemat tempat'],
+  kecantikan: ['aman BPOM', 'halal', 'hasil terlihat', 'cocok semua kulit'],
+  kesehatan: ['aman dikonsumsi', 'terdaftar BPOM', 'bahan alami', 'tanpa efek samping'],
+  makanan: ['halal MUI', 'tanpa pengawet', 'rasa autentik', 'kemasan aman'],
+  olahraga: ['ringan', 'tahan lama', 'ergonomis', 'cocok untuk outdoor'],
+  otomotif: ['kualitas OEM', 'tahan lama', 'mudah dipasang', 'kompatibel universal'],
+  bayi_anak: ['aman untuk bayi', 'bahan non-toxic', 'SNI certified', 'mudah dibersihkan'],
+  komputer: ['kompatibel universal', 'plug and play', 'performa stabil', 'garansi resmi'],
+  handphone: ['kompatibel semua HP', 'fast charging', 'tahan lama', 'garansi resmi'],
+  gaming: ['low latency', 'RGB lighting', 'ergonomis', 'tahan lama'],
+  hobi: ['koleksi limited', 'kualitas premium', 'original', 'packaging aman']
+};
+
+const POWER_WORDS = [
+  'murah', 'original', 'premium', 'terlaris', 'best seller',
+  'garansi', 'gratis ongkir', 'cashback', 'diskon', 'limited edition',
+  'ready stock', 'pengiriman cepat', 'packing aman', 'trusted seller'
+];
+
+document.getElementById('keywordInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = this.value.trim();
+    if (val && !keywords.includes(val)) {
+      keywords.push(val);
+      renderKeywords();
+    }
+    this.value = '';
+  }
+});
+
+function renderKeywords() {
+  const container = document.getElementById('keywordTags');
+  container.innerHTML = keywords.map((k, i) =>
+    '<span class="keyword-tag">' + escapeHtml(k) + '<span class="remove" onclick="removeKeyword(' + i + ')">&times;</span></span>'
+  ).join('');
+}
+
+function removeKeyword(idx) {
+  keywords.splice(idx, 1);
+  renderKeywords();
+}
+
+function addFeature() {
+  const list = document.getElementById('featuresList');
+  const row = document.createElement('div');
+  row.className = 'feature-input-row';
+  row.innerHTML = '<input type="text" class="feature-input" placeholder="e.g. Feature"><button class="btn-remove" onclick="removeFeature(this)">x</button>';
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+function removeFeature(btn) {
+  const rows = document.querySelectorAll('.feature-input-row');
+  if (rows.length > 1) {
+    btn.parentElement.remove();
+  }
+}
+
+function getFeatures() {
+  return Array.from(document.querySelectorAll('.feature-input'))
+    .map(el => el.value.trim())
+    .filter(v => v.length > 0);
+}
+
+function formatPrice(n) {
+  return 'Rp ' + Number(n).toLocaleString('id-ID');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function loadExample() {
+  document.getElementById('productName').value = 'TWS Bluetooth Earphone T900 Pro';
+  document.getElementById('category').value = 'elektronik';
+  document.getElementById('price').value = '89000';
+  document.getElementById('brand').value = 'Baseus';
+
+  const features = ['Noise cancelling', 'Battery 8 jam', 'Bluetooth 5.3', 'Touch control'];
+  const list = document.getElementById('featuresList');
+  list.innerHTML = '';
+  features.forEach(f => {
+    const row = document.createElement('div');
+    row.className = 'feature-input-row';
+    row.innerHTML = '<input type="text" class="feature-input" value="' + escapeHtml(f) + '"><button class="btn-remove" onclick="removeFeature(this)">x</button>';
+    list.appendChild(row);
+  });
+
+  keywords.length = 0;
+  ['tws murah', 'earphone bluetooth', 'tws noise cancelling', 'earphone gaming'].forEach(k => keywords.push(k));
+  renderKeywords();
+}
+
+function clearForm() {
+  document.getElementById('productName').value = '';
+  document.getElementById('category').value = '';
+  document.getElementById('price').value = '';
+  document.getElementById('brand').value = '';
+  document.getElementById('condition').value = 'new';
+  document.getElementById('featuresList').innerHTML =
+    '<div class="feature-input-row"><input type="text" class="feature-input" placeholder="e.g. Feature"><button class="btn-remove" onclick="removeFeature(this)">x</button></div>';
+  keywords.length = 0;
+  renderKeywords();
+  document.getElementById('outputArea').innerHTML =
+    '<div class="empty-state"><div class="dot-pattern"></div><p>Fill in product info and click Generate</p></div>';
+  document.getElementById('titleCard').hidden = true;
+  document.getElementById('bulletCard').hidden = true;
+}
+
+function switchPlatform(platform) {
+  currentPlatform = platform;
+  document.querySelectorAll('.platform-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.platform === platform);
+  });
+  if (generatedData[platform]) {
+    renderDescription(platform);
+  }
+}
+
+function generate() {
+  const name = document.getElementById('productName').value.trim();
+  const category = document.getElementById('category').value;
+  const price = document.getElementById('price').value.trim();
+  const brand = document.getElementById('brand').value.trim();
+  const condition = document.getElementById('condition').value;
+  const features = getFeatures();
+
+  if (!name) {
+    document.getElementById('productName').focus();
+    return;
+  }
+
+  if (!category) {
+    document.getElementById('category').focus();
+    return;
+  }
+
+  if (!price) {
+    document.getElementById('price').focus();
+    return;
+  }
+
+  const priceNum = parseInt(price.replace(/\D/g, ''));
+  const priceFormatted = formatPrice(priceNum);
+  const benefits = CATEGORY_BENEFITS[category] || ['kualitas terjamin', 'harga bersaing'];
+  const condText = condition === 'new' ? 'Baru' : condition === 'used' ? 'Bekas' : 'Refurbished';
+
+  // Generate for each platform
+  generatedData = {};
+
+  // Tokopedia
+  generatedData.tokopedia = generateTokopedia(name, category, priceNum, priceFormatted, brand, condText, features, benefits);
+
+  // Shopee
+  generatedData.shopee = generateShopee(name, category, priceNum, priceFormatted, brand, condText, features, benefits);
+
+  // Lazada
+  generatedData.lazada = generateLazada(name, category, priceNum, priceFormatted, brand, condText, features, benefits);
+
+  // Bukalapak
+  generatedData.bukalapak = generateBukalapak(name, category, priceNum, priceFormatted, brand, condText, features, benefits);
+
+  // TikTok Shop
+  generatedData.tiktok = generateTikTok(name, category, priceNum, priceFormatted, brand, condText, features, benefits);
+
+  // Blibli
+  generatedData.blibli = generateBlibli(name, category, priceNum, priceFormatted, brand, condText, features, benefits);
+
+  // Render
+  renderDescription(currentPlatform);
+  renderTitles(name, brand, category, features);
+  renderBullets(features, benefits, brand, condText);
+}
+
+function generateTokopedia(name, category, priceNum, priceFormatted, brand, condText, features, benefits) {
+  const title = buildTitle(name, brand, features, PLATFORM_LIMITS.tokopedia.titleMax);
+  let desc = '';
+
+  desc += name.toUpperCase() + '\n';
+  if (brand) desc += 'Brand: ' + brand + '\n';
+  desc += 'Kondisi: ' + condText + '\n';
+  desc += 'Harga: ' + priceFormatted + '\n\n';
+
+  desc += 'SPESIFIKASI:\n';
+  if (features.length > 0) {
+    features.forEach(f => { desc += '- ' + f + '\n'; });
+  }
+  desc += '\n';
+
+  desc += 'KEUNGGULAN PRODUK:\n';
+  benefits.slice(0, 4).forEach(b => { desc += '- ' + capitalize(b) + '\n'; });
+  desc += '\n';
+
+  if (keywords.length > 0) {
+    desc += 'Cocok untuk: ' + keywords.slice(0, 5).join(', ') + '\n\n';
+  }
+
+  desc += 'PENGIRIMAN:\n';
+  desc += '- Packing aman dengan bubble wrap\n';
+  desc += '- Resi otomatis update\n';
+  desc += '- Pengiriman cepat 1-3 hari\n\n';
+
+  desc += 'GARANSI:\n';
+  desc += '- Garansi toko 7 hari\n';
+  desc += '- Retur jika barang tidak sesuai deskripsi\n\n';
+
+  desc += '#tokopedia #' + category.replace('_', ' ');
+
+  return { title, desc };
+}
+
+function generateShopee(name, category, priceNum, priceFormatted, brand, condText, features, benefits) {
+  const title = buildTitle(name, brand, features, PLATFORM_LIMITS.shopee.titleMax);
+  let desc = '';
+
+  desc += name + '\n';
+  desc += 'Harga: ' + priceFormatted + '\n\n';
+
+  if (brand) desc += 'Brand: ' + brand + '\n';
+  desc += 'Kondisi: ' + condText + '\n\n';
+
+  desc += 'DETAIL PRODUK:\n';
+  if (features.length > 0) {
+    features.forEach(f => { desc += '- ' + f + '\n'; });
+  }
+  desc += '\n';
+
+  desc += 'KENAPA HARUS BELI DI SINI?\n';
+  benefits.slice(0, 4).forEach(b => { desc += '- ' + capitalize(b) + '\n'; });
+  desc += '- Packing aman\n';
+  desc += '- Fast response\n';
+  desc += '\n';
+
+  desc += 'Cara order:\n';
+  desc += '1. Klik Beli\n';
+  desc += '2. Pilih varian (jika ada)\n';
+  desc += '3. Checkout dan bayar\n';
+  desc += '4. Barang dikirim 1x24 jam\n\n';
+
+  desc += 'Jika ada pertanyaan, chat kami sebelum order ya.\n';
+  desc += 'Terima kasih sudah berkunjung.\n\n';
+
+  desc += '#' + category.replace('_', ' ') + ' #shopee';
+
+  return { title, desc };
+}
+
+function generateLazada(name, category, priceNum, priceFormatted, brand, condText, features, benefits) {
+  const title = buildTitle(name, brand, features, PLATFORM_LIMITS.lazada.titleMax);
+  let desc = '';
+
+  desc += 'Product Description\n';
+  desc += '==================\n\n';
+
+  desc += name + '\n';
+  if (brand) desc += 'Brand: ' + brand + '\n';
+  desc += 'Condition: ' + condText + '\n';
+  desc += 'Price: ' + priceFormatted + '\n\n';
+
+  desc += 'Features:\n';
+  if (features.length > 0) {
+    features.forEach(f => { desc += '- ' + f + '\n'; });
+  }
+  desc += '\n';
+
+  desc += 'Benefits:\n';
+  benefits.slice(0, 4).forEach(b => { desc += '- ' + capitalize(b) + '\n'; });
+  desc += '\n';
+
+  desc += 'Package Includes:\n';
+  desc += '- 1x ' + name + '\n';
+  desc += '- Packaging box\n\n';
+
+  desc += 'Shipping:\n';
+  desc += '- Same day processing\n';
+  desc += '- Bubble wrap protection\n';
+  desc += '- Tracking number provided\n\n';
+
+  desc += 'Warranty:\n';
+  desc += '- 7-day return policy\n';
+  desc += '- Contact seller for support\n';
+
+  return { title, desc };
+}
+
+function generateBukalapak(name, category, priceNum, priceFormatted, brand, condText, features, benefits) {
+  const title = buildTitle(name, brand, features, PLATFORM_LIMITS.bukalapak.titleMax);
+  let desc = '';
+
+  desc += name + '\n\n';
+  if (brand) desc += 'Brand: ' + brand + '\n';
+  desc += 'Kondisi: ' + condText + '\n';
+  desc += 'Harga: ' + priceFormatted + '\n\n';
+
+  desc += 'Fitur:\n';
+  if (features.length > 0) {
+    features.forEach(f => { desc += '- ' + f + '\n'; });
+  }
+  desc += '\n';
+
+  desc += 'Kelebihan:\n';
+  benefits.slice(0, 3).forEach(b => { desc += '- ' + capitalize(b) + '\n'; });
+  desc += '\n';
+
+  desc += 'Info Pengiriman:\n';
+  desc += '- Kirim setiap hari (Senin-Sabtu)\n';
+  desc += '- Packing rapi dan aman\n\n';
+
+  desc += 'Silakan diorder. Chat kami jika ada pertanyaan.';
+
+  return { title, desc };
+}
+
+function generateTikTok(name, category, priceNum, priceFormatted, brand, condText, features, benefits) {
+  const title = buildTitle(name, brand, features.slice(0, 2), PLATFORM_LIMITS.tiktok.titleMax);
+  let desc = '';
+
+  desc += name + '\n';
+  desc += priceFormatted + '\n\n';
+
+  if (features.length > 0) {
+    desc += features.slice(0, 5).map(f => '- ' + f).join('\n') + '\n\n';
+  }
+
+  desc += benefits.slice(0, 3).map(b => capitalize(b)).join(' | ') + '\n\n';
+
+  desc += 'Order sekarang, kirim hari ini!';
+  if (keywords.length > 0) {
+    desc += '\n\n' + keywords.slice(0, 3).map(k => '#' + k.replace(/\s+/g, '')).join(' ');
+  }
+
+  return { title, desc };
+}
+
+function generateBlibli(name, category, priceNum, priceFormatted, brand, condText, features, benefits) {
+  const title = buildTitle(name, brand, features, PLATFORM_LIMITS.blibli.titleMax);
+  let desc = '';
+
+  desc += name + '\n\n';
+  if (brand) desc += 'Brand: ' + brand + '\n';
+  desc += 'Kondisi: ' + condText + '\n';
+  desc += 'Harga: ' + priceFormatted + '\n\n';
+
+  desc += 'Spesifikasi:\n';
+  if (features.length > 0) {
+    features.forEach(f => { desc += '- ' + f + '\n'; });
+  }
+  desc += '\n';
+
+  desc += 'Keunggulan:\n';
+  benefits.slice(0, 4).forEach(b => { desc += '- ' + capitalize(b) + '\n'; });
+  desc += '- Garansi resmi\n';
+  desc += '- Packing aman\n\n';
+
+  desc += 'Pengiriman:\n';
+  desc += '- Same day shipping untuk order sebelum 14:00\n';
+  desc += '- Bubble wrap + kardus tebal\n\n';
+
+  desc += 'Hubungi kami untuk pertanyaan lebih lanjut.';
+
+  return { title, desc };
+}
+
+function buildTitle(name, brand, features, maxLen) {
+  let title = '';
+  if (brand) title += brand + ' ';
+  title += name;
+
+  if (features.length > 0 && title.length < maxLen - 20) {
+    const featureStr = ' - ' + features.slice(0, 3).join(', ');
+    if (title.length + featureStr.length <= maxLen) {
+      title += featureStr;
+    }
+  }
+
+  if (title.length > maxLen) {
+    title = title.substring(0, maxLen - 3) + '...';
+  }
+
+  return title;
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function renderDescription(platform) {
+  const data = generatedData[platform];
+  if (!data) return;
+
+  const limits = PLATFORM_LIMITS[platform];
+  const area = document.getElementById('outputArea');
+
+  area.innerHTML =
+    '<div style="margin-bottom:8px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+        '<span style="font-size:12px;color:var(--text-dim)">Title (' + data.title.length + '/' + limits.titleMax + ')</span>' +
+        '<button class="btn btn-secondary btn-sm" onclick="copyText(\'title\')">Copy Title</button>' +
+      '</div>' +
+      '<div class="output-box" id="titleBox">' + escapeHtml(data.title) + '</div>' +
+    '</div>' +
+    '<div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+        '<span style="font-size:12px;color:var(--text-dim)">Description (' + data.desc.length + '/' + limits.descMax + ')</span>' +
+        '<button class="btn btn-secondary btn-sm" onclick="copyText(\'desc\')">Copy Description</button>' +
+      '</div>' +
+      '<div class="output-box" id="descBox">' + escapeHtml(data.desc) + '</div>' +
+    '</div>';
+
+  // Update char count colors
+  updateCharColor(data.title.length, limits.titleMax, area.querySelector('span'));
+}
+
+function renderTitles(name, brand, category, features) {
+  const card = document.getElementById('titleCard');
+  card.hidden = false;
+  const output = document.getElementById('titleOutput');
+
+  const titles = [];
+  const limits = PLATFORM_LIMITS;
+
+  Object.keys(limits).forEach(platform => {
+    const data = generatedData[platform];
+    if (data) {
+      titles.push(
+        '<div style="margin-bottom:12px">' +
+          '<div style="font-size:12px;color:var(--text-dim);margin-bottom:4px">' + platform.toUpperCase() + ' (' + data.title.length + '/' + limits[platform].titleMax + ')</div>' +
+          '<div class="output-box" style="min-height:auto;padding:8px 12px;font-size:12px">' + escapeHtml(data.title) + '</div>' +
+        '</div>'
+      );
+    }
+  });
+
+  output.innerHTML = titles.join('');
+}
+
+function renderBullets(features, benefits, brand, condText) {
+  const card = document.getElementById('bulletCard');
+  card.hidden = false;
+  const output = document.getElementById('bulletOutput');
+
+  let bullets = [];
+  if (brand) bullets.push('Brand: ' + brand);
+  bullets.push('Kondisi: ' + condText);
+  features.slice(0, 5).forEach(f => bullets.push(f));
+  benefits.slice(0, 3).forEach(b => bullets.push(capitalize(b)));
+
+  output.innerHTML =
+    '<div class="output-box">' +
+      bullets.map(b => '- ' + escapeHtml(b)).join('\n') +
+    '</div>' +
+    '<div style="margin-top:8px;display:flex;justify-content:flex-end">' +
+      '<button class="btn btn-secondary btn-sm" onclick="copyText(\'bullets\')">Copy Bullets</button>' +
+    '</div>';
+}
+
+function copyText(type) {
+  let text = '';
+  if (type === 'title') {
+    text = generatedData[currentPlatform].title;
+  } else if (type === 'desc') {
+    text = generatedData[currentPlatform].desc;
+  } else if (type === 'bullets') {
+    const features = getFeatures();
+    const category = document.getElementById('category').value;
+    const brand = document.getElementById('brand').value;
+    const condText = document.getElementById('condition').value === 'new' ? 'Baru' : 'Bekas';
+    const benefits = CATEGORY_BENEFITS[category] || ['kualitas terjamin'];
+    let bullets = [];
+    if (brand) bullets.push('Brand: ' + brand);
+    bullets.push('Kondisi: ' + condText);
+    features.slice(0, 5).forEach(f => bullets.push(f));
+    benefits.slice(0, 3).forEach(b => bullets.push(capitalize(b)));
+    text = bullets.map(b => '- ' + b).join('\n');
+  }
+
+  navigator.clipboard.writeText(text).then(() => {
+    const feedback = document.createElement('span');
+    feedback.className = 'copy-feedback show';
+    feedback.textContent = 'Copied!';
+    document.getElementById(type === 'title' ? 'titleBox' : type === 'desc' ? 'descBox' : 'outputArea').appendChild(feedback);
+    setTimeout(() => feedback.remove(), 1500);
+  });
+}
+
+function updateCharColor(current, max, el) {
+  const ratio = current / max;
+  if (ratio > 0.9) {
+    el.className = 'char-count error';
+  } else if (ratio > 0.7) {
+    el.className = 'char-count warning';
+  } else {
+    el.className = 'char-count';
+  }
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.ctrlKey) {
+    generate();
+  }
+});
+</script>
+</body>
+</html>

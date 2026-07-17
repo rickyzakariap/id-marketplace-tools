@@ -120,3 +120,19 @@
 - Lesson: http.server handles simple JSON APIs fine for prototypes
 - Lesson: Go not available on this machine - check toolchain before planning
 - Next: Add save/export functionality, SQLite for history
+
+---
+
+## 2026-07-17 - Listing Description Generator
+- Works: Static HTML/CSS/JS, zero dependencies, no backend needed
+- Works: 6 marketplace targets with platform-specific formatting
+- Works: Character count with warning colors (yellow/red)
+- Works: Auto-fill example data, copy-to-clipboard
+- Works: Category-aware benefits and keywords
+- Works: Platform character limits respected
+- Issues: TikTok title limit is very short (34 chars), hard to fit useful info
+- Issues: Generated descriptions are template-based, not AI-generated
+- Lesson: Static HTML/CSS/JS is perfect for tools that don't need backend logic
+- Lesson: Platform limits vary wildly (TikTok 34 vs Lazada 255 for titles)
+- Lesson: Template-based generation works well for marketplace descriptions
+- Next: Add more category-specific templates, support custom templates
