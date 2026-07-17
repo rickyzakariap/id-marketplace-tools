@@ -1,66 +1,64 @@
 package main
 
 const htmlPage = `<!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Listing Description Generator</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet"/>
-<script>
-tailwind.config = {
-  darkMode: 'class',
-  theme: {
-    extend: {
-      colors: {
-        primary: '#adc6ff',
-        'on-primary': '#002e6a',
-        'primary-container': '#4d8eff',
-        'on-primary-container': '#00285d',
-        background: '#0b1326',
-        'surface-container-lowest': '#060e20',
-        'surface-container-low': '#131b2e',
-        'surface-container': '#171f33',
-        'surface-container-high': '#222a3d',
-        'surface-container-highest': '#2d3449',
-        'on-surface': '#dae2fd',
-        'on-surface-variant': '#c2c6d6',
-        outline: '#8c909f',
-        'outline-variant': '#424754',
-        error: '#ffb4ab',
-        green: '#22c55e',
-        red: '#ef4444',
-        yellow: '#eab308',
-      },
-    },
-  },
-}
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-body { font-family: 'Inter', system-ui, sans-serif; }
-h1 { font-family: 'Plus Jakarta Sans', sans-serif; }
-.mono { font-family: 'JetBrains Mono', monospace; }
-.tab-active { border-bottom: 2px solid #adc6ff; color: #adc6ff; }
-.tab-inactive { border-bottom: 2px solid transparent; color: #c2c6d6; }
-.tab-inactive:hover { color: #dae2fd; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5;min-height:100vh;padding:20px}
+.container{max-width:1000px;margin:0 auto}
+h1{font-size:1.4rem;font-weight:600;margin-bottom:2px}
+.subtitle{color:#666;font-size:0.85rem;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px}
+.section-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:#999;margin-bottom:14px;font-weight:500}
+label{display:block;font-size:0.82rem;color:#555;margin-bottom:4px;margin-top:14px}
+label:first-of-type{margin-top:0}
+input,select,textarea{width:100%;padding:10px 12px;background:#fff;border:1px solid #ddd;border-radius:6px;color:#1a1a1a;font-size:0.88rem;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#4a9}
+textarea{resize:none}
+select{cursor:pointer}
+.example-row{margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.example-row span{font-size:0.72rem;color:#999}
+.example-btn{padding:3px 10px;background:#fff;border:1px solid #ddd;border-radius:4px;color:#4a9;font-size:0.72rem;cursor:pointer}
+.example-btn:hover{background:#f0f7f5}
+.validation{margin-top:10px;padding:8px 12px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:0.82rem;display:none}
+.btn{width:100%;padding:12px;margin-top:14px;background:#4a9;color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:inherit}
+.btn:hover{background:#3a8}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid #e5e5e5}
+.tab{padding:8px 14px;font-size:0.82rem;color:#999;cursor:pointer;border-bottom:2px solid transparent}
+.tab:hover{color:#555}
+.tab.active{color:#2a7;border-bottom-color:#4a9}
+.output-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.char-count{font-size:0.72rem;font-family:'JetBrains Mono',monospace,'Inter',sans-serif}
+.char-ok{color:#999}
+.char-warn{color:#d97706}
+.char-over{color:#dc2626}
+.output-box{background:#f8f8f8;border:1px solid #e5e5e5;border-radius:6px;padding:12px;font-size:0.85rem;white-space:pre-wrap;min-height:80px}
+.copy-btn{margin-top:6px;padding:4px 12px;background:#fff;border:1px solid #ddd;border-radius:4px;color:#4a9;font-size:0.75rem;cursor:pointer}
+.copy-btn:hover{background:#f0f7f5}
+.empty{text-align:center;padding:60px 20px;color:#ccc;font-size:0.88rem}
 </style>
 </head>
-<body class="bg-background text-on-surface min-h-screen p-5">
-<div class="max-w-5xl mx-auto">
-  <h1 class="text-2xl font-bold mb-1">Listing Description Generator</h1>
-  <p class="text-on-surface-variant text-sm mb-6">Generate deskripsi produk untuk 6 marketplace Indonesia</p>
+<body>
+<div class="container">
+  <h1>Listing Description Generator</h1>
+  <p class="subtitle">Generate deskripsi produk untuk 6 marketplace Indonesia</p>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <div class="lg:col-span-1 bg-surface-container-low border border-outline-variant rounded-xl p-5">
-      <div class="text-xs uppercase tracking-wider text-on-surface-variant font-medium mb-4">Info Produk</div>
+  <div class="grid">
+    <div class="card">
+      <div class="section-label">Info Produk</div>
 
-      <label class="block text-sm text-on-surface-variant mb-1">Nama Produk</label>
-      <input type="text" id="productName" placeholder="Kaos Polos Premium"
-        class="w-full rounded-lg border border-outline-variant bg-surface-container-low text-on-surface p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-on-surface-variant/50">
+      <label>Nama Produk</label>
+      <input type="text" id="productName" placeholder="Kaos Polos Premium">
 
-      <label class="block text-sm text-on-surface-variant mb-1 mt-4">Kategori</label>
-      <select id="category" class="w-full rounded-lg border border-outline-variant bg-surface-container-low text-on-surface p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors cursor-pointer">
+      <label>Kategori</label>
+      <select id="category">
         <option value="fashion">Fashion</option>
         <option value="electronics">Elektronik</option>
         <option value="food">Makanan & Minuman</option>
@@ -73,46 +71,40 @@ h1 { font-family: 'Plus Jakarta Sans', sans-serif; }
         <option value="pet">Hewan Peliharaan</option>
       </select>
 
-      <label class="block text-sm text-on-surface-variant mb-1 mt-4">Harga (Rp)</label>
-      <input type="text" id="price" placeholder="79000"
-        class="w-full rounded-lg border border-outline-variant bg-surface-container-low text-on-surface p-3 text-sm mono focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-on-surface-variant/50">
+      <label>Harga (Rp)</label>
+      <input type="text" id="price" placeholder="79000" style="font-family:'JetBrains Mono',monospace,'Inter',sans-serif">
 
-      <label class="block text-sm text-on-surface-variant mb-1 mt-4">Brand (opsional)</label>
-      <input type="text" id="brand" placeholder="Nama brand"
-        class="w-full rounded-lg border border-outline-variant bg-surface-container-low text-on-surface p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-on-surface-variant/50">
+      <label>Brand (opsional)</label>
+      <input type="text" id="brand" placeholder="Nama brand">
 
-      <label class="block text-sm text-on-surface-variant mb-1 mt-4">Kondisi</label>
-      <select id="condition" class="w-full rounded-lg border border-outline-variant bg-surface-container-low text-on-surface p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors cursor-pointer">
+      <label>Kondisi</label>
+      <select id="condition">
         <option value="new">Baru</option>
         <option value="used">Bekas</option>
         <option value="refurbished">Refurbished</option>
       </select>
 
-      <label class="block text-sm text-on-surface-variant mb-1 mt-4">Fitur (satu per baris)</label>
-      <textarea id="features" rows="4" placeholder="100% cotton&#10;Tersedia S-XXL&#10;Warna tidak luntur"
-        class="w-full rounded-lg border border-outline-variant bg-surface-container-low text-on-surface p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-on-surface-variant/50 resize-none"></textarea>
+      <label>Fitur (satu per baris)</label>
+      <textarea id="features" rows="4" placeholder="100% cotton&#10;Tersedia S-XXL&#10;Warna tidak luntur"></textarea>
 
-      <label class="block text-sm text-on-surface-variant mb-1 mt-4">Keywords (satu per baris)</label>
-      <textarea id="keywords" rows="2" placeholder="kaos polos&#10;baju cotton"
-        class="w-full rounded-lg border border-outline-variant bg-surface-container-low text-on-surface p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-on-surface-variant/50 resize-none"></textarea>
+      <label>Keywords (satu per baris)</label>
+      <textarea id="keywords" rows="2" placeholder="kaos polos&#10;baju cotton"></textarea>
 
-      <div class="mt-3 flex items-center gap-2 flex-wrap">
-        <span class="text-xs text-on-surface-variant">Contoh:</span>
-        <button onclick="fillExample('fashion')" class="px-3 py-1 text-xs rounded border border-outline-variant bg-surface-container text-primary hover:bg-surface-container-high transition-colors">Fashion</button>
-        <button onclick="fillExample('electronics')" class="px-3 py-1 text-xs rounded border border-outline-variant bg-surface-container text-primary hover:bg-surface-container-high transition-colors">Elektronik</button>
-        <button onclick="fillExample('food')" class="px-3 py-1 text-xs rounded border border-outline-variant bg-surface-container text-primary hover:bg-surface-container-high transition-colors">Makanan</button>
+      <div class="example-row">
+        <span>Contoh:</span>
+        <button class="example-btn" onclick="fillExample('fashion')">Fashion</button>
+        <button class="example-btn" onclick="fillExample('electronics')">Elektronik</button>
+        <button class="example-btn" onclick="fillExample('food')">Makanan</button>
       </div>
 
-      <div id="validationMsg" class="hidden mt-3 text-sm text-error bg-error/10 border border-error/30 rounded-lg px-3 py-2"></div>
+      <div id="validationMsg" class="validation"></div>
 
-      <button onclick="generate()" class="w-full mt-5 bg-primary text-on-primary py-3 rounded-lg text-sm font-semibold transition-colors hover:bg-primary/90 active:scale-[0.98]">Generate Deskripsi</button>
+      <button class="btn" onclick="generate()">Generate Deskripsi</button>
     </div>
 
-    <div class="lg:col-span-2">
-      <div id="results" class="bg-surface-container-low border border-outline-variant rounded-xl p-5 min-h-[400px]">
-        <div class="text-center py-16 text-on-surface-variant/40">
-          <div class="text-sm">Isi info produk lalu generate</div>
-        </div>
+    <div>
+      <div id="results" class="card">
+        <div class="empty">Isi info produk lalu generate</div>
       </div>
     </div>
   </div>
@@ -125,123 +117,103 @@ const EXAMPLES = {
   food: {name:'Kopi Arabika Gayo',category:'food',price:'85000',brand:'Gayo Premium',features:'100% arabika\nRoasting medium\nKemasan 250gr\nHalal MUI',keywords:'kopi arabika\nkopi gayo'},
 };
 
-function fillExample(cat){
-  const e=EXAMPLES[cat];
-  document.getElementById('productName').value=e.name;
-  document.getElementById('category').value=e.category;
-  document.getElementById('price').value=e.price;
-  document.getElementById('brand').value=e.brand;
-  document.getElementById('features').value=e.features;
-  document.getElementById('keywords').value=e.keywords;
+let currentData = null;
+let currentPlatform = 'tokopedia';
+
+function fillExample(cat) {
+  const e = EXAMPLES[cat];
+  document.getElementById('productName').value = e.name;
+  document.getElementById('category').value = e.category;
+  document.getElementById('price').value = e.price;
+  document.getElementById('brand').value = e.brand;
+  document.getElementById('features').value = e.features;
+  document.getElementById('keywords').value = e.keywords;
   generate();
 }
 
-function showValidation(msg){
-  const el=document.getElementById('validationMsg');
-  el.textContent=msg;
-  el.classList.remove('hidden');
-  setTimeout(()=>el.classList.add('hidden'),3000);
+function showValidation(msg) {
+  const el = document.getElementById('validationMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3000);
 }
 
-let currentData=null;
-let currentPlatform='tokopedia';
+async function generate() {
+  const name = document.getElementById('productName').value.trim();
+  const category = document.getElementById('category').value;
+  const price = document.getElementById('price').value.trim();
+  const brand = document.getElementById('brand').value.trim();
+  const condition = document.getElementById('condition').value;
+  const features = document.getElementById('features').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const keywords = document.getElementById('keywords').value.split('\n').map(s => s.trim()).filter(Boolean);
 
-function fmt(n){return'Rp '+Number(n).toLocaleString('id-ID')}
+  if (!name) { showValidation('Isi nama produk'); return; }
+  if (!price) { showValidation('Isi harga'); return; }
 
-async function generate(){
-  const name=document.getElementById('productName').value.trim();
-  const category=document.getElementById('category').value;
-  const price=document.getElementById('price').value.trim();
-  const brand=document.getElementById('brand').value.trim();
-  const condition=document.getElementById('condition').value;
-  const features=document.getElementById('features').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  const keywords=document.getElementById('keywords').value.split('\n').map(s=>s.trim()).filter(Boolean);
-
-  if(!name){showValidation('Isi nama produk');return;}
-  if(!category){showValidation('Pilih kategori');return;}
-  if(!price){showValidation('Isi harga');return;}
-
-  const resp=await fetch('/api/generate',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name,category,price,brand,condition,features,keywords})
+  const resp = await fetch('/api/generate', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({name, category, price, brand, condition, features, keywords})
   });
-  currentData=await resp.json();
+  currentData = await resp.json();
   renderResults();
 }
 
-function renderResults(){
-  if(!currentData)return;
-  const platforms=['tokopedia','shopee','lazada','bukalapak','tiktok','blibli'];
-  const names={tokopedia:'Tokopedia',shopee:'Shopee',lazada:'Lazada',bukalapak:'Bukalapak',tiktok:'TikTok Shop',blibli:'Blibli'};
+function renderResults() {
+  if (!currentData) return;
+  const platforms = ['tokopedia','shopee','lazada','bukalapak','tiktok','blibli'];
+  const names = {tokopedia:'Tokopedia',shopee:'Shopee',lazada:'Lazada',bukalapak:'Bukalapak',tiktok:'TikTok Shop',blibli:'Blibli'};
 
-  let tabs='<div class="flex gap-1 mb-4 border-b border-outline-variant overflow-x-auto">';
-  platforms.forEach(p=>{
-    const cls=p===currentPlatform?'tab-active':'tab-inactive';
-    tabs+='<button onclick="switchPlatform(\\''+p+'\\')" class="px-3 py-2 text-sm font-medium whitespace-nowrap '+cls+'">'+names[p]+'</button>';
+  let tabs = '<div class="tabs">';
+  platforms.forEach(p => {
+    tabs += '<div class="tab ' + (p === currentPlatform ? 'active' : '') + '" onclick="switchPlatform(\'' + p + '\')">' + names[p] + '</div>';
   });
-  tabs+='</div>';
+  tabs += '</div>';
 
-  const d=currentData[currentPlatform];
-  const titleLen=d.title.length;
-  const descLen=d.description.length;
-  const titleColor=titleLen>d.title_max?'text-red':'text-on-surface-variant';
-  const descColor=descLen>d.desc_max?'text-red':'text-on-surface-variant';
+  const d = currentData[currentPlatform];
+  const titleLen = d.title.length;
+  const descLen = d.description.length;
+  const titleCls = titleLen > d.title_max ? 'char-over' : (titleLen > d.title_max * 0.9 ? 'char-warn' : 'char-ok');
+  const descCls = descLen > d.desc_max ? 'char-over' : (descLen > d.desc_max * 0.9 ? 'char-warn' : 'char-ok');
 
-  let html=tabs;
-  html+='<div class="mb-4">';
-  html+='<div class="flex justify-between items-center mb-2">';
-  html+='<div class="text-xs uppercase tracking-wider text-on-surface-variant font-medium">Title</div>';
-  html+='<div class="text-xs '+titleColor+' mono">'+titleLen+'/'+d.title_max+'</div>';
-  html+='</div>';
-  html+='<div class="bg-surface-container border border-outline-variant rounded-lg p-3 text-sm">'+escapeHtml(d.title)+'</div>';
-  html+='<button onclick="copyToClipboard(\\''+escapeForAttr(d.title)+'\\')" class="mt-1 px-3 py-1 text-xs rounded border border-outline-variant bg-surface-container text-primary hover:bg-surface-container-high transition-colors">Copy Title</button>';
-  html+='</div>';
+  let html = tabs;
+  html += '<div style="margin-bottom:16px">';
+  html += '<div class="output-label"><div class="section-label" style="margin:0">Title</div><span class="char-count ' + titleCls + '">' + titleLen + '/' + d.title_max + '</span></div>';
+  html += '<div class="output-box">' + escapeHtml(d.title) + '</div>';
+  html += '<button class="copy-btn" onclick="copyText(this,\'' + escapeAttr(d.title) + '\')">Copy</button>';
+  html += '</div>';
 
-  html+='<div class="mb-4">';
-  html+='<div class="flex justify-between items-center mb-2">';
-  html+='<div class="text-xs uppercase tracking-wider text-on-surface-variant font-medium">Description</div>';
-  html+='<div class="text-xs '+descColor+' mono">'+descLen+'/'+d.desc_max+'</div>';
-  html+='</div>';
-  html+='<pre class="bg-surface-container border border-outline-variant rounded-lg p-3 text-sm whitespace-pre-wrap font-sans">'+escapeHtml(d.description)+'</pre>';
-  html+='<button onclick="copyToClipboard(\\''+escapeForAttr(d.description)+'\\')" class="mt-1 px-3 py-1 text-xs rounded border border-outline-variant bg-surface-container text-primary hover:bg-surface-container-high transition-colors">Copy Description</button>';
-  html+='</div>';
+  html += '<div>';
+  html += '<div class="output-label"><div class="section-label" style="margin:0">Description</div><span class="char-count ' + descCls + '">' + descLen + '/' + d.desc_max + '</span></div>';
+  html += '<div class="output-box">' + escapeHtml(d.description) + '</div>';
+  html += '<button class="copy-btn" onclick="copyText(this,\'' + escapeAttr(d.description) + '\')">Copy</button>';
+  html += '</div>';
 
-  document.getElementById('results').innerHTML=html;
+  document.getElementById('results').innerHTML = html;
 }
 
-function switchPlatform(p){
-  currentPlatform=p;
+function switchPlatform(p) {
+  currentPlatform = p;
   renderResults();
 }
 
-function escapeHtml(s){
+function escapeHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function escapeForAttr(s){
-  return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\\n/g,'\\n');
+function escapeAttr(s) {
+  return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
 }
 
-function copyToClipboard(text){
-  text=text.replace(/\\\\n/g,'\\n').replace(/\\\\'/g,"'");
-  navigator.clipboard.writeText(text).then(()=>{
-    showValidation('Copied!');
-  }).catch(()=>{
-    const ta=document.createElement('textarea');
-    ta.value=text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showValidation('Copied!');
+function copyText(btn, text) {
+  text = text.replace(/\\\\n/g, '\n').replace(/\\\\'/g, "'");
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
   });
 }
 
-document.addEventListener('keydown',e=>{
-  if(e.ctrlKey&&e.key==='Enter'){
-    e.preventDefault();
-    generate();
-  }
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); generate(); }
 });
 </script>
 </body>
