@@ -12,7 +12,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 4 | [04-fee-breakdown-calculator](04-fee-breakdown-calculator/) | CLI | Python | Fee breakdown calculator for 6 marketplaces with comparison |
 | 5 | [05-review-extension](05-review-extension/) | Extension | Chrome MV3 + Express + Supabase | Shopee/Tokopedia review scraper and sentiment analyzer |
 | 6 | [06-dropship-calculator](06-dropship-calculator/) | Web | Python (stdlib) | Dropship margin calculator across 6 marketplaces |
-| 7 | [07-listing-description-generator](07-listing-description-generator/) | Web | HTML/CSS/JS (static) | Generate optimized descriptions for 6 marketplaces |
+| 7 | [07-listing-description-generator](07-listing-description-generator/) | Web | Go + Tailwind | Generate marketplace-specific product descriptions |
 
 ## Contributing
 
