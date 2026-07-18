@@ -149,3 +149,20 @@
 - Lesson: Platform limits vary wildly (TikTok 34 vs Lazada 255 for titles)
 - Lesson: Template-based generation works well for marketplace descriptions
 - Next: Add more category-specific templates, support custom templates
+
+---
+
+## 2026-07-18 - Komplain Response Generator
+- Works: Python stdlib http.server, zero dependencies
+- Works: Web UI (not CLI) - sellers can use directly
+- Works: 6 complaint types with auto-detection from buyer message
+- Works: 3 response tones: sopan, tegas, minta maaf
+- Works: Customizable fields: resi, courier, compensation
+- Works: Copy individual or all responses
+- Works: Light minimal theme, responsive design
+- Works: Keyboard shortcut Ctrl+Enter
+- Issues: Templates are static, not AI-generated
+- Lesson: Auto-detect from buyer message text is very useful for sellers
+- Lesson: Template-based responses work well for common complaint patterns
+- Lesson: Python stdlib is enough for a useful web tool
+- Next: Add more complaint types, support custom templates, save response history

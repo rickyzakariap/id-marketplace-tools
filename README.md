@@ -13,6 +13,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 5 | [05-review-extension](05-review-extension/) | Extension | Chrome MV3 + Express + Supabase | Shopee/Tokopedia review scraper and sentiment analyzer |
 | 6 | [06-dropship-calculator](06-dropship-calculator/) | Web | Python (stdlib) | Dropship margin calculator across 6 marketplaces |
 | 7 | [07-listing-description-generator](07-listing-description-generator/) | Web | Go + Tailwind | Generate marketplace-specific product descriptions |
+| 8 | [08-komplain-response-generator](08-komplain-response-generator/) | Web | Python (stdlib) | Generate professional complaint responses for marketplace sellers |
 
 ## Contributing
 
