@@ -166,3 +166,18 @@
 - Lesson: Template-based responses work well for common complaint patterns
 - Lesson: Python stdlib is enough for a useful web tool
 - Next: Add more complaint types, support custom templates, save response history
+
+---
+
+## 2026-07-19 - Profit Tracker Dashboard
+- Works: Web UI with SQLite persistence, zero dependencies
+- Works: Transaction CRUD with full fee breakdown (komisi, biaya layanan, ongkir)
+- Works: Summary cards (revenue, cost, fees, net profit)
+- Works: Marketplace breakdown with per-marketplace profit
+- Works: History filters (marketplace, category, date range)
+- Works: CSV export with all calculated fields
+- Works: Auto-fill example data, light/dark theme, responsive
+- Issues: Fee data entered manually per transaction (no auto-calc from marketplace rules)
+- Lesson: SQLite via Python stdlib is enough for a useful persistent tool
+- Lesson: Data analytics category fills a gap - sellers need to track actual profit, not just calculate it
+- Next: Add auto-fill commission rates per marketplace, add charts/graphs for profit trends

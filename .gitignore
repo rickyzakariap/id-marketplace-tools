@@ -4,6 +4,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 __pycache__/
+*.db
 07-listing-description-generator/server.exe
 07-listing-description-generator/go.sum
 07-listing-description-generator/server.exe~
