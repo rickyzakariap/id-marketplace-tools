@@ -1,0 +1,10 @@
+# Binaries
+*.exe
+10-bulk-fee-calculator/bulk-fee-calculator
+
+# Output
+results.csv
+
+# Go
+*.test
+*.out
