@@ -181,3 +181,21 @@
 - Lesson: SQLite via Python stdlib is enough for a useful persistent tool
 - Lesson: Data analytics category fills a gap - sellers need to track actual profit, not just calculate it
 - Next: Add auto-fill commission rates per marketplace, add charts/graphs for profit trends
+
+---
+
+## 2026-07-20 - Stock Alert Dashboard
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: JSON file storage (no CGO, no SQLite driver needed)
+- Works: Visual stock alerts (red/yellow/orange) with priority sorting
+- Works: Quick stock adjustment buttons (+1, +5, -1) from table
+- Works: Filter by marketplace, category, alert status
+- Works: CSV export, auto-fill example data (single + bulk 5)
+- Works: Light/dark theme toggle, responsive design
+- Works: All 9 API endpoints tested and verified
+- Issues: JSON file storage not suitable for high-write concurrent access (fine for single user)
+- Issues: No authentication (local tool only)
+- Lesson: Go net/http + encoding/json is enough for a useful web tool without external deps
+- Lesson: JSON file storage is simpler than SQLite for Go projects without CGO
+- Lesson: Quick stock adjustment buttons (+1/+5/-1) are more useful than edit forms for inventory management
+- Next: Add stock history tracking (log every change with timestamp), add restock suggestions based on sales velocity
