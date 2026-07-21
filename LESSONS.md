@@ -199,3 +199,20 @@
 - Lesson: JSON file storage is simpler than SQLite for Go projects without CGO
 - Lesson: Quick stock adjustment buttons (+1/+5/-1) are more useful than edit forms for inventory management
 - Next: Add stock history tracking (log every change with timestamp), add restock suggestions based on sales velocity
+
+---
+
+## 2026-07-21 - Shipping Cost Estimator
+- Works: Node.js + Express, vanilla HTML/CSS/JS
+- Works: Compare costs from 5 Indonesian couriers (JNE, J&T, SiCepat, AnterAja, GoSend)
+- Works: Zone-based pricing model with 18 cities
+- Works: COD fee calculation with minimum floor
+- Works: Cheapest/fastest courier recommendations
+- Works: Light minimal UI with dark theme option
+- Works: Responsive design, autocomplete for cities
+- Issues: Fee data is estimated (not real-time API rates)
+- Lesson: Shipping cost is the #1 factor in purchase decisions for Indonesian buyers
+- Lesson: Zone-based pricing model works well for estimation without real API
+- Lesson: GoSend same-city only limitation is realistic for instant delivery
+- Lesson: COD fees typically 2-3% of shipping cost with minimum floor
+- Next: Add more cities, integrate with real courier APIs if available
