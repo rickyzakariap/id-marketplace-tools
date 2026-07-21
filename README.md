@@ -16,6 +16,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 8 | [08-komplain-response-generator](08-komplain-response-generator/) | Web | Python (stdlib) | Generate professional complaint responses for marketplace sellers |
 | 9 | [09-profit-tracker](09-profit-tracker/) | Web | Python (stdlib + sqlite3) | Track real profit across marketplaces with fee breakdown |
 | 10 | [10-stock-alert-dashboard](10-stock-alert-dashboard/) | Web | Go 1.26 | Visual stock alerts and inventory tracking for multi-marketplace sellers |
+| 11 | [11-shipping-cost-estimator](11-shipping-cost-estimator/) | Web | Node.js + Express | Estimate and compare shipping costs across Indonesian couriers |
 
 ## Contributing
 

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shipping Cost Estimator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;--yellow:#ca8a04;--blue:#2563eb;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent-light:#1a2e28;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.5rem;font-weight:600}
+.header-actions{display:flex;gap:8px;align-items:center}
+.theme-toggle,.btn{background:var(--card);border:1px solid var(--border);color:var(--text-dim);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:inherit}
+.theme-toggle:hover,.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-hover);color:#fff;border-color:var(--accent-hover)}
+.btn-sm{padding:4px 8px;font-size:0.75rem}
+
+/* Form */
+.form-section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:24px}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
+.form-group input,.form-group select{padding:10px 12px;border:1px solid var(--input-border);border-radius:6px;font-size:0.9rem;background:var(--input-bg);color:var(--text);font-family:inherit}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent)}
+.form-group .hint{font-size:0.7rem;color:var(--text-muted)}
+.checkbox-group{display:flex;align-items:center;gap:8px;margin-top:8px}
+.checkbox-group input[type="checkbox"]{width:16px;height:16px;accent-color:var(--accent)}
+.checkbox-group label{font-size:0.85rem;color:var(--text-dim);text-transform:none;letter-spacing:0}
+.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+/* Autocomplete */
+.autocomplete{position:relative}
+.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:0 0 6px 6px;max-height:200px;overflow-y:auto;z-index:10;display:none}
+.autocomplete-list.show{display:block}
+.autocomplete-item{padding:8px 12px;cursor:pointer;font-size:0.85rem}
+.autocomplete-item:hover,.autocomplete-item.selected{background:var(--accent-light);color:var(--accent)}
+
+/* Results */
+.results-section{display:none}
+.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.results-header h2{font-size:1.1rem;font-weight:600}
+.result-meta{display:flex;gap:12px;flex-wrap:wrap}
+.result-meta span{font-size:0.8rem;color:var(--text-dim)}
+.result-meta strong{color:var(--text)}
+
+/* Courier Cards */
+.courier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.courier-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative}
+.courier-card.cheapest{border-color:var(--green);border-width:2px}
+.courier-card.fastest{border-color:var(--blue);border-width:2px}
+.courier-card.unavailable{opacity:0.5}
+.courier-badge{position:absolute;top:8px;right:8px;font-size:0.65rem;padding:2px 6px;border-radius:4px;text-transform:uppercase;font-weight:600}
+.courier-badge.cheapest-badge{background:#dcfce7;color:var(--green)}
+.courier-badge.fastest-badge{background:#dbeafe;color:var(--blue)}
+.courier-name{font-size:1rem;font-weight:600;margin-bottom:8px}
+.courier-cost{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-bottom:4px}
+.courier-cod{font-size:0.75rem;color:var(--text-muted);margin-bottom:8px}
+.courier-delivery{font-size:0.8rem;color:var(--text-dim)}
+.courier-services{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.courier-service{font-size:0.65rem;padding:2px 6px;background:var(--card-alt);border:1px solid var(--border);border-radius:4px;color:var(--text-muted)}
+
+/* Comparison Table */
+.comparison-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.comparison-table th,.comparison-table td{padding:12px;text-align:left;border-bottom:1px solid var(--border)}
+.comparison-table th{background:var(--card-alt);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);font-weight:600}
+.comparison-table td{font-size:0.85rem}
+.comparison-table tr:last-child td{border-bottom:none}
+.comparison-table tr:hover td{background:var(--card-alt)}
+.cost-cell{font-family:'JetBrains Mono',monospace;font-weight:600}
+.cod-cell{font-family:'JetBrains Mono',monospace;color:var(--text-dim)}
+
+/* Summary */
+.summary-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px}
+.summary-card .label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:4px}
+.summary-card .value{font-size:1.2rem;font-weight:600;font-family:'JetBrains Mono',monospace}
+.summary-card .detail{font-size:0.8rem;color:var(--text-dim);margin-top:4px}
+
+/* Empty State */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.empty-state .icon{font-size:2rem;margin-bottom:12px;opacity:0.5}
+.empty-state p{font-size:0.9rem}
+
+/* Error */
+.error-msg{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px;color:var(--red);font-size:0.85rem;margin-bottom:16px;display:none}
+
+/* Responsive */
+@media(max-width:768px){
+  .container{padding:12px}
+  .form-grid{grid-template-columns:1fr}
+  .courier-grid{grid-template-columns:1fr}
+  .summary-cards{grid-template-columns:1fr}
+  .results-header{flex-direction:column;align-items:flex-start}
+  .comparison-table{font-size:0.8rem}
+  .comparison-table th,.comparison-table td{padding:8px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Shipping Cost Estimator</h1>
+    <div class="header-actions">
+      <span id="themeLabel" class="theme-toggle" onclick="toggleTheme()">Dark</span>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="weight">Berat Paket (kg)</label>
+        <input type="number" id="weight" min="0.1" step="0.1" placeholder="1.5" value="1">
+        <span class="hint">Masukkan berat dalam kilogram</span>
+      </div>
+      <div class="form-group autocomplete">
+        <label for="origin">Kota Asal</label>
+        <input type="text" id="origin" placeholder="Jakarta" value="Jakarta">
+        <div id="originList" class="autocomplete-list"></div>
+        <span class="hint">Klik untuk lihat kota tersedia</span>
+      </div>
+      <div class="form-group autocomplete">
+        <label for="destination">Kota Tujuan</label>
+        <input type="text" id="destination" placeholder="Surabaya" value="Surabaya">
+        <div id="destList" class="autocomplete-list"></div>
+        <span class="hint">Klik untuk lihat kota tersedia</span>
+      </div>
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="cod" checked>
+      <label for="cod">Sertakan biaya COD</label>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="calculateBtn" onclick="calculate()">Hitung Ongkir</button>
+      <button class="btn" onclick="fillExample()">Isi Contoh</button>
+      <button class="btn" onclick="clearForm()">Reset</button>
+    </div>
+  </div>
+
+  <div id="errorMsg" class="error-msg"></div>
+
+  <div id="resultsSection" class="results-section">
+    <div class="results-header">
+      <h2>Perbandingan Ongkir</h2>
+      <div class="result-meta">
+        <span><strong id="resOrigin"></strong> -> <strong id="resDest"></strong></span>
+        <span>Berat: <strong id="resWeight"></strong> kg</span>
+        <span id="resCod" style="display:none">COD: <strong>Ya</strong></span>
+      </div>
+    </div>
+
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="label">Termurah</div>
+        <div class="value green" id="cheapestName">-</div>
+        <div class="detail" id="cheapestDetail">-</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Tercepat</div>
+        <div class="value" id="fastestName" style="color:var(--blue)">-</div>
+        <div class="detail" id="fastestDetail">-</div>
+      </div>
+    </div>
+
+    <div id="courierGrid" class="courier-grid"></div>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Kurir</th>
+          <th>Ongkir</th>
+          <th>Biaya COD</th>
+          <th>Total</th>
+          <th>Estimasi</th>
+          <th>Layanan</th>
+        </tr>
+      </thead>
+      <tbody id="comparisonBody"></tbody>
+    </table>
+  </div>
+
+  <div id="emptyState" class="empty-state">
+    <div class="icon">&#128230;</div>
+    <p>Masukkan detail paket dan klik "Hitung Ongkir" untuk membandingkan biaya pengiriman.</p>
+  </div>
+</div>
+
+<script>
+let cities = [];
+let activeAutocomplete = null;
+let selectedIndex = -1;
+
+// Theme
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.getElementById('themeLabel').textContent = isDark ? 'Dark' : 'Light';
+  localStorage.setItem('theme', isDark ? '' : 'dark');
+}
+
+// Init theme
+if (localStorage.getItem('theme') === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.getElementById('themeLabel').textContent = 'Light';
+}
+
+// Load cities
+fetch('/api/cities')
+  .then(r => r.json())
+  .then(data => { cities = data; });
+
+// Autocomplete
+function setupAutocomplete(inputId, listId) {
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+  
+  input.addEventListener('focus', () => {
+    activeAutocomplete = { input, list };
+    showSuggestions(input.value, list, input);
+  });
+  
+  input.addEventListener('input', () => {
+    activeAutocomplete = { input, list };
+    showSuggestions(input.value, list, input);
+  });
+  
+  input.addEventListener('blur', () => {
+    setTimeout(() => {
+      list.classList.remove('show');
+      activeAutocomplete = null;
+    }, 200);
+  });
+  
+  input.addEventListener('keydown', (e) => {
+    const items = list.querySelectorAll('.autocomplete-item');
+    if (!items.length) return;
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+      updateSelection(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIndex = Math.max(selectedIndex - 1, 0);
+      updateSelection(items);
+    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+      e.preventDefault();
+      input.value = items[selectedIndex].textContent;
+      list.classList.remove('show');
+    }
+  });
+}
+
+function showSuggestions(query, list, input) {
+  const filtered = cities.filter(c => 
+    c.toLowerCase().includes(query.toLowerCase())
+  ).slice(0, 10);
+  
+  list.innerHTML = filtered.map(c => 
+    `<div class="autocomplete-item" onmousedown="selectCity('${c}', '${input.id}')">${c}</div>`
+  ).join('');
+  
+  list.classList.toggle('show', filtered.length > 0 && query.length > 0);
+  selectedIndex = -1;
+}
+
+function updateSelection(items) {
+  items.forEach((item, i) => {
+    item.classList.toggle('selected', i === selectedIndex);
+  });
+}
+
+function selectCity(city, inputId) {
+  document.getElementById(inputId).value = city;
+  document.getElementById(inputId.replace('origin', 'originList').replace('destination', 'destList')).classList.remove('show');
+}
+
+setupAutocomplete('origin', 'originList');
+setupAutocomplete('destination', 'destList');
+
+// Calculate
+async function calculate() {
+  const weight = parseFloat(document.getElementById('weight').value);
+  const origin = document.getElementById('origin').value.trim();
+  const destination = document.getElementById('destination').value.trim();
+  const cod = document.getElementById('cod').checked;
+  
+  const errorEl = document.getElementById('errorMsg');
+  errorEl.style.display = 'none';
+  
+  if (!weight || weight <= 0) {
+    errorEl.textContent = 'Berat paket harus lebih dari 0 kg.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  if (!origin || !destination) {
+    errorEl.textContent = 'Kota asal dan tujuan harus diisi.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  const btn = document.getElementById('calculateBtn');
+  btn.textContent = 'Menghitung...';
+  btn.disabled = true;
+  
+  try {
+    const res = await fetch('/api/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ weight, origin, destination, cod })
+    });
+    
+    const data = await res.json();
+    
+    if (data.error) {
+      errorEl.textContent = data.error;
+      errorEl.style.display = 'block';
+      return;
+    }
+    
+    renderResults(data);
+  } catch (err) {
+    errorEl.textContent = 'Gagal menghitung ongkir. Coba lagi.';
+    errorEl.style.display = 'block';
+  } finally {
+    btn.textContent = 'Hitung Ongkir';
+    btn.disabled = false;
+  }
+}
+
+function renderResults(data) {
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+  
+  document.getElementById('resOrigin').textContent = data.origin;
+  document.getElementById('resDest').textContent = data.destination;
+  document.getElementById('resWeight').textContent = data.weight;
+  document.getElementById('resCod').style.display = data.useCod ? 'inline' : 'none';
+  
+  // Summary
+  if (data.cheapest) {
+    document.getElementById('cheapestName').textContent = data.cheapest.name;
+    document.getElementById('cheapestDetail').textContent = 
+      `Rp ${data.cheapest.totalCost.toLocaleString('id-ID')}${data.cheapest.deliveryDays !== '-' ? ' - ' + data.cheapest.deliveryDays + ' hari' : ''}`;
+  }
+  
+  if (data.fastest && data.fastest.code !== data.cheapest?.code) {
+    document.getElementById('fastestName').textContent = data.fastest.name;
+    document.getElementById('fastestDetail').textContent = 
+      `Rp ${data.fastest.totalCost.toLocaleString('id-ID')} - ${data.fastest.deliveryDays} hari`;
+  } else if (data.fastest) {
+    document.getElementById('fastestName').textContent = data.fastest.name + ' (juga termurah)';
+    document.getElementById('fastestDetail').textContent = 
+      `Rp ${data.fastest.totalCost.toLocaleString('id-ID')} - ${data.fastest.deliveryDays} hari`;
+  }
+  
+  // Courier cards
+  const grid = document.getElementById('courierGrid');
+  grid.innerHTML = data.couriers.map(c => {
+    const isCheapest = data.cheapest && c.code === data.cheapest.code;
+    const isFastest = data.fastest && c.code === data.fastest.code && !isCheapest;
+    const unavailable = !c.available;
+    
+    return `
+      <div class="courier-card ${unavailable ? 'unavailable' : ''} ${isCheapest ? 'cheapest' : ''} ${isFastest ? 'fastest' : ''}">
+        ${isCheapest ? '<span class="courier-badge cheapest-badge">Termurah</span>' : ''}
+        ${isFastest ? '<span class="courier-badge fastest-badge">Tercepat</span>' : ''}
+        <div class="courier-name">${c.name}</div>
+        <div class="courier-cost">Rp ${c.totalCost.toLocaleString('id-ID')}</div>
+        ${data.useCod ? `<div class="courier-cod">Ongkir: Rp ${c.cost.toLocaleString('id-ID')} | COD: Rp ${c.codFee.toLocaleString('id-ID')}</div>` : ''}
+        <div class="courier-delivery">${unavailable ? 'Tidak tersedia' : 'Estimasi: ' + c.deliveryDays + ' hari'}</div>
+        <div class="courier-services">${c.services.map(s => `<span class="courier-service">${s}</span>`).join('')}</div>
+      </div>
+    `;
+  }).join('');
+  
+  // Comparison table
+  const tbody = document.getElementById('comparisonBody');
+  tbody.innerHTML = data.couriers.map(c => `
+    <tr class="${!c.available ? 'unavailable' : ''}">
+      <td><strong>${c.name}</strong></td>
+      <td class="cost-cell">Rp ${c.cost.toLocaleString('id-ID')}</td>
+      <td class="cod-cell">${data.useCod ? 'Rp ' + c.codFee.toLocaleString('id-ID') : '-'}</td>
+      <td class="cost-cell">Rp ${c.totalCost.toLocaleString('id-ID')}</td>
+      <td>${c.available ? c.deliveryDays + ' hari' : '-'}</td>
+      <td>${c.services.join(', ')}</td>
+    </tr>
+  `).join('');
+}
+
+// Example data
+function fillExample() {
+  document.getElementById('weight').value = '2';
+  document.getElementById('origin').value = 'Jakarta';
+  document.getElementById('destination').value = 'Surabaya';
+  document.getElementById('cod').checked = true;
+}
+
+// Clear form
+function clearForm() {
+  document.getElementById('weight').value = '';
+  document.getElementById('origin').value = '';
+  document.getElementById('destination').value = '';
+  document.getElementById('cod').checked = false;
+  document.getElementById('errorMsg').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'block';
+  document.getElementById('cheapestName').textContent = '-';
+  document.getElementById('cheapestDetail').textContent = '-';
+  document.getElementById('fastestName').textContent = '-';
+  document.getElementById('fastestDetail').textContent = '-';
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !activeAutocomplete) {
+    calculate();
+  } else if (e.key === 'Escape') {
+    clearForm();
+  }
+});
+</script>
+</body>
+</html>
