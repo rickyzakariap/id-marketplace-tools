@@ -140,7 +140,7 @@ function calculateShipping(weight, originCity, destCity, useCod = false) {
   const zoneFactor = getZoneFactor(originZone, destZone);
   const distCategory = getDistanceCategory(zoneFactor);
   
-  const sameCity = originZone === destZone && distCategory === 'same';
+  const sameCity = originKey === destKey;
   
   const results = [];
   
