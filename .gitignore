@@ -8,3 +8,4 @@ __pycache__/
 07-listing-description-generator/server.exe
 07-listing-description-generator/go.sum
 07-listing-description-generator/server.exe~
+*.exe
