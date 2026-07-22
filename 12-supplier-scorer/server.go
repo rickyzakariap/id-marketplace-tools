@@ -138,10 +138,27 @@ func handleGetSuppliers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(list)
 }
 
+func validateSupplier(s *Supplier) error {
+	if s.Name == "" {
+		return fmt.Errorf("name is required")
+	}
+	scores := []int{s.PriceScore, s.ShippingScore, s.QualityScore, s.Communication, s.ReturnRate, s.MOQScore}
+	for _, v := range scores {
+		if v < 1 || v > 5 {
+			return fmt.Errorf("scores must be 1-5")
+		}
+	}
+	return nil
+}
+
 func handleCreateSupplier(w http.ResponseWriter, r *http.Request) {
 	var s Supplier
 	if err := json.NewDecoder(r.Body).Decode(&s); err != nil {
 		http.Error(w, `{"error":"invalid JSON"}`, http.StatusBadRequest)
+		return
+	}
+	if err := validateSupplier(&s); err != nil {
+		http.Error(w, fmt.Sprintf(`{"error":"%s"}`, err), http.StatusBadRequest)
 		return
 	}
 
@@ -187,6 +204,10 @@ func handleUpdateSupplier(w http.ResponseWriter, r *http.Request) {
 	var s Supplier
 	if err := json.NewDecoder(r.Body).Decode(&s); err != nil {
 		http.Error(w, `{"error":"invalid JSON"}`, http.StatusBadRequest)
+		return
+	}
+	if err := validateSupplier(&s); err != nil {
+		http.Error(w, fmt.Sprintf(`{"error":"%s"}`, err), http.StatusBadRequest)
 		return
 	}
 
