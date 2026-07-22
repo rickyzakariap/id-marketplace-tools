@@ -216,3 +216,18 @@
 - Lesson: GoSend same-city only limitation is realistic for instant delivery
 - Lesson: COD fees typically 2-3% of shipping cost with minimum floor
 - Next: Add more cities, integrate with real courier APIs if available
+
+---
+
+## 2026-07-22 - Supplier Scorer
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: 6-dimension scoring with auto-calculated average and letter grade (A+ to D)
+- Works: CRUD API with JSON file persistence
+- Works: Filter by marketplace, search by name
+- Works: Dark/light theme toggle, responsive design
+- Works: Keyboard shortcuts (Ctrl+Enter, Escape)
+- Issues: No batch import for existing supplier lists
+- Lesson: Go embedded HTML pattern works well for simple tools - no separate build step
+- Lesson: Supplier scoring is a real pain point for dropshippers evaluating multiple sources
+- Lesson: Letter grades (A+ to D) are more intuitive than raw numbers for quick comparison
+- Next: Add CSV import, supplier comparison side-by-side view, export to PDF
