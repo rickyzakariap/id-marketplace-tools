@@ -18,6 +18,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 10 | [10-stock-alert-dashboard](10-stock-alert-dashboard/) | Web | Go 1.26 | Visual stock alerts and inventory tracking for multi-marketplace sellers |
 | 11 | [11-shipping-cost-estimator](11-shipping-cost-estimator/) | Web | Node.js + Express | Estimate and compare shipping costs across Indonesian couriers |
 | 12 | [12-supplier-scorer](12-supplier-scorer/) | Web | Go 1.26 | Score and rank suppliers on 6 dimensions with auto-grading |
+| 13 | [13-competitor-price-monitor](13-competitor-price-monitor/) | Web | Node.js + Express | Track competitor prices across marketplaces with history charts |
 
 ## Contributing
 

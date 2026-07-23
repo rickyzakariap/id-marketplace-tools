@@ -230,4 +230,17 @@
 - Lesson: Go embedded HTML pattern works well for simple tools - no separate build step
 - Lesson: Supplier scoring is a real pain point for dropshippers evaluating multiple sources
 - Lesson: Letter grades (A+ to D) are more intuitive than raw numbers for quick comparison
-- Next: Add CSV import, supplier comparison side-by-side view, export to PDF
+----
+
+## 2026-07-23 - Competitor Price Monitor
+- Works: Node.js + Express, JSON file storage, canvas-based price chart
+- Works: 6 marketplaces, marketplace filters, price change tracking
+- Works: Price history with min/max/avg stats, CSV export
+- Works: Auto-fill sample data with 7-day price history
+- Works: Light/dark theme toggle, responsive design
+- Works: All API endpoints tested (CRUD, record price, history, stats, export)
+- Issues: Chart needs minimum 2 price records to render
+- Lesson: Canvas charts are simpler than chart libraries for basic line graphs
+- Lesson: JSON file storage works well for single-user tools, no DB setup needed
+- Lesson: Price change percentage + absolute value both needed for context
+- Next: Add price alert thresholds, bulk import from CSV, weekly price comparison report
