@@ -1,0 +1,269 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "TWS Bluetooth Earphone X7",
+      "marketplace": "Shopee",
+      "url": "https://shopee.co.id/product/123",
+      "currentPrice": 82000,
+      "notes": "",
+      "createdAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 2,
+      "name": "Phone Case iPhone 15 Pro",
+      "marketplace": "Tokopedia",
+      "url": "https://tokopedia.com/product/456",
+      "currentPrice": 47000,
+      "notes": "",
+      "createdAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 3,
+      "name": "Power Bank 20000mAh",
+      "marketplace": "Lazada",
+      "url": "https://lazada.co.id/product/789",
+      "currentPrice": 168000,
+      "notes": "",
+      "createdAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 4,
+      "name": "USB-C Cable 2m",
+      "marketplace": "Shopee",
+      "url": "https://shopee.co.id/product/101",
+      "currentPrice": 25000,
+      "notes": "",
+      "createdAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 5,
+      "name": "LED Desk Lamp",
+      "marketplace": "Bukalapak",
+      "url": "https://bukalapak.com/product/202",
+      "currentPrice": 137000,
+      "notes": "",
+      "createdAt": "2026-07-23T03:08:22.601Z"
+    }
+  ],
+  "prices": [
+    {
+      "id": 1,
+      "productId": 1,
+      "price": 87000,
+      "recordedAt": "2026-07-17T03:08:22.601Z"
+    },
+    {
+      "id": 2,
+      "productId": 1,
+      "price": 86000,
+      "recordedAt": "2026-07-18T03:08:22.601Z"
+    },
+    {
+      "id": 3,
+      "productId": 1,
+      "price": 90000,
+      "recordedAt": "2026-07-19T03:08:22.601Z"
+    },
+    {
+      "id": 4,
+      "productId": 1,
+      "price": 91000,
+      "recordedAt": "2026-07-20T03:08:22.601Z"
+    },
+    {
+      "id": 5,
+      "productId": 1,
+      "price": 88000,
+      "recordedAt": "2026-07-21T03:08:22.601Z"
+    },
+    {
+      "id": 6,
+      "productId": 1,
+      "price": 90000,
+      "recordedAt": "2026-07-22T03:08:22.601Z"
+    },
+    {
+      "id": 7,
+      "productId": 1,
+      "price": 86000,
+      "recordedAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 8,
+      "productId": 2,
+      "price": 47000,
+      "recordedAt": "2026-07-17T03:08:22.601Z"
+    },
+    {
+      "id": 9,
+      "productId": 2,
+      "price": 47000,
+      "recordedAt": "2026-07-18T03:08:22.601Z"
+    },
+    {
+      "id": 10,
+      "productId": 2,
+      "price": 45000,
+      "recordedAt": "2026-07-19T03:08:22.601Z"
+    },
+    {
+      "id": 11,
+      "productId": 2,
+      "price": 44000,
+      "recordedAt": "2026-07-20T03:08:22.601Z"
+    },
+    {
+      "id": 12,
+      "productId": 2,
+      "price": 46000,
+      "recordedAt": "2026-07-21T03:08:22.601Z"
+    },
+    {
+      "id": 13,
+      "productId": 2,
+      "price": 44000,
+      "recordedAt": "2026-07-22T03:08:22.601Z"
+    },
+    {
+      "id": 14,
+      "productId": 2,
+      "price": 47000,
+      "recordedAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 15,
+      "productId": 3,
+      "price": 174000,
+      "recordedAt": "2026-07-17T03:08:22.601Z"
+    },
+    {
+      "id": 16,
+      "productId": 3,
+      "price": 169000,
+      "recordedAt": "2026-07-18T03:08:22.601Z"
+    },
+    {
+      "id": 17,
+      "productId": 3,
+      "price": 173000,
+      "recordedAt": "2026-07-19T03:08:22.601Z"
+    },
+    {
+      "id": 18,
+      "productId": 3,
+      "price": 170000,
+      "recordedAt": "2026-07-20T03:08:22.601Z"
+    },
+    {
+      "id": 19,
+      "productId": 3,
+      "price": 168000,
+      "recordedAt": "2026-07-21T03:08:22.601Z"
+    },
+    {
+      "id": 20,
+      "productId": 3,
+      "price": 172000,
+      "recordedAt": "2026-07-22T03:08:22.601Z"
+    },
+    {
+      "id": 21,
+      "productId": 3,
+      "price": 168000,
+      "recordedAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 22,
+      "productId": 4,
+      "price": 26000,
+      "recordedAt": "2026-07-17T03:08:22.601Z"
+    },
+    {
+      "id": 23,
+      "productId": 4,
+      "price": 26000,
+      "recordedAt": "2026-07-18T03:08:22.601Z"
+    },
+    {
+      "id": 24,
+      "productId": 4,
+      "price": 26000,
+      "recordedAt": "2026-07-19T03:08:22.601Z"
+    },
+    {
+      "id": 25,
+      "productId": 4,
+      "price": 25000,
+      "recordedAt": "2026-07-20T03:08:22.601Z"
+    },
+    {
+      "id": 26,
+      "productId": 4,
+      "price": 24000,
+      "recordedAt": "2026-07-21T03:08:22.601Z"
+    },
+    {
+      "id": 27,
+      "productId": 4,
+      "price": 24000,
+      "recordedAt": "2026-07-22T03:08:22.601Z"
+    },
+    {
+      "id": 28,
+      "productId": 4,
+      "price": 25000,
+      "recordedAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 29,
+      "productId": 5,
+      "price": 131000,
+      "recordedAt": "2026-07-17T03:08:22.601Z"
+    },
+    {
+      "id": 30,
+      "productId": 5,
+      "price": 140000,
+      "recordedAt": "2026-07-18T03:08:22.601Z"
+    },
+    {
+      "id": 31,
+      "productId": 5,
+      "price": 128000,
+      "recordedAt": "2026-07-19T03:08:22.601Z"
+    },
+    {
+      "id": 32,
+      "productId": 5,
+      "price": 130000,
+      "recordedAt": "2026-07-20T03:08:22.601Z"
+    },
+    {
+      "id": 33,
+      "productId": 5,
+      "price": 132000,
+      "recordedAt": "2026-07-21T03:08:22.601Z"
+    },
+    {
+      "id": 34,
+      "productId": 5,
+      "price": 141000,
+      "recordedAt": "2026-07-22T03:08:22.601Z"
+    },
+    {
+      "id": 35,
+      "productId": 5,
+      "price": 137000,
+      "recordedAt": "2026-07-23T03:08:22.601Z"
+    },
+    {
+      "id": 36,
+      "productId": 1,
+      "price": 82000,
+      "recordedAt": "2026-07-23T03:08:42.909Z"
+    }
+  ],
+  "nextId": 6,
+  "nextPriceId": 37
+}

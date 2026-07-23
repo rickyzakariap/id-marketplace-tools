@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Competitor Price Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fafafa;--card:#fff;--border:#e5e5e5;--text:#1a1a1a;--text2:#666;--text3:#999;--accent:#4a9;--accent2:#3a8;--green:#22c55e;--red:#dc2626;--yellow:#eab308;--font:'Inter',system-ui,sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px}
+header h1{font-size:18px;font-weight:600}
+.header-actions{display:flex;gap:8px}
+.btn{padding:8px 16px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-family:var(--font);font-size:13px;cursor:pointer;transition:border-color 0.15s}
+.btn:hover{border-color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent2);border-color:var(--accent2)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-danger{color:var(--red);border-color:var(--red)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.theme-toggle{background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;font-family:var(--font)}
+.dark{--bg:#1a1a1a;--card:#242424;--border:#333;--text:#e5e5e5;--text2:#aaa;--text3:#777}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px}
+.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin-bottom:4px}
+.stat-value{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.chip{padding:6px 12px;border:1px solid var(--border);border-radius:20px;background:var(--card);font-size:12px;cursor:pointer;color:var(--text2);font-family:var(--font)}
+.chip.active{border-color:var(--accent);color:var(--accent);background:rgba(74,153,153,0.08)}
+.main-grid{display:grid;grid-template-columns:1fr 340px;gap:20px}
+.product-table{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.table-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
+.table-title{font-size:14px;font-weight:600}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:500}
+td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.price{font-family:'JetBrains Mono',monospace;font-weight:500}
+.change-up{color:var(--red)}
+.change-down{color:var(--green)}
+.change-none{color:var(--text3)}
+.mp-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.mp-shopee{background:#ee4d2d15;color:#ee4d2d}
+.mp-tokopedia{background:#42b54915;color:#42b549}
+.mp-lazada{background:#0f146d15;color:#0f146d}
+.mp-bukalapak{background:#e31e5215;color:#e31e52}
+.mp-blibli{background:#2d9cdb15;color:#2d9cdb}
+.mp-tiktokshop{background:#00000010;color:#333}
+.action-btns{display:flex;gap:4px}
+.action-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:2px 4px;border-radius:4px}
+.action-btn:hover{color:var(--accent);background:rgba(74,153,153,0.08)}
+.sidebar{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12px;font-weight:500;margin-bottom:4px;color:var(--text2)}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;background:var(--bg);color:var(--text)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
+.form-group textarea{resize:vertical;min-height:60px}
+.form-error{font-size:11px;color:var(--red);margin-top:2px;display:none}
+.form-error.show{display:block}
+.chart-container{position:relative;width:100%;height:200px}
+canvas{width:100%;height:100%}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;width:90%;max-width:400px}
+.modal h3{font-size:16px;margin-bottom:16px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.toast{position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:6px;font-size:13px;z-index:200;display:none}
+.toast.show{display:block}
+.toast-success{background:var(--green);color:#fff}
+.toast-error{background:var(--red);color:#fff}
+.empty-records{color:var(--text3);font-size:12px}
+@media(max-width:768px){
+.container{padding:12px}
+.stats-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+.main-grid{grid-template-columns:1fr}
+header{flex-direction:column;gap:10px;text-align:center}
+.header-actions{width:100%;justify-content:center}
+.filters{justify-content:center}
+th:nth-child(4),td:nth-child(4),th:nth-child(6),td:nth-child(6){display:none}
+.stat-value{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Competitor Price Monitor</h1>
+    <div class="header-actions">
+      <button class="btn" onclick="loadSampleData()">Load Sample</button>
+      <button class="btn" onclick="exportCSV()">Export CSV</button>
+      <button class="theme-toggle" onclick="toggleTheme()">Dark</button>
+    </div>
+  </header>
+
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <div class="filters" id="marketplaceFilters">
+    <div class="chip active" data-mp="all" onclick="filterMarketplace('all')">All</div>
+    <div class="chip" data-mp="Shopee" onclick="filterMarketplace('Shopee')">Shopee</div>
+    <div class="chip" data-mp="Tokopedia" onclick="filterMarketplace('Tokopedia')">Tokopedia</div>
+    <div class="chip" data-mp="Lazada" onclick="filterMarketplace('Lazada')">Lazada</div>
+    <div class="chip" data-mp="Bukalapak" onclick="filterMarketplace('Bukalapak')">Bukalapak</div>
+    <div class="chip" data-mp="Blibli" onclick="filterMarketplace('Blibli')">Blibli</div>
+  </div>
+
+  <div class="main-grid">
+    <div class="product-table">
+      <div class="table-header">
+        <div class="table-title" id="tableTitle">Tracked Products</div>
+        <button class="btn btn-primary btn-sm" onclick="showAddForm()">+ Add Product</button>
+      </div>
+      <div id="productTableContent"></div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card">
+        <div class="card-title">Price History</div>
+        <div id="chartProduct" style="font-size:12px;color:var(--text2);margin-bottom:8px">Select a product to view history</div>
+        <div class="chart-container">
+          <canvas id="priceChart"></canvas>
+        </div>
+        <div id="chartStats" style="margin-top:8px;font-size:12px;color:var(--text2)"></div>
+      </div>
+
+      <div class="card" id="addProductCard" style="display:none">
+        <div class="card-title" id="addFormTitle">Add Product</div>
+        <form id="productForm" onsubmit="submitProduct(event)">
+          <input type="hidden" id="editId">
+          <div class="form-group">
+            <label for="prodName">Product Name</label>
+            <input type="text" id="prodName" placeholder="e.g. TWS Bluetooth X7">
+            <div class="form-error" id="prodNameError">Name is required</div>
+          </div>
+          <div class="form-group">
+            <label for="prodMarketplace">Marketplace</label>
+            <select id="prodMarketplace">
+              <option value="Shopee">Shopee</option>
+              <option value="Tokopedia">Tokopedia</option>
+              <option value="Lazada">Lazada</option>
+              <option value="Bukalapak">Bukalapak</option>
+              <option value="Blibli">Blibli</option>
+              <option value="TikTok Shop">TikTok Shop</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="prodUrl">URL (optional)</label>
+            <input type="text" id="prodUrl" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label for="prodPrice">Current Price (Rp)</label>
+            <input type="number" id="prodPrice" placeholder="e.g. 89000">
+            <div class="form-error" id="prodPriceError">Price must be a positive number</div>
+          </div>
+          <div class="form-group">
+            <label for="prodNotes">Notes (optional)</label>
+            <textarea id="prodNotes" placeholder="e.g. Direct competitor, check weekly"></textarea>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button type="submit" class="btn btn-primary" id="submitBtn">Save Product</button>
+            <button type="button" class="btn" onclick="hideAddForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Record Price Modal -->
+<div class="modal-overlay" id="recordModal">
+  <div class="modal">
+    <h3>Record New Price</h3>
+    <div id="recordProductName" style="font-size:13px;color:var(--text2);margin-bottom:12px"></div>
+    <div class="form-group">
+      <label for="newPrice">New Price (Rp)</label>
+      <input type="number" id="newPrice" placeholder="e.g. 85000">
+      <div class="form-error" id="newPriceError">Price must be a positive number</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeRecordModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitRecord()">Record</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentFilter = 'all';
+let selectedProductId = null;
+
+async function fetchProducts() {
+  const mp = currentFilter === 'all' ? '' : `?marketplace=${encodeURIComponent(currentFilter)}`;
+  const res = await fetch(`/api/products${mp}`);
+  return res.json();
+}
+
+async function fetchStats() {
+  const res = await fetch('/api/stats');
+  return res.json();
+}
+
+function formatRp(n) {
+  return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+function getMpClass(mp) {
+  return 'mp-' + mp.toLowerCase().replace(/\s+/g, '');
+}
+
+function renderStats(stats) {
+  const grid = document.getElementById('statsGrid');
+  const avgByMp = stats.marketplaceAvg || {};
+  const avgStr = Object.keys(avgByMp).length > 0
+    ? Object.entries(avgByMp).map(([k,v]) => `${k}: ${formatRp(v)}`).join(' | ')
+    : 'No data';
+
+  grid.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Tracked Products</div>
+      <div class="stat-value">${stats.totalProducts}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Price Increases</div>
+      <div class="stat-value" style="color:var(--red)">${stats.priceChanges.increases}</div>
+      <div class="stat-sub">competitors raised price</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Price Decreases</div>
+      <div class="stat-value" style="color:var(--green)">${stats.priceChanges.decreases}</div>
+      <div class="stat-sub">competitors dropped price</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Marketplaces</div>
+      <div class="stat-value">${Object.keys(stats.marketplaceCounts).length}</div>
+      <div class="stat-sub">${avgStr}</div>
+    </div>
+  `;
+}
+
+function renderTable(products) {
+  const container = document.getElementById('productTableContent');
+  if (products.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        No products tracked yet.<br>
+        Click "+ Add Product" or "Load Sample" to get started.
+      </div>`;
+    return;
+  }
+
+  let html = `<table>
+    <thead><tr>
+      <th>Product</th>
+      <th>Marketplace</th>
+      <th>Current Price</th>
+      <th>Change</th>
+      <th>Range</th>
+      <th>Actions</th>
+    </tr></thead><tbody>`;
+
+  products.forEach(p => {
+    let changeHtml = '<span class="empty-records">-</span>';
+    if (p.priceChange !== null) {
+      const cls = parseFloat(p.priceChange) > 0 ? 'change-up' : parseFloat(p.priceChange) < 0 ? 'change-down' : 'change-none';
+      const arrow = parseFloat(p.priceChange) > 0 ? '\u2191' : parseFloat(p.priceChange) < 0 ? '\u2193' : '\u2192';
+      const abs = p.priceChangeAbs ? formatRp(Math.abs(p.priceChangeAbs)) : '';
+      changeHtml = `<span class="${cls}">${arrow} ${p.priceChange}%</span><br><span style="font-size:11px;color:var(--text3)">${abs}</span>`;
+    }
+
+    const rangeHtml = p.minPrice && p.maxPrice && p.minPrice !== p.maxPrice
+      ? `<span style="font-size:12px">${formatRp(p.minPrice)} - ${formatRp(p.maxPrice)}</span>`
+      : `<span class="empty-records">-</span>`;
+
+    html += `<tr>
+      <td>
+        <div style="font-weight:500">${p.name}</div>
+        ${p.notes ? `<div style="font-size:11px;color:var(--text3)">${p.notes}</div>` : ''}
+      </td>
+      <td><span class="mp-badge ${getMpClass(p.marketplace)}">${p.marketplace}</span></td>
+      <td class="price">${formatRp(p.currentPrice)}</td>
+      <td>${changeHtml}</td>
+      <td>${rangeHtml}</td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn" title="Record Price" onclick="openRecordModal(${p.id}, '${p.name.replace(/'/g,"\\'")}')">\u21BB</button>
+          <button class="action-btn" title="View History" onclick="viewHistory(${p.id}, '${p.name.replace(/'/g,"\\'")}')">\u25A1</button>
+          <button class="action-btn" title="Edit" onclick="editProduct(${p.id})">\u270E</button>
+          <button class="action-btn" title="Delete" onclick="deleteProduct(${p.id})">\u2715</button>
+        </div>
+      </td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+async function refresh() {
+  const [products, stats] = await Promise.all([fetchProducts(), fetchStats()]);
+  renderStats(stats);
+  renderTable(products);
+}
+
+function filterMarketplace(mp) {
+  currentFilter = mp;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.chip[data-mp="${mp}"]`).classList.add('active');
+  refresh();
+}
+
+function showAddForm() {
+  document.getElementById('addProductCard').style.display = 'block';
+  document.getElementById('addFormTitle').textContent = 'Add Product';
+  document.getElementById('submitBtn').textContent = 'Save Product';
+  document.getElementById('editId').value = '';
+  document.getElementById('productForm').reset();
+  clearErrors();
+}
+
+function hideAddForm() {
+  document.getElementById('addProductCard').style.display = 'none';
+}
+
+function clearErrors() {
+  ['prodName','prodPrice','newPrice'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.borderColor = '';
+    const err = document.getElementById(id + 'Error');
+    if (err) err.classList.remove('show');
+  });
+}
+
+async function submitProduct(e) {
+  e.preventDefault();
+  clearErrors();
+  const editId = document.getElementById('editId').value;
+  const name = document.getElementById('prodName').value.trim();
+  const marketplace = document.getElementById('prodMarketplace').value;
+  const url = document.getElementById('prodUrl').value.trim();
+  const price = document.getElementById('prodPrice').value;
+  const notes = document.getElementById('prodNotes').value.trim();
+
+  let valid = true;
+  if (!name) {
+    document.getElementById('prodNameError').classList.add('show');
+    document.getElementById('prodName').style.borderColor = 'var(--red)';
+    valid = false;
+  }
+  if (!price || parseFloat(price) <= 0) {
+    document.getElementById('prodPriceError').classList.add('show');
+    document.getElementById('prodPrice').style.borderColor = 'var(--red)';
+    valid = false;
+  }
+  if (!valid) return;
+
+  if (editId) {
+    await fetch(`/api/products/${editId}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, marketplace, url, notes })
+    });
+    showToast('Product updated');
+  } else {
+    await fetch('/api/products', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, marketplace, url, currentPrice: price, notes })
+    });
+    showToast('Product added');
+  }
+
+  hideAddForm();
+  refresh();
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Delete this product and all its price history?')) return;
+  await fetch(`/api/products/${id}`, { method: 'DELETE' });
+  showToast('Product deleted');
+  if (selectedProductId === id) {
+    selectedProductId = null;
+    document.getElementById('chartProduct').textContent = 'Select a product to view history';
+    document.getElementById('chartStats').innerHTML = '';
+    clearChart();
+  }
+  refresh();
+}
+
+async function editProduct(id) {
+  const products = await fetchProducts();
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('addProductCard').style.display = 'block';
+  document.getElementById('addFormTitle').textContent = 'Edit Product';
+  document.getElementById('submitBtn').textContent = 'Update Product';
+  document.getElementById('editId').value = id;
+  document.getElementById('prodName').value = p.name;
+  document.getElementById('prodMarketplace').value = p.marketplace;
+  document.getElementById('prodUrl').value = p.url || '';
+  document.getElementById('prodPrice').value = p.currentPrice;
+  document.getElementById('prodNotes').value = p.notes || '';
+  clearErrors();
+}
+
+let recordProductId = null;
+function openRecordModal(id, name) {
+  recordProductId = id;
+  document.getElementById('recordProductName').textContent = name;
+  document.getElementById('newPrice').value = '';
+  document.getElementById('newPriceError').classList.remove('show');
+  document.getElementById('recordModal').classList.add('show');
+  document.getElementById('newPrice').focus();
+}
+
+function closeRecordModal() {
+  document.getElementById('recordModal').classList.remove('show');
+  recordProductId = null;
+}
+
+async function submitRecord() {
+  const price = document.getElementById('newPrice').value;
+  if (!price || parseFloat(price) <= 0) {
+    document.getElementById('newPriceError').classList.add('show');
+    return;
+  }
+  await fetch(`/api/products/${recordProductId}/record`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ price: parseFloat(price) })
+  });
+  closeRecordModal();
+  showToast('Price recorded');
+  refresh();
+  if (selectedProductId === recordProductId) {
+    viewHistory(selectedProductId, document.getElementById('chartProduct').textContent);
+  }
+}
+
+// Simple canvas chart
+function drawChart(history) {
+  const canvas = document.getElementById('priceChart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+
+  if (!history || history.length < 2) {
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text3').trim() || '#999';
+    ctx.font = '12px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Need at least 2 price records', rect.width / 2, rect.height / 2);
+    return;
+  }
+
+  const w = rect.width;
+  const h = rect.height;
+  const pad = { top: 20, right: 16, bottom: 30, left: 60 };
+  const plotW = w - pad.left - pad.right;
+  const plotH = h - pad.top - pad.bottom;
+
+  const prices = history.map(h => h.price);
+  const minP = Math.min(...prices);
+  const maxP = Math.max(...prices);
+  const range = maxP - minP || 1;
+
+  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text2').trim() || '#666';
+  const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || '#e5e5e5';
+  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4a9';
+
+  // Grid lines
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = 0.5;
+  const gridLines = 4;
+  for (let i = 0; i <= gridLines; i++) {
+    const y = pad.top + (plotH / gridLines) * i;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(w - pad.right, y);
+    ctx.stroke();
+
+    const val = maxP - (range / gridLines) * i;
+    ctx.fillStyle = textColor;
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('Rp ' + val.toLocaleString('id-ID'), pad.left - 6, y + 3);
+  }
+
+  // X-axis labels
+  const labelCount = Math.min(history.length, 5);
+  const step = Math.max(1, Math.floor(history.length / labelCount));
+  ctx.textAlign = 'center';
+  for (let i = 0; i < history.length; i += step) {
+    const x = pad.left + (plotW / (history.length - 1)) * i;
+    const d = new Date(history[i].recordedAt);
+    ctx.fillText(`${d.getDate()}/${d.getMonth() + 1}`, x, h - 6);
+  }
+
+  // Line
+  ctx.strokeStyle = accentColor;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  history.forEach((h, i) => {
+    const x = pad.left + (plotW / (history.length - 1)) * i;
+    const y = pad.top + plotH - ((h.price - minP) / range) * plotH;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Dots
+  history.forEach((h, i) => {
+    const x = pad.left + (plotW / (history.length - 1)) * i;
+    const y = pad.top + plotH - ((h.price - minP) / range) * plotH;
+    ctx.fillStyle = accentColor;
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Current price dot (last)
+  const lastX = pad.left + plotW;
+  const lastY = pad.top + plotH - ((prices[prices.length - 1] - minP) / range) * plotH;
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(lastX, lastY, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = accentColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function clearChart() {
+  const canvas = document.getElementById('priceChart');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+async function viewHistory(id, name) {
+  selectedProductId = id;
+  document.getElementById('chartProduct').textContent = name;
+  const res = await fetch(`/api/products/${id}/history`);
+  const data = await res.json();
+  drawChart(data.history);
+
+  if (data.history.length >= 2) {
+    const prices = data.history.map(h => h.price);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    const avg = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+    const latest = prices[prices.length - 1];
+    const first = prices[0];
+    const totalChange = ((latest - first) / first * 100).toFixed(1);
+    document.getElementById('chartStats').innerHTML = `
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span>Low:</span><span class="price">${formatRp(min)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span>Avg:</span><span class="price">${formatRp(avg)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span>High:</span><span class="price">${formatRp(max)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span>Total Change:</span>
+        <span class="${parseFloat(totalChange) >= 0 ? 'change-up' : 'change-down'}">${totalChange}%</span>
+      </div>
+    `;
+  } else {
+    document.getElementById('chartStats').innerHTML = '';
+  }
+}
+
+async function loadSampleData() {
+  await fetch('/api/sample', { method: 'POST' });
+  showToast('Sample data loaded');
+  refresh();
+}
+
+async function exportCSV() {
+  window.location.href = '/api/export';
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  document.querySelector('.theme-toggle').textContent = isDark ? 'Light' : 'Dark';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  if (selectedProductId) {
+    const name = document.getElementById('chartProduct').textContent;
+    viewHistory(selectedProductId, name);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast toast-success show';
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.body.classList.add('dark');
+    document.querySelector('.theme-toggle').textContent = 'Light';
+  }
+  refresh();
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeRecordModal();
+    hideAddForm();
+  }
+});
+</script>
+</body>
+</html>
