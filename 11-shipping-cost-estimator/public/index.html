@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shipping Cost Estimator</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
+h1, h2, h3 { text-wrap: balance; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
 :root{
   --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
   --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
@@ -24,8 +29,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
 .header h1{font-size:1.5rem;font-weight:600}
 .header-actions{display:flex;gap:8px;align-items:center}
-.theme-toggle,.btn{background:var(--card);border:1px solid var(--border);color:var(--text-dim);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:inherit}
+.theme-toggle,.btn{background:var(--card);border:1px solid var(--border);color:var(--text-dim);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:inherit;transition:border-color 0.15s, color 0.15s, background 0.15s, transform 0.15s}
 .theme-toggle:hover,.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:active{transform:scale(0.96)}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-primary:hover{background:var(--accent-hover);color:#fff;border-color:var(--accent-hover)}
 .btn-sm{padding:4px 8px;font-size:0.75rem}
@@ -68,7 +74,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .courier-badge.cheapest-badge{background:#dcfce7;color:var(--green)}
 .courier-badge.fastest-badge{background:#dbeafe;color:var(--blue)}
 .courier-name{font-size:1rem;font-weight:600;margin-bottom:8px}
-.courier-cost{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-bottom:4px}
+.courier-cost{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-bottom:4px;font-variant-numeric:tabular-nums}
 .courier-cod{font-size:0.75rem;color:var(--text-muted);margin-bottom:8px}
 .courier-delivery{font-size:0.8rem;color:var(--text-dim)}
 .courier-services{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
@@ -88,7 +94,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .summary-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
 .summary-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px}
 .summary-card .label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:4px}
-.summary-card .value{font-size:1.2rem;font-weight:600;font-family:'JetBrains Mono',monospace}
+.summary-card .value{font-size:1.2rem;font-weight:600;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
 .summary-card .detail{font-size:0.8rem;color:var(--text-dim);margin-top:4px}
 
 /* Empty State */

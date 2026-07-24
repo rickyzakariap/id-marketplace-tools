@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -52,6 +52,8 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
+    h1, h2, h3 { text-wrap: balance; }
+    .tabular { font-variant-numeric: tabular-nums; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #f4f7f2; }
     ::-webkit-scrollbar-thumb { background: #c1c9bf; border-radius: 3px; }
@@ -180,7 +182,7 @@
         </div>
 
         <!-- Submit -->
-        <button class="w-full bg-primary hover:bg-primary-fixed text-on-primary py-3 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 active:scale-[0.98]" id="analyzeBtn" type="button" onclick="analyze()">
+        <button class="w-full bg-primary hover:bg-primary-fixed text-on-primary py-3 rounded-lg text-sm font-semibold transition-[background-color] duration-150 ease-out flex items-center justify-center gap-2 active:scale-[0.96]" id="analyzeBtn" type="button" onclick="analyze()">
           <span class="material-symbols-outlined">troubleshoot</span>
           Analisa Sekarang
         </button>
@@ -453,7 +455,7 @@
             <span class="material-symbols-outlined text-tertiary text-base mt-0.5">arrow_forward</span>
             <span class="text-sm text-on-surface-variant">${t}</span>
           </div>
-        `).join('') + '<button class="w-full mt-2 bg-surface-container-high hover:bg-surface-bright text-on-surface py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 active:scale-[0.98] border border-outline-variant" onclick="applyTips()"><span class="material-symbols-outlined text-base">auto_fix_high</span> Terapkan Saran & Analisa Ulang</button>';
+        `).join('') + '<button class="w-full mt-2 bg-surface-container-high hover:bg-surface-bright text-on-surface py-2.5 rounded-lg text-sm font-medium transition-[background-color] duration-150 ease-out flex items-center justify-center gap-2 active:scale-[0.96] border border-outline-variant" onclick="applyTips()"><span class="material-symbols-outlined text-base">auto_fix_high</span> Terapkan Saran & Analisa Ulang</button>';
         window._lastTips = o.allTips;
       } else {
         $('tips').innerHTML = '<div class="flex items-center gap-2 text-green-400 text-sm"><span class="material-symbols-outlined text-base">check_circle</span> Listing sudah optimal.</div>';

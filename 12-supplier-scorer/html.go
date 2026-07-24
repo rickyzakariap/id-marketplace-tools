@@ -1,7 +1,7 @@
 package main
 
 var indexHTML = `<!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,6 +10,11 @@ var indexHTML = `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
+h1, h2, h3 { text-wrap: balance; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
 body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5}
 .container{max-width:960px;margin:0 auto;padding:20px}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
@@ -24,9 +29,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#4a9}
 textarea{resize:vertical;min-height:60px}
 .score-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .score-field{text-align:center}
-.score-field input{width:60px;text-align:center;font-size:1.1rem;font-weight:600;font-family:'JetBrains Mono',monospace}
+.score-field input{width:60px;text-align:center;font-size:1.1rem;font-weight:600;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
 .score-label{font-size:.75rem;color:#666;margin-top:4px}
-.btn{padding:10px 20px;border:none;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:500;font-family:inherit}
+.btn{padding:10px 20px;border:none;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:500;font-family:inherit;transition:background 0.15s, transform 0.15s}
+.btn:active{transform:scale(0.96)}
 .btn-primary{background:#4a9;color:#fff}
 .btn-primary:hover{background:#3a8}
 .btn-secondary{background:#f5f5f5;color:#1a1a1a;border:1px solid #e5e5e5}
@@ -52,7 +58,7 @@ tr:hover td{background:#fafafa}
 .grade-d{background:#fee2e2;color:#991b1b}
 .score-bar{height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden;min-width:80px}
 .score-bar-fill{height:100%;border-radius:3px;transition:width .2s}
-.rank-badge{font-weight:600;font-family:'JetBrains Mono',monospace;color:#4a9}
+.rank-badge{font-weight:600;font-family:'JetBrains Mono',monospace;color:#4a9;font-variant-numeric:tabular-nums}
 .empty-state{text-align:center;padding:40px;color:#999}
 .empty-state p{margin-top:8px;font-size:.9rem}
 .filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}

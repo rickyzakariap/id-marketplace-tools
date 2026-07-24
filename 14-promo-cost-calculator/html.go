@@ -1,7 +1,7 @@
 package main
 
 var indexHTML = `<!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,6 +10,11 @@ var indexHTML = `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
+h1, h2, h3 { text-wrap: balance; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
 body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5}
 .container{max-width:960px;margin:0 auto;padding:20px}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
@@ -25,7 +30,8 @@ label{font-size:.78rem;font-weight:500;color:#666;display:block;margin-bottom:4p
 input,select{width:100%;padding:8px 12px;border:1px solid #e5e5e5;border-radius:6px;font-size:.9rem;font-family:inherit}
 input:focus,select:focus{outline:none;border-color:#4a9}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn{padding:10px 20px;border:none;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:500;font-family:inherit;width:100%;margin-top:8px}
+.btn{padding:10px 20px;border:none;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:500;font-family:inherit;width:100%;margin-top:8px;transition:background 0.15s, transform 0.15s}
+.btn:active{transform:scale(0.96)}
 .btn-primary{background:#4a9;color:#fff}
 .btn-primary:hover{background:#3a8}
 .btn-secondary{background:#f5f5f5;color:#1a1a1a;border:1px solid #e5e5e5}
@@ -35,7 +41,7 @@ input:focus,select:focus{outline:none;border-color:#4a9}
 .result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0}
 .result-row:last-child{border-bottom:none}
 .result-label{font-size:.85rem;color:#666}
-.result-value{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:600}
+.result-value{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:600;font-variant-numeric:tabular-nums}
 .result-positive{color:#16a34a}
 .result-negative{color:#dc2626}
 .result-zero{color:#666}
@@ -43,7 +49,7 @@ input:focus,select:focus{outline:none;border-color:#4a9}
 .highlight-card.profit{border-left-color:#16a34a;background:#f0fdf4}
 .highlight-card.loss{border-left-color:#dc2626;background:#fef2f2}
 .highlight-title{font-size:.8rem;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
-.highlight-value{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700}
+.highlight-value{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;font-variant-numeric:tabular-nums}
 .promo-types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px}
 .promo-type-btn{padding:6px 8px;border:1px solid #e5e5e5;border-radius:6px;background:#fff;cursor:pointer;font-size:.78rem;font-family:inherit;text-align:center;transition:border-color 0.15s}
 .promo-type-btn:hover{border-color:#4a9}

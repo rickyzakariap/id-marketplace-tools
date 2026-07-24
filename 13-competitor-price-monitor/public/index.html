@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,14 +8,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
+h1, h2, h3 { text-wrap: balance; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
 :root{--bg:#fafafa;--card:#fff;--border:#e5e5e5;--text:#1a1a1a;--text2:#666;--text3:#999;--accent:#4a9;--accent2:#3a8;--green:#22c55e;--red:#dc2626;--yellow:#eab308;--font:'Inter',system-ui,sans-serif}
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5}
 .container{max-width:1200px;margin:0 auto;padding:20px}
 header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px}
 header h1{font-size:18px;font-weight:600}
 .header-actions{display:flex;gap:8px}
-.btn{padding:8px 16px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-family:var(--font);font-size:13px;cursor:pointer;transition:border-color 0.15s}
+.btn{padding:8px 16px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-family:var(--font);font-size:13px;cursor:pointer;transition:border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s}
 .btn:hover{border-color:var(--accent)}
+.btn:active{transform:scale(0.96)}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-primary:hover{background:var(--accent2);border-color:var(--accent2)}
 .btn-sm{padding:5px 10px;font-size:12px}
@@ -26,7 +32,7 @@ header h1{font-size:18px;font-weight:600}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px}
 .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin-bottom:4px}
-.stat-value{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-value{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
 .stat-sub{font-size:12px;color:var(--text2);margin-top:2px}
 .filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .chip{padding:6px 12px;border:1px solid var(--border);border-radius:20px;background:var(--card);font-size:12px;cursor:pointer;color:var(--text2);font-family:var(--font)}
@@ -39,7 +45,7 @@ table{width:100%;border-collapse:collapse}
 th{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:500}
 td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
 tr:last-child td{border-bottom:none}
-.price{font-family:'JetBrains Mono',monospace;font-weight:500}
+.price{font-family:'JetBrains Mono',monospace;font-weight:500;font-variant-numeric:tabular-nums}
 .change-up{color:var(--red)}
 .change-down{color:var(--green)}
 .change-none{color:var(--text3)}

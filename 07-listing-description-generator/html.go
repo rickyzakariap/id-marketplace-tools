@@ -1,7 +1,7 @@
 package main
 
 const htmlPage = `<!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +9,11 @@ const htmlPage = `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
+h1, h2, h3 { text-wrap: balance; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
 :root{
   --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
   --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
@@ -46,14 +51,15 @@ select{cursor:pointer}
 .example-btn:hover{background:var(--accent-light)}
 .validation{margin-top:10px;padding:8px 12px;background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:0.82rem;display:none}
 [data-theme="dark"] .validation{background:#3a1a1a;border-color:#7f1d1d;color:#fca5a5}
-.btn{width:100%;padding:12px;margin-top:14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:inherit}
+.btn{width:100%;padding:12px;margin-top:14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.15s, transform 0.15s}
 .btn:hover{background:var(--accent-hover)}
+.btn:active{transform:scale(0.96)}
 .tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)}
 .tab{padding:8px 14px;font-size:0.82rem;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent}
 .tab:hover{color:var(--text-dim)}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .output-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.char-count{font-size:0.72rem;font-family:'JetBrains Mono',monospace,'Inter',sans-serif}
+.char-count{font-size:0.72rem;font-family:'JetBrains Mono',monospace,'Inter',sans-serif;font-variant-numeric:tabular-nums}
 .char-ok{color:var(--text-muted)}
 .char-warn{color:#d97706}
 .char-over{color:var(--red)}

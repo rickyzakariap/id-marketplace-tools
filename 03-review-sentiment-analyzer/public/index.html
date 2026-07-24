@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,6 +43,10 @@ body {
   max-width: 900px;
   margin: 0 auto;
 }
+
+h1, h2, h3 { text-wrap: balance; }
+
+.tabular { font-variant-numeric: tabular-nums; }
 
 h1 {
   font-size: 20px;
@@ -124,7 +128,8 @@ textarea.error {
 }
 
 .btn:hover { background: var(--accent-hover); }
-.btn:active { background: #1e40af; }
+.btn:active { background: #1e40af; transform: scale(0.96); }
+.btn { transition: background 0.15s, transform 0.15s; }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .btn.secondary {
@@ -184,6 +189,7 @@ textarea.error {
   font-size: 20px;
   font-weight: 700;
   font-family: monospace;
+  font-variant-numeric: tabular-nums;
 }
 
 .stat-value.green { color: var(--green); }
