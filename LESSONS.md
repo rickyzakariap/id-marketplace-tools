@@ -244,3 +244,22 @@
 - Lesson: JSON file storage works well for single-user tools, no DB setup needed
 - Lesson: Price change percentage + absolute value both needed for context
 - Next: Add price alert thresholds, bulk import from CSV, weekly price comparison report
+
+---
+
+## 2026-07-24 - Promo Cost Calculator
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: 5 promo types: % discount, Rp discount, free shipping, flash sale, store voucher
+- Works: Full fee breakdown per marketplace (commission + platform + payment + shipping subsidy)
+- Works: Break-even analysis: how many extra units needed to cover promo cost
+- Works: ROI calculation based on expected additional sales volume
+- Works: Max discount threshold: how deep you can discount before losing money
+- Works: Cross-marketplace comparison sorted by promo profit
+- Works: Light minimal theme, responsive design, dark mode toggle
+- Works: Auto-fill example data, keyboard shortcut (Enter to calculate)
+- Issues: Fee data is 2026 estimates, marketplace rates change quarterly
+- Lesson: Sellers often don't know that marketplace commissions are charged on DISCOUNTED price, not original
+- Lesson: Break-even analysis is the most actionable metric - shows exactly how many extra sales needed
+- Lesson: Bukalapak consistently has lowest fees, Shopee highest - comparison table makes this obvious
+- Lesson: Max discount threshold is a critical safety feature - prevents sellers from pricing themselves into losses
+- Next: Add promo history tracking, export comparison to CSV, add per-category fee rates
