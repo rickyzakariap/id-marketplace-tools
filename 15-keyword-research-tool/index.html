@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keyword Research Tool</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5}
+.container{max-width:960px;margin:0 auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+h1{font-size:1.4rem;font-weight:700}
+.subtitle{font-size:.85rem;color:#666;margin-top:2px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px}
+.card h2{font-size:1rem;font-weight:600;margin-bottom:16px;color:#1a1a1a}
+.form-group{margin-bottom:12px}
+label{font-size:.78rem;font-weight:500;color:#666;display:block;margin-bottom:4px}
+input,select{width:100%;padding:8px 12px;border:1px solid #e5e5e5;border-radius:6px;font-size:.9rem;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:#4a9}
+.btn{padding:10px 20px;border:none;border-radius:6px;cursor:pointer;font-size:.9rem;font-weight:500;font-family:inherit;width:100%;margin-top:8px}
+.btn-primary{background:#4a9;color:#fff}
+.btn-primary:hover{background:#3a8}
+.btn-secondary{background:#f5f5f5;color:#1a1a1a;border:1px solid #e5e5e5}
+.btn-secondary:hover{background:#eee}
+.btn-sm{padding:6px 12px;font-size:.8rem;width:auto;margin-top:0}
+.results{margin-top:16px}
+.keyword-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid #e5e5e5;border-radius:6px;margin-bottom:8px;background:#fff}
+.keyword-item:hover{border-color:#4a9}
+.keyword-text{font-size:.9rem;flex:1}
+.keyword-meta{display:flex;gap:8px;align-items:center}
+.badge{font-size:.72rem;padding:2px 8px;border-radius:4px;font-weight:500}
+.badge-low{background:#e8f5e9;color:#2e7d32}
+.badge-medium{background:#fff3e0;color:#e65100}
+.badge-high{background:#fce4ec;color:#c62828}
+.relevance{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#666}
+.copy-btn{background:none;border:1px solid #e5e5e5;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:.75rem;color:#666}
+.copy-btn:hover{border-color:#4a9;color:#4a9}
+.analysis-box{margin-top:12px;padding:12px;background:#f9f9f9;border:1px solid #e5e5e5;border-radius:6px}
+.analysis-box .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:#999;margin-bottom:4px}
+.analysis-box .value{font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.suggestion{font-size:.85rem;color:#666;padding:4px 0;border-left:2px solid #4a9;padding-left:10px;margin-top:6px}
+.empty-state{text-align:center;padding:40px 20px;color:#999;font-size:.9rem}
+.tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid #e5e5e5}
+.tab{padding:8px 16px;cursor:pointer;font-size:.85rem;color:#666;border-bottom:2px solid transparent}
+.tab.active{color:#4a9;border-bottom-color:#4a9;font-weight:500}
+.example-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font-size:.78rem;padding:4px 10px;border:1px solid #e5e5e5;border-radius:4px;cursor:pointer;color:#666}
+.chip:hover{border-color:#4a9;color:#4a9}
+.copy-all{margin-top:12px;text-align:right}
+@media(max-width:768px){
+  .grid{grid-template-columns:1fr}
+  .container{padding:12px}
+  .keyword-item{flex-direction:column;align-items:flex-start;gap:8px}
+  .keyword-meta{width:100%;justify-content:flex-end}
+  .tabs{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Keyword Research Tool</h1>
+      <p class="subtitle">Riset keyword marketplace Indonesia</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Generate Keywords</h2>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="category">
+          <option value="fashion">Fashion</option>
+          <option value="electronics">Elektronik</option>
+          <option value="beauty">Kecantikan</option>
+          <option value="home">Rumah Tangga</option>
+          <option value="food">Makanan</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Produk</label>
+        <input type="text" id="product" placeholder="cth: kaos, hp, skincare">
+      </div>
+      <div class="example-chips">
+        <span class="chip" onclick="fillExample('fashion','kaos')">kaos</span>
+        <span class="chip" onclick="fillExample('electronics','hp')">hp</span>
+        <span class="chip" onclick="fillExample('beauty','serum')">serum</span>
+        <span class="chip" onclick="fillExample('home','rak')">rak</span>
+        <span class="chip" onclick="fillExample('food','kopi')">kopi</span>
+      </div>
+      <button class="btn btn-primary" onclick="generateKeywords()" id="generateBtn">Generate</button>
+      <div id="generateResults" class="results"></div>
+    </div>
+
+    <div class="card">
+      <h2>Analisa Keyword</h2>
+      <div class="form-group">
+        <label>Keyword</label>
+        <input type="text" id="analyzeInput" placeholder="ketik keyword untuk analisa">
+      </div>
+      <button class="btn btn-primary" onclick="analyzeKeyword()" id="analyzeBtn">Analisa</button>
+      <div id="analyzeResults" class="results"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function fillExample(cat, prod) {
+  document.getElementById('category').value = cat;
+  document.getElementById('product').value = prod;
+}
+
+async function generateKeywords() {
+  const btn = document.getElementById('generateBtn');
+  const results = document.getElementById('generateResults');
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+
+  try {
+    const resp = await fetch('/api/generate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        category: document.getElementById('category').value,
+        product: document.getElementById('product').value
+      })
+    });
+    const data = await resp.json();
+    if (!data.success) throw new Error(data.error);
+
+    let html = '<div class="copy-all"><button class="btn btn-sm btn-secondary" onclick="copyAll()">Copy Semua</button></div>';
+    data.keywords.forEach((kw, i) => {
+      const compClass = kw.competition === 'low' ? 'badge-low' : kw.competition === 'high' ? 'badge-high' : 'badge-medium';
+      html += `<div class="keyword-item">
+        <span class="keyword-text">${kw.keyword}</span>
+        <span class="keyword-meta">
+          <span class="badge ${compClass}">${kw.competition}</span>
+          <span class="relevance">${kw.relevance}%</span>
+          <button class="copy-btn" onclick="copyOne('${kw.keyword.replace(/'/g, "\\'")}')">copy</button>
+        </span>
+      </div>`;
+    });
+    results.innerHTML = html;
+  } catch(e) {
+    results.innerHTML = `<div class="empty-state">Error: ${e.message}</div>`;
+  } finally {
+    btn.textContent = 'Generate';
+    btn.disabled = false;
+  }
+}
+
+async function analyzeKeyword() {
+  const btn = document.getElementById('analyzeBtn');
+  const results = document.getElementById('analyzeResults');
+  btn.textContent = 'Analysing...';
+  btn.disabled = true;
+
+  try {
+    const keyword = document.getElementById('analyzeInput').value;
+    if (!keyword) throw new Error('Masukkan keyword dulu');
+
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({keyword})
+    });
+    const data = await resp.json();
+    if (!data.success) throw new Error(data.error);
+
+    const a = data.analysis;
+    const compClass = a.estimated_competition === 'low' ? 'badge-low' : a.estimated_competition === 'high' ? 'badge-high' : 'badge-medium';
+
+    let html = `<div class="analysis-box">
+      <div class="label">Panjang</div>
+      <div class="value">${a.length} karakter, ${a.word_count} kata</div>
+    </div>
+    <div class="analysis-box">
+      <div class="label">Estimasi Kompetisi</div>
+      <div class="value"><span class="badge ${compClass}">${a.estimated_competition}</span></div>
+    </div>
+    <div class="analysis-box">
+      <div class="label">Modifier Terdeteksi</div>
+      <div class="value">Harga: ${a.has_price_modifier ? 'ya' : 'tidak'} | Kualitas: ${a.has_quality_modifier ? 'ya' : 'tidak'} | Lokasi: ${a.has_location ? 'ya' : 'tidak'}</div>
+    </div>`;
+
+    if (a.suggestions.length > 0) {
+      html += '<div style="margin-top:12px">';
+      a.suggestions.forEach(s => {
+        html += `<div class="suggestion">${s}</div>`;
+      });
+      html += '</div>';
+    }
+
+    results.innerHTML = html;
+  } catch(e) {
+    results.innerHTML = `<div class="empty-state">${e.message}</div>`;
+  } finally {
+    btn.textContent = 'Analisa';
+    btn.disabled = false;
+  }
+}
+
+function copyOne(text) {
+  navigator.clipboard.writeText(text);
+}
+
+function copyAll() {
+  const items = document.querySelectorAll('.keyword-text');
+  const all = Array.from(items).map(el => el.textContent).join('\n');
+  navigator.clipboard.writeText(all);
+}
+
+document.getElementById('analyzeInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') analyzeKeyword();
+});
+document.getElementById('product').addEventListener('keydown', e => {
+  if (e.key === 'Enter') generateKeywords();
+});
+</script>
+</body>
+</html>
