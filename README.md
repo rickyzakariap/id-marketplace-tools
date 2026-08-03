@@ -20,6 +20,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 12 | [12-supplier-scorer](12-supplier-scorer/) | Web | Go 1.26 | Score and rank suppliers on 6 dimensions with auto-grading |
 | 13 | [13-competitor-price-monitor](13-competitor-price-monitor/) | Web | Node.js + Express | Track competitor prices across marketplaces with history charts |
 | 14 | [14-promo-cost-calculator](14-promo-cost-calculator/) | Web | Go 1.26 | Calculate real cost of promotions across marketplaces |
+| 15 | [15-keyword-research-tool](15-keyword-research-tool/) | Web | Python (stdlib) | Generate and analyze marketplace keywords for Indonesian sellers |
 
 ## Contributing
 
