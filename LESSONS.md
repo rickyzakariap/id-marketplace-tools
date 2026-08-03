@@ -263,3 +263,23 @@
 - Lesson: Bukalapak consistently has lowest fees, Shopee highest - comparison table makes this obvious
 - Lesson: Max discount threshold is a critical safety feature - prevents sellers from pricing themselves into losses
 - Next: Add promo history tracking, export comparison to CSV, add per-category fee rates
+
+---
+
+## 2026-08-03 - Keyword Research Tool
+- Works: Python 3 stdlib http.server, zero dependencies
+- Works: Web UI (not CLI) - sellers can use directly
+- Works: 5 categories with keyword patterns: fashion, electronics, beauty, home, food
+- Works: Generate 20 keyword suggestions with competition level and relevance score
+- Works: Keyword analysis: length, word count, modifier detection, competition estimate
+- Works: Copy individual keywords or all at once
+- Works: Example chips for quick testing (kaos, hp, serum, rak, kopi)
+- Works: Light minimal theme, responsive design
+- Works: Keyboard shortcuts (Enter to submit)
+- Issues: Keyword database is heuristic-based, not real marketplace search volume data
+- Issues: Competition estimates are educated guesses, not actual marketplace metrics
+- Lesson: Keyword research is a real pain point - sellers struggle with what keywords to use
+- Lesson: Category-based keyword patterns (modifier, material, occasion, brand) work well for Indonesian marketplace
+- Lesson: Long-tail keywords (3+ words) have lower competition - useful insight for sellers
+- Lesson: Python stdlib is enough for a useful keyword tool, no need for external packages
+- Next: Add real search volume data from marketplace APIs, add keyword trend tracking, add competitor keyword analysis
