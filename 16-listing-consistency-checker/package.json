@@ -1,0 +1,12 @@
+{
+  "name": "listing-consistency-checker",
+  "version": "1.0.0",
+  "description": "Check listing consistency across marketplaces",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

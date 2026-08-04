@@ -1,0 +1,112 @@
+[
+  {
+    "product_name": "Kaos Polos Premium",
+    "marketplace": "tokopedia",
+    "title": "Kaos Polos Premium Katun Combed 30s",
+    "price": 89000,
+    "stock": 50,
+    "description": "Bahan katun combed 30s, halus dan adem",
+    "id": "097bab58-a569-44cf-80ad-262b16a76a6e",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Kaos Polos Premium",
+    "marketplace": "shopee",
+    "title": "Kaos Polos Premium Katun Combed 30s Original",
+    "price": 85000,
+    "stock": 45,
+    "description": "Bahan katun combed 30s, halus dan adem",
+    "id": "fb7a77e8-1abf-4726-b5b9-7837c948a774",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Kaos Polos Premium",
+    "marketplace": "lazada",
+    "title": "Kaos Polos Premium Katun",
+    "price": 92000,
+    "stock": 30,
+    "description": "Kaos polos bahan katun combed 30s",
+    "id": "3dd92ead-cdc3-4e5e-bfd4-5b229069a08b",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Kaos Polos Premium",
+    "marketplace": "bukalapak",
+    "title": "Kaos Polos Premium Katun Combed 30s",
+    "price": 89000,
+    "stock": 50,
+    "description": "Bahan katun combed 30s, halus dan adem",
+    "id": "fcbafb48-2639-4b11-8c33-d8276f26b98f",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Tumbler Stainless",
+    "marketplace": "tokopedia",
+    "title": "Tumbler Stainless Steel 500ml",
+    "price": 125000,
+    "stock": 20,
+    "description": "Tumbler stainless steel, tahan panas dan dingin",
+    "id": "e5f053a2-b82d-466c-84c2-6823bf17d4b8",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Tumbler Stainless",
+    "marketplace": "shopee",
+    "title": "Tumbler Stainless Steel 500ml Premium",
+    "price": 125000,
+    "stock": 20,
+    "description": "Tumbler stainless steel, tahan panas dan dingin",
+    "id": "f3b6c00e-2385-4500-9111-d7dd4c4d8867",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Tumbler Stainless",
+    "marketplace": "lazada",
+    "title": "Tumbler Stainless 500ml",
+    "price": 130000,
+    "stock": 15,
+    "description": "Tumbler stainless steel 500ml",
+    "id": "c60813ec-8320-4245-9da4-e181a624ba27",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Tumbler Stainless",
+    "marketplace": "tokopedia",
+    "title": "Tumbler Stainless Steel 500ml",
+    "price": 125000,
+    "stock": 20,
+    "description": "Tumbler stainless steel, tahan panas dan dingin",
+    "id": "c91f378e-f291-4f34-b127-f343bab13bfc",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Powerbank 10000mAh",
+    "marketplace": "shopee",
+    "title": "Powerbank 10000mAh Fast Charging",
+    "price": 199000,
+    "stock": 35,
+    "description": "Powerbank kapasitas 10000mAh dengan fast charging",
+    "id": "1dfc9d14-bad5-4aa9-82f1-c7e16e934bcb",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Powerbank 10000mAh",
+    "marketplace": "tokopedia",
+    "title": "Powerbank 10000mAh Fast Charging PD",
+    "price": 210000,
+    "stock": 30,
+    "description": "Powerbank 10000mAh fast charging PD dan QC",
+    "id": "2fb4b5cf-092b-46ac-b262-756f8c3f20bc",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  },
+  {
+    "product_name": "Powerbank 10000mAh",
+    "marketplace": "lazada",
+    "title": "Powerbank 10000mAh",
+    "price": 185000,
+    "stock": 40,
+    "description": "Powerbank 10000mAh",
+    "id": "45552b45-4912-4d01-8f43-43ca11d2ec16",
+    "created_at": "2026-08-04T03:03:51.763Z"
+  }
+]

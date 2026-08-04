@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listing Consistency Checker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+h1{font-size:1.4rem;font-weight:700}
+.subtitle{font-size:.85rem;color:#666;margin-top:2px}
+.theme-btn{background:none;border:1px solid #e5e5e5;border-radius:6px;padding:6px 12px;font-size:.8rem;cursor:pointer;color:#666}
+.theme-btn:hover{border-color:#4a9;color:#4a9}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px}
+.card h2{font-size:1rem;font-weight:600;margin-bottom:16px;color:#1a1a1a}
+.form-group{margin-bottom:12px}
+label{font-size:.78rem;font-weight:500;color:#666;display:block;margin-bottom:4px}
+input,select,textarea{width:100%;padding:8px 12px;border:1px solid #e5e5e5;border-radius:6px;font-size:.9rem;font-family:inherit;background:#fff;color:#1a1a1a}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#4a9}
+textarea{resize:vertical;min-height:60px}
+.btn{padding:8px 16px;border:none;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer;font-family:inherit}
+.btn-primary{background:#4a9;color:#fff}
+.btn-primary:hover{background:#3b8}
+.btn-secondary{background:#f0f0f0;color:#1a1a1a;border:1px solid #e5e5e5}
+.btn-secondary:hover{background:#e5e5e5}
+.btn-sm{padding:4px 10px;font-size:.78rem}
+.btn-row{display:flex;gap:8px;margin-top:12px}
+.product-list{margin-bottom:16px}
+.product-item{padding:10px 14px;border:1px solid #e5e5e5;border-radius:6px;margin-bottom:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:.9rem}
+.product-item:hover{border-color:#4a9}
+.product-item.active{border-color:#4a9;background:#f0faf5}
+.product-item .count{font-size:.75rem;color:#999;font-family:'JetBrains Mono',monospace}
+.consistency-card{margin-top:16px}
+.score-bar{height:8px;background:#e5e5e5;border-radius:4px;overflow:hidden;margin:8px 0}
+.score-fill{height:100%;border-radius:4px}
+.score-good{background:#4a9}
+.score-warn{background:#f59e0b}
+.score-bad{background:#dc2626}
+.field-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.field-row:last-child{border-bottom:none}
+.field-name{font-size:.85rem;font-weight:500}
+.field-status{font-size:.78rem;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace}
+.status-ok{background:#ecfdf5;color:#059669}
+.status-bad{background:#fef2f2;color:#dc2626}
+.diff-table{width:100%;margin-top:12px;border-collapse:collapse}
+.diff-table th,.diff-table td{padding:8px 10px;text-align:left;font-size:.82rem;border-bottom:1px solid #f0f0f0}
+.diff-table th{font-weight:500;color:#666;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em}
+.diff-table td{font-family:'JetBrains Mono',monospace;font-size:.8rem}
+.diff-highlight{background:#fef2f2;color:#dc2626;font-weight:600}
+.diff-ok{color:#059669}
+.empty-state{text-align:center;padding:40px 20px;color:#999;font-size:.9rem}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{padding:4px 10px;border:1px solid #e5e5e5;border-radius:20px;font-size:.78rem;cursor:pointer;color:#666}
+.chip:hover{border-color:#4a9;color:#4a9}
+@media(max-width:768px){
+  .grid{grid-template-columns:1fr}
+  .container{padding:12px}
+  .card{padding:14px}
+  .chip-row{gap:4px}
+  .diff-table{font-size:.75rem}
+  .diff-table th,.diff-table td{padding:6px 8px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Listing Consistency Checker</h1>
+      <div class="subtitle">Compare your listings across marketplaces</div>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()">Dark</button>
+  </header>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>Products</h2>
+        <div class="chip-row">
+          <span class="chip" onclick="seedData()">Load Example Data</span>
+        </div>
+        <div id="productList" class="product-list">
+          <div class="empty-state">No products yet. Add listings or load example data.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>Add Listing</h2>
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="productName" placeholder="e.g. Kaos Polos Premium">
+        </div>
+        <div class="form-group">
+          <label>Marketplace</label>
+          <select id="marketplace">
+            <option value="tokopedia">Tokopedia</option>
+            <option value="shopee">Shopee</option>
+            <option value="lazada">Lazada</option>
+            <option value="bukalapak">Bukalapak</option>
+            <option value="blibli">Blibli</option>
+            <option value="tiktokshop">TikTok Shop</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="title" placeholder="Product title on this marketplace">
+        </div>
+        <div class="form-group">
+          <label>Price (Rp)</label>
+          <input type="number" id="price" placeholder="89000">
+        </div>
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" id="stock" placeholder="50">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description" placeholder="Product description"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="addListing()">Add Listing</button>
+          <button class="btn btn-secondary" onclick="fillExample()">Fill Example</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Consistency Report</h2>
+        <div id="reportArea">
+          <div class="empty-state">Select a product to check consistency</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let products = [];
+let selectedProduct = null;
+
+async function loadProducts() {
+  const res = await fetch('/api/products');
+  products = await res.json();
+  renderProductList();
+}
+
+async function renderProductList() {
+  const container = document.getElementById('productList');
+  if (products.length === 0) {
+    container.innerHTML = '<div class="empty-state">No products yet. Add listings or load example data.</div>';
+    return;
+  }
+  const listings = await (await fetch('/api/listings')).json();
+  container.innerHTML = products.map(p => {
+    const count = listings.filter(l => l.product_name === p).length;
+    const active = selectedProduct === p ? 'active' : '';
+    return `<div class="product-item ${active}" onclick="selectProduct('${p}')">
+      <span>${p}</span>
+      <span class="count">${count} listings</span>
+    </div>`;
+  }).join('');
+}
+
+async function selectProduct(name) {
+  selectedProduct = name;
+  await renderProductList();
+  await checkConsistency(name);
+}
+
+async function checkConsistency(productName) {
+  const res = await fetch('/api/check', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ product_name: productName })
+  });
+  if (!res.ok) {
+    document.getElementById('reportArea').innerHTML = '<div class="empty-state">Error loading report</div>';
+    return;
+  }
+  const data = await res.json();
+  renderReport(data);
+}
+
+function renderReport(data) {
+  const { consistency, listings } = data;
+  const scoreClass = consistency.score >= 80 ? 'score-good' : consistency.score >= 50 ? 'score-warn' : 'score-bad';
+
+  let html = `
+    <div class="consistency-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:.9rem;font-weight:600">${data.product_name}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:600">${consistency.score}%</span>
+      </div>
+      <div class="score-bar"><div class="score-fill ${scoreClass}" style="width:${consistency.score}%"></div></div>
+      <div style="font-size:.78rem;color:#666;margin-bottom:12px">${listings.length} marketplace${listings.length > 1 ? 's' : ''} compared</div>
+    </div>
+    <div style="margin-top:16px">
+      <h3 style="font-size:.85rem;font-weight:600;margin-bottom:8px">Field Comparison</h3>
+  `;
+
+  for (const [field, info] of Object.entries(consistency.fields)) {
+    const statusClass = info.consistent ? 'status-ok' : 'status-bad';
+    const statusText = info.consistent ? 'MATCH' : 'MISMATCH';
+    html += `
+      <div class="field-row">
+        <span class="field-name">${field}</span>
+        <span class="field-status ${statusClass}">${statusText}</span>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+
+  // Diff table
+  html += `
+    <div style="margin-top:20px">
+      <h3 style="font-size:.85rem;font-weight:600;margin-bottom:8px">Detail per Marketplace</h3>
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th>Marketplace</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Stock</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+
+  const priceValues = listings.map(l => l.price);
+  const priceConsistent = new Set(priceValues).size === 1;
+  const stockValues = listings.map(l => l.stock);
+  const stockConsistent = new Set(stockValues).size === 1;
+  const titleValues = listings.map(l => l.title);
+  const titleConsistent = new Set(titleValues).size === 1;
+
+  for (const l of listings) {
+    const priceClass = !priceConsistent ? 'diff-highlight' : 'diff-ok';
+    const stockClass = !stockConsistent ? 'diff-highlight' : 'diff-ok';
+    const titleClass = !titleConsistent ? 'diff-highlight' : 'diff-ok';
+    html += `
+      <tr>
+        <td style="font-family:inherit;text-transform:capitalize">${l.marketplace}</td>
+        <td class="${titleClass}">${l.title || '-'}</td>
+        <td class="${priceClass}">${formatRp(l.price)}</td>
+        <td class="${stockClass}">${l.stock}</td>
+      </tr>
+    `;
+  }
+
+  html += '</tbody></table></div>';
+
+  // Summary
+  const mismatches = Object.entries(consistency.fields).filter(([_, v]) => !v.consistent);
+  if (mismatches.length > 0) {
+    html += `<div style="margin-top:16px;padding:12px;background:#fef2f2;border-radius:6px;font-size:.82rem;color:#dc2626">
+      ${mismatches.length} field${mismatches.length > 1 ? 's' : ''} inconsistent: ${mismatches.map(([k]) => k).join(', ')}
+    </div>`;
+  } else {
+    html += `<div style="margin-top:16px;padding:12px;background:#ecfdf5;border-radius:6px;font-size:.82rem;color:#059669">
+      All fields consistent across marketplaces
+    </div>`;
+  }
+
+  document.getElementById('reportArea').innerHTML = html;
+}
+
+function formatRp(n) {
+  return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+async function addListing() {
+  const body = {
+    product_name: document.getElementById('productName').value.trim(),
+    marketplace: document.getElementById('marketplace').value,
+    title: document.getElementById('title').value.trim(),
+    price: parseFloat(document.getElementById('price').value) || 0,
+    stock: parseInt(document.getElementById('stock').value) || 0,
+    description: document.getElementById('description').value.trim()
+  };
+  if (!body.product_name) return alert('Product name required');
+  const res = await fetch('/api/listings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (res.ok) {
+    clearForm();
+    await loadProducts();
+    if (selectedProduct === body.product_name) {
+      await checkConsistency(body.product_name);
+    }
+  }
+}
+
+function clearForm() {
+  ['productName', 'title', 'price', 'stock', 'description'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+function fillExample() {
+  document.getElementById('productName').value = 'Kaos Polos Premium';
+  document.getElementById('marketplace').value = 'tokopedia';
+  document.getElementById('title').value = 'Kaos Polos Premium Katun Combed 30s';
+  document.getElementById('price').value = '89000';
+  document.getElementById('stock').value = '50';
+  document.getElementById('description').value = 'Bahan katun combed 30s, halus dan adem';
+}
+
+async function seedData() {
+  const res = await fetch('/api/seed', { method: 'POST' });
+  if (res.ok) {
+    await loadProducts();
+  }
+}
+
+// Theme
+function toggleTheme() {
+  const isDark = document.body.style.background === 'rgb(26, 26, 26)';
+  if (isDark) {
+    document.body.style.background = '#fafafa';
+    document.body.style.color = '#1a1a1a';
+    document.querySelectorAll('.card').forEach(c => { c.style.background = '#fff'; c.style.borderColor = '#e5e5e5'; });
+    document.querySelectorAll('input,select,textarea').forEach(el => { el.style.background = '#fff'; el.style.color = '#1a1a1a'; el.style.borderColor = '#e5e5e5'; });
+    document.querySelector('.theme-btn').textContent = 'Dark';
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.body.style.background = '#1a1a1a';
+    document.body.style.color = '#e5e5e5';
+    document.querySelectorAll('.card').forEach(c => { c.style.background = '#242424'; c.style.borderColor = '#333'; });
+    document.querySelectorAll('input,select,textarea').forEach(el => { el.style.background = '#2a2a2a'; el.style.color = '#e5e5e5'; el.style.borderColor = '#333'; });
+    document.querySelector('.theme-btn').textContent = 'Light';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// Load saved theme
+if (localStorage.getItem('theme') === 'dark') {
+  toggleTheme();
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') addListing();
+});
+
+// Init
+loadProducts();
+</script>
+</body>
+</html>
