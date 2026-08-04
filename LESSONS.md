@@ -283,3 +283,19 @@
 - Lesson: Long-tail keywords (3+ words) have lower competition - useful insight for sellers
 - Lesson: Python stdlib is enough for a useful keyword tool, no need for external packages
 - Next: Add real search volume data from marketplace APIs, add keyword trend tracking, add competitor keyword analysis
+
+---
+
+## 2026-08-04 - Listing Consistency Checker
+- Works: Node.js + Express, JSON file storage, single HTML frontend
+- Works: 6 marketplace support (Tokopedia, Shopee, Lazada, Bukalapak, Blibli, TikTok Shop)
+- Works: Consistency score per product (0-100%) based on price/stock/title match
+- Works: Visual diff table with red highlighting for mismatches
+- Works: Price outlier detection (which marketplace has the odd price)
+- Works: Seed data with 3 products across multiple marketplaces
+- Works: Light minimal theme, responsive, dark mode toggle
+- Works: All API endpoints tested (CRUD, check, products, seed)
+- Issues: No batch import from CSV yet
+- Lesson: Consistency checking is a real pain point for multi-marketplace sellers
+- Lesson: Outlier detection (which marketplace differs from the rest) is more actionable than just "mismatch"
+- Next: Add CSV import, add description similarity check, add price difference percentage
