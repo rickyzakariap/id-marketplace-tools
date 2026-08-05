@@ -286,6 +286,23 @@
 
 ---
 
+## 2026-08-05 - Price Optimizer
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: 8 Indonesian product categories with price benchmarks
+- Works: 5 price suggestions: minimum, competitive, optimal, premium, high
+- Works: Competitor simulation with price, rating, sold count
+- Works: Marketplace-specific fee calculation (6 marketplaces)
+- Works: Price psychology insights (X999, goceng pricing)
+- Works: Light minimal theme, responsive design, dark mode toggle
+- Works: All API endpoints tested (categories, marketplaces, analyze, history)
+- Issues: Price suggestions had duplicates when snapping to price points
+- Fix: Added deduplication logic with seen map, spread test prices more evenly
+- Lesson: When generating multiple price points, ensure they're distinct after snapping to benchmarks
+- Lesson: Go's single binary deployment is perfect for self-contained tools
+- Next: Add price trend tracking, add CSV import for bulk analysis
+
+---
+
 ## 2026-08-04 - Listing Consistency Checker
 - Works: Node.js + Express, JSON file storage, single HTML frontend
 - Works: 6 marketplace support (Tokopedia, Shopee, Lazada, Bukalapak, Blibli, TikTok Shop)
