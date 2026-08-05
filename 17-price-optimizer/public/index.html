@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price Optimizer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+h1{font-size:1.4rem;font-weight:700}
+.subtitle{font-size:.85rem;color:#666;margin-top:2px}
+.theme-btn{background:none;border:1px solid #e5e5e5;border-radius:6px;padding:6px 12px;font-size:.8rem;cursor:pointer;color:#666}
+.theme-btn:hover{border-color:#4a9;color:#4a9}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px}
+.card h2{font-size:1rem;font-weight:600;margin-bottom:16px;color:#1a1a1a}
+.form-group{margin-bottom:12px}
+label{font-size:.78rem;font-weight:500;color:#666;display:block;margin-bottom:4px}
+input,select{width:100%;padding:8px 10px;border:1px solid #e5e5e5;border-radius:6px;font-size:.9rem;font-family:inherit;background:#fff;color:#1a1a1a}
+input:focus,select:focus{outline:none;border-color:#4a9}
+input[type="number"]{font-family:'JetBrains Mono',monospace}
+.btn{background:#4a9;color:#fff;border:none;border-radius:6px;padding:10px 20px;font-size:.9rem;font-weight:500;cursor:pointer;width:100%}
+.btn:hover{background:#3a8}
+.btn:disabled{background:#ccc;cursor:not-allowed}
+.btn-secondary{background:#fff;color:#4a9;border:1px solid #4a9}
+.btn-secondary:hover{background:#f0f9f5}
+.result-card{margin-top:16px}
+.metric{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0}
+.metric:last-child{border-bottom:none}
+.metric-label{font-size:.85rem;color:#666}
+.metric-value{font-size:.9rem;font-weight:600;font-family:'JetBrains Mono',monospace}
+.metric-value.positive{color:#22c55e}
+.metric-value.negative{color:#dc2626}
+.price-point{background:#f9f9f9;border:1px solid #e5e5e5;border-radius:6px;padding:12px;margin-bottom:8px}
+.price-point.recommended{border-color:#4a9;background:#f0f9f5}
+.price-point-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.price-point-label{font-size:.85rem;font-weight:600}
+.price-point-price{font-size:1rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:#4a9}
+.price-point-reason{font-size:.78rem;color:#666;margin-top:4px}
+.competitor-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.competitor-table th{text-align:left;padding:8px 6px;border-bottom:2px solid #e5e5e5;font-weight:600;color:#666;font-size:.75rem}
+.competitor-table td{padding:8px 6px;border-bottom:1px solid #f0f0f0}
+.competitor-table tr:last-child td{border-bottom:none}
+.competitor-table .price{font-family:'JetBrains Mono',monospace;font-weight:600}
+.insight{background:#f9f9f9;border-left:3px solid #4a9;padding:10px 12px;margin-bottom:8px;font-size:.85rem;color:#333}
+.range-bar{position:relative;height:8px;background:#e5e5e5;border-radius:4px;margin:12px 0}
+.range-marker{position:absolute;top:-4px;width:4px;height:16px;background:#4a9;border-radius:2px}
+.range-labels{display:flex;justify-content:space-between;font-size:.75rem;color:#666;font-family:'JetBrains Mono',monospace}
+.empty-state{text-align:center;padding:40px 20px;color:#999;font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{background:#f0f0f0;border:1px solid #e5e5e5;border-radius:12px;padding:4px 10px;font-size:.75rem;cursor:pointer}
+.chip:hover{background:#e5e5e5}
+@media(max-width:768px){
+.grid{grid-template-columns:1fr}
+.container{padding:12px}
+.card{padding:16px}
+h1{font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<div>
+<h1>Price Optimizer</h1>
+<div class="subtitle">Rekomendasi harga terbaik berdasarkan kategori dan marketplace</div>
+</div>
+<button class="theme-btn" onclick="toggleTheme()">Dark</button>
+</header>
+
+<div class="grid">
+<div class="card">
+<h2>Input Produk</h2>
+<div class="form-group">
+<label>Nama Produk</label>
+<input type="text" id="product" placeholder="Contoh: Kaos Polos Cotton">
+</div>
+<div class="form-group">
+<label>Kategori</label>
+<select id="category">
+<option value="">Pilih kategori...</option>
+</select>
+</div>
+<div class="form-group">
+<label>Modal (Rp)</label>
+<input type="number" id="cost" placeholder="50000" min="0">
+</div>
+<div class="form-group">
+<label>Marketplace</label>
+<select id="marketplace">
+<option value="">Pilih marketplace...</option>
+</select>
+</div>
+<div class="chips">
+<div class="chip" onclick="fillExample('kaos','fashion_pria',50000,'shopee')">Contoh: Kaos</div>
+<div class="chip" onclick="fillExample('serum vitamin C','kecantikan',35000,'tokopedia')">Contoh: Serum</div>
+<div class="chip" onclick="fillExample('charger type C','elektronik',25000,'lazada')">Contoh: Charger</div>
+</div>
+<button class="btn" id="analyzeBtn" onclick="analyze()">Analisa Harga</button>
+</div>
+
+<div class="card">
+<h2>Hasil Analisa</h2>
+<div id="result">
+<div class="empty-state">Isi form dan klik "Analisa Harga" untuk melihat rekomendasi</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const API = '';
+let categories = [];
+let marketplaces = [];
+
+async function init() {
+const [catRes, mktRes] = await Promise.all([
+fetch(API + '/api/categories'),
+fetch(API + '/api/marketplaces')
+]);
+categories = await catRes.json();
+marketplaces = await mktRes.json();
+
+const catSelect = document.getElementById('category');
+categories.forEach(c => {
+const opt = document.createElement('option');
+opt.value = c.key;
+opt.textContent = c.name;
+catSelect.appendChild(opt);
+});
+
+const mktSelect = document.getElementById('marketplace');
+marketplaces.forEach(m => {
+const opt = document.createElement('option');
+opt.value = m.key;
+opt.textContent = m.name + ' (' + m.total_fee.toFixed(1) + '% fee)';
+mktSelect.appendChild(opt);
+});
+}
+
+function fillExample(product, category, cost, marketplace) {
+document.getElementById('product').value = product;
+document.getElementById('category').value = category;
+document.getElementById('cost').value = cost;
+document.getElementById('marketplace').value = marketplace;
+}
+
+async function analyze() {
+const btn = document.getElementById('analyzeBtn');
+const product = document.getElementById('product').value.trim();
+const category = document.getElementById('category').value;
+const cost = parseInt(document.getElementById('cost').value);
+const marketplace = document.getElementById('marketplace').value;
+
+if (!product || !category || !cost || !marketplace) {
+alert('Lengkapi semua field');
+return;
+}
+
+btn.disabled = true;
+btn.textContent = 'Menganalisa...';
+
+try {
+const res = await fetch(API + '/api/analyze', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ product, category, cost, marketplace })
+});
+
+if (!res.ok) throw new Error('Analysis failed');
+const data = await res.json();
+renderResult(data);
+} catch (err) {
+document.getElementById('result').innerHTML = '<div class="empty-state">Error: ' + err.message + '</div>';
+} finally {
+btn.disabled = false;
+btn.textContent = 'Analisa Harga';
+}
+}
+
+function formatRupiah(amount) {
+return 'Rp ' + amount.toLocaleString('id-ID');
+}
+
+function renderResult(data) {
+const html = `
+<div class="result-card">
+<div class="metric">
+<span class="metric-label">Harga Rekomendasi</span>
+<span class="metric-value positive">${formatRupiah(data.recommended_price)}</span>
+</div>
+<div class="metric">
+<span class="metric-label">Profit Optimal</span>
+<span class="metric-value positive">${formatRupiah(data.optimal_profit)}</span>
+</div>
+<div class="metric">
+<span class="metric-label">Margin</span>
+<span class="metric-value">${data.optimal_margin.toFixed(1)}%</span>
+</div>
+<div class="metric">
+<span class="metric-label">Fee Marketplace</span>
+<span class="metric-value">${formatRupiah(data.fee_at_optimal)}</span>
+</div>
+<div class="metric">
+<span class="metric-label">Net After Fee</span>
+<span class="metric-value positive">${formatRupiah(data.net_at_optimal)}</span>
+</div>
+</div>
+
+<div class="result-card">
+<h2 style="margin-top:20px">Rentang Harga</h2>
+<div class="range-bar">
+<div class="range-marker" style="left:${calculatePosition(data.recommended_price, data.price_range)}%"></div>
+</div>
+<div class="range-labels">
+<span>${formatRupiah(data.price_range[0])}</span>
+<span>${formatRupiah(data.price_range[1])}</span>
+</div>
+</div>
+
+<div class="result-card">
+<h2 style="margin-top:20px">Saran Harga</h2>
+${data.price_suggestions.map(s => `
+<div class="price-point ${s.price === data.recommended_price ? 'recommended' : ''}">
+<div class="price-point-header">
+<span class="price-point-label">${s.label}</span>
+<span class="price-point-price">${formatRupiah(s.price)}</span>
+</div>
+<div class="metric">
+<span class="metric-label">Profit</span>
+<span class="metric-value">${formatRupiah(s.profit)}</span>
+</div>
+<div class="metric">
+<span class="metric-label">Margin</span>
+<span class="metric-value">${s.margin.toFixed(1)}%</span>
+</div>
+<div class="price-point-reason">${s.reason}</div>
+</div>
+`).join('')}
+</div>
+
+<div class="result-card">
+<h2 style="margin-top:20px">Simulasi Kompetitor</h2>
+<table class="competitor-table">
+<thead>
+<tr>
+<th>Toko</th>
+<th>Harga</th>
+<th>Rating</th>
+<th>Terjual</th>
+</tr>
+</thead>
+<tbody>
+${data.competitor_sim.slice(0, 6).map(c => `
+<tr>
+<td>${c.name}</td>
+<td class="price">${formatRupiah(c.price)}</td>
+<td>${c.rating.toFixed(1)}</td>
+<td>${c.sold}</td>
+</tr>
+`).join('')}
+</tbody>
+</table>
+</div>
+
+<div class="result-card">
+<h2 style="margin-top:20px">Insight</h2>
+${data.insights.map(i => `<div class="insight">${i}</div>`).join('')}
+</div>
+`;
+
+document.getElementById('result').innerHTML = html;
+}
+
+function calculatePosition(price, range) {
+const percent = ((price - range[0]) / (range[1] - range[0])) * 100;
+return Math.max(0, Math.min(100, percent));
+}
+
+function toggleTheme() {
+const body = document.body;
+const btn = document.querySelector('.theme-btn');
+if (body.style.background === 'rgb(26, 26, 26)') {
+body.style.background = '#fafafa';
+body.style.color = '#1a1a1a';
+document.querySelectorAll('.card').forEach(c => {
+c.style.background = '#fff';
+c.style.borderColor = '#e5e5e5';
+});
+btn.textContent = 'Dark';
+localStorage.setItem('theme', 'light');
+} else {
+body.style.background = '#1a1a1a';
+body.style.color = '#e5e5e5';
+document.querySelectorAll('.card').forEach(c => {
+c.style.background = '#242424';
+c.style.borderColor = '#333';
+});
+btn.textContent = 'Light';
+localStorage.setItem('theme', 'dark');
+}
+}
+
+// Load theme
+if (localStorage.getItem('theme') === 'dark') {
+toggleTheme();
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+if (e.key === 'Enter' && !e.target.matches('input, select')) {
+analyze();
+}
+});
+
+init();
+</script>
+</body>
+</html>
