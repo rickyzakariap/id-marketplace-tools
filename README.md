@@ -22,6 +22,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 14 | [14-promo-cost-calculator](14-promo-cost-calculator/) | Web | Go 1.26 | Calculate real cost of promotions across marketplaces |
 | 15 | [15-keyword-research-tool](15-keyword-research-tool/) | Web | Python (stdlib) | Generate and analyze marketplace keywords for Indonesian sellers |
 | 16 | [16-listing-consistency-checker](16-listing-consistency-checker/) | Web | Node.js + Express | Check listing consistency across marketplaces |
+| 17 | [17-price-optimizer](17-price-optimizer/) | Web | Go 1.26 | Price recommendations based on category and marketplace |
 
 ## Contributing
 
