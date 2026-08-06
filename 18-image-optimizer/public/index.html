@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Optimizer - Marketplace Tools</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.5}
+.container{max-width:900px;margin:0 auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid #e5e5e5;margin-bottom:24px}
+h1{font-size:20px;font-weight:600}
+.theme-btn{background:none;border:1px solid #e5e5e5;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:#666}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#666;margin-bottom:12px}
+.drop-zone{border:2px dashed #e5e5e5;border-radius:8px;padding:40px;text-align:center;cursor:pointer;transition:border-color 0.15s}
+.drop-zone:hover,.drop-zone.dragover{border-color:#4a9}
+.drop-zone p{color:#666;font-size:14px}
+.drop-zone .hint{font-size:12px;color:#999;margin-top:4px}
+input[type="file"]{display:none}
+.marketplace-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:12px}
+.mp-chip{padding:8px 12px;border:1px solid #e5e5e5;border-radius:6px;font-size:13px;cursor:pointer;text-align:center;transition:border-color 0.15s}
+.mp-chip:hover{border-color:#4a9}
+.mp-chip.selected{border-color:#4a9;background:#f0faf5;color:#2a7}
+.preview-area{display:none;margin-top:16px}
+.preview-area.active{display:block}
+.preview-row{display:flex;gap:16px;flex-wrap:wrap}
+.preview-img{max-width:200px;max-height:200px;border:1px solid #e5e5e5;border-radius:6px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin-top:12px}
+.info-label{color:#666}
+.info-value{font-family:'JetBrains Mono',monospace;font-weight:500}
+.status{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:500}
+.status.ok{background:#e8f5e9;color:#2e7d32}
+.status.warn{background:#fff3e0;color:#e65100}
+.status.fail{background:#ffebee;color:#c62828}
+.specs-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+.specs-table th{text-align:left;padding:8px;border-bottom:1px solid #e5e5e5;color:#666;font-weight:500}
+.specs-table td{padding:8px;border-bottom:1px solid #f0f0f0}
+.specs-table td.num{font-family:'JetBrains Mono',monospace}
+.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.btn{padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid #e5e5e5;background:#fff;color:#1a1a1a;transition:background 0.15s}
+.btn:hover{background:#f5f5f5}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.btn-primary{background:#4a9;color:#fff;border-color:#4a9}
+.btn-primary:hover{background:#3a8}
+.result-card{border-left:3px solid #4a9}
+.result-card.has-issue{border-left-color:#e65100}
+.result-card.fail{border-left-color:#c62828}
+.download-link{color:#4a9;text-decoration:none;font-size:13px;font-weight:500}
+.download-link:hover{text-decoration:underline}
+canvas{display:none}
+@media(max-width:768px){
+  .container{padding:12px}
+  .marketplace-grid{grid-template-columns:repeat(2,1fr)}
+  .preview-row{flex-direction:column}
+  .preview-img{max-width:100%}
+  .info-grid{grid-template-columns:1fr}
+  .specs-table{font-size:12px}
+  .specs-table th,.specs-table td{padding:6px 4px}
+  .actions{flex-direction:column}
+  .btn{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Image Optimizer</h1>
+  <button class="theme-btn" id="themeBtn">Dark</button>
+</header>
+
+<div class="card">
+  <div class="card-title">Upload Image</div>
+  <div class="drop-zone" id="dropZone">
+    <p>Drop image here or click to upload</p>
+    <div class="hint">JPG, PNG - any size</div>
+  </div>
+  <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp">
+</div>
+
+<div class="card">
+  <div class="card-title">Target Marketplace</div>
+  <div class="marketplace-grid" id="mpGrid"></div>
+</div>
+
+<div class="preview-area" id="previewArea">
+  <div class="card">
+    <div class="card-title">Original Image</div>
+    <div class="preview-row">
+      <img id="previewImg" class="preview-img" alt="preview">
+      <div>
+        <div class="info-grid">
+          <span class="info-label">Dimensions</span>
+          <span class="info-value" id="origDim">-</span>
+          <span class="info-label">File size</span>
+          <span class="info-value" id="origSize">-</span>
+          <span class="info-label">Format</span>
+          <span class="info-value" id="origFormat">-</span>
+          <span class="info-label">Aspect ratio</span>
+          <span class="info-value" id="origRatio">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultsArea"></div>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="optimizeBtn" disabled>Optimize for Selected</button>
+    <button class="btn" id="clearBtn">Clear</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Marketplace Image Specs</div>
+  <table class="specs-table">
+    <thead>
+      <tr><th>Marketplace</th><th>Min Size</th><th>Ratio</th><th>Max File</th><th>Format</th><th>Recommended</th></tr>
+    </thead>
+    <tbody id="specsBody"></tbody>
+  </table>
+</div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const SPECS = [
+  {id:'tokopedia',name:'Tokopedia',min_width:700,min_height:700,ratio:'1:1',ratio_value:1,max_file_kb:5120,format:'JPG/PNG',bg:'white',recommended:1000},
+  {id:'shopee',name:'Shopee',min_width:500,min_height:500,ratio:'1:1',ratio_value:1,max_file_kb:2048,format:'JPG/PNG',bg:'white',recommended:800},
+  {id:'lazada',name:'Lazada',min_width:330,min_height:330,ratio:'1:1',ratio_value:1,max_file_kb:5120,format:'JPG/PNG',bg:'white',recommended:800},
+  {id:'bukalapak',name:'Bukalapak',min_width:500,min_height:500,ratio:'1:1',ratio_value:1,max_file_kb:5120,format:'JPG/PNG',bg:'white',recommended:800},
+  {id:'blibli',name:'Blibli',min_width:500,min_height:500,ratio:'1:1',ratio_value:1,max_file_kb:2048,format:'JPG',bg:'white',recommended:800},
+  {id:'tiktok',name:'TikTok Shop',min_width:600,min_height:600,ratio:'1:1',ratio_value:1,max_file_kb:5120,format:'JPG/PNG',bg:'white',recommended:800}
+];
+
+let currentFile = null;
+let currentImg = null;
+let selectedMPs = new Set();
+
+// Theme
+const themeBtn = document.getElementById('themeBtn');
+let isDark = localStorage.getItem('theme') === 'dark';
+function applyTheme() {
+  if (isDark) {
+    document.body.style.background = '#1a1a1a';
+    document.body.style.color = '#e0e0e0';
+    document.querySelectorAll('.card').forEach(c => { c.style.background = '#242424'; c.style.borderColor = '#333'; });
+    document.querySelectorAll('.btn').forEach(b => { b.style.background = '#242424'; b.style.borderColor = '#333'; b.style.color = '#e0e0e0'; });
+    document.querySelectorAll('.mp-chip').forEach(c => { c.style.borderColor = '#333'; });
+    document.querySelectorAll('.specs-table th,.specs-table td').forEach(el => { el.style.borderColor = '#333'; });
+    document.querySelector('.drop-zone').style.borderColor = '#333';
+    themeBtn.textContent = 'Light';
+  } else {
+    document.body.style.background = '#fafafa';
+    document.body.style.color = '#1a1a1a';
+    document.querySelectorAll('.card').forEach(c => { c.style.background = '#fff'; c.style.borderColor = '#e5e5e5'; });
+    document.querySelectorAll('.btn').forEach(b => { b.style.background = '#fff'; b.style.borderColor = '#e5e5e5'; b.style.color = '#1a1a1a'; });
+    document.querySelectorAll('.mp-chip').forEach(c => { c.style.borderColor = '#e5e5e5'; });
+    document.querySelectorAll('.specs-table th,.specs-table td').forEach(el => { el.style.borderColor = '#e5e5e5'; });
+    document.querySelector('.drop-zone').style.borderColor = '#e5e5e5';
+    themeBtn.textContent = 'Dark';
+  }
+}
+themeBtn.addEventListener('click', () => { isDark = !isDark; localStorage.setItem('theme', isDark ? 'dark' : 'light'); applyTheme(); });
+if (isDark) applyTheme();
+
+// Render marketplace chips
+const mpGrid = document.getElementById('mpGrid');
+SPECS.forEach(s => {
+  const chip = document.createElement('div');
+  chip.className = 'mp-chip';
+  chip.textContent = s.name;
+  chip.dataset.id = s.id;
+  chip.addEventListener('click', () => {
+    if (selectedMPs.has(s.id)) { selectedMPs.delete(s.id); chip.classList.remove('selected'); }
+    else { selectedMPs.add(s.id); chip.classList.add('selected'); }
+    updateOptimizeBtn();
+  });
+  mpGrid.appendChild(chip);
+});
+
+// Render specs table
+const specsBody = document.getElementById('specsBody');
+SPECS.forEach(s => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${s.name}</td><td class="num">${s.min_width}x${s.min_height}</td><td>${s.ratio}</td><td class="num">${s.max_file_kb >= 1024 ? (s.max_file_kb/1024).toFixed(0) + ' MB' : s.max_file_kb + ' KB'}</td><td>${s.format}</td><td class="num">${s.recommended}x${s.recommended}</td>`;
+  specsBody.appendChild(tr);
+});
+
+// Drop zone
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', e => { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) return;
+  currentFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      currentImg = img;
+      document.getElementById('previewImg').src = e.target.result;
+      document.getElementById('origDim').textContent = img.width + ' x ' + img.height;
+      document.getElementById('origSize').textContent = formatBytes(file.size);
+      document.getElementById('origFormat').textContent = file.type.split('/')[1].toUpperCase();
+      const gcd = gcdCalc(img.width, img.height);
+      document.getElementById('origRatio').textContent = (img.width/gcd) + ':' + (img.height/gcd);
+      document.getElementById('previewArea').classList.add('active');
+      analyzeImage();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function analyzeImage() {
+  if (!currentImg) return;
+  const resultsArea = document.getElementById('resultsArea');
+  resultsArea.innerHTML = '';
+  
+  const w = currentImg.width;
+  const h = currentImg.height;
+  const ratio = w / h;
+  
+  SPECS.forEach(s => {
+    const issues = [];
+    let status = 'ok';
+    
+    if (w < s.min_width || h < s.min_height) {
+      issues.push('Too small (min ' + s.min_width + 'x' + s.min_height + ')');
+      status = 'fail';
+    }
+    if (Math.abs(ratio - s.ratio_value) > 0.05) {
+      issues.push('Wrong ratio (need ' + s.ratio + ', got ' + ratio.toFixed(2) + ')');
+      status = status === 'fail' ? 'fail' : 'warn';
+    }
+    if (currentFile.size > s.max_file_kb * 1024) {
+      issues.push('File too large (max ' + (s.max_file_kb >= 1024 ? (s.max_file_kb/1024).toFixed(0) + 'MB' : s.max_file_kb + 'KB') + ')');
+      status = status === 'fail' ? 'fail' : 'warn';
+    }
+    if (w < s.recommended || h < s.recommended) {
+      issues.push('Below recommended (' + s.recommended + 'x' + s.recommended + ')');
+      if (status === 'ok') status = 'warn';
+    }
+    
+    const card = document.createElement('div');
+    card.className = 'card result-card' + (status === 'fail' ? ' fail' : status === 'warn' ? ' has-issue' : '');
+    card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>' + s.name + '</strong><span class="status ' + status + '">' + (status === 'ok' ? 'OK' : status === 'warn' ? 'Needs Fix' : 'Fail') + '</span></div>' + (issues.length ? '<div style="font-size:13px;color:#666">' + issues.join('<br>') + '</div>' : '<div style="font-size:13px;color:#2e7d32">Meets all requirements</div>');
+    resultsArea.appendChild(card);
+  });
+}
+
+function updateOptimizeBtn() {
+  document.getElementById('optimizeBtn').disabled = !currentImg || selectedMPs.size === 0;
+}
+
+// Optimize
+document.getElementById('optimizeBtn').addEventListener('click', () => {
+  if (!currentImg || selectedMPs.size === 0) return;
+  
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  selectedMPs.forEach(mpId => {
+    const spec = SPECS.find(s => s.id === mpId);
+    if (!spec) return;
+    
+    // Calculate output dimensions (maintain ratio, fit to recommended)
+    let outW = spec.recommended;
+    let outH = spec.recommended;
+    
+    // If image is not 1:1, crop to center
+    const srcRatio = currentImg.width / currentImg.height;
+    let srcX = 0, srcY = 0, srcW = currentImg.width, srcH = currentImg.height;
+    
+    if (Math.abs(srcRatio - 1) > 0.01) {
+      // Crop to square from center
+      if (srcRatio > 1) {
+        srcX = (currentImg.width - currentImg.height) / 2;
+        srcW = currentImg.height;
+      } else {
+        srcY = (currentImg.height - currentImg.width) / 2;
+        srcH = currentImg.width;
+      }
+    }
+    
+    canvas.width = outW;
+    canvas.height = outH;
+    
+    // White background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, outW, outH);
+    
+    // Draw image (scaled to fit)
+    ctx.drawImage(currentImg, srcX, srcY, srcW, srcH, 0, 0, outW, outH);
+    
+    // Export
+    const format = spec.format.includes('PNG') ? 'image/png' : 'image/jpeg';
+    const quality = 0.85;
+    
+    canvas.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = spec.name.toLowerCase().replace(/\s/g, '-') + '-optimized.jpg';
+      
+      // Show download result
+      const resultsArea = document.getElementById('resultsArea');
+      const dlCard = document.createElement('div');
+      dlCard.className = 'card result-card';
+      dlCard.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><strong>' + spec.name + ' - Optimized</strong><span class="info-value">' + formatBytes(blob.size) + '</span></div><div style="margin-top:8px"><a class="download-link" href="' + url + '" download="' + a.download + '">Download ' + outW + 'x' + outH + ' ' + spec.name + ' version</a></div>';
+      resultsArea.appendChild(dlCard);
+    }, format, quality);
+  });
+});
+
+// Clear
+document.getElementById('clearBtn').addEventListener('click', () => {
+  currentFile = null;
+  currentImg = null;
+  selectedMPs.clear();
+  document.querySelectorAll('.mp-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('previewArea').classList.remove('active');
+  document.getElementById('resultsArea').innerHTML = '';
+  fileInput.value = '';
+  updateOptimizeBtn();
+});
+
+// Helpers
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function gcdCalc(a, b) {
+  a = Math.abs(Math.round(a));
+  b = Math.abs(Math.round(b));
+  while (b) { [a, b] = [b, a % b]; }
+  return a;
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('clearBtn').click();
+});
+</script>
+</body>
+</html>
