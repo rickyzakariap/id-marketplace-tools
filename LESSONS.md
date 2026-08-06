@@ -286,6 +286,25 @@
 
 ---
 
+## 2026-08-06 - Image Optimizer
+- Works: Python stdlib http.server, zero dependencies
+- Works: Web UI (not CLI) - sellers can use directly
+- Works: Upload images (drag-drop or click)
+- Works: Check compatibility with 6 marketplaces (Tokopedia, Shopee, Lazada, Bukalapak, Blibli, TikTok Shop)
+- Works: Auto-resize and crop to marketplace specs (1:1 ratio)
+- Works: White background fill for non-square images
+- Works: File size validation per marketplace
+- Works: Batch export for multiple marketplaces
+- Works: Light minimal theme, responsive design, dark mode toggle
+- Works: Keyboard shortcuts (Esc to clear)
+- Issues: Canvas API quality is good but not professional-grade (no advanced compression)
+- Lesson: Canvas API is enough for basic image optimization, no need for Pillow/ImageMagick
+- Lesson: Marketplace image specs vary (Tokopedia 1000x1000 recommended, others 800x800)
+- Lesson: Auto-crop to 1:1 from center works well for product photos
+- Next: Add watermark support, add batch upload, add background removal
+
+---
+
 ## 2026-08-05 - Price Optimizer
 - Works: Go 1.26 single binary, zero external dependencies
 - Works: 8 Indonesian product categories with price benchmarks
