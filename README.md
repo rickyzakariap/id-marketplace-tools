@@ -23,6 +23,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 15 | [15-keyword-research-tool](15-keyword-research-tool/) | Web | Python (stdlib) | Generate and analyze marketplace keywords for Indonesian sellers |
 | 16 | [16-listing-consistency-checker](16-listing-consistency-checker/) | Web | Node.js + Express | Check listing consistency across marketplaces |
 | 17 | [17-price-optimizer](17-price-optimizer/) | Web | Go 1.26 | Price recommendations based on category and marketplace |
+| 18 | [18-image-optimizer](18-image-optimizer/) | Web | Python (stdlib) | Optimize product images for marketplace requirements |
 
 ## Contributing
 
