@@ -335,3 +335,19 @@
 - Lesson: Consistency checking is a real pain point for multi-marketplace sellers
 - Lesson: Outlier detection (which marketplace differs from the rest) is more actionable than just "mismatch"
 - Next: Add CSV import, add description similarity check, add price difference percentage
+
+## 2026-08-12 - Komplain Tracker
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: Complaint lifecycle tracking (baru -> ditanggapi -> diproses -> selesai/batal)
+- Works: SLA monitoring with 24h response and 72h resolution targets
+- Works: Overdue detection at two levels (response vs resolution)
+- Works: Follow-up notes per complaint
+- Works: Filters by status, marketplace, complaint type
+- Works: Dashboard stats with avg resolution time
+- Works: CSV export
+- Works: Auto-fill example data, light minimal theme, responsive
+- Issues: Complaint types are hardcoded, no customization
+- Lesson: SLA-based tools need two thresholds (response + resolution), not one
+- Lesson: Go http.ServeMux with {id} path params (Go 1.22+) simplifies REST routing
+- Next: Add Telegram notification when complaint is overdue, add editable complaint types
+
