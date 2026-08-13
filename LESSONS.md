@@ -351,3 +351,19 @@
 - Lesson: Go http.ServeMux with {id} path params (Go 1.22+) simplifies REST routing
 - Next: Add Telegram notification when complaint is overdue, add editable complaint types
 
+## 2026-08-13 - Stock Sync Checker (Chrome Extension)
+- Works: Chrome MV3 extension, zero external dependencies
+- Works: Product page detection for 5 marketplaces (Shopee, Tokopedia, Lazada, Bukalapak, Blibli)
+- Works: Stock extraction from page text with polling for lazy-load (Tokopedia)
+- Works: Fuzzy name matching (token overlap) tolerates per-marketplace title variations
+- Works: Badge overlay with color status: green ok, red oversell, orange undersell, gray untracked
+- Works: Popup with master stock list, stats, CSV import/export, example data
+- Works: 31/31 Node unit tests pass on shared logic
+- Issues: DOM selectors per marketplace need real browser test, page structure changes over time
+- Issues: bodyText-based stock extraction can miss stock info if page renders it in an iframe
+- Lesson: MV3 popup CSP blocks inline scripts, use addEventListener not onclick
+- Lesson: activeTab + scripting permission needed to inject content script into already-open tabs
+- Lesson: Pure logic in shared.js (no chrome.* API) makes unit testing possible in Node
+- Lesson: Extensions are the right format for page-interaction tools, user already logged in, no bot detection
+- Next: Add stock update shortcuts, auto-detect seller center pages, Telegram alert on oversell
+
