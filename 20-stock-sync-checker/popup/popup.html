@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stok Sync Checker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;--orange:#d97706;
+}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;width:380px;min-height:400px;font-size:14px}
+.container{padding:16px}
+h1{font-size:16px;font-weight:600;margin-bottom:2px}
+.sub{font-size:12px;color:var(--text-muted);margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px}
+.card h2{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-dim);margin-bottom:8px}
+.result{border-left:4px solid var(--border)}
+.result.ok{border-left-color:var(--green)}
+.result.oversell{border-left-color:var(--red)}
+.result.undersell{border-left-color:var(--orange)}
+.result.notrack{border-left-color:var(--text-muted)}
+.result .pname{font-weight:600;font-size:13px;margin-bottom:4px}
+.result .nums{font-family:ui-monospace,Consolas,monospace;font-size:13px;font-weight:600;margin-bottom:4px}
+.result .msg{font-size:12px;color:var(--text-dim)}
+.result .meta{font-size:11px;color:var(--text-muted);margin-top:4px}
+label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:4px}
+input[type=text],input[type=number],textarea{width:100%;background:var(--input-bg);border:1px solid var(--input-border);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--text);font-family:inherit;margin-bottom:8px}
+input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+button{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 12px;font-size:13px;cursor:pointer;color:var(--text);font-family:inherit}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);color:#fff}
+button.danger{color:var(--red)}
+button:disabled{opacity:0.5;cursor:default}
+.row{display:flex;gap:8px;align-items:center}
+.row input[type=text]{flex:2;margin-bottom:0}
+.row input[type=number]{flex:1;margin-bottom:0}
+.row button{margin-bottom:0;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;color:var(--text-muted);font-weight:500;padding:4px 6px;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:0.03em}
+td{padding:5px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+td.num,th.num{font-family:ui-monospace,Consolas,monospace;text-align:right}
+td .mini{font-size:11px;color:var(--text-muted)}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:0.02em}
+.tag.ok{background:#f0fdf4;color:var(--green)}
+.tag.oversell{background:#fef2f2;color:var(--red)}
+.tag.undersell{background:#fffbeb;color:var(--orange)}
+.tag.notrack{background:#f5f5f5;color:var(--text-muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.empty{text-align:center;color:var(--text-muted);font-size:12px;padding:16px 0}
+.hint{font-size:11px;color:var(--text-muted);margin-top:4px}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.stat{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}
+.stat .n{font-family:ui-monospace,Consolas,monospace;font-size:18px;font-weight:600}
+.stat .l{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.03em}
+#importWrap{margin-top:8px}
+#importWrap textarea{height:60px;font-family:ui-monospace,Consolas,monospace;font-size:11px}
+@media(max-width:768px){
+  .container{padding:12px}
+  body{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Stok Sync Checker</h1>
+  <div class="sub">Cek stok listing vs stok asli di semua marketplace</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Produk</div></div>
+    <div class="stat"><div class="n" id="statOversell" style="color:var(--red)">0</div><div class="l">Oversell</div></div>
+    <div class="stat"><div class="n" id="statOk" style="color:var(--green)">0</div><div class="l">Cocok</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Cek halaman ini</h2>
+    <div id="pageResult" class="result notrack">
+      <div class="msg">Buka halaman produk Shopee, Tokopedia, Lazada, Bukalapak, atau Blibli, lalu klik Cek.</div>
+    </div>
+    <div class="actions">
+      <button id="btnCheck" class="primary">Cek halaman ini</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Daftar stok asli</h2>
+    <div id="listWrap">
+      <div class="empty">Belum ada produk. Tambah manual atau impor CSV.</div>
+    </div>
+    <div style="margin-top:10px">
+      <div class="row">
+        <input type="text" id="inpName" placeholder="Nama produk (contoh: TWS Bluetooth Earphone X7)">
+        <input type="number" id="inpStock" placeholder="Stok" min="0">
+        <button id="btnAdd" class="primary">Tambah</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btnExample">Isi contoh</button>
+      <button id="btnImport">Impor CSV</button>
+      <button id="btnExport">Ekspor CSV</button>
+    </div>
+    <div id="importWrap" style="display:none">
+      <textarea id="csvText" placeholder="nama,stok satu per baris"></textarea>
+      <button id="btnImportGo" class="primary">Impor</button>
+      <button id="btnImportCancel">Batal</button>
+      <div class="hint">Format: nama,stok per baris. Contoh: Kaos Polos Premium,50</div>
+    </div>
+  </div>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>

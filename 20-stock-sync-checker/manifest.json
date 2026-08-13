@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Stok Sync Checker",
+  "version": "1.0.0",
+  "description": "Cek stok listing vs stok asli di Shopee, Tokopedia, Lazada, Bukalapak, Blibli. Flag oversell risk sebelum buyer order.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "*://*.shopee.co.id/*",
+    "*://*.tokopedia.com/*",
+    "*://*.lazada.co.id/*",
+    "*://*.bukalapak.com/*",
+    "*://*.blibli.com/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Stok Sync Checker"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.shopee.co.id/*",
+        "*://*.tokopedia.com/*",
+        "*://*.lazada.co.id/*",
+        "*://*.bukalapak.com/*",
+        "*://*.blibli.com/*"
+      ],
+      "js": ["shared/shared.js", "content/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
