@@ -26,6 +26,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 18 | [18-image-optimizer](18-image-optimizer/) | Web | Python (stdlib) | Optimize product images for marketplace requirements |
 | 19 | [19-komplain-tracker](19-komplain-tracker/) | Web | Go 1.26 | Track complaints with SLA monitoring and follow-up |
 | 20 | [20-stock-sync-checker](20-stock-sync-checker/) | Extension | Chrome MV3 | Compare listed stock vs actual stock across marketplaces, flag oversell risk |
+| 21 | [21-harbolnas-calendar](21-harbolnas-calendar/) | Web | Python (stdlib) | Promo event calendar with countdown and prep checklists |
 
 ## Contributing
 
