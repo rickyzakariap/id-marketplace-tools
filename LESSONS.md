@@ -367,3 +367,18 @@
 - Lesson: Extensions are the right format for page-interaction tools, user already logged in, no bot detection
 - Next: Add stock update shortcuts, auto-detect seller center pages, Telegram alert on oversell
 
+## 2026-08-14 - Harbolnas Promo Calendar
+- Works: Python stdlib http.server, zero dependencies
+- Works: Web UI (not CLI) - sellers can see upcoming promo events directly
+- Works: 6 event categories: Harbolnas, Payday, Ramadan, Lebaran, Imlek, Tahun Baru
+- Works: Live countdown to next event (days, weeks, prep start date)
+- Works: Per-event prep checklists (stock, vouchers, ads, CS) with prep lead days
+- Works: Payday sale events auto-generated monthly from current date
+- Works: Estimated religious dates flagged in UI (Ramadan, Lebaran, Imlek)
+- Works: Filters by category and marketplace, light minimal theme, responsive
+- Issues: Harbolnas dates for 2027 are fixed data, not scraped from marketplace announcements
+- Lesson: Promo calendar is a real gap - sellers miss Harbolnas deadlines because nothing reminds them
+- Lesson: Estimating religious dates and flagging them as estimates beats hardcoding wrong dates
+- Lesson: Countdown tools need a hero section with the NEXT event, not just a flat list
+- Next: Add Telegram reminder before event, link to official marketplace promo pages
+
