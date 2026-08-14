@@ -1,0 +1,23 @@
+{
+  "date": "2026-08-14",
+  "sources": ["duckduckgo", "bing", "existing research 2026-07-15"],
+  "pain_points": [
+    {
+      "category": "Promo & Calendar",
+      "description": "Seller sering ketinggalan jadwal Harbolnas dan promo musiman (9.9, 10.10, 11.11, 12.12, Ramadan, Lebaran). Persiapan stok dan promo butuh waktu 1-2 minggu sebelum event, tapi ga ada tools yang kasih countdown + checklist persiapan.",
+      "frequency": "HIGH",
+      "sources": ["indonesian-business-context skill: Indonesian holidays affect everything", "tokoboost.com - tools wajib seller 2026", "existing research 2026-07-15: Fee & Pricing + Stok"]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Harbolnas Promo Calendar",
+      "type": "Web",
+      "tech": "Go 1.26 (stdlib net/http, single binary)",
+      "description": "Kalender event promo marketplace Indonesia: Harbolnas, payday sale, Ramadan, Lebaran, akhir tahun. Countdown real-time, filter per marketplace, checklist persiapan per event (stok, promo, foto, fee check).",
+      "category": "Websites/Dashboards",
+      "priority": 1,
+      "why": "Seller butuh tahu kapan event berikutnya dan apa yang harus disiapkan. Ga ada tools lokal yang nyediain ini."
+    }
+  ]
+}
