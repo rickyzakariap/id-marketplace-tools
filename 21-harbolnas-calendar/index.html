@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Kalender Promo Marketplace</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;--yellow:#d97706;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent:#4a9;--accent-hover:#5ba8;--accent-light:#1a2a25;
+  --green:#4ade80;--red:#f87171;--yellow:#fbbf24;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;padding:20px}
+.container{max-width:920px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+h1{font-size:22px;font-weight:600}
+h1 span{color:var(--text-muted);font-weight:400}
+button{font-family:inherit;cursor:pointer}
+.theme-btn{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:13px}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+.hero{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:16px}
+.hero-label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.hero-name{font-size:24px;font-weight:600;margin-bottom:4px}
+.hero-date{font-size:14px;color:var(--text-dim);margin-bottom:14px}
+.hero-date b{font-family:'JetBrains Mono',Consolas,monospace;font-weight:600}
+.countdown{display:flex;gap:12px;flex-wrap:wrap}
+.cd-box{background:var(--accent-light);border:1px solid var(--border);border-radius:8px;padding:12px 16px;min-width:90px;text-align:center}
+.cd-num{font-family:'JetBrains Mono',Consolas,monospace;font-size:26px;font-weight:600;color:var(--accent)}
+.cd-lbl{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.chip{background:var(--card);border:1px solid var(--border);color:var(--text-dim);border-radius:20px;padding:6px 14px;font-size:13px}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+select{background:var(--input-bg);border:1px solid var(--input-border);color:var(--text);border-radius:6px;padding:6px 10px;font-size:13px;font-family:inherit}
+.section-title{font-size:15px;font-weight:600;margin:18px 0 10px}
+.event{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px}
+.event.passed{opacity:.55}
+.event.today{border-color:var(--accent);border-width:2px}
+.ev-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ev-name{font-size:16px;font-weight:600}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;color:#fff;margin-left:8px;vertical-align:2px}
+.tag{display:inline-block;font-size:11px;background:var(--card-alt);border:1px solid var(--border);color:var(--text-dim);border-radius:4px;padding:1px 7px;margin:3px 3px 0 0}
+.ev-date{font-size:13px;color:var(--text-dim);margin-top:4px}
+.ev-date b{font-family:'JetBrains Mono',Consolas,monospace}
+.days{font-family:'JetBrains Mono',Consolas,monospace;font-size:14px;font-weight:600;white-space:nowrap}
+.days.up{color:var(--green)}
+.days.warn{color:var(--yellow)}
+.days.now{color:var(--accent)}
+.days.pass{color:var(--text-muted)}
+.ev-desc{font-size:13px;color:var(--text-dim);margin-top:8px}
+.prep{background:var(--card-alt);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:10px}
+.prep-title{font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.prep-list{list-style:none}
+.prep-list li{font-size:13px;color:var(--text-dim);padding:3px 0 3px 18px;position:relative}
+.prep-list li:before{content:"";position:absolute;left:2px;top:10px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.prep-start{font-size:12px;color:var(--text-muted);margin-top:6px}
+.prep-start b{font-family:'JetBrains Mono',Consolas,monospace;font-weight:600}
+.note{font-size:12px;color:var(--text-muted);margin-top:12px}
+.est{display:inline-block;font-size:10px;color:var(--yellow);border:1px solid var(--yellow);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.empty{background:var(--card);border:1px dashed var(--border);border-radius:10px;padding:30px;text-align:center;color:var(--text-muted);font-size:14px}
+@media(max-width:768px){
+  body{padding:12px}
+  h1{font-size:19px}
+  .hero{padding:18px}
+  .hero-name{font-size:20px}
+  .cd-box{min-width:72px;padding:10px 10px}
+  .cd-num{font-size:21px}
+  .event{padding:14px}
+  .filters{gap:6px}
+  .chip{padding:5px 11px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Kalender Promo <span>Marketplace Indonesia</span></h1>
+    <button class="theme-btn" id="themeBtn">Dark</button>
+  </header>
+
+  <div class="hero" id="hero" hidden>
+    <div class="hero-label">Event berikutnya</div>
+    <div class="hero-name" id="heroName"></div>
+    <div class="hero-date" id="heroDate"></div>
+    <div class="countdown">
+      <div class="cd-box"><div class="cd-num" id="cdDays"></div><div class="cd-lbl">Hari lagi</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdWeeks"></div><div class="cd-lbl">Minggu</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdPrep"></div><div class="cd-lbl">Mulai persiapan</div></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="chip active" data-cat="">Semua</button>
+    <button class="chip" data-cat="harbolnas">Harbolnas</button>
+    <button class="chip" data-cat="payday">Payday</button>
+    <button class="chip" data-cat="ramadan">Ramadan</button>
+    <button class="chip" data-cat="lebaran">Lebaran</button>
+    <button class="chip" data-cat="imlek">Imlek</button>
+    <button class="chip" data-cat="tahunbaru">Tahun Baru</button>
+    <select id="mpFilter">
+      <option value="">Semua marketplace</option>
+    </select>
+  </div>
+
+  <div class="section-title">Event mendatang</div>
+  <div id="upcoming"></div>
+
+  <div class="section-title" id="passedTitle" hidden>Event sudah lewat</div>
+  <div id="passed"></div>
+
+  <p class="note" id="estNote" hidden>Tanggal Ramadan, Lebaran, dan Imlek adalah perkiraan. Cek pengumuman resmi dari pemerintah dan marketplace.</p>
+</div>
+
+<script>
+const state = { cat: '', mp: '', data: null };
+
+const $ = id => document.getElementById(id);
+
+function fmtDate(iso){
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+function fmtShort(iso){
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function daysText(ev){
+  if(ev.status === 'today') return '<span class="days now">Hari ini</span>';
+  if(ev.status === 'passed') return '<span class="days pass">Lewat</span>';
+  const d = ev.days_left;
+  const cls = d <= 7 ? 'warn' : 'up';
+  return `<span class="days ${cls}">H-${d}</span>`;
+}
+
+function eventCard(ev){
+  const cat = ev.cat;
+  const mps = ev.marketplaces.map(m => `<span class="tag">${m}</span>`).join('');
+  const est = ev.estimated ? '<span class="est">perkiraan</span>' : '';
+  const prepStart = ev.status === 'passed' ? '' :
+    `<div class="prep-start">Mulai persiapan: <b>${fmtShort(ev.prep_date)}</b> (H-${ev.prep_lead_days})</div>`;
+  return `
+  <div class="event ${ev.status}">
+    <div class="ev-top">
+      <div>
+        <span class="ev-name">${ev.name}</span>
+        <span class="badge" style="background:${cat.color}">${cat.label}</span>${est}
+        <div class="ev-date"><b>${fmtDate(ev.date)}</b></div>
+      </div>
+      ${daysText(ev)}
+    </div>
+    <div>${mps}</div>
+    <div class="ev-desc">${ev.desc}</div>
+    <div class="prep">
+      <div class="prep-title">Checklist persiapan</div>
+      <ul class="prep-list">${ev.checklist.map(c => `<li>${c}</li>`).join('')}</ul>
+      ${prepStart}
+    </div>
+  </div>`;
+}
+
+function render(){
+  const evs = state.data.events;
+  const filtered = evs.filter(e =>
+    (!state.cat || e.category === state.cat) &&
+    (!state.mp || e.marketplaces.includes(state.mp))
+  );
+  const upcoming = filtered.filter(e => e.status !== 'passed');
+  const passed = filtered.filter(e => e.status === 'passed');
+
+  const hero = $('hero');
+  const next = filtered.find(e => e.status !== 'passed');
+  if(next){
+    hero.hidden = false;
+    $('heroName').textContent = next.name;
+    $('heroDate').innerHTML = `<b>${fmtDate(next.date)}</b>`;
+    $('cdDays').textContent = next.days_left;
+    $('cdWeeks').textContent = Math.floor(next.days_left / 7);
+    $('cdPrep').textContent = next.prep_days_left > 0 ? next.prep_days_left : 0;
+  } else {
+    hero.hidden = true;
+  }
+
+  $('upcoming').innerHTML = upcoming.length
+    ? upcoming.map(eventCard).join('')
+    : '<div class="empty">Tidak ada event untuk filter ini</div>';
+
+  const pt = $('passedTitle');
+  pt.hidden = passed.length === 0;
+  $('passed').innerHTML = passed.length
+    ? passed.slice(0, 30).map(eventCard).join('')
+    : '';
+
+  $('estNote').hidden = !state.data.events.some(e => e.estimated);
+}
+
+function load(){
+  fetch('/api/events').then(r => r.json()).then(data => {
+    state.data = data;
+    const sel = $('mpFilter');
+    data.marketplaces.forEach(m => {
+      const o = document.createElement('option');
+      o.value = m; o.textContent = m;
+      sel.appendChild(o);
+    });
+    render();
+  });
+}
+
+document.querySelectorAll('.chip').forEach(ch => {
+  ch.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    ch.classList.add('active');
+    state.cat = ch.dataset.cat;
+    render();
+  });
+});
+$('mpFilter').addEventListener('change', e => { state.mp = e.target.value; render(); });
+
+// Theme toggle, light default, localStorage persistence
+const themeBtn = $('themeBtn');
+function setTheme(t){
+  document.documentElement.dataset.theme = t;
+  themeBtn.textContent = t === 'dark' ? 'Light' : 'Dark';
+  localStorage.setItem('theme', t);
+}
+themeBtn.addEventListener('click', () => {
+  setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+});
+setTheme(localStorage.getItem('theme') || 'light');
+
+load();
+</script>
+</body>
+</html>
