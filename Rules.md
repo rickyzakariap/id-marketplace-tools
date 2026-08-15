@@ -1,4 +1,4 @@
-# Rules — ID Marketplace Tools
+# Rules - ID Marketplace Tools
 
 ## Coding Standards
 
@@ -25,7 +25,7 @@ func CalcFee(p float64) float64 {
 ```
 
 **Rules:**
-- Stdlib only — no external dependencies kecuali absolutely necessary
+- Stdlib only - no external dependencies kecuali absolutely necessary
 - Error handling: Always check errors, wrap dengan context
 - Concurrency: Goroutines + channels, avoid shared state
 - Testing: Table-driven tests, coverage > 80%
@@ -45,7 +45,7 @@ const calc = (p: number, m: string) => p * getFeeRate(m);
 **Rules:**
 - TypeScript strict mode
 - Functional components only (React)
-- No `any` type — use proper types atau `unknown`
+- No `any` type - use proper types atau `unknown`
 - Async/await over `.then()` chains
 
 ### CSS
@@ -98,13 +98,13 @@ Fixes #12
 **Format:** `<type>(<scope>): <subject>`
 
 **Types:**
-- `feat` — New feature
-- `fix` — Bug fix
-- `docs` — Documentation
-- `style` — Formatting, no code change
-- `refactor` — Code restructuring
-- `test` — Add/update tests
-- `chore` — Maintenance
+- `feat` - New feature
+- `fix` - Bug fix
+- `docs` - Documentation
+- `style` - Formatting, no code change
+- `refactor` - Code restructuring
+- `test` - Add/update tests
+- `chore` - Maintenance
 
 ### Pull Requests
 
@@ -204,7 +204,7 @@ const apiKey = "sk-1234567890";
 ```
 
 **Rules:**
-- No API keys in code — use `.env` files
+- No API keys in code - use `.env` files
 - `.env` in `.gitignore`
 - Rotate secrets quarterly
 - Use secrets manager untuk production
@@ -271,12 +271,12 @@ for _, product := range products {
 ### README
 
 Every tool must have:
-1. **What it does** — 1 sentence
-2. **Installation** — How to install
-3. **Usage** — Examples dengan output
-4. **Configuration** — Env vars, config files
-5. **Contributing** — How to contribute
-6. **License** — MIT
+1. **What it does** - 1 sentence
+2. **Installation** - How to install
+3. **Usage** - Examples dengan output
+4. **Configuration** - Env vars, config files
+5. **Contributing** - How to contribute
+6. **License** - MIT
 
 ## Performance
 

@@ -1,4 +1,4 @@
-# Design — ID Marketplace Tools
+# Design - ID Marketplace Tools
 
 ## Design Philosophy
 
@@ -12,22 +12,22 @@ Non-technical sellers butuh tools yang:
 
 ## UI/UX Principles
 
-1. **Zero Learning Curve** — Tool harus self-explanatory
-2. **Instant Feedback** — Hasil dalam < 2 detik
-3. **Visual Hierarchy** — Info penting paling gede
-4. **Error Prevention** — Validasi input sebelum submit
-5. **Export Everything** — User bisa download hasil
+1. **Zero Learning Curve** - Tool harus self-explanatory
+2. **Instant Feedback** - Hasil dalam < 2 detik
+3. **Visual Hierarchy** - Info penting paling gede
+4. **Error Prevention** - Validasi input sebelum submit
+5. **Export Everything** - User bisa download hasil
 
 ## Color Palette
 
 ```css
 /* Primary */
---primary: #10b981;        /* Emerald green — trust, money */
+--primary: #10b981;        /* Emerald green - trust, money */
 --primary-dark: #059669;
 --primary-light: #34d399;
 
 /* Secondary */
---secondary: #3b82f6;      /* Blue — professional */
+--secondary: #3b82f6;      /* Blue - professional */
 --secondary-dark: #2563eb;
 
 /* Neutral */
@@ -148,7 +148,7 @@ Non-technical sellers butuh tools yang:
 ### CLI Output
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  ID Marketplace Tools — Bulk Fee Calculator v1.0.0      │
+│  ID Marketplace Tools - Bulk Fee Calculator v1.0.0      │
 ├─────────────────────────────────────────────────────────┤
 │  Loaded 8 products from data/sample.csv                 │
 │                                                         │
@@ -220,13 +220,13 @@ Setiap marketplace punya warna sendiri buat comparison:
 ## Icons
 
 Pake Lucide Icons (open source, consistent):
-- `Download` — Export
-- `Upload` — Import
-- `TrendingUp` — Profit
-- `TrendingDown` — Loss
-- `Check` — Success
-- `X` — Error
-- `Info` — Info
+- `Download` - Export
+- `Upload` - Import
+- `TrendingUp` - Profit
+- `TrendingDown` - Loss
+- `Check` - Success
+- `X` - Error
+- `Info` - Info
 
 ## Accessibility
 

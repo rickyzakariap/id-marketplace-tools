@@ -1,4 +1,4 @@
-# Architecture — ID Marketplace Tools
+# Architecture - ID Marketplace Tools
 
 ## Overview
 

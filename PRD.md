@@ -1,4 +1,4 @@
-# PRD — ID Marketplace Tools
+# PRD - ID Marketplace Tools
 
 ## Product Vision
 
@@ -9,21 +9,21 @@ Target user: Non-technical sellers yang jual di Shopee, Tokopedia, Bukalapak, La
 ## Problem Statement
 
 Seller Indonesia menghadapi:
-1. **Fee structure kompleks** — Tiap marketplace punya fee beda, susah bandingin
-2. **Pricing gak optimal** — Gak tau harga terbaik buat maximize profit
-3. **Listing quality rendah** — Judul & deskripsi gak SEO-friendly
-4. **Stock management ribet** — Sync stok antar marketplace manual
-5. **Review analysis manual** — Baca ratusan review satu-satu
+1. **Fee structure kompleks** - Tiap marketplace punya fee beda, susah bandingin
+2. **Pricing gak optimal** - Gak tau harga terbaik buat maximize profit
+3. **Listing quality rendah** - Judul & deskripsi gak SEO-friendly
+4. **Stock management ribet** - Sync stok antar marketplace manual
+5. **Review analysis manual** - Baca ratusan review satu-satu
 
 ## Solution
 
 Suite of tools yang:
-- ✅ **Bulk Fee Calculator** — Hitung fee semua marketplace sekaligus (DONE)
-- 🔄 **Price Optimizer** — Rekomendasi harga terbaik berdasarkan kompetisi
-- 🔄 **Listing Generator** — Auto-generate judul & deskripsi SEO-friendly
-- 🔄 **Stock Sync** — Sinkron stok antar marketplace real-time
-- 🔄 **Review Analyzer** — Analisis sentiment & extract insights dari review
-- 🔄 **Profit Calculator** — Hitung HPP + margin + fee = net profit
+- ✅ **Bulk Fee Calculator** - Hitung fee semua marketplace sekaligus (DONE)
+- 🔄 **Price Optimizer** - Rekomendasi harga terbaik berdasarkan kompetisi
+- 🔄 **Listing Generator** - Auto-generate judul & deskripsi SEO-friendly
+- 🔄 **Stock Sync** - Sinkron stok antar marketplace real-time
+- 🔄 **Review Analyzer** - Analisis sentiment & extract insights dari review
+- 🔄 **Profit Calculator** - Hitung HPP + margin + fee = net profit
 
 ## User Personas
 
@@ -32,25 +32,25 @@ Suite of tools yang:
 - **Background:** Karyawan yang jual side hustle
 - **Pain points:** Gak ngerti fee structure, pricing asal
 - **Goals:** Jual 10-50 produk/bulan, profit minimal 20%
-- **Tech level:** Low — butuh tools yang simple
+- **Tech level:** Low - butuh tools yang simple
 
 ### Persona 2: Sari (Seller Pro)
 - **Age:** 30-45
 - **Background:** Full-time seller, 1000+ produk
 - **Pain points:** Stock management ribet, listing quality inconsistent
 - **Goals:** Scale ke 10.000+ produk, automate workflows
-- **Tech level:** Medium — bisa pake CLI, butuh efficiency
+- **Tech level:** Medium - bisa pake CLI, butuh efficiency
 
 ### Persona 3: Andi (Agency Owner)
 - **Age:** 35-50
 - **Background:** Manage 10+ toko untuk clients
 - **Pain points:** Multi-account management, reporting
 - **Goals:** Centralized dashboard, bulk operations
-- **Tech level:** High — butuh API, integrations
+- **Tech level:** High - butuh API, integrations
 
 ## Features (by Priority)
 
-### P0 — Must Have (MVP)
+### P0 - Must Have (MVP)
 
 #### 1. Bulk Fee Calculator ✅ DONE
 - Input: CSV (name, price)
@@ -67,7 +67,7 @@ Suite of tools yang:
 - Output: SEO-optimized title + description
 - Features: AI-powered, multi-marketplace templates
 
-### P1 — Should Have
+### P1 - Should Have
 
 #### 4. Stock Sync (Chrome Extension)
 - Input: Stock data dari spreadsheet
@@ -79,7 +79,7 @@ Suite of tools yang:
 - Output: Net profit, margin %, break-even point
 - Features: Multi-product, scenario analysis
 
-### P2 — Nice to Have
+### P2 - Nice to Have
 
 #### 6. Review Analyzer
 - Input: Product URL / review export

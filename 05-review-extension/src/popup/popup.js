@@ -158,7 +158,7 @@ function scrapeShopeeSearch() {
 
     // Fallback: parse from concatenated text
     if (!sales) {
-      // Rating+Sales with suffix (e.g. "4.81RB+ terjual" — rating is always 1-5)
+      // Rating+Sales with suffix (e.g. "4.81RB+ terjual" - rating is always 1-5)
       const ratedSalesMatch = text.match(/([1-5]\.\d{1,2}(?:RB|rb|Rb|K|k|M|m)\+?\s*terjual)/i);
       if (ratedSalesMatch) {
         sales = ratedSalesMatch[1];
