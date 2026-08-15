@@ -1,0 +1,23 @@
+{
+  "date": "2026-08-15",
+  "sources": ["duckduckgo lite", "tirto.id", "visaverge.com", "kayonews.co.id"],
+  "pain_points": [
+    {
+      "category": "Tax & Compliance",
+      "description": "PPh 22 e-commerce (PMK 37/2025) mulai 1 Agustus 2026: marketplace (Shopee, Tokopedia, Lazada, Blibli) memungut 0.5% dari peredaran bruto penjual. DITUNDA 6 Agustus 2026, refund berjalan 14 Agustus-30 September 2026, akan berlaku lagi 1 November 2026. Seller bingung: siapa yang kena, siapa yang dikecualikan, bagaimana cara hitung, apa itu surat pernyataan pengecualian, dan status refund dana yang sudah terlanjur dipotong.",
+      "frequency": "HIGH",
+      "sources": ["tirto.id: Aturan PPh 22 Ditunda, Shopee-Tokopedia Balikin Duit Seller", "visaverge.com: Indonesia E-commerce Tax 2026 0.5% Withholding Rules", "kayonews.co.id: Pajak E-Commerce Resmi Berlaku 1 Agustus 2026"]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "PPh 22 E-Commerce Tax Calculator",
+      "type": "Web",
+      "tech": "Go 1.26 (stdlib net/http, single binary)",
+      "description": "Kalkulator pajak PPh 22 untuk seller marketplace: hitung pemotongan 0.5%, cek status kena/tidak (threshold Rp500jt omzet gabungan), simulasi per marketplace, status kebijakan real-time (ditunda/refund/berlaku), checklist pengecualian, FAQ aturan PMK 37/2025.",
+      "category": "Websites/Dashboards",
+      "priority": 1,
+      "why": "Tantangan terbesar aturan ini bukan teknologi, tapi pemahaman jutaan seller. idEA sendiri menyatakan sosialisasi adalah kunci. Tools hitung + status kebijakan langsung menjawab kebingungan itu."
+    }
+  ]
+}
