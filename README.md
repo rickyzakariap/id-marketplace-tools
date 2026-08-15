@@ -27,6 +27,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 19 | [19-komplain-tracker](19-komplain-tracker/) | Web | Go 1.26 | Track complaints with SLA monitoring and follow-up |
 | 20 | [20-stock-sync-checker](20-stock-sync-checker/) | Extension | Chrome MV3 | Compare listed stock vs actual stock across marketplaces, flag oversell risk |
 | 21 | [21-harbolnas-calendar](21-harbolnas-calendar/) | Web | Python (stdlib) | Promo event calendar with countdown and prep checklists |
+| 22 | [22-pph22-tax-calculator](22-pph22-tax-calculator/) | Web | Go 1.26 | PPh 22 e-commerce tax calculator with policy status and exemption checker |
 
 ## Contributing
 
