@@ -382,3 +382,15 @@
 - Lesson: Countdown tools need a hero section with the NEXT event, not just a flat list
 - Next: Add Telegram reminder before event, link to official marketplace promo pages
 
+
+## 2026-08-15 - PPh 22 Tax Calculator
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: Policy status API that derives phase from current date (belum/aktif/ditunda/refund/berlaku kembali)
+- Works: 3-tier seller status logic: wajib dipungut (omzet > Rp500jt), dikecualikan (di bawah + surat pernyataan), berisiko dipungut (di bawah tapi belum kirim surat pernyataan)
+- Works: PPN-aware DPP calculation (omzet / 1.11 when PPN included)
+- Works: Per-transaction simulation, checklist pengecualian, light minimal theme, responsive
+- Issues: Exempt status still showed computed withholding initially - fixed by zeroing withheld amounts on exempt
+- Lesson: Research-first paid off - real news (PMK 37/2025, postponed Aug 6, refund Aug 14-Sep 30, restart Nov 1) beats guessing what sellers need
+- Lesson: Tax tools need a date-aware policy layer, not just a calculator - rules change over time, status banner handles it
+- Lesson: DPP (dasar pengenaan pajak) must exclude PPN when omzet includes it, otherwise over-withholding by 11%
+- Next: Add NPWP/NIK requirement check, multi-month omzet input, export per-marketplace summary
