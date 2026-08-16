@@ -1,3 +1,12 @@
 node_modules/
 .env
 *.log
+.DS_Store
+Thumbs.db
+__pycache__/
+*.db
+*.exe
+*.exe~
+graphify-out/
+12-supplier-scorer/data.json
+19-komplain-tracker/data/
