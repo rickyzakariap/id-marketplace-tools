@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Cek Diskon Biaya Layanan UMKM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;--yellow:#d97706;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent:#4a9;--accent-hover:#5ba8;--accent-light:#1a2a25;
+  --green:#4ade80;--red:#f87171;--yellow:#fbbf24;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+.header{max-width:960px;margin:0 auto;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.header h1{font-size:1.15rem;font-weight:600}
+#themeBtn{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 12px;font-size:.85rem;cursor:pointer;font-family:inherit}
+#themeBtn:hover{border-color:var(--accent)}
+.container{max-width:960px;margin:0 auto;padding:0 20px 40px}
+.banner{border:1px solid var(--border);border-left:3px solid var(--accent);background:var(--card);border-radius:8px;padding:14px 16px;margin-bottom:20px}
+.banner .b-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600}
+.banner .b-title{font-weight:600;font-size:1rem;margin:2px 0}
+.banner .b-desc{font-size:.85rem;color:var(--text-dim)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:20px}
+.card h2{font-size:1rem;font-weight:600;margin-bottom:14px}
+.section-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600;margin:16px 0 8px}
+.q-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.q-item:last-child{border-bottom:none}
+.q-item .q-label{font-size:.9rem}
+.q-item .q-detail{font-size:.78rem;color:var(--text-muted)}
+.chip-group{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);border-radius:6px;padding:5px 12px;font-size:.85rem;cursor:pointer;font-family:inherit}
+.chip.active{border-color:var(--accent);background:var(--accent-light);color:var(--text);font-weight:500}
+.row-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;align-items:end}
+.row-grid .mp-name{font-size:.85rem;font-weight:500;padding-bottom:6px}
+label{display:block;font-size:.78rem;color:var(--text-dim);margin-bottom:3px}
+input[type=number],input[type=text]{width:100%;padding:7px 10px;border:1px solid var(--input-border);border-radius:6px;font-size:.9rem;background:var(--input-bg);color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace}
+input:focus{outline:none;border-color:var(--accent)}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:10px 18px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.result-hidden{display:none}
+.verdict{border-radius:8px;padding:16px;margin-bottom:16px;border:1px solid}
+.verdict.ok{background:var(--accent-light);border-color:var(--accent)}
+.verdict.no{background:#fef2f2;border-color:var(--red)}
+[data-theme="dark"] .verdict.no{background:#2a1a1a;border-color:var(--red)}
+.verdict .v-title{font-weight:600;font-size:1.05rem}
+.verdict .v-sub{font-size:.85rem;color:var(--text-dim);margin-top:4px}
+.check-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.88rem;align-items:flex-start}
+.check-item:last-child{border-bottom:none}
+.check-item .mark{flex-shrink:0;width:20px;text-align:center;font-weight:700}
+.check-item .ok{color:var(--green)}
+.check-item .no{color:var(--red)}
+.check-item .ci-detail{font-size:.78rem;color:var(--text-muted)}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card-alt);border:1px solid var(--border);border-radius:8px;padding:12px}
+.stat .s-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
+.stat .s-value{font-size:1.15rem;font-weight:600;font-family:'JetBrains Mono',ui-monospace,monospace;margin-top:2px}
+.stat .s-value.green{color:var(--green)}
+.table{width:100%;border-collapse:collapse;font-size:.85rem}
+.table th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted)}
+.table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.table td.num,.table th.num{text-align:right;font-family:'JetBrains Mono',ui-monospace,monospace}
+.prep-list{list-style:none}
+.prep-list li{padding:6px 0;font-size:.88rem;display:flex;gap:8px;align-items:flex-start}
+.prep-list li::before{content:"";flex-shrink:0;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:7px}
+.note{font-size:.78rem;color:var(--text-muted);margin-top:10px}
+@media(max-width:768px){
+  .container{padding:0 12px 24px}
+  .header{padding:16px 12px}
+  .row-grid{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr}
+  .card{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Cek Diskon Biaya Layanan UMKM</h1>
+  <button id="themeBtn" onclick="toggleTheme()">Dark</button>
+</div>
+<div class="container">
+  <div class="banner" id="statusBanner">
+    <div class="b-label">Status kebijakan</div>
+    <div class="b-title" id="statusTitle">Memuat...</div>
+    <div class="b-desc" id="statusDesc"></div>
+  </div>
+
+  <div class="card">
+    <h2>Apakah kamu memenuhi syarat?</h2>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:8px">Jawab 5 pertanyaan ini. Diskon 50% biaya layanan hanya untuk usaha mikro dan kecil yang menjual produk lokal.</p>
+
+    <div class="q-item">
+      <div>
+        <div class="q-label">Skala usaha</div>
+        <div class="q-detail">Diskon khusus usaha mikro dan kecil, bukan menengah</div>
+      </div>
+      <div class="chip-group" id="scaleGroup">
+        <button class="chip" data-scale="mikro" onclick="setScale('mikro')">Mikro</button>
+        <button class="chip" data-scale="kecil" onclick="setScale('kecil')">Kecil</button>
+        <button class="chip" data-scale="menengah" onclick="setScale('menengah')">Menengah</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div>
+        <div class="q-label">Punya NIB (Nomor Induk Berusaha)?</div>
+        <div class="q-detail">NIB wajib sebagai identitas usaha resmi</div>
+      </div>
+      <div class="chip-group" id="nibGroup">
+        <button class="chip" data-val="1" onclick="setAnswer('nib', true)">Ya</button>
+        <button class="chip" data-val="0" onclick="setAnswer('nib', false)">Belum</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div>
+        <div class="q-label">Terdaftar BPJS?</div>
+        <div class="q-detail">BPJS kesehatan atau ketenagakerjaan jadi syarat insentif</div>
+      </div>
+      <div class="chip-group" id="bpjsGroup">
+        <button class="chip" data-val="1" onclick="setAnswer('bpjs', true)">Ya</button>
+        <button class="chip" data-val="0" onclick="setAnswer('bpjs', false)">Belum</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div>
+        <div class="q-label">Terdaftar di SAPA UMKM?</div>
+        <div class="q-detail">Sistem Aplikasi Pelayanan UMKM dari Kemenkop UMKM</div>
+      </div>
+      <div class="chip-group" id="sapaGroup">
+        <button class="chip" data-val="1" onclick="setAnswer('sapa', true)">Ya</button>
+        <button class="chip" data-val="0" onclick="setAnswer('sapa', false)">Belum</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div>
+        <div class="q-label">Menjual produk lokal?</div>
+        <div class="q-detail">Diskon khusus produk lokal, bukan impor</div>
+      </div>
+      <div class="chip-group" id="localGroup">
+        <button class="chip" data-val="1" onclick="setAnswer('local', true)">Ya</button>
+        <button class="chip" data-val="0" onclick="setAnswer('local', false)">Campur/impor</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Simulasi penghematan</h2>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:14px">Isi omzet bulanan dan biaya layanan (persen) per marketplace. Angka default dari perkiraan 2026, sesuaikan dengan seller center kamu.</p>
+    <div class="toolbar">
+      <button class="btn btn-secondary" onclick="addRow()">Tambah marketplace</button>
+      <button class="btn btn-secondary" onclick="fillExample()">Isi contoh</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Bersihkan</button>
+    </div>
+    <div id="rows"></div>
+    <button class="btn" id="checkBtn" onclick="check()">Hitung penghematan</button>
+  </div>
+
+  <div id="result" class="result-hidden"></div>
+</div>
+
+<script>
+const MARKETPLACES = [
+  { id: 'shopee', name: 'Shopee', defaultRate: 2.0 },
+  { id: 'tokopedia', name: 'Tokopedia', defaultRate: 1.5 },
+  { id: 'lazada', name: 'Lazada', defaultRate: 1.0 },
+  { id: 'bukalapak', name: 'Bukalapak', defaultRate: 1.0 },
+  { id: 'blibli', name: 'Blibli', defaultRate: 1.0 },
+  { id: 'tiktok', name: 'TikTok Shop', defaultRate: 2.0 }
+];
+
+const answers = {
+  scale: 'mikro',
+  nib: true,
+  bpjs: true,
+  sapa: true,
+  local: true
+};
+let rowCount = 0;
+
+// Theme toggle
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+}
+
+// Policy status
+fetch('/api/status').then(r => r.json()).then(p => {
+  document.getElementById('statusTitle').textContent = p.label;
+  document.getElementById('statusDesc').textContent = p.description;
+}).catch(() => {
+  document.getElementById('statusTitle').textContent = 'Status tidak tersedia';
+});
+
+// Scale selection
+function setScale(scale) {
+  answers.scale = scale;
+  document.querySelectorAll('#scaleGroup .chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.scale === scale);
+  });
+}
+
+// Yes/no answer
+function setAnswer(key, val) {
+  answers[key] = val;
+  const group = document.getElementById(key + 'Group');
+  group.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('active', String(c.dataset.val) === (val ? '1' : '0'));
+  });
+}
+
+// Rows
+function addRow(mpId, omzet, rate) {
+  const mp = MARKETPLACES.find(m => m.id === mpId) || MARKETPLACES[0];
+  const div = document.createElement('div');
+  div.className = 'row-grid';
+  div.id = 'row-' + rowCount;
+  div.innerHTML = `
+    <div>
+      <label>Marketplace</label>
+      <select style="width:100%;padding:7px 10px;border:1px solid var(--input-border);border-radius:6px;font-size:.9rem;background:var(--input-bg);color:var(--text);font-family:inherit">
+        ${MARKETPLACES.map(m => `<option value="${m.id}" ${m.id === mp.id ? 'selected' : ''}>${m.name}</option>`).join('')}
+      </select>
+    </div>
+    <div>
+      <label>Omzet bulanan (Rp)</label>
+      <input type="number" data-omzet placeholder="mis. 5000000" value="${omzet || ''}" />
+    </div>
+    <div>
+      <label>Biaya layanan (%)</label>
+      <input type="number" data-rate step="0.1" placeholder="mis. 2" value="${rate || mp.defaultRate}" />
+    </div>
+  `;
+  document.getElementById('rows').appendChild(div);
+  rowCount++;
+}
+
+function collectRows() {
+  const rows = [];
+  document.querySelectorAll('#rows .row-grid').forEach(r => {
+    const select = r.querySelector('select');
+    const omzet = r.querySelector('[data-omzet]').value;
+    const rate = r.querySelector('[data-rate]').value;
+    if (omzet && Number(omzet) > 0) {
+      rows.push({ marketplace: select.value, omzet: Number(omzet), rate: Number(rate) || 0 });
+    }
+  });
+  return rows;
+}
+
+// Auto-fill example
+function fillExample() {
+  document.getElementById('rows').innerHTML = '';
+  rowCount = 0;
+  addRow('shopee', 5000000, 2.0);
+  addRow('tokopedia', 3000000, 1.5);
+  addRow('tiktok', 2000000, 2.0);
+}
+
+function clearAll() {
+  document.getElementById('rows').innerHTML = '';
+  rowCount = 0;
+  document.getElementById('result').classList.add('result-hidden');
+  document.getElementById('result').innerHTML = '';
+}
+
+function clearErrors() {
+  document.querySelectorAll('.input-error').forEach(e => e.remove());
+  document.querySelectorAll('.has-error').forEach(e => e.classList.remove('has-error'));
+}
+
+// Format rupiah
+function rp(n) {
+  return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+}
+
+// Check
+async function check() {
+  const btn = document.getElementById('checkBtn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  clearErrors();
+
+  const entries = collectRows();
+  if (entries.length === 0) {
+    document.getElementById('result').innerHTML = '<div class="verdict no"><div class="v-title">Belum ada data</div><div class="v-sub">Isi minimal satu marketplace dengan omzet, atau pakai tombol Isi contoh.</div></div>';
+    document.getElementById('result').classList.remove('result-hidden');
+    btn.disabled = false;
+    btn.textContent = 'Hitung penghematan';
+    return;
+  }
+
+  try {
+    const resp = await fetch('/api/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers, entries })
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Terjadi kesalahan');
+
+    renderResult(data);
+  } catch (err) {
+    document.getElementById('result').innerHTML = '<div class="verdict no"><div class="v-title">Gagal menghitung</div><div class="v-sub">' + err.message + '</div></div>';
+    document.getElementById('result').classList.remove('result-hidden');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung penghematan';
+  }
+}
+
+function renderResult(data) {
+  const checks = Object.values(data.checks);
+  const missing = checks.filter(c => !c.ok);
+  const html = [];
+
+  // Verdict
+  if (data.eligible) {
+    html.push(`<div class="verdict ok">
+      <div class="v-title">Kamu berhak dapat diskon 50% biaya layanan</div>
+      <div class="v-sub">Hemat ${rp(data.summary.savingMonthly)} per bulan, atau ${rp(data.summary.savingAnnual)} per tahun dari total biaya layanan ${rp(data.summary.feeMonthlyTotal)}/bulan.</div>
+    </div>`);
+  } else {
+    html.push(`<div class="verdict no">
+      <div class="v-title">Belum memenuhi syarat</div>
+      <div class="v-sub">Lengkapi ${missing.length} syarat di bawah ini untuk dapat diskon 50% biaya layanan.</div>
+    </div>`);
+  }
+
+  // Checks
+  html.push(`<div class="card"><h2>Cek syarat</h2>`);
+  checks.forEach(c => {
+    html.push(`<div class="check-item"><span class="mark ${c.ok ? 'ok' : 'no'}">${c.ok ? 'OK' : 'X'}</span><div><div>${c.label}</div><div class="ci-detail">${c.detail}</div></div></div>`);
+  });
+  html.push('</div>');
+
+  // Summary stats
+  html.push(`<div class="card"><h2>Ringkasan penghematan</h2>
+    <div class="summary-grid">
+      <div class="stat"><div class="s-label">Biaya layanan / bulan</div><div class="s-value">${rp(data.summary.feeMonthlyTotal)}</div></div>
+      <div class="stat"><div class="s-label">Hemat / bulan</div><div class="s-value green">${rp(data.summary.savingMonthly)}</div></div>
+      <div class="stat"><div class="s-label">Hemat / tahun</div><div class="s-value green">${rp(data.summary.savingAnnual)}</div></div>
+    </div>`);
+
+  // Breakdown table
+  if (data.breakdown.length > 0) {
+    html.push(`<table class="table">
+      <tr><th>Marketplace</th><th class="num">Omzet/bulan</th><th class="num">Fee %</th><th class="num">Fee/bulan</th><th class="num">Hemat/bulan</th></tr>`);
+    data.breakdown.forEach(b => {
+      html.push(`<tr><td>${b.marketplace}</td><td class="num">${rp(b.omzetMonthly)}</td><td class="num">${b.rate}%</td><td class="num">${rp(b.feeMonthly)}</td><td class="num" style="color:var(--green)">${rp(b.savingMonthly)}</td></tr>`);
+    });
+    html.push('</table>');
+  }
+  html.push('</div>');
+
+  // Prep checklist if not eligible
+  if (!data.eligible) {
+    html.push(`<div class="card"><h2>Yang perlu disiapkan</h2><ul class="prep-list">`);
+    missing.forEach(c => {
+      html.push(`<li>${c.label}. ${c.detail}.</li>`);
+    });
+    html.push(`</ul>
+      <p class="note">Cek syarat lengkap dan prosedur pendaftaran SAPA UMKM di sapa.kemenkopukm.go.id atau aplikasi SAPA UMKM.</p>
+    </div>`);
+  }
+
+  html.push(`<p class="note">Perhitungan memakai biaya layanan yang kamu isi. Angka default hanya perkiraan 2026 - cek tarif aktual di seller center masing-masing marketplace.</p>`);
+
+  document.getElementById('result').innerHTML = html.join('');
+  document.getElementById('result').classList.remove('result-hidden');
+}
+
+// Init: default scale + first row
+setScale('mikro');
+setAnswer('nib', true);
+setAnswer('bpjs', true);
+setAnswer('sapa', true);
+setAnswer('local', true);
+addRow('shopee', '', 2.0);
+</script>
+</body>
+</html>

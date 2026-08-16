@@ -1,0 +1,12 @@
+{
+  "name": "umkm-service-fee-checker",
+  "version": "1.0.0",
+  "description": "Check eligibility for 50% marketplace service fee discount (Permen UMKM 2026) and estimate savings",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
