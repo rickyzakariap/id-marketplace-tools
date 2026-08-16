@@ -1,0 +1,32 @@
+{
+  "date": "2026-08-16",
+  "sources": ["google news rss", "stabilitas.id", "kompas.com", "metrotvnews.com", "detikfinance", "antara news", "bisnis.com", "validnews"],
+  "pain_points": [
+    {
+      "category": "Fees & Compliance",
+      "description": "Kementerian UMKM mengesahkan Permen Perlindungan dan Peningkatan Daya Saing UMKM (aturan turunan PP 7/2021) yang mewajibkan marketplace memberi diskon 50% biaya layanan (service fee) untuk pelaku usaha mikro dan kecil yang menjual produk lokal. Kepmen ditandatangani pekan 12-13 Agustus 2026, berlaku Agustus 2026. Syarat: NIB, BPJS, terverifikasi/terdaftar SAPA UMKM, produk lokal, skala mikro/kecil. Seller bingung: apakah mereka memenuhi syarat, apa yang harus disiapkan, dan berapa besar penghematan per bulan.",
+      "frequency": "HIGH",
+      "sources": [
+        "stabilitas.id: Lindungi Pedagang Lokal, Kementerian UMKM Wajibkan Marketplace Diskon Biaya Layanan 50% (2026-05-22)",
+        "bisnis.com: Diskon Biaya Layanan UMK Shopee Cs 50% Berlaku Agustus, Ini Syaratnya (2026-08-12)",
+        "detikFinance: Biaya Admin e-Commerce Dipangkas 50% untuk UMKM, Aturan Segera Diteken (2026-08-12)",
+        "kompas.com: Kapan Diskon 50 Persen Biaya Layanan Marketplace untuk UMKM Diberlakukan? (2026-08-12)",
+        "metrotvnews.com: Menteri UMKM akan Tandatangani Kepmen Diskon Biaya Layanan 50% di Marketplace (2026-08-13)",
+        "validnews: Mau Dapat Diskon Biaya Marketplace 50%? Seller Harus Punya BPJS (2026-06-25)",
+        "antara: BPJS menjadi syarat pedagang di marketplace dapat insentif (2026-06-24)",
+        "radar surabaya: Kepmen Diskon 50 Persen Biaya Layanan Marketplace untuk UMKM Terbit Pekan Ini (2026-08-13)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "UMKM Service Fee Discount Checker",
+      "type": "Web",
+      "tech": "Node.js + Express (vanilla frontend, light minimal theme)",
+      "description": "Cek kelayakan diskon 50% biaya layanan marketplace (Permen UMKM 2026): kuis syarat (NIB, BPJS, SAPA UMKM, produk lokal, skala usaha), simulasi penghematan per marketplace per bulan/tahun, checklist persiapan dokumen, status kebijakan real-time (Kepmen diteken 12-13 Agustus 2026).",
+      "category": "Websites/Dashboards",
+      "priority": 1,
+      "why": "Kebijakan baru berlaku Agustus 2026 dan seller tidak tahu syarat maupun nominal penghematannya. Tools ini menjawab dua pertanyaan sekaligus: 'apakah saya dapat diskon' dan 'berapa saya hemat'."
+    }
+  ]
+}
