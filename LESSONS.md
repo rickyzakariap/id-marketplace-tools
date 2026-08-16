@@ -394,3 +394,15 @@
 - Lesson: Tax tools need a date-aware policy layer, not just a calculator - rules change over time, status banner handles it
 - Lesson: DPP (dasar pengenaan pajak) must exclude PPN when omzet includes it, otherwise over-withholding by 11%
 - Next: Add NPWP/NIK requirement check, multi-month omzet input, export per-marketplace summary
+
+## 2026-08-16 - UMKM Service Fee Discount Checker
+- Works: Node.js + Express web tool, zero custom deps beyond express
+- Works: Research-first via Google News RSS (DuckDuckGo hit captcha, Bing returned JS-only page) - found real policy: Permen UMKM 2026 (PP 7/2021 derivative) mandates 50% service fee discount for micro/small sellers of local products, Kepmen signed week of Aug 12-13 2026
+- Works: 5-point eligibility quiz (scale, NIB, BPJS, SAPA UMKM, local products) with per-requirement breakdown
+- Works: Savings simulation per marketplace with editable default rates, monthly + annual totals
+- Works: Policy status API (date-aware), light minimal theme, responsive, auto-fill example
+- Issues: Google News RSS link decoding (batchexecute API) returned 400 - used headline-level facts + stabilitas.id article instead
+- Lesson: When DuckDuckGo and Bing block scraping, Google News RSS is a reliable fallback for fresh Indonesian policy news
+- Lesson: New regulation + deadline = immediate seller confusion = high-value tool. Same pattern as PPh 22 (#22)
+- Lesson: Eligibility checkers need per-requirement breakdown (what passed, what failed), not just a yes/no verdict
+- Next: Add Telegram reminder when Kepmen details change, add per-marketplace fee rate lookup
