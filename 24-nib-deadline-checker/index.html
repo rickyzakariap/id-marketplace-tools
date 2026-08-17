@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIB Deadline Checker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;--yellow:#d97706;--orange:#ea580c;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent:#4a9;--accent-hover:#5ba8;--accent-light:#1a2a25;
+  --green:#4ade80;--red:#f87171;--yellow:#fbbf24;--orange:#fb923c;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;padding:20px}
+.container{max-width:720px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px}
+h1{font-size:22px;font-weight:600}
+h2{font-size:16px;font-weight:600;margin-bottom:12px}
+p{color:var(--text-dim);font-size:14px}
+#themeBtn{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+#themeBtn:hover{border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
+.banner{border-left:4px solid var(--accent);background:var(--accent-light)}
+.banner .label{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.banner h2{font-size:15px;margin-bottom:6px}
+.banner p{font-size:13px}
+.banner .meta{margin-top:8px;font-size:12px;color:var(--text-muted)}
+label{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+input[type="date"]{width:100%;padding:10px 12px;border:1px solid var(--input-border);border-radius:8px;font-size:15px;background:var(--input-bg);color:var(--text);font-family:'JetBrains Mono',monospace;outline:none}
+input[type="date"]:focus{border-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{background:var(--card-alt);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+#checkBtn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:14px}
+#checkBtn:hover{background:var(--accent-hover)}
+#checkBtn:disabled{opacity:.6;cursor:default}
+#checkError{display:none;color:var(--red);font-size:13px;margin-top:8px}
+#result{display:none;border-top:1px solid var(--border);margin-top:18px;padding-top:18px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.metric{background:var(--card-alt);border:1px solid var(--border);border-radius:8px;padding:12px}
+.metric .k{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
+.metric .v{font-size:18px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-top:4px}
+.metric .v.small{font-size:14px}
+#statusBadge{display:inline-block;padding:4px 12px;border-radius:999px;color:#fff;font-size:13px;font-weight:600;margin-top:10px}
+.bar{background:var(--card-alt);border:1px solid var(--border);border-radius:999px;height:10px;margin-top:12px;overflow:hidden}
+.bar > div{height:100%;border-radius:999px;transition:width .3s}
+.note{margin-top:10px;font-size:12px;color:var(--text-muted)}
+ul{list-style:none}
+ul li{padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+ul li:last-child{border-bottom:none}
+ul li .t{font-weight:500}
+ul li .d{color:var(--text-dim);font-size:13px;margin-top:2px}
+ol{padding-left:20px}
+ol li{padding:6px 0;font-size:14px;color:var(--text-dim)}
+.steps-note{margin-top:8px;font-size:12px;color:var(--text-muted)}
+.faq-item{padding:10px 0;border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-item .q{font-weight:600;font-size:14px}
+.faq-item .a{font-size:13px;color:var(--text-dim);margin-top:4px}
+.clarify{background:var(--accent-light);border:1px solid var(--border);border-radius:8px;padding:14px}
+.clarify .t{font-weight:600;font-size:14px;margin-bottom:4px}
+.clarify p{font-size:13px}
+.benefit{padding:10px 0;border-bottom:1px solid var(--border)}
+.benefit:last-child{border-bottom:none}
+.benefit .t{font-weight:500;font-size:14px}
+.benefit .d{color:var(--text-dim);font-size:13px;margin-top:2px}
+@media(max-width:768px){
+  body{padding:12px}
+  .card{padding:14px}
+  .container{max-width:100%}
+  .result-grid{grid-template-columns:1fr 1fr;gap:8px}
+  h1{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>NIB Deadline Checker</h1>
+    <button id="themeBtn" type="button">Dark</button>
+  </header>
+
+  <div class="card banner">
+    <div class="label" id="policyLabel">Menunggu status kebijakan</div>
+    <h2 id="policyTitle"></h2>
+    <p id="policyDesc"></p>
+    <p class="meta" id="policyMeta"></p>
+  </div>
+
+  <div class="card">
+    <h2>Cek tenggat NIB kamu</h2>
+    <p>Masukkan tanggal pertama kali kamu mulai jualan di marketplace. Tenggat dihitung dari aturan Permendag 19/2026 yang berlaku 8 Juni 2026.</p>
+    <div class="chips">
+      <button class="chip" type="button" data-date="2026-05-01">Sudah jualan sebelum Juni 2026</button>
+      <button class="chip" type="button" data-date="2026-06-15">Baru mulai Juni 2026</button>
+      <button class="chip" type="button" data-date="2026-08-01">Baru mulai bulan ini</button>
+    </div>
+    <label for="startDate">Tanggal mulai jualan</label>
+    <input type="date" id="startDate">
+    <button id="checkBtn" type="button">Cek tenggat</button>
+    <p id="checkError"></p>
+
+    <div id="result">
+      <span id="statusBadge"></span>
+      <div class="result-grid">
+        <div class="metric"><div class="k">Tenggat NIB</div><div class="v small" id="rDeadline"></div></div>
+        <div class="metric"><div class="k">Sisa hari</div><div class="v" id="rDays"></div></div>
+        <div class="metric"><div class="k">Kategori</div><div class="v small" id="rKind"></div></div>
+        <div class="metric"><div class="k">Mulai jualan</div><div class="v small" id="rStart"></div></div>
+      </div>
+      <div class="bar"><div id="rBar" style="width:0%"></div></div>
+      <p class="note" id="rNote"></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Yang perlu disiapkan</h2>
+    <ul id="checklist"></ul>
+  </div>
+
+  <div class="card clarify">
+    <div class="t">NIB bukan pajak</div>
+    <p>Menteri Perdagangan sudah klarifikasi: NIB adalah legalitas usaha, tidak ada hubungannya dengan pajak pedagang online. NIB juga gratis dan prosesnya online sekitar 30 menit lewat OSS.</p>
+  </div>
+
+  <div class="card">
+    <h2>Cara buat NIB lewat OSS</h2>
+    <ol id="ossSteps"></ol>
+    <p class="steps-note">Pembuatan NIB gratis melalui sistem Online Single Submission (OSS). Jika kesulitan, Kemendag menyediakan pendampingan.</p>
+  </div>
+
+  <div class="card">
+    <h2>Manfaat punya NIB</h2>
+    <div id="benefits"></div>
+  </div>
+
+  <div class="card">
+    <h2>FAQ</h2>
+    <div class="faq-item">
+      <div class="q">NIB itu pajak baru?</div>
+      <div class="a">Bukan. NIB adalah bukti legalitas usaha, terbit dari sistem OSS. Kewajiban ini bagian dari Permendag 19/2026 untuk menata legalitas pedagang online, bukan penarikan pajak.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Kalau belum punya NIB, toko saya diblokir?</div>
+      <div class="a">Marketplace wajib menolak pendaftaran pedagang tanpa NIB. Untuk pedagang yang sudah berjualan ada masa tenggang 18 bulan sejak aturan berlaku, jadi masih ada waktu untuk mengurus.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Berapa biaya buat NIB?</div>
+      <div class="a">Gratis. Pengurusan lewat OSS online dan bisa selesai sekitar 30 menit jika data sudah lengkap.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Saya jualan kecil-kecilan, tetap wajib?</div>
+      <div class="a">Ya, kewajiban NIB berlaku untuk semua pelaku usaha di platform e-commerce, termasuk usaha mikro. NIB juga membuka akses pembiayaan dan program pemerintah.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+}
+document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+
+const $ = id => document.getElementById(id);
+
+// Auto-fill example date so user never starts from empty
+$('startDate').value = '2026-05-01';
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    $('startDate').value = chip.dataset.date;
+    check();
+  });
+});
+
+async function loadStatus() {
+  try {
+    const r = await fetch('/api/status');
+    const d = await r.json();
+    $('policyLabel').textContent = d.policy.label;
+    $('policyTitle').textContent = d.policy.regulation;
+    $('policyDesc').textContent = d.policy.description;
+    $('policyMeta').textContent = d.policy.key_desc + ': ' + d.policy.key_date + '. ' + d.policy.note;
+    $('checklist').innerHTML = d.checklist.map(c =>
+      '<li><div class="t">' + c.label + '</div><div class="d">' + c.detail + '</div></li>').join('');
+    $('ossSteps').innerHTML = d.steps.map(s => '<li>' + s + '</li>').join('');
+    $('benefits').innerHTML = d.benefits.map(b =>
+      '<div class="benefit"><div class="t">' + b.title + '</div><div class="d">' + b.detail + '</div></div>').join('');
+  } catch (e) {
+    $('policyTitle').textContent = 'Gagal memuat status kebijakan';
+  }
+}
+
+async function check() {
+  const startDate = $('startDate').value;
+  const err = $('checkError');
+  err.style.display = 'none';
+  if (!startDate) {
+    err.textContent = 'Isi tanggal mulai jualan dulu';
+    err.style.display = 'block';
+    return;
+  }
+  const btn = $('checkBtn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const r = await fetch('/api/check', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({start_date: startDate})
+    });
+    const d = await r.json();
+    if (!r.ok) {
+      err.textContent = d.error || 'Terjadi kesalahan';
+      err.style.display = 'block';
+      return;
+    }
+    $('result').style.display = 'block';
+    $('statusBadge').textContent = d.status;
+    $('statusBadge').style.background = d.status_color;
+    $('rDeadline').textContent = d.deadline_label;
+    $('rDays').textContent = d.days_left + ' hari';
+    $('rKind').textContent = d.seller_label;
+    $('rStart').textContent = d.start_label;
+    $('rBar').style.width = d.progress + '%';
+    $('rBar').style.background = d.status_color;
+    $('rNote').textContent = d.note;
+  } catch (e) {
+    err.textContent = 'Gagal terhubung ke server';
+    err.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Cek tenggat';
+  }
+}
+
+$('checkBtn').addEventListener('click', check);
+$('startDate').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+loadStatus();
+</script>
+</body>
+</html>
