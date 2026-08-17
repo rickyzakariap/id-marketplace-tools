@@ -1,0 +1,39 @@
+{
+  "date": "2026-08-17",
+  "sources": ["google news rss", "detikfinance", "kompas.com", "cnbcindonesia", "ortax", "bisnis.com", "ikpi.or.id"],
+  "pain_points": [
+    {
+      "category": "Compliance & Legalitas",
+      "description": "Permendag 19/2026 (PMSE) berlaku sejak 8 Juni 2026 mewajibkan semua pedagang di e-commerce punya NIB (Nomor Induk Berusaha). Marketplace wajib menolak/blokir pedagang tanpa NIB. Masa tenggang: 18 bulan untuk pedagang yang sudah berjualan (deadline ~8 Desember 2027), 6 bulan untuk pedagang baru (deadline 6 bulan sejak mulai berjualan). Banyak seller bingung: mengira NIB = pajak (Mendag sampai klarifikasi publik), tidak tahu tenggat masing-masing, tidak tahu NIB gratis dan bisa dibuat online ~30 menit via OSS, tidak tahu apa yang harus disiapkan.",
+      "frequency": "HIGH",
+      "sources": [
+        "detikfinance: Apa Itu NIB? Wajib Dimiliki Pedagang Online Atau Diblokir (2026-06-25)",
+        "detikfinance: Heboh Wajib NIB di Toko Online Dikira Kena Pajak, Mendag Buka Suara (2026-06-22)",
+        "detikfinance: Mendag: NIB Tidak Terkait Pajak (2026-06-22)",
+        "kompas.id: Wajib NIB untuk Jualan Daring Berisiko Jadi Hambatan Baru UMKM (2026-06-12)",
+        "ortax: Mendag: NIB Hanya Legalitas Usaha, Tidak Berkaitan dengan Kewajiban Pajak Pedagang Online (2026-06-24)",
+        "ikpi.or.id: Permendag Baru Terbit, Marketplace Wajib Tolak Seller Tanpa NIB",
+        "harianjogja: Seller Marketplace Diberi Waktu 18 Bulan Urus NIB, Ini Kata Kemendag"
+      ]
+    },
+    {
+      "category": "Fees & Kebijakan",
+      "description": "Shopee memperkenalkan aturan GMV Max yang dikabarkan mulai berlaku pertengahan 2026 (berita Bisnis Tekno 2026-05-07). Detail aturan masih simpang siur, seller bingung apakah terbantu atau terbebani.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "bisnis.com: Aturan Baru GMV Max Shopee Berlaku Hari Ini, Seller Terbantu atau Terbebani? (2026-05-07)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "NIB Deadline Checker",
+      "type": "Web",
+      "tech": "Python stdlib http.server (zero dependencies)",
+      "description": "Cek tenggat kewajiban NIB (Permendag 19/2026): input tanggal mulai jualan -> hitung deadline (18 bulan untuk seller existing, 6 bulan untuk seller baru), countdown hari, status risiko (aman/segera/kritis/terlewat), checklist dokumen, panduan langkah demi langkah buat NIB via OSS, klarifikasi NIB vs pajak (bukan pajak!), manfaat NIB, FAQ.",
+      "category": "Websites/Dashboards",
+      "priority": 1,
+      "why": "Aturan sudah berlaku sejak 8 Juni 2026 dan seller masih bingung: mengira NIB = pajak, tidak tahu tenggat 18/6 bulan, tidak tahu NIB gratis. Blokir oleh marketplace adalah konsekuensi nyata. Pola yang sama terbukti di #22 (PPh 22) dan #23 (diskon biaya layanan): aturan baru + tenggat = kebingungan seller = tool bernilai tinggi."
+    }
+  ]
+}
