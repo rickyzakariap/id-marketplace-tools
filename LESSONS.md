@@ -406,3 +406,16 @@
 - Lesson: New regulation + deadline = immediate seller confusion = high-value tool. Same pattern as PPh 22 (#22)
 - Lesson: Eligibility checkers need per-requirement breakdown (what passed, what failed), not just a yes/no verdict
 - Next: Add Telegram reminder when Kepmen details change, add per-marketplace fee rate lookup
+
+## 2026-08-17 - NIB Deadline Checker
+- Works: Python stdlib http.server, zero dependencies
+- Works: Research-first via Google News RSS + detikFinance articles - found Permendag 19/2026 (PMSE, berlaku 8 Juni 2026) mewajibkan NIB untuk semua pedagang e-commerce, marketplace wajib tolak/blokir tanpa NIB
+- Works: Deadline logic: 18 bulan dari tanggal aturan berlaku (8 Des 2027) untuk seller existing, 6 bulan dari mulai jualan untuk seller baru
+- Works: Date-aware status banner, countdown sisa hari, status risiko (Aman/Segera/Kritis/Mendesak/Terlewat), progress bar
+- Works: Checklist dokumen, langkah buat NIB via OSS, klarifikasi NIB vs pajak, 5 manfaat, FAQ
+- Works: Light minimal theme, responsive, auto-fill example date
+- Issues: Lead GMV Max Shopee (berita Mei 2026) minim detail publik - pivot ke NIB yang lebih fresh dan berdampak
+- Lesson: Pola yang sama seperti #22 (PPh 22) dan #23 (diskon biaya layanan) terulang: aturan baru + tenggat + kebingungan seller = tool bernilai tinggi
+- Lesson: Kebingungan NIB vs pajak nyata - Mendag sampai klarifikasi publik. Tool harus aktif meluruskan mispersepsi, bukan cuma menghitung
+- Lesson: Deadline seller existing (18 bulan sejak aturan berlaku) vs seller baru (6 bulan sejak mulai jualan) - kategori berbeda, deadline berbeda
+- Next: Tambah pengingat Telegram sebelum deadline, link langsung ke OSS

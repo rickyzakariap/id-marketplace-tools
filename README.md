@@ -29,6 +29,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 21 | [21-harbolnas-calendar](21-harbolnas-calendar/) | Web | Python (stdlib) | Promo event calendar with countdown and prep checklists |
 | 22 | [22-pph22-tax-calculator](22-pph22-tax-calculator/) | Web | Go 1.26 | PPh 22 e-commerce tax calculator with policy status and exemption checker |
 | 23 | [23-umkm-service-fee-checker](23-umkm-service-fee-checker/) | Web | Node.js + Express | Check eligibility for 50% marketplace service fee discount (Permen UMKM 2026) and estimate savings |
+| 24 | [24-nib-deadline-checker](24-nib-deadline-checker/) | Web | Python (stdlib) | Check NIB deadline for marketplace sellers (Permendag 19/2026) with countdown and OSS guide |
 
 ## Contributing
 
