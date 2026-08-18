@@ -419,3 +419,14 @@
 - Lesson: Kebingungan NIB vs pajak nyata - Mendag sampai klarifikasi publik. Tool harus aktif meluruskan mispersepsi, bukan cuma menghitung
 - Lesson: Deadline seller existing (18 bulan sejak aturan berlaku) vs seller baru (6 bulan sejak mulai jualan) - kategori berbeda, deadline berbeda
 - Next: Tambah pengingat Telegram sebelum deadline, link langsung ke OSS
+
+## 2026-08-18 - PPh 22 Refund Tracker
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: Research-first via Google News RSS - menemukan episode terbaru PPh 22: pungut mulai 1 Agu, protes massal (potongan tembus 30%), ditunda 6 Agu, refund otomatis 14 Agu - 30 Sep, berlaku lagi 1 Nov (bisa berubah, idEA usul Januari 2027)
+- Works: Fakta terverifikasi dari pernyataan resmi platform via detikFinance 10 Agu (d-8611328, d-8610997): Shopee refund bertahap 14 Agu-30 Sep, Tokopedia maks 30 Sep otomatis, Blibli menunggu ketentuan DJP, Lazada belum ada jadwal
+- Works: Status banner date-aware dengan progress bar jendela refund (14 Agu -> 30 Sep), estimasi dana refund (omzet 1-5 Agu x 0,5%), status omzet atas/bawah Rp 500jt, kronologi, FAQ, sumber
+- Issues: parseDate() pakai time.Parse (UTC) sedangkan todayOnly pakai time.Local (WIB) - selisih 7 jam bikin off-by-one di perhitungan hari
+- Fix: ganti ke time.ParseInLocation("2006-01-02", s, time.Local) - refund_pct jadi benar (8,5% bukan 6,4% di 18 Agu)
+- Lesson: Go time.Parse return UTC, kalau dibandingkan dengan waktu lokal harus ParseInLocation, kalau tidak perhitungan hari meleset 1 hari
+- Lesson: Episode PPh 22 berkembang terus (mulai -> protes -> tunda -> refund -> berlaku lagi) - tool wajib date-aware dan pantau berita terbaru, jangan hardcode status
+- Next: Pantau keputusan perpanjangan penundaan (Menkeu buka opsi, idEA usul Januari 2027), update phase restart kalau berubah
