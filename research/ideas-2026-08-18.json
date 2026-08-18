@@ -1,0 +1,33 @@
+{
+  "date": "2026-08-18",
+  "sources": ["google news rss", "detikfinance", "kontan.co.id", "cnbcindonesia", "DDTCNews", "Ortax", "Bloomberg Technoz", "MUC Consulting"],
+  "pain_points": [
+    {
+      "category": "Pajak & Refund",
+      "description": "Pemungutan PPh 22 (0,5%) oleh 4 marketplace (Shopee, Tokopedia, Lazada, Blibli) mulai 1 Agustus 2026 memicu protes massal penjual karena potongan tembus 30% (fee + pajak). Kemenkeu menunda pemungutan hingga 31 Oktober 2026. Dana yang terlanjur dipotong 1-5 Agustus dikembalikan OTOMATIS (tanpa pengajuan): Shopee bertahap 14 Agu - 30 Sep (cek Seller Centre > Saldo Saya > tipe Penyesuaian), Tokopedia maksimal 30 Sep (otomatis, cek riwayat transaksi), Blibli menunggu ketentuan DJP (adjustment sistem maks akhir Agustus), Lazada belum ada jadwal resmi. Seller bingung: apakah perlu mengajukan refund, kapan dana kembali, apakah omzet < Rp 500jt tetap kena, dan apa yang terjadi 1 November (Menkeu buka opsi perpanjangan, idEA usul Januari 2027).",
+      "frequency": "HIGH",
+      "sources": [
+        "detikfinance: Tokopedia & Shopee Refund Dana Pedagang Bertahap Usai Pajak Ditunda (2026-08-10, d-8611328)",
+        "detikfinance: Refund Dana Pedagang Usai Pajak Ditunda, Maksimal 30 September (2026-08-10, d-8610997)",
+        "kontan.co.id: Pedagang Online Protes Pajak Marketplace, Potongan Kini Tembus 30% (2026-08-02)",
+        "kontan.co.id: Ramai Protes Pajak Marketplace, Ditjen Pajak Janji Evaluasi (2026-08-03)",
+        "DDTCNews: Ditunda 3 Bulan, Pajak yang Telanjur Dipungut Marketplace Dikembalikan (2026-08-06)",
+        "cnbcindonesia: Ecommerce Pungut Pajak Pedagang Online Ditunda 2 Bulan (2026-08-14)",
+        "MUC Consulting: Marketplace Kembalikan PPh 22 yang Dipungut, Seller Tak Perlu Ajukan Refund (Agustus 2026)",
+        "Ortax: Pajak Marketplace Ditunda, idEA Usulkan Implementasi Mulai Januari 2027 (Agustus 2026)",
+        "Bloomberg Technoz: Alasan Menkeu Purbaya Tunda Pajak Marketplace (2026-08-15)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "PPh 22 Refund Tracker",
+      "type": "Web",
+      "tech": "Go 1.26 single binary (zero dependencies)",
+      "description": "Cek status refund dana PPh 22 yang dipotong 1-5 Agustus 2026: banner status date-aware (masa refund berjalan 14 Agu - 30 Sep dengan progress bar), estimasi dana refund (omzet 1-5 Agu x 0,5%), status per marketplace (Shopee/Tokopedia/Blibli/Lazada dengan jadwal refund resmi masing-masing), cek status omzet (atas/bawah Rp 500jt + surat pernyataan), kronologi penundaan, FAQ, sumber berita.",
+      "category": "Websites/Dashboards",
+      "priority": 1,
+      "why": "Jendela refund sedang BERJALAN SEKARANG (mulai 14 Agustus, 4 hari lalu) dan seller panik cek saldo tiap hari. Fakta sudah terverifikasi dari pernyataan resmi platform (detikFinance 10 Agu). Tidak tumpang tindih dengan #22 (kalkulator potongan) - ini tracker refund yang sedang aktif. Pola regulasi baru + kebingungan seller terbukti 4x (#22, #23, #24, #25)."
+    }
+  ]
+}
