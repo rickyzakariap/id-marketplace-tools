@@ -430,3 +430,15 @@
 - Lesson: Go time.Parse return UTC, kalau dibandingkan dengan waktu lokal harus ParseInLocation, kalau tidak perhitungan hari meleset 1 hari
 - Lesson: Episode PPh 22 berkembang terus (mulai -> protes -> tunda -> refund -> berlaku lagi) - tool wajib date-aware dan pantau berita terbaru, jangan hardcode status
 - Next: Pantau keputusan perpanjangan penundaan (Menkeu buka opsi, idEA usul Januari 2027), update phase restart kalau berubah
+
+## 2026-08-20 - Omzet Gabungan Tracker
+- Works: Node.js + Express web tool, zero deps beyond express
+- Works: Research-first via Google News RSS - found DJP accumulates omzet across ALL marketplaces + offline for the Rp 500jt threshold (Kompas/MetroTVNews 24-25 Jun 2026, Ortax 29 Jul 2026), and Menkeu's Aug 19 signal that PPh 22 restart could slip to 2027 if economy misses 6% growth
+- Works: 7-channel input grid (6 marketplaces + offline), 12-month omzet per channel, quick-fill per channel
+- Works: YTD, projected annual, avg monthly, status risk (aman/waspada/mendekati/terlewat), crossing month, PPh 22 0.5% estimate, per-marketplace share bars, monthly total chart
+- Works: Date-aware policy banner (refund phase active, restart 1 Nov 2026 or 2027), light minimal theme, responsive, auto-fill example, all element IDs verified
+- Works: Updated #25 (PPh 22 refund tracker) restart timeline after Menkeu's 2027 signal - the Aug 19 news made its "restart Nov 1" language stale
+- Lesson: The PPh 22 saga keeps evolving (start -> protest -> postpone -> refund -> restart uncertainty). Both #22, #25 and #26 must stay date-aware; #25 needed a same-day fix when the story moved
+- Lesson: DJP accumulating omzet across platforms is a blind spot for multi-platform sellers - they check omzet per marketplace, not combined. Tool directly answers "apakah total saya lewat Rp 500jt"
+- Lesson: Google News RSS remains reliable for fresh Indonesian policy news; headline-level facts from multiple outlets beat deep-linking single articles
+- Next: Add per-marketplace threshold projection, CSV import from seller center exports, Telegram reminder when restart date changes

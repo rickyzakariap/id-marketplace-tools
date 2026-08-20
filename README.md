@@ -31,6 +31,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 23 | [23-umkm-service-fee-checker](23-umkm-service-fee-checker/) | Web | Node.js + Express | Check eligibility for 50% marketplace service fee discount (Permen UMKM 2026) and estimate savings |
 | 24 | [24-nib-deadline-checker](24-nib-deadline-checker/) | Web | Python (stdlib) | Check NIB deadline for marketplace sellers (Permendag 19/2026) with countdown and OSS guide |
 | 25 | [25-pph22-refund-tracker](25-pph22-refund-tracker/) | Web | Go 1.26 | Track PPh 22 refund from marketplaces (postponed Aug 2026): status window, per-platform schedule, refund estimate |
+| 26 | [26-omzet-gabungan-tracker](26-omzet-gabungan-tracker/) | Web | Node.js + Express | Track combined omzet across all marketplaces vs Rp 500jt tax-free threshold (DJP accumulates omzet), PPh 22 estimate |
 
 ## Contributing
 
