@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Omzet Gabungan Tracker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;--yellow:#d97706;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent:#4a9;--accent-hover:#5ba8;--accent-light:#1a2a25;
+  --green:#4ade80;--red:#f87171;--yellow:#fbbf24;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+.header{max-width:1000px;margin:0 auto;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.header h1{font-size:1.15rem;font-weight:600}
+#themeBtn{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 12px;font-size:.85rem;cursor:pointer;font-family:inherit}
+#themeBtn:hover{border-color:var(--accent)}
+.container{max-width:1000px;margin:0 auto;padding:0 20px 40px}
+.banner{border:1px solid var(--border);border-left:3px solid var(--accent);background:var(--card);border-radius:8px;padding:14px 16px;margin-bottom:20px}
+.banner .b-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600}
+.banner .b-title{font-weight:600;font-size:1rem;margin:2px 0}
+.banner .b-desc{font-size:.85rem;color:var(--text-dim)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:20px}
+.card h2{font-size:1rem;font-weight:600;margin-bottom:14px}
+.section-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600;margin:16px 0 8px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:10px 18px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent)}
+.grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:760px}
+th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--border);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);white-space:nowrap}
+td{padding:4px 6px;border-bottom:1px solid var(--border);white-space:nowrap}
+td.mp-name{font-weight:500;font-size:.85rem}
+td.mp-name .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+input[type=number]{width:100%;min-width:64px;padding:5px 6px;border:1px solid var(--input-border);border-radius:5px;font-size:.82rem;background:var(--input-bg);color:var(--text);font-family:'JetBrains Mono',ui-monospace,monospace;text-align:right}
+input[type=number]:focus{outline:none;border-color:var(--accent)}
+tr.total-row td{font-weight:600;border-top:2px solid var(--border);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.82rem}
+.fill-btn{background:var(--card);border:1px solid var(--input-border);color:var(--text-dim);border-radius:4px;padding:2px 8px;font-size:.72rem;cursor:pointer;font-family:inherit}
+.fill-btn:hover{border-color:var(--accent);color:var(--text)}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card-alt);border:1px solid var(--border);border-radius:8px;padding:12px}
+.stat .s-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
+.stat .s-value{font-size:1.1rem;font-weight:600;font-family:'JetBrains Mono',ui-monospace,monospace;margin-top:2px}
+.stat .s-value.green{color:var(--green)}
+.stat .s-value.red{color:var(--red)}
+.stat .s-value.yellow{color:var(--yellow)}
+.verdict{border-radius:8px;padding:14px 16px;margin-bottom:16px;border:1px solid}
+.verdict.ok{background:var(--accent-light);border-color:var(--accent)}
+.verdict.warn{background:#fef9e7;border-color:var(--yellow)}
+[data-theme="dark"] .verdict.warn{background:#2a251a;border-color:var(--yellow)}
+.verdict.bad{background:#fef2f2;border-color:var(--red)}
+[data-theme="dark"] .verdict.bad{background:#2a1a1a;border-color:var(--red)}
+.verdict .v-title{font-weight:600;font-size:1.05rem}
+.verdict .v-desc{font-size:.85rem;color:var(--text-dim);margin-top:4px}
+.progress{height:10px;background:var(--card-alt);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:10px 0 6px}
+.progress .bar{height:100%;background:var(--accent);border-radius:6px;transition:width .2s}
+.progress .bar.warn{background:var(--yellow)}
+.progress .bar.bad{background:var(--red)}
+.pct-note{font-size:.78rem;color:var(--text-muted);text-align:right}
+.share-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.85rem}
+.share-row .sh-name{width:130px;flex-shrink:0}
+.share-row .sh-bar-wrap{flex:1;background:var(--card-alt);border:1px solid var(--border);border-radius:4px;height:14px;overflow:hidden}
+.share-row .sh-bar{height:100%;border-radius:4px}
+.share-row .sh-val{width:130px;text-align:right;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.8rem;flex-shrink:0}
+.result-hidden{display:none}
+.note{font-size:.78rem;color:var(--text-muted);margin-top:10px}
+.insight{background:var(--card-alt);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:.88rem}
+.insight .i-title{font-weight:600;margin-bottom:2px}
+@media(max-width:768px){
+  .header{padding:16px}
+  .container{padding:0 12px 32px}
+  .card{padding:14px}
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .share-row .sh-name{width:100px}
+  .share-row .sh-val{width:100px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Omzet Gabungan Tracker</h1>
+  <button id="themeBtn">Dark</button>
+</div>
+<div class="container">
+  <div class="banner" id="policyBanner">
+    <div class="b-label">Status kebijakan</div>
+    <div class="b-title" id="bannerTitle">Memuat...</div>
+    <div class="b-desc" id="bannerDesc"></div>
+  </div>
+
+  <div class="card">
+    <h2>Isi omzet per marketplace per bulan</h2>
+    <p class="note">DJP menghitung omzet dari semua marketplace digabung, plus penjualan offline. Isi bulan yang sudah lewat, kosongkan yang belum. Angka dalam Rupiah.</p>
+    <div class="toolbar">
+      <button class="btn-secondary" id="exampleBtn">Isi contoh data</button>
+      <button class="btn-secondary" id="clearBtn">Bersihkan</button>
+      <button class="btn" id="analyzeBtn">Hitung posisi omzet</button>
+    </div>
+    <div class="grid-wrap">
+      <table id="omzetTable">
+        <thead><tr><th>Marketplace</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Mei</th><th>Jun</th><th>Jul</th><th>Agu</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card result-hidden" id="resultCard">
+    <h2>Hasil</h2>
+    <div id="verdictBox"></div>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="section-label">Progress vs batas Rp 500 juta</div>
+    <div class="progress"><div class="bar" id="progressBar"></div></div>
+    <div class="pct-note" id="pctNote"></div>
+    <div class="section-label">PPh 22 (jika pemungutan aktif)</div>
+    <div id="pph22Box"></div>
+    <div class="section-label">Kontribusi per marketplace</div>
+    <div id="shareBox"></div>
+    <div class="section-label">Total per bulan</div>
+    <div id="monthBox"></div>
+  </div>
+</div>
+
+<script>
+const MONTH_KEYS = ['jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des'];
+const MARKETPLACES = [
+  { id:'shopee', name:'Shopee', color:'#ee4d2d' },
+  { id:'tokopedia', name:'Tokopedia', color:'#00aa5b' },
+  { id:'tiktok', name:'TikTok Shop', color:'#111111' },
+  { id:'lazada', name:'Lazada', color:'#0f146d' },
+  { id:'blibli', name:'Blibli', color:'#0073c8' },
+  { id:'bukalapak', name:'Bukalapak', color:'#e31837' },
+  { id:'lainnya', name:'Offline / Lainnya', color:'#666666' }
+];
+const fmt = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+const fmtShort = n => {
+  if (n >= 1000000000) return 'Rp ' + (n/1000000000).toFixed(2).replace('.', ',') + ' M';
+  if (n >= 1000000) return 'Rp ' + (n/1000000).toFixed(0) + ' jt';
+  return fmt(n);
+};
+
+const themeBtn = document.getElementById('themeBtn');
+if (localStorage.getItem('theme') === 'dark') { document.documentElement.dataset.theme = 'dark'; themeBtn.textContent = 'Light'; }
+themeBtn.addEventListener('click', () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = dark ? '' : 'dark';
+  themeBtn.textContent = dark ? 'Dark' : 'Light';
+  localStorage.setItem('theme', dark ? 'light' : 'dark');
+});
+
+function buildTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  MARKETPLACES.forEach(mp => {
+    const tr = document.createElement('tr');
+    const nameTd = document.createElement('td');
+    nameTd.className = 'mp-name';
+    nameTd.innerHTML = '<span class="dot" style="background:' + mp.color + '"></span>' + mp.name;
+    const fillBtn = document.createElement('button');
+    fillBtn.className = 'fill-btn';
+    fillBtn.textContent = 'isi sama';
+    fillBtn.style.marginLeft = '6px';
+    fillBtn.addEventListener('click', () => {
+      const val = prompt('Isi omzet bulanan untuk ' + mp.name + ' (Rupiah):', '');
+      if (val === null) return;
+      const num = parseInt(val.replace(/[^0-9]/g, ''), 10) || 0;
+      tr.querySelectorAll('input').forEach(i => { i.value = num; });
+    });
+    nameTd.appendChild(fillBtn);
+    tr.appendChild(nameTd);
+    for (let m = 0; m < 12; m++) {
+      const td = document.createElement('td');
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '0';
+      input.placeholder = '0';
+      input.dataset.mp = mp.id;
+      input.dataset.month = m;
+      input.addEventListener('input', () => { input.value = input.value.replace(/[^0-9]/g, ''); });
+      td.appendChild(input);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  });
+  // total row
+  const tr = document.createElement('tr');
+  tr.className = 'total-row';
+  const nameTd = document.createElement('td');
+  nameTd.textContent = 'Total';
+  tr.appendChild(nameTd);
+  for (let m = 0; m < 12; m++) {
+    const td = document.createElement('td');
+    td.id = 'total-' + m;
+    td.textContent = '0';
+    tr.appendChild(td);
+  }
+  tbody.appendChild(tr);
+}
+buildTable();
+
+function readValues() {
+  const values = {};
+  MARKETPLACES.forEach(mp => { values[mp.id] = new Array(12).fill(0); });
+  document.querySelectorAll('#tableBody input').forEach(input => {
+    const v = parseInt(input.value.replace(/[^0-9]/g, ''), 10) || 0;
+    values[input.dataset.mp][parseInt(input.dataset.month, 10)] = v;
+  });
+  return values;
+}
+
+function updateTotals(values) {
+  for (let m = 0; m < 12; m++) {
+    let sum = 0;
+    MARKETPLACES.forEach(mp => { sum += values[mp.id][m]; });
+    document.getElementById('total-' + m).textContent = sum ? fmtShort(sum) : '0';
+  }
+}
+
+function setStatusClass(el, status) {
+  el.className = 'verdict ' + (status === 'terlewat' ? 'bad' : (status === 'mendekati' || status === 'waspada' ? 'warn' : 'ok'));
+}
+
+async function analyze() {
+  const values = readValues();
+  updateTotals(values);
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ values })
+    });
+    const data = await resp.json();
+    if (data.error) { alert(data.error); return; }
+    renderResult(data);
+  } catch (e) {
+    alert('Gagal menghitung, coba lagi.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung posisi omzet';
+  }
+}
+
+function renderResult(d) {
+  document.getElementById('resultCard').classList.remove('result-hidden');
+
+  const verdictBox = document.getElementById('verdictBox');
+  verdictBox.innerHTML = '';
+  const v = document.createElement('div');
+  setStatusClass(v, d.status);
+  v.innerHTML = '<div class="v-title">' + d.status_label + ' - proyeksi omzet setahun ' + fmtShort(d.projected_annual) + '</div>' +
+    '<div class="v-desc">' + d.status_desc + '</div>';
+  verdictBox.appendChild(v);
+
+  const grid = document.getElementById('summaryGrid');
+  grid.innerHTML = '';
+  const stats = [
+    { label: 'Omzet YTD (2026)', value: fmtShort(d.ytd), cls: '' },
+    { label: 'Proyeksi 1 tahun', value: fmtShort(d.projected_annual), cls: d.status === 'terlewat' ? 'red' : (d.status === 'mendekati' ? 'yellow' : 'green') },
+    { label: 'Rata-rata / bulan', value: fmtShort(d.avg_monthly), cls: '' },
+    { label: 'Estimasi PPh 22 / thn', value: fmtShort(d.pph22_estimated_year), cls: d.pph22_estimated_year > 0 ? 'yellow' : 'green' }
+  ];
+  stats.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'stat';
+    div.innerHTML = '<div class="s-label">' + s.label + '</div><div class="s-value ' + s.cls + '">' + s.value + '</div>';
+    grid.appendChild(div);
+  });
+
+  const bar = document.getElementById('progressBar');
+  const pct = Math.min(100, d.projected_pct);
+  bar.style.width = pct + '%';
+  bar.className = 'bar ' + (d.projected_pct >= 100 ? 'bad' : (d.projected_pct >= 80 ? 'warn' : ''));
+  document.getElementById('pctNote').textContent = pct + '% dari batas Rp 500 juta (proyeksi)';
+
+  const pph = document.getElementById('pph22Box');
+  pph.innerHTML = '';
+  const pphInsight = document.createElement('div');
+  pphInsight.className = 'insight';
+  if (d.projected_annual >= d.threshold) {
+    pphInsight.innerHTML = '<div class="i-title">Potensi dipungut PPh 22 ' + d.pph22_rate_pct + '%</div>' +
+      'Estimasi potongan per tahun: ' + fmt(d.pph22_estimated_year) + '. Kalau omzet YTD sudah lewat batas (' + fmt(d.pph22_estimated_ytd) + '), potongan berlaku dari transaksi yang lewat batas. Pemungutan masih ditunda - pantau kabar resmi kapan restart.';
+  } else {
+    pphInsight.innerHTML = '<div class="i-title">Di bawah batas, tidak kena PPh 22</div>' +
+      'Proyeksi omzet masih di bawah Rp 500 juta. Siapkan surat pernyataan omzet di bawah batas kalau pemungutan jalan dan omzet mendekati ambang.';
+  }
+  pph.appendChild(pphInsight);
+
+  const share = document.getElementById('shareBox');
+  share.innerHTML = '';
+  const active = d.per_marketplace.filter(m => m.total > 0);
+  active.forEach(mp => {
+    const pct = mp.total / d.full_year * 100;
+    const row = document.createElement('div');
+    row.className = 'share-row';
+    row.innerHTML = '<div class="sh-name">' + mp.name + '</div>' +
+      '<div class="sh-bar-wrap"><div class="sh-bar" style="width:' + Math.max(2, pct) + '%;background:' + mp.color + '"></div></div>' +
+      '<div class="sh-val">' + fmtShort(mp.total) + ' (' + pct.toFixed(0) + '%)</div>';
+    share.appendChild(row);
+  });
+
+  const monthBox = document.getElementById('monthBox');
+  monthBox.innerHTML = '';
+  const mRow = document.createElement('div');
+  mRow.className = 'share-row';
+  mRow.innerHTML = '<div class="sh-name">Bulan</div>' +
+    '<div class="sh-bar-wrap" style="display:flex;gap:2px;background:none;border:none">' +
+    d.month_totals.map((t, i) => {
+      const h = t > 0 ? Math.max(4, Math.round(t / Math.max(...d.month_totals) * 100)) : 0;
+      return '<div style="flex:1;height:20px;background:var(--card-alt);border:1px solid var(--border);border-radius:3px;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:' + h + '%;background:var(--accent);border-radius:3px"></div><div style="position:absolute;top:2px;left:0;right:0;text-align:center;font-size:.62rem;font-family:monospace">' + d.months[i] + '</div></div>';
+    }).join('') +
+    '</div><div class="sh-val">' + fmtShort(d.full_year) + '</div>';
+  monthBox.appendChild(mRow);
+  monthBox.appendChild(document.createElement('div')).className = 'note';
+  monthBox.lastChild.textContent = 'Total setahun (kolom terisi): ' + fmt(d.full_year);
+}
+
+document.getElementById('exampleBtn').addEventListener('click', async () => {
+  const resp = await fetch('/api/example');
+  const data = await resp.json();
+  document.querySelectorAll('#tableBody input').forEach(input => {
+    input.value = data.values[input.dataset.mp][parseInt(input.dataset.month, 10)] || '';
+  });
+  updateTotals(readValues());
+});
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.querySelectorAll('#tableBody input').forEach(input => { input.value = ''; });
+  updateTotals(readValues());
+  document.getElementById('resultCard').classList.add('result-hidden');
+});
+
+document.getElementById('analyzeBtn').addEventListener('click', analyze);
+
+async function loadStatus() {
+  const resp = await fetch('/api/status');
+  const data = await resp.json();
+  document.getElementById('bannerTitle').textContent = data.status.label;
+  document.getElementById('bannerDesc').textContent = data.status.description + ' ' + data.policy.restart_note;
+}
+loadStatus();
+</script>
+</body>
+</html>
