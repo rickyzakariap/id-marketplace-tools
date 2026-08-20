@@ -1,0 +1,32 @@
+{
+  "date": "2026-08-20",
+  "sources": ["google news rss", "cnbcindonesia", "katadata", "ddtcnews", "metrotvnews", "kompas.com", "ortax", "ikpi.or.id", "bloomberg technoz"],
+  "pain_points": [
+    {
+      "category": "Pajak & Omzet",
+      "description": "DJP memastikan omzet pedagang online dihitung dari TOTAL penjualan di SEMUA marketplace (diumumkan 24-25 Juni 2026, dipertegas 1 Juli 2026). Seller multi-platform (Shopee + Tokopedia + TikTok Shop + Lazada) tidak tahu omzet gabungan mereka vs batas bebas pajak Rp 500 juta/tahun. Ortax (29 Juli): batasan dihitung dari omzet toko online DAN offline. Banyak seller mengira omzet dihitung per marketplace, padahal diakumulasi. Sementara itu 19 Agustus 2026 Menkeu Purbaya menyatakan pemungutan PPh 22 (yang semula mundur ke 1 November) bisa ditunda lagi hingga 2027 kalau ekonomi belum tumbuh 6%, idEA mengusulkan Januari 2027. Seller tetap perlu tahu posisi omzet mereka untuk siap kapan pun pemungutan jalan.",
+      "frequency": "HIGH",
+      "sources": [
+        "metrotvnews: DJP: Pajak Pedagang Online Dihitung dari Total Omzet di Seluruh Marketplace (2026-06-25)",
+        "kompas.com: Aturan Pajak Marketplace Berlaku, DJP Sebut Omzet Seller dari Semua Platform Akan Diakumulasi (2026-06-25)",
+        "waspada.id: Aturan Baru Pajak Marketplace: Omzet Dari Semua Platform Akan Digabung (2026-06-25)",
+        "ikpi.or.id: Tak Bisa Akali Pajak, DJP Pantau Omzet Seller Online dari Data Marketplace (2026-07-01)",
+        "ortax: Catat! Batasan Bebas Pajak Marketplace Dihitung dari Omzet Toko Online dan Offline (2026-07-29)",
+        "cnbcindonesia: Pajak E-commerce Ditunda hingga 2027, Purbaya: Kalau Ekonomi Bagus (2026-08-19)",
+        "katadata.co.id: Purbaya Tunda Penarikan Pajak Marketplace hingga 2027 (2026-08-19)",
+        "ddtcnews: Purbaya: Pemungutan Pajak Baru Tunggu Ekonomi Tumbuh 6% (2026-08-17)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Omzet Gabungan Tracker",
+      "type": "Web",
+      "tech": "Node.js + Express, JSON file storage",
+      "description": "Cek posisi omzet gabungan lintas marketplace vs batas Rp 500 juta/tahun. Input omzet bulanan per marketplace (Shopee, Tokopedia, TikTok Shop, Lazada, Blibli, lainnya) + offline, tool menghitung total YTD, persentase vs threshold, status risiko (aman/mendekati/kritis/terlewat), proyeksi kapan menyentuh Rp 500 juta, estimasi PPh 22 0,5% yang bakal dipungut, plus banner status kebijakan date-aware (pemungutan ditunda, bisa mundur ke 2027).",
+      "category": "Data & Analytics",
+      "priority": 1,
+      "why": "DJP resmi mengakumulasi omzet SEMUA platform (24-25 Juni 2026), tapi seller multi-platform tidak punya alat untuk melihat posisi gabungan mereka. Ini gap nyata: #22 menghitung potongan per transaksi, #25 melacak refund - tidak ada yang melacak total omzet vs threshold. Seller yang jualan di 3-4 platform berisiko kena pungutan tanpa sadar. Pola aturan baru + kebingungan seller terbukti 5x (#22, #23, #24, #25)."
+    }
+  ]
+}
