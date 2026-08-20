@@ -164,9 +164,9 @@ input[type="number"]:focus,input[type="text"]:focus{border-color:var(--accent)}
       <div class="d">Dana yang terlanjur dipotong dikembalikan otomatis, tanpa perlu mengajukan apa pun.</div>
     </div>
     <div class="step">
-      <div class="when">1 November 2026</div>
-      <div class="t">Pemungutan berlaku kembali</div>
-      <div class="d">Jadwal bisa berubah: Menkeu membuka opsi perpanjangan, idEA mengusulkan mundur ke Januari 2027.</div>
+      <div class="when">1 November 2026 (bisa mundur)</div>
+      <div class="t">Pemungutan dijadwalkan berlaku kembali</div>
+      <div class="d">19 Agustus 2026 Menkeu menyatakan penarikan bisa ditunda hingga 2027 kalau ekonomi belum tumbuh 6%. idEA mengusulkan Januari 2027.</div>
     </div>
   </div>
 
@@ -199,7 +199,7 @@ input[type="number"]:focus,input[type="text"]:focus{border-color:var(--accent)}
     </div>
     <div class="faq-item">
       <div class="q">Apa yang terjadi 1 November 2026?</div>
-      <div class="a">Pemungutan PPh 22 0,5% berlaku kembali. Catatan: Menkeu membuka opsi perpanjangan penundaan dan idEA mengusulkan implementasi mundur ke Januari 2027. Pantau kabar resmi.</div>
+      <div class="a">Pemungutan PPh 22 0,5% dijadwalkan berlaku kembali, tapi tanggal ini belum final. 19 Agustus 2026 Menkeu menyatakan penarikan bisa ditunda hingga 2027 kalau ekonomi belum tumbuh 6%, dan idEA mengusulkan implementasi mundur ke Januari 2027. Pantau kabar resmi.</div>
     </div>
   </div>
 
@@ -211,7 +211,9 @@ input[type="number"]:focus,input[type="text"]:focus{border-color:var(--accent)}
       kontan.co.id, "Pedagang Online Protes Pajak Marketplace, Potongan Kini Tembus 30%" (2 Agu 2026) dan "Ditjen Pajak Janji Evaluasi" (3 Agu 2026)<br>
       DDTCNews, "Ditunda 3 Bulan, Pajak yang Telanjur Dipungut Marketplace Dikembalikan" (6 Agu 2026)<br>
       Ortax, "Pajak Marketplace Ditunda, idEA Usulkan Implementasi Mulai Januari 2027" (Agustus 2026)<br>
-      Bloomberg Technoz, "Alasan Menkeu Purbaya Tunda Pajak Marketplace" (15 Agu 2026)
+      Bloomberg Technoz, "Alasan Menkeu Purbaya Tunda Pajak Marketplace" (15 Agu 2026)<br>
+      CNBC Indonesia, "Pajak E-commerce Ditunda hingga 2027, Purbaya: Kalau Ekonomi Bagus" (19 Agu 2026)<br>
+      DDTCNews, "Purbaya: Pemungutan Pajak Baru Tunggu Ekonomi Tumbuh 6%" (17 Agu 2026)
     </p>
   </div>
 </div>

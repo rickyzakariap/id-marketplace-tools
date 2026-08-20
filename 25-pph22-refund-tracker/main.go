@@ -164,14 +164,14 @@ func getStatus(now time.Time) StatusResponse {
 	case today.Before(restart):
 		return StatusResponse{
 			Phase: "refund-done", Label: "Masa refund selesai",
-			Description: "Batas akhir refund 30 September 2026 sudah lewat. Belum terima dana? Hubungi dukungan platform masing-masing. Pemungutan berlaku kembali 1 November 2026.",
+			Description: "Batas akhir refund 30 September 2026 sudah lewat. Belum terima dana? Hubungi dukungan platform masing-masing. Pemungutan dijadwalkan berlaku kembali 1 November 2026, tapi Menkeu membuka opsi mundur ke 2027 kalau pertumbuhan ekonomi belum 6%.",
 			NextKeyDate: DATE_RESTART, NextKeyDesc: "Pemungutan berlaku kembali",
 			DaysToNext:  daysBetween(today, restart),
 		}
 	default:
 		return StatusResponse{
 			Phase: "restart", Label: "Pemungutan berlaku kembali",
-			Description: "Pemungutan PPh 22 aktif lagi per 1 November 2026. Marketplace memotong 0,5% dari peredaran bruto penjual. Catatan: jadwal bisa berubah, Menkeu membuka opsi perpanjangan dan idEA mengusulkan mundur ke Januari 2027.",
+			Description: "Pemungutan PPh 22 dijadwalkan aktif lagi per 1 November 2026. Marketplace memotong 0,5% dari peredaran bruto penjual. Catatan: 19 Agustus 2026 Menkeu menyatakan penarikan bisa ditunda hingga 2027 kalau ekonomi belum tumbuh 6%. idEA juga mengusulkan mundur ke Januari 2027.",
 			NextKeyDate: "", NextKeyDesc: "", DaysToNext: 0,
 		}
 	}
