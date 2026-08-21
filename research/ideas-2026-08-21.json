@@ -1,0 +1,29 @@
+{
+  "date": "2026-08-21",
+  "sources": ["google news rss", "jpnn.com", "bisnis.com (teknologi.bisnis.com)", "associe.co.id", "metrotvnews.com", "html.duckduckgo.com"],
+  "pain_points": [
+    {
+      "category": "Biaya Marketplace",
+      "description": "TikTok Shop menaikkan biaya komisi dinamis per 18 Mei 2026. Batas atas (cap) per item melesat dari Rp40.000 menjadi Rp650.000 (15-16x lipat). Banyak kategori naik tarif: Pakaian Wanita 5,5% -> 8%, Kecantikan 4% -> 7%, Busana Muslim 5,5% -> 8%, dll. Seller menjerit: potongan per item bisa naik drastis. Plus 1 Juni 2026: biaya pengiriman return Rp5.000 (gagal kirim) + Rp5.000 (retur kesalahan pembeli) = hingga Rp10.000 per item. Menteri UMKM Maman memanggil marketplace dan melarang kenaikan sepihak, ancam tindak tegas. Seller butuh alat untuk hitung potongan baru per kategori vs lama, dan cek dampak ke margin.",
+      "frequency": "HIGH",
+      "sources": [
+        "bisnis.com: Komisi Dinamis Seller TikTok Shop Naik Hari Ini, Batas Atas Melesat 15 Kali Lipat (2026-05-18)",
+        "jpnn.com: TikTok Shop Bersiap Naikkan Komisi Seller, Pemerintah Bakal Ambil Tindakan Tegas (2026-05-14)",
+        "associe.co.id: Biaya Komisi Dinamis Naik, Apakah Merugikan Penjual di TikTok Shop? (2026-05-08)",
+        "cnbcindonesia: Komisi TikTok Shop Naik, Potongan ke Penjual Bisa Naik 16 Kali Lipat",
+        "metrotvnews.com: Biaya Admin Shopee 2026, Daftar Biaya per Kategori Produk"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "TikTok Shop Komisi Kalkulator",
+      "type": "Web",
+      "tech": "Python stdlib http.server, single file",
+      "description": "Hitung potongan komisi dinamis TikTok Shop lama vs baru (18 Mei 2026). Pilih kategori (30 kategori, tarif lama 10 Jun 2025 vs baru), masukkan harga produk, diskon seller, volume bulanan, modal (opsional). Output: komisi per item lama vs baru (dengan cap Rp40rb vs Rp650rb), total bulanan, selisih, persentase kenaikan, harga baru yang dibutuhkan agar margin tetap, dampak ke profit per item, estimasi biaya retur (Rp10rb per retur, 1 Juni 2026), plus perbandingan dengan biaya admin Shopee 2026 per kategori.",
+      "category": "Web / Data & Analytics",
+      "priority": 1,
+      "why": "Kenaikan komisi TikTok Shop 18 Mei 2026 adalah masalah paling panas bulan ini: seller menjerit, Menteri UMKM turun tangan. Seller tidak tahu tarif baru kategori mereka dan berapa harus menaikkan harga. #26 sudah cover omzet/pajak, belum ada yang cover biaya komisi platform. Pola aturan baru + kebingungan seller terbukti berulang (#22-#26)."
+    }
+  ]
+}
