@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Shop Komisi Kalkulator</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --card: #fff;
+    --border: #e5e5e5;
+    --text: #1a1a1a;
+    --muted: #666;
+    --faint: #999;
+    --accent: #4a9;
+    --danger: #dc2626;
+    --ok: #22c55e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    padding: 20px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 20px; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  #themeBtn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .banner {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .banner b { display: block; margin-bottom: 4px; }
+  .banner .note { color: var(--muted); margin-top: 6px; font-size: 12px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card h2 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field.full { grid-column: 1 / -1; }
+  label { font-size: 12px; color: var(--muted); }
+  label .opt { color: var(--faint); }
+  input, select {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--card);
+    color: var(--text);
+    width: 100%;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  .num { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .hint { font-size: 11px; color: var(--faint); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+  button {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  #calcBtn {
+    background: var(--accent);
+    color: #fff;
+    flex: 1;
+    min-width: 140px;
+  }
+  #calcBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+  #fillBtn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .error {
+    color: var(--danger);
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+  .error.show { display: block; }
+  .result { display: none; }
+  .result.show { display: block; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--bg);
+  }
+  .stat .k { font-size: 11px; color: var(--muted); }
+  .stat .v { font-size: 17px; font-weight: 600; margin-top: 2px; }
+  .stat .v.num { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .stat .d { font-size: 11px; margin-top: 2px; }
+  .up { color: var(--danger); }
+  .down { color: var(--ok); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; }
+  td.num, th.num { font-family: 'JetBrains Mono', ui-monospace, monospace; text-align: right; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .tag.hit { border-color: var(--danger); color: var(--danger); }
+  .note2 { font-size: 12px; color: var(--muted); margin-top: 12px; }
+  .src { font-size: 11px; color: var(--faint); margin-top: 14px; line-height: 1.6; }
+  .src span { display: block; }
+  @media (max-width: 768px) {
+    body { padding: 12px; }
+    .grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .card { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Komisi TikTok Shop</h1>
+      <div class="sub">Potongan komisi dinamis lama vs baru (18 Mei 2026)</div>
+    </div>
+    <button id="themeBtn">Dark</button>
+  </header>
+
+  <div class="banner" id="banner">
+    <b>Komisi dinamis baru berlaku 18 Mei 2026</b>
+    <span>Batas atas (cap) per item melesat dari Rp40.000 ke Rp650.000. Sebagian besar kategori naik, contoh Pakaian Wanita 5,5% -> 8%, Kecantikan 4% -> 7%.</span>
+    <div class="note">Mulai 1 Juni 2026 ada biaya retur: hingga Rp5.000 untuk pengiriman gagal dan Rp5.000 untuk retur kesalahan pembeli. Menteri UMKM telah memanggil marketplace dan melarang kenaikan sepihak.</div>
+  </div>
+
+  <div class="card">
+    <h2>Hitung potongan</h2>
+    <div class="grid">
+      <div class="field full">
+        <label for="category">Kategori produk</label>
+        <select id="category"></select>
+      </div>
+      <div class="field">
+        <label for="price">Harga produk (Rp)</label>
+        <input type="number" id="price" class="num" min="0" placeholder="100000">
+      </div>
+      <div class="field">
+        <label for="modal">Modal per item (Rp) <span class="opt">opsional</span></label>
+        <input type="number" id="modal" class="num" min="0" placeholder="55000">
+      </div>
+      <div class="field">
+        <label for="discount">Diskon seller (Rp) <span class="opt">opsional</span></label>
+        <input type="number" id="discount" class="num" min="0" placeholder="0">
+      </div>
+      <div class="field">
+        <label for="volume">Penjualan per bulan (pcs)</label>
+        <input type="number" id="volume" class="num" min="1" value="100">
+      </div>
+      <div class="field full">
+        <label for="shopee_group">Bandingkan dengan biaya admin Shopee 2026 <span class="opt">opsional</span></label>
+        <select id="shopee_group">
+          <option value="">Tidak dibandingkan</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <button id="calcBtn">Hitung</button>
+      <button id="fillBtn">Isi contoh</button>
+    </div>
+    <div class="error" id="error"></div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="stats">
+      <div class="stat">
+        <div class="k">Komisi per item (lama)</div>
+        <div class="v num" id="rOld">-</div>
+        <div class="d" id="rOldRate"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Komisi per item (baru)</div>
+        <div class="v num" id="rNew">-</div>
+        <div class="d" id="rNewRate"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Selisih per item</div>
+        <div class="v num" id="rDiff">-</div>
+        <div class="d" id="rDiffPct"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Total per bulan (baru)</div>
+        <div class="v num" id="rTotal">-</div>
+        <div class="d" id="rTotalDiff"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Rincian</h2>
+      <table>
+        <thead>
+          <tr><th>Komponen</th><th class="num">Lama</th><th class="num">Baru</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Tarif kategori</td><td class="num" id="tRateOld"></td><td class="num" id="tRateNew"></td></tr>
+          <tr><td>Komisi per item</td><td class="num" id="tCommOld"></td><td class="num" id="tCommNew"></td></tr>
+          <tr><td>Total per bulan</td><td class="num" id="tTotalOld"></td><td class="num" id="tTotalNew"></td></tr>
+          <tr><td>Profit per item</td><td class="num" id="tProfitOld"></td><td class="num" id="tProfitNew"></td></tr>
+          <tr><td>Margin</td><td class="num" id="tMarginOld"></td><td class="num" id="tMarginNew"></td></tr>
+        </tbody>
+      </table>
+      <div class="note2" id="capNote"></div>
+    </div>
+
+    <div class="card" id="recoCard" style="display:none">
+      <h2>Rekomendasi harga</h2>
+      <table>
+        <tbody>
+          <tr><td>Harga baru agar profit per item sama dengan skema lama</td><td class="num" id="rReco"></td></tr>
+          <tr><td>Kenaikan harga yang dibutuhkan</td><td class="num" id="rRecoDiff"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" id="shopeeCard" style="display:none">
+      <h2>Perbandingan Shopee 2026</h2>
+      <table>
+        <tbody>
+          <tr><td>Kelompok Shopee</td><td id="sGroup"></td></tr>
+          <tr><td>Tarif admin Shopee</td><td class="num" id="sRate"></td></tr>
+          <tr><td>Admin Shopee per item</td><td class="num" id="sComm"></td></tr>
+          <tr><td>Selisih vs komisi TikTok Shop baru</td><td class="num" id="sDiff"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="src" id="src"></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+const fmtPct = (n, d=1) => (n !== null && n !== undefined) ? (d === 0 ? Math.round(n) : n.toFixed ? Number(n).toFixed(d) : n) + '%' : '-';
+
+let cats = [];
+let policy = null;
+
+function loadCategories() {
+  fetch('/api/categories').then(r => r.json()).then(list => {
+    cats = list;
+    const sel = $('category');
+    list.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      opt.textContent = c.name + ' (' + c.old + '% -> ' + c.new + '%)';
+      sel.appendChild(opt);
+    });
+  });
+}
+
+function loadShopee() {
+  fetch('/api/shopee').then(r => r.json()).then(list => {
+    const sel = $('shopee_group');
+    list.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g.id;
+      const r = g.rate_min ? g.rate_min + '-' + g.rate_max + '%' : g.rate + '%';
+      opt.textContent = g.label + ' (' + r + ')';
+      sel.appendChild(opt);
+    });
+  });
+}
+
+function loadPolicy() {
+  fetch('/api/status').then(r => r.json()).then(p => {
+    policy = p;
+    $('banner').querySelector('b').textContent = p.label;
+    $('banner').querySelector('span').textContent = p.description;
+    const note = $('banner').querySelector('.note');
+    note.textContent = p.note;
+    $('src').innerHTML = p.sources.map(s => '<span>' + s + '</span>').join('');
+  });
+}
+
+function setError(msg) {
+  const e = $('error');
+  e.textContent = msg || '';
+  e.classList.toggle('show', !!msg);
+}
+
+function calc() {
+  setError('');
+  const payload = {
+    category: $('category').value,
+    price: $('price').value,
+    modal: $('modal').value,
+    discount: $('discount').value,
+    volume: $('volume').value,
+    shopee_group: $('shopee_group').value
+  };
+  const btn = $('calcBtn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  fetch('/api/calculate', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  }).then(r => r.json()).then(d => {
+    if (d.error) { setError(d.error); return; }
+    render(d);
+  }).catch(() => setError('Gagal terhubung ke server')).finally(() => {
+    btn.disabled = false;
+    btn.textContent = 'Hitung';
+  });
+}
+
+function render(d) {
+  $('result').classList.add('show');
+  const up = d.diff_item >= 0;
+  $('rOld').textContent = fmt(d.comm_old);
+  $('rNew').textContent = fmt(d.comm_new);
+  $('rDiff').textContent = (up ? '+' : '') + fmt(d.diff_item);
+  $('rDiff').className = 'v num ' + (up ? 'up' : 'down');
+  $('rDiffPct').textContent = d.pct_up !== null ? (up ? '+' : '') + d.pct_up + '%' : '-';
+  $('rDiffPct').className = 'd ' + (up ? 'up' : 'down');
+  $('rTotal').textContent = fmt(d.total_new);
+  $('rTotalDiff').textContent = (d.total_diff >= 0 ? '+' : '') + fmt(d.total_diff) + ' / bulan';
+  $('rTotalDiff').className = 'd ' + (d.total_diff >= 0 ? 'up' : 'down');
+
+  $('tRateOld').textContent = d.rate_old + '%';
+  $('tRateNew').textContent = d.rate_new + '%';
+  $('tCommOld').textContent = fmt(d.comm_old);
+  $('tCommNew').textContent = fmt(d.comm_new);
+  $('tTotalOld').textContent = fmt(d.total_old);
+  $('tTotalNew').textContent = fmt(d.total_new);
+
+  const capNotes = [];
+  if (d.cap_old_hit) capNotes.push('Potongan lama kena cap Rp40.000 per item.');
+  if (d.cap_new_hit) capNotes.push('Potongan baru kena cap Rp650.000 per item.');
+  if (!d.cap_old_hit && !d.cap_new_hit) capNotes.push('Tidak ada yang kena cap.');
+  $('capNote').textContent = capNotes.join(' ') + ' Biaya retur maksimal ' + fmt(d.return_fee_max) + ' per kejadian (berlaku 1 Juni 2026).';
+
+  if (d.profit_old !== undefined) {
+    $('tProfitOld').textContent = fmt(d.profit_old);
+    $('tProfitNew').textContent = fmt(d.profit_new);
+    $('tMarginOld').textContent = fmtPct(d.margin_old);
+    $('tMarginNew').textContent = fmtPct(d.margin_new);
+    $('recoCard').style.display = 'block';
+    $('rReco').textContent = fmt(d.reco_price);
+    const diff = d.reco_price - d.base - d.discount;
+    $('rRecoDiff').textContent = '+' + fmt(diff);
+    $('rRecoDiff').className = 'num up';
+  } else {
+    $('tProfitOld').textContent = '-';
+    $('tProfitNew').textContent = '-';
+    $('tMarginOld').textContent = '-';
+    $('tMarginNew').textContent = '-';
+    $('recoCard').style.display = 'none';
+  }
+
+  if (d.shopee) {
+    $('shopeeCard').style.display = 'block';
+    $('sGroup').textContent = d.shopee.group;
+    const rateTxt = d.shopee.rate_min !== undefined
+      ? d.shopee.rate_min + '-' + d.shopee.rate_max + '%'
+      : d.shopee.rate + '%';
+    $('sRate').textContent = rateTxt;
+    $('sComm').textContent = fmt(d.shopee.comm);
+    const sd = d.shopee.diff_vs_tiktok;
+    $('sDiff').textContent = (sd >= 0 ? '+' : '') + fmt(sd);
+    $('sDiff').className = 'num ' + (sd >= 0 ? 'up' : 'down');
+  } else {
+    $('shopeeCard').style.display = 'none';
+  }
+}
+
+function fillExample() {
+  fetch('/api/example').then(r => r.json()).then(e => {
+    $('category').value = e.category;
+    $('price').value = e.price;
+    $('modal').value = e.modal;
+    $('discount').value = e.discount;
+    $('volume').value = e.volume;
+  });
+}
+
+// Theme toggle: light default, dark as option, warm gray
+const saved = localStorage.getItem('komisi-theme');
+if (saved === 'dark') applyDark();
+$('themeBtn').addEventListener('click', () => {
+  if (document.body.dataset.theme === 'dark') applyLight(); else applyDark();
+});
+function applyDark() {
+  document.body.dataset.theme = 'dark';
+  const r = document.documentElement.style;
+  r.setProperty('--bg', '#1a1a1a');
+  r.setProperty('--card', '#242424');
+  r.setProperty('--border', '#333');
+  r.setProperty('--text', '#e5e5e5');
+  r.setProperty('--muted', '#999');
+  r.setProperty('--faint', '#666');
+  r.setProperty('--accent', '#4a9');
+  localStorage.setItem('komisi-theme', 'dark');
+  $('themeBtn').textContent = 'Light';
+}
+function applyLight() {
+  document.body.dataset.theme = 'light';
+  const r = document.documentElement.style;
+  r.setProperty('--bg', '#fafafa');
+  r.setProperty('--card', '#fff');
+  r.setProperty('--border', '#e5e5e5');
+  r.setProperty('--text', '#1a1a1a');
+  r.setProperty('--muted', '#666');
+  r.setProperty('--faint', '#999');
+  localStorage.setItem('komisi-theme', 'light');
+  $('themeBtn').textContent = 'Dark';
+}
+
+$('calcBtn').addEventListener('click', calc);
+$('fillBtn').addEventListener('click', fillExample);
+$('category').addEventListener('change', () => {
+  const c = cats.find(x => x.name === $('category').value);
+  if (c) {
+    $('rOldRate').textContent = 'Tarif ' + c.old + '%';
+    $('rNewRate').textContent = 'Tarif ' + c.new + '%';
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') calc();
+  if (e.key === 'Escape') { $('result').classList.remove('show'); setError(''); }
+});
+
+loadCategories();
+loadShopee();
+loadPolicy();
+</script>
+</body>
+</html>
