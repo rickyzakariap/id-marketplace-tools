@@ -442,3 +442,15 @@
 - Lesson: DJP accumulating omzet across platforms is a blind spot for multi-platform sellers - they check omzet per marketplace, not combined. Tool directly answers "apakah total saya lewat Rp 500jt"
 - Lesson: Google News RSS remains reliable for fresh Indonesian policy news; headline-level facts from multiple outlets beat deep-linking single articles
 - Next: Add per-marketplace threshold projection, CSV import from seller center exports, Telegram reminder when restart date changes
+
+## 2026-08-21 - TikTok Shop Komisi Kalkulator
+- Works: Python stdlib http.server, zero dependencies
+- Works: Research-first via Google News RSS + DuckDuckGo HTML fallback (Bing RSS returned empty links) - found the full TikTok Shop dynamic commission table old vs new (30 categories, effective 18 May 2026) from associe.co.id and teknologi.bisnis.com
+- Works: Cap logic per item (Rp40rb lama vs Rp650rb baru) - verified against article examples: fashion Rp1jt = Rp40rb (old cap hit) vs Rp80rb, laptop Rp20jt = Rp800rb capped to Rp650rb
+- Works: Reco price math with cap transition (base_no_cap check first, capped formula fallback) - verified profit equality: old profit 9.960.000 = new profit at reco price 20.610.000
+- Works: Shopee 2026 admin fee comparison (6 groups from metrotvnews), return fee info (Rp10rb per return, 1 June 2026), light minimal theme, responsive, auto-fill, all 40 element IDs verified matching
+- Issues: Bing News RSS returned only self-links (no article URLs), Google News redirect URLs are JS-rendered - DuckDuckGo HTML search (html.duckduckgo.com) was the working path to article URLs
+- Lesson: When news RSS gives headlines but no usable links, html.duckduckgo.com with the exact headline quote finds the article URL reliably
+- Lesson: Policy tools need the FULL rate table, not just the headline number - the 16x/15x "cap melesat" headline is meaningless without per-category old/new rates
+- Lesson: Cap-aware commission math must check the no-cap case first then fall back to the capped formula, else reco price is wrong by the cap delta
+- Next: Add PPN (11%) to the calculation, add Tokopedia commission comparison, watch for Menteri UMKM enforcement outcome (may freeze rates again)
