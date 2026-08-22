@@ -1,0 +1,30 @@
+{
+  "date": "2026-08-22",
+  "sources": ["google news rss", "katadata.co.id", "antaranews.com", "dataloka.id", "teknologi.bisnis.com", "duoke.com", "html.duckduckgo.com"],
+  "pain_points": [
+    {
+      "category": "Biaya Marketplace",
+      "description": "Biaya marketplace makin mahal di 2026: Shopee admin fee naik hingga 10% per grup kategori, TikTok Shop komisi naik 18 Mei 2026 dengan cap melesat ke Rp650.000, Tokopedia/TikTok sesuaikan komisi. Seller mulai eksodus: berita 'Eksodus seller', 'Biaya Marketplace Kian Mahal, UMKM Dipaksa Cari Jalan Belakang', 'Biaya Marketplace Kian Tinggi, Kiamat Buat Seller yang Tak Beralih'. Seller bingung mau pindah atau bertahan, dan ke mana harus pindah.",
+      "frequency": "HIGH",
+      "sources": [
+        "katadata.co.id: Profil TOCO, Saingan Tokopedia hingga Shopee yang Gratiskan Biaya Admin Penjual (2025-06-20)",
+        "antaranews.com: Toco tawarkan marketplace 0 persen admin bagi pelaku UMKM (2026-03-04)",
+        "dataloka.id: Toco Tawarkan Marketplace Berbasis Retensi Pelanggan dan Biaya Transaksi 0% di IDMC 2026 (2026-06-19)",
+        "metrotvnews.com: Biaya Admin Shopee 2026, Daftar Biaya per Kategori Produk",
+        "duoke.com: Biaya Administrasi Shopee Tahun 2025 VS 2026 (2025-12-31)",
+        "campaignindonesia.com: Eksodus seller, ekonomi platform yang tidak goyah (2026-05-12)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Toco Migration Calculator",
+      "type": "Web",
+      "tech": "Node.js + Express, single HTML frontend",
+      "description": "Bandingkan profit jualan di Toco (komisi seller 0%, pembeli bayar Rp2.000/transaksi yang masih digratiskan) vs Shopee (grup A-X, hingga 10% + biaya proses Rp1.250), TikTok Shop (tarif baru 18 Mei 2026, cap Rp650.000), Tokopedia, Lazada, Bukalapak, Blibli. Input: kategori, harga, modal, volume bulanan, marketplace sekarang. Output: profit per item dan per bulan per marketplace diurutkan, selisih Toco vs sekarang, traffic reality check (slider volume Toco vs sekarang), break-even unit di Toco agar profit sama.",
+      "category": "Web / Data & Analytics",
+      "priority": 1,
+      "why": "Seller menghadapi dilema nyata: fee naik di semua marketplace besar, sementara Toco menawarkan 0% komisi. Tapi Toco masih baru dengan traffic kecil. Tool ini kasih jawaban jujur dengan traffic check, bukan sekadar tabel fee. Berita Toco sedang ramai (IDMC 2026, Juni 2026)."
+    }
+  ]
+}
