@@ -454,3 +454,17 @@
 - Lesson: Policy tools need the FULL rate table, not just the headline number - the 16x/15x "cap melesat" headline is meaningless without per-category old/new rates
 - Lesson: Cap-aware commission math must check the no-cap case first then fall back to the capped formula, else reco price is wrong by the cap delta
 - Next: Add PPN (11%) to the calculation, add Tokopedia commission comparison, watch for Menteri UMKM enforcement outcome (may freeze rates again)
+
+## 2026-08-22 - Toco Migration Calculator
+- Works: Node.js + Express web tool, single dep (express)
+- Works: Research-first via Google News RSS - found Toco (marketplace baru, komisi seller 0%, didirikan Arnold Sebastian Egg pendiri Tokobagus) ramai dilirik seller di tengah kenaikan fee Shopee (grup A-X hingga 10%) dan TikTok Shop (18 Mei 2026). Katadata 20 Jun 2025 + ANTARA 4 Mar 2026 + Dataloka 19 Jun 2026 (IDMC) jadi sumber utama
+- Works: 7 marketplace comparison (Toco, Shopee, TikTok, Tokopedia, Lazada, Bukalapak, Blibli) dengan profit per item dan per bulan, sorted
+- Works: Traffic reality check - slider volume Toco vs marketplace sekarang, karena Toco 0% komisi tapi traffic kecil. Ini insight paling jujur: 0% fee tidak berarti kalau volume cuma 10%
+- Works: Break-even unit di Toco agar profit bulanan sama dengan marketplace sekarang (78 unit = 78% volume di contoh fashion)
+- Works: Light minimal theme, responsive, auto-fill example, error handling (harga <= 0, kategori invalid)
+- Issues: Fee Tokopedia/Lazada/Bukalapak/Blibli dipakai dari project #06 (estimasi 2026), bukan sumber berita fresh
+- Issues: Toco buyer fee Rp2.000/transaksi masih digratiskan masa awal - kalau mulai dikenakan, seller harus naikkan harga atau tanggung sendiri
+- Lesson: Pola "marketplace baru dengan fee rendah" adalah cerita berulang (Toco sekarang, TikTok Shop dulu). Tool perbandingan migrasi = nilai tinggi buat seller yang bingung pindah atau bertahan
+- Lesson: 0% komisi bukan jawaban otomatis - traffic reality check adalah pembeda tool ini vs tabel fee statis
+- Lesson: Google News RSS + katadata/ANTARA langsung bisa di-fetch tanpa JS redirect (beda dari detik/bisnis yang kadang anti-bot)
+- Next: Tambah input ongkir per item, tambah Toco buyer fee Rp2.000 sebagai toggle, update tarif saat Toco umumkan biaya baru
