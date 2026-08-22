@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toco Migration Calculator</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #ffffff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --text2: #666666;
+  --muted: #999999;
+  --accent: #4a9;
+  --ok: #22c55e;
+  --err: #dc2626;
+}
+.dark {
+  --bg: #1a1a1a;
+  --card: #242424;
+  --border: #333333;
+  --text: #e8e8e8;
+  --text2: #aaa;
+  --muted: #777;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  padding: 20px;
+  transition: background 0.15s, color 0.15s;
+}
+header {
+  max-width: 880px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+h1 { font-size: 20px; font-weight: 600; }
+h1 span { color: var(--accent); }
+.theme-btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text2);
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--text); }
+main { max-width: 880px; margin: 0 auto; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card h2 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.field label {
+  display: block;
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 4px;
+}
+.field input, .field select {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  transition: border-color 0.15s;
+}
+.field select { font-family: 'Inter', system-ui, sans-serif; }
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn.secondary { color: var(--accent); border-color: var(--accent); background: transparent; }
+.hidden { display: none; }
+#results { margin-top: 0; }
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.stat {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--bg);
+}
+.stat .k { font-size: 12px; color: var(--text2); }
+.stat .v { font-size: 18px; font-weight: 600; font-family: 'JetBrains Mono', ui-monospace, monospace; margin-top: 2px; }
+.stat .v.ok { color: var(--ok); }
+.stat .v.bad { color: var(--err); }
+.stat .s { font-size: 12px; color: var(--muted); margin-top: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: right; padding: 8px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--text2); font-weight: 500; font-size: 12px; }
+td.num { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+tr.hl td { background: rgba(68, 170, 153, 0.08); font-weight: 600; }
+tr.me td { border-bottom: 2px solid var(--accent); }
+.traffic { margin-top: 16px; padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); }
+.traffic .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.traffic input[type=range] { flex: 1; min-width: 180px; accent-color: var(--accent); }
+.traffic .pct { font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 600; min-width: 48px; text-align: right; }
+.traffic .verdict { margin-top: 10px; font-size: 14px; }
+.traffic .verdict b.ok { color: var(--ok); }
+.traffic .verdict b.bad { color: var(--err); }
+.note { font-size: 12px; color: var(--muted); margin-top: 12px; line-height: 1.6; }
+.breakeven {
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  margin-top: 12px;
+  background: var(--bg);
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+}
+.breakeven b { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+@media (max-width: 768px) {
+  body { padding: 12px; }
+  .card { padding: 14px; }
+  .grid { grid-template-columns: 1fr; }
+  th, td { padding: 6px 4px; font-size: 12px; }
+  .actions { flex-direction: column; }
+  .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Toco <span>Migration</span> Calculator</h1>
+  <button class="theme-btn" id="themeBtn">Dark</button>
+</header>
+<main>
+  <div class="card">
+    <h2>Bandingkan profit</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Kategori produk</label>
+        <select id="category"></select>
+      </div>
+      <div class="field">
+        <label>Harga jual (Rp)</label>
+        <input type="number" id="price" min="0" placeholder="100000">
+      </div>
+      <div class="field">
+        <label>Modal per item (Rp)</label>
+        <input type="number" id="modal" min="0" placeholder="55000">
+      </div>
+      <div class="field">
+        <label>Penjualan per bulan</label>
+        <input type="number" id="volume" min="1" placeholder="100">
+      </div>
+      <div class="field">
+        <label>Marketplace sekarang</label>
+        <select id="current"></select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn secondary" id="exampleBtn">Isi contoh</button>
+      <button class="btn primary" id="calcBtn">Hitung</button>
+    </div>
+  </div>
+
+  <div id="results" class="hidden">
+    <div class="summary-cards" id="summary"></div>
+    <div class="card">
+      <h2>Profit per marketplace</h2>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Marketplace</th>
+              <th>Tarif</th>
+              <th>Potongan/item</th>
+              <th>Profit/item</th>
+              <th>Margin</th>
+              <th>Profit/bulan</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="traffic" id="traffic"></div>
+      <div class="breakeven hidden" id="breakeven"></div>
+      <div class="note" id="notes"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+let meta = null;
+let lastResult = null;
+
+const fmt = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+const fmtPct = (n) => n + '%';
+
+function loadMeta() {
+  fetch('/api/meta').then(r => r.json()).then(m => {
+    meta = m;
+    const catSel = $('category');
+    m.categories.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.id; o.textContent = c.label;
+      catSel.appendChild(o);
+    });
+    const curSel = $('current');
+    m.marketplaces.forEach(mp => {
+      const o = document.createElement('option');
+      o.value = mp.id; o.textContent = mp.name;
+      curSel.appendChild(o);
+    });
+    fillExample();
+  });
+}
+
+function fillExample() {
+  $('category').value = 'fashion';
+  $('price').value = '120000';
+  $('modal').value = '60000';
+  $('volume').value = '100';
+  $('current').value = 'shopee';
+}
+
+function render(r) {
+  lastResult = r;
+  $('results').classList.remove('hidden');
+
+  // Summary: Toco vs current
+  const t = r.toco, c = r.current;
+  const diffItem = t.profitItem - c.profitItem;
+  const diffMonth = t.profitMonth - c.profitMonth;
+  $('summary').innerHTML = `
+    <div class="stat">
+      <div class="k">Profit/item di Toco</div>
+      <div class="v">${fmt(t.profitItem)}</div>
+      <div class="s">margin ${t.margin}%</div>
+    </div>
+    <div class="stat">
+      <div class="k">Profit/item di ${c.name}</div>
+      <div class="v">${fmt(c.profitItem)}</div>
+      <div class="s">margin ${c.margin}%</div>
+    </div>
+    <div class="stat">
+      <div class="k">Selisih per item</div>
+      <div class="v ${diffItem >= 0 ? 'ok' : 'bad'}">${diffItem >= 0 ? '+' : ''}${fmt(diffItem)}</div>
+      <div class="s">${diffItem >= 0 ? 'Toco lebih untung' : 'Marketplace sekarang lebih untung'}</div>
+    </div>
+    <div class="stat">
+      <div class="k">Selisih per bulan (${r.volume} unit)</div>
+      <div class="v ${diffMonth >= 0 ? 'ok' : 'bad'}">${diffMonth >= 0 ? '+' : ''}${fmt(diffMonth)}</div>
+      <div class="s">asumsi volume sama</div>
+    </div>`;
+
+  // Table
+  const tbody = $('tbody');
+  tbody.innerHTML = '';
+  r.rows.forEach(row => {
+    const tr = document.createElement('tr');
+    if (row.id === 'toco') tr.className = 'hl';
+    if (row.id === r.currentId) tr.className += ' me';
+    let rateStr = row.group ? row.group.id + ' (' + fmtPct(row.rate) + ')' : fmtPct(row.rate);
+    tr.innerHTML = `
+      <td>${row.name}</td>
+      <td class="num">${rateStr}</td>
+      <td class="num">${fmt(row.fees)}</td>
+      <td class="num">${fmt(row.profitItem)}</td>
+      <td class="num">${row.margin}%</td>
+      <td class="num">${fmt(row.profitMonth)}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Traffic reality check
+  renderTraffic(r);
+
+  // Break-even
+  if (r.breakeven && r.currentId !== 'toco') {
+    $('breakeven').classList.remove('hidden');
+    $('breakeven').innerHTML = `
+      <b>Break-even:</b> cukup jual <b>${r.breakeven.units} unit/bulan</b> di Toco
+      (${r.breakeven.pctOfCurrent}% dari volume sekarang di ${r.current.name})
+      untuk profit bulanan yang sama.`;
+  } else {
+    $('breakeven').classList.add('hidden');
+  }
+
+  // Notes
+  const notes = r.rows.map(row => {
+    return '<b>' + row.name + ':</b> ' + row.note;
+  });
+  notes.unshift('Perhitungan belum termasuk ongkir, pajak, dan biaya program promosi. Toco masih baru dengan traffic jauh lebih kecil dari marketplace besar, jadi volume nyata bisa jauh di bawah asumsi.');
+  notes.push('Sumber: katadata.co.id (20 Jun 2025), antaranews.com (4 Mar 2026), metrotvnews.com, associe.co.id (8 Mei 2026). Tarif bisa berubah sewaktu-waktu.');
+  $('notes').innerHTML = notes.join('<br>');
+}
+
+function renderTraffic(r) {
+  const t = r.toco, c = r.current;
+  const box = $('traffic');
+  const pct = $('trafficPct') ? $('trafficPct').value : 30;
+  const volToco = Math.round(r.volume * pct / 100);
+  const profitToco = t.profitItem * volToco;
+  const profitCur = c.profitMonth;
+  const verdict = profitToco >= profitCur
+    ? `<b class="ok">Toco tetap lebih untung</b> walau cuma dapat ${pct}% volume (${fmt(profitToco)} vs ${fmt(profitCur)})`
+    : `<b class="bad">Marketplace sekarang masih lebih untung</b> kalau Toco cuma dapat ${pct}% volume (${fmt(profitToco)} vs ${fmt(profitCur)})`;
+  box.innerHTML = `
+    <div class="row">
+      <span style="font-size:13px;color:var(--text2)">Estimasi volume di Toco vs ${c.name}</span>
+      <input type="range" id="trafficPct" min="1" max="100" value="${pct}">
+      <span class="pct">${pct}%</span>
+      <span style="font-size:13px;color:var(--muted)">= ${volToco} unit</span>
+    </div>
+    <div class="verdict">${verdict}</div>`;
+  $('trafficPct').addEventListener('input', (e) => renderTraffic(r));
+}
+
+$('calcBtn').addEventListener('click', () => {
+  const body = {
+    category: $('category').value,
+    price: parseFloat($('price').value) || 0,
+    modal: parseFloat($('modal').value) || 0,
+    volume: parseInt($('volume').value, 10) || 1,
+    current_marketplace: $('current').value,
+  };
+  if (body.price <= 0) {
+    $('price').style.borderColor = '#dc2626';
+    setTimeout(() => { $('price').style.borderColor = ''; }, 1500);
+    return;
+  }
+  $('calcBtn').disabled = true;
+  $('calcBtn').textContent = 'Menghitung...';
+  fetch('/api/calc', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+    .then(res => res.json())
+    .then(r => {
+      if (r.error) { alert(r.error); return; }
+      render(r);
+    })
+    .finally(() => {
+      $('calcBtn').disabled = false;
+      $('calcBtn').textContent = 'Hitung';
+    });
+});
+
+$('exampleBtn').addEventListener('click', fillExample);
+
+// Enter = submit
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') $('calcBtn').click();
+});
+
+// Theme toggle, light default, localStorage
+$('themeBtn').addEventListener('click', () => {
+  const dark = document.body.classList.toggle('dark');
+  $('themeBtn').textContent = dark ? 'Light' : 'Dark';
+  localStorage.setItem('toco_theme', dark ? 'dark' : 'light');
+});
+if (localStorage.getItem('toco_theme') === 'dark') {
+  document.body.classList.add('dark');
+  $('themeBtn').textContent = 'Light';
+}
+
+loadMeta();
+</script>
+</body>
+</html>

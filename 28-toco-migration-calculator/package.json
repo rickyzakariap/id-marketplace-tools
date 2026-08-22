@@ -1,0 +1,12 @@
+{
+  "name": "toco-migration-calculator",
+  "version": "1.0.0",
+  "description": "Compare net profit selling on Toco (0% commission) vs other Indonesian marketplaces",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
