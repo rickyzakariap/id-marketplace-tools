@@ -468,3 +468,21 @@
 - Lesson: 0% komisi bukan jawaban otomatis - traffic reality check adalah pembeda tool ini vs tabel fee statis
 - Lesson: Google News RSS + katadata/ANTARA langsung bisa di-fetch tanpa JS redirect (beda dari detik/bisnis yang kadang anti-bot)
 - Next: Tambah input ongkir per item, tambah Toco buyer fee Rp2.000 sebagai toggle, update tarif saat Toco umumkan biaya baru
+
+## 2026-08-23 - UMKM Service Fee Checker (fix)
+- Issues: #23 mengklaim Kepmen diskon 50% biaya layanan sudah diteken 12-13 Agu 2026 dan berlaku Agustus. Fakta terbaru (ANTARA, detikFinance, Tirto, 21-22 Agu): Kepmen BELUM diteken, Menteri UMKM targetkan diteken pekan 24-28 Agu, berlaku akhir Agustus. Banner tool salah = seller salah informasi.
+- Fix: POLICY dijadikan date-aware (menunggu -> diteken -> active) dengan tanggal target, deskripsi menyebut "jadwal target, bisa berubah". Pakai tanggal lokal (getFullYear/getMonth/getDate), bukan toISOString (UTC bisa beda 1 hari dengan WIB - pola yang sama dengan lesson #25 ParseInLocation).
+- Lesson: Tool kebijakan yang dibangun dari berita WAJIB di-recheck tanggalnya saat berita baru keluar. Berita "Kepmen diteken" versi 16 Agu ternyata premature - cek ulang sebelum claim.
+- Next: Update lagi saat Kepmen benar-benar diteken dan tarif resmi keluar.
+
+## 2026-08-23 - Dana Tertahan Tracker
+- Works: Node.js + Express web tool, single dep (express), JSON file storage
+- Works: Research-first via Google News RSS when:3d - ketemu kasus saldo tertahan yang masih berjalan: 500 akun TikTok Shop beku Rp 3 triliun (CNBC 9 Jul), Komisi VII DPR panggil platform (ANTARA 2 Jul), dan update terbaru 21 Agu: penangguhan berakhir tapi saldo Tokopedia/TikTok belum bisa dicairkan (detikNews)
+- Works: Case tracker (platform, jumlah, sejak, alasan, status, catatan) dengan summary total dana, kasus terbuka, kasus tertua (hanya dari kasus yang belum cair)
+- Works: Kronologi saga date-aware (status banner: sebelum -> berlangsung -> pasca penangguhan), 5 alasan penahanan, checklist eskalasi 5 langkah (CS -> Kemenkop UKM -> Komisi VII DPR -> bantuan hukum)
+- Works: Auto-fill contoh (form + seed data), export CSV, light minimal theme, responsive, semua element ID verified
+- Issues: Kasus "saldo ditahan" tidak punya tanggal rilis pasti - tool ini tracking + edukasi, bukan prediksi tanggal cair
+- Lesson: Story platform vs seller (dana tertahan, fee naik) = pain point nyata yang berulang. Rp 3 triliun nyangkut = masalah yang lebih besar dari sekadar fee, dan belum ada tool yang bantu seller melacaknya
+- Lesson: Kasus "cair" harus dikeluarkan dari statistik terbuka - summary open_cases terpisah dari total, kasus tertua dihitung dari kasus yang belum cair (jangan sampai UI kontradiktif)
+- Lesson: kill node server di Windows via git-bash: taskkill //F gagal (MSYS path mangling), pakai powershell Stop-Process -Id
+- Next: Tambah pengingat Telegram saat ada kabar baru soal pencairan, tambah import CSV

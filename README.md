@@ -34,6 +34,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 26 | [26-omzet-gabungan-tracker](26-omzet-gabungan-tracker/) | Web | Node.js + Express | Track combined omzet across all marketplaces vs Rp 500jt tax-free threshold (DJP accumulates omzet), PPh 22 estimate |
 | 27 | [27-tiktok-komisi-calculator](27-tiktok-komisi-calculator/) | Web | Python (stdlib) | Calculate TikTok Shop dynamic commission old vs new (18 May 2026, cap Rp40rb->Rp650rb) with margin impact, reco price, Shopee 2026 fee comparison |
 | 28 | [28-toco-migration-calculator](28-toco-migration-calculator/) | Web | Node.js + Express | Compare net profit selling on Toco (0% commission) vs 6 marketplaces, with traffic reality check and break-even volume |
+| 29 | [29-dana-tertahan-tracker](29-dana-tertahan-tracker/) | Web | Node.js + Express | Track marketplace balances frozen or withheld by platforms (TikTok Shop Rp 3T case), with saga timeline, escalation checklist, CSV export |
 
 ## Contributing
 
