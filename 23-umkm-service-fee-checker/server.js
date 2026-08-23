@@ -19,17 +19,45 @@ const MARKETPLACES = [
   { id: 'tiktok', name: 'TikTok Shop', defaultRate: 2.0 }
 ];
 
-// Policy status derived from the 2026-08-16 timeline:
-// Kepmen signed week of Aug 12-13 2026, discount effective August 2026.
-// Structure allows updating dates as the policy evolves.
-const POLICY = {
-  status: 'active',
-  label: 'Berlaku Agustus 2026',
-  description: 'Kepmen diskon biaya layanan ditandatangani pekan 12-13 Agustus 2026. Marketplace wajib memberi diskon 50% biaya layanan untuk pelaku usaha mikro dan kecil yang menjual produk lokal.',
-  regulation: 'Permen Perlindungan dan Peningkatan Daya Saing UMKM (aturan turunan PP 7/2021)',
-  key_date: '2026-08-13',
-  key_desc: 'Kepmen ditandatangani'
-};
+// Policy status derived from the latest timeline (updated 2026-08-23).
+// Kabar 21-22 Agustus 2026 (ANTARA, detikFinance, Tirto): Kepmen diskon 50%
+// biaya layanan untuk UMKM BELUM diteken. Menteri UMKM menargetkan diteken
+// pekan 24-28 Agustus 2026 dan diskon mulai berlaku akhir Agustus 2026.
+// Tanggal ini target resmi, bisa bergeser - status dihitung dari tanggal hari ini.
+const POLICY = (() => {
+  const d = new Date();
+  const today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const signedTarget = '2026-08-24';
+  const effectiveTarget = '2026-08-31';
+  if (today < signedTarget) {
+    return {
+      status: 'menunggu',
+      label: 'Kepmen belum diteken',
+      description: 'Kepmen diskon biaya layanan 50% untuk UMKM belum diteken. Menteri UMKM menargetkan diteken pekan 24-28 Agustus 2026 dan berlaku akhir Agustus 2026 (pernyataan 21-22 Agustus 2026). Jadwal target, bisa berubah.',
+      regulation: 'Permen Perlindungan dan Peningkatan Daya Saing UMKM (aturan turunan PP 7/2021)',
+      key_date: signedTarget,
+      key_desc: 'Target Kepmen diteken'
+    };
+  }
+  if (today <= effectiveTarget) {
+    return {
+      status: 'diteken',
+      label: 'Kepmen diteken, diskon mulai berlaku',
+      description: 'Kepmen diskon biaya layanan 50% untuk UMKM diteken dan mulai berlaku akhir Agustus 2026. Cek seller center masing-masing untuk tarif biaya layanan terbaru.',
+      regulation: 'Permen Perlindungan dan Peningkatan Daya Saing UMKM (aturan turunan PP 7/2021)',
+      key_date: effectiveTarget,
+      key_desc: 'Diskon mulai berlaku'
+    };
+  }
+  return {
+    status: 'active',
+    label: 'Diskon biaya layanan berlaku',
+    description: 'Diskon 50% biaya layanan untuk pelaku usaha mikro dan kecil yang menjual produk lokal sudah berlaku. Marketplace wajib menerapkan diskon ini. Cek seller center untuk tarif terbaru.',
+    regulation: 'Permen Perlindungan dan Peningkatan Daya Saing UMKM (aturan turunan PP 7/2021)',
+    key_date: effectiveTarget,
+    key_desc: 'Diskon mulai berlaku'
+  };
+})();
 
 // Eligibility requirements from the regulation
 const REQUIREMENTS = [
