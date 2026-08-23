@@ -1,0 +1,12 @@
+{
+  "name": "dana-tertahan-tracker",
+  "version": "1.0.0",
+  "description": "Lacak saldo marketplace yang dibekukan atau ditahan platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dana Tertahan Tracker</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #fff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --text-dim: #666;
+  --text-muted: #999;
+  --accent: #4a9;
+  --accent-soft: #e6f5ef;
+  --error: #dc2626;
+  --success: #22c55e;
+  --warn: #d97706;
+  --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --card: #242424;
+  --border: #333;
+  --text: #eee;
+  --text-dim: #aaa;
+  --text-muted: #777;
+  --accent-soft: #1f3a31;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 15px;
+}
+.wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+h1 { font-size: 1.35rem; font-weight: 600; }
+.theme-btn {
+  background: none; border: 1px solid var(--border); color: var(--text-dim);
+  padding: 6px 14px; border-radius: 6px; font-size: .85rem; cursor: pointer; font-family: inherit;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--text); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.banner { border-left: 3px solid var(--warn); }
+.banner h2 { font-size: 1rem; margin-bottom: 4px; }
+.banner p { color: var(--text-dim); font-size: .9rem; }
+.banner .src { color: var(--text-muted); font-size: .78rem; margin-top: 6px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.stat .label { font-size: .75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+.stat .value { font-family: var(--mono); font-size: 1.15rem; font-weight: 600; margin-top: 4px; }
+.stat .sub { font-size: .78rem; color: var(--text-dim); margin-top: 2px; }
+h3 { font-size: .95rem; margin-bottom: 12px; font-weight: 600; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.field { margin-bottom: 4px; }
+.field label { display: block; font-size: .8rem; color: var(--text-dim); margin-bottom: 4px; }
+.field input, .field select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+  font-size: .9rem; background: var(--card); color: var(--text); font-family: inherit;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field input[type="number"] { font-family: var(--mono); }
+.field .err { color: var(--error); font-size: .75rem; display: none; margin-top: 3px; }
+.field.invalid input, .field.invalid select { border-color: var(--error); }
+.field.invalid .err { display: block; }
+.field.full { grid-column: 1 / -1; }
+.actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.btn {
+  padding: 9px 18px; border-radius: 6px; font-size: .9rem; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card); color: var(--text);
+  font-family: inherit; transition: border-color .15s, background .15s;
+}
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
+.btn-primary:hover { filter: brightness(.95); }
+.btn-ghost { background: none; color: var(--text-dim); }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th { text-align: left; color: var(--text-muted); font-weight: 500; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+td.num { font-family: var(--mono); text-align: right; }
+td .note { color: var(--text-muted); font-size: .78rem; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .72rem; background: var(--accent-soft); color: var(--text-dim); }
+.tag.warn { background: #fdf0e3; color: var(--warn); }
+.tag.ok { background: #e7f6ec; color: var(--success); }
+select.mini { padding: 3px 6px; border: 1px solid var(--border); border-radius: 5px; background: var(--card); color: var(--text); font-size: .78rem; font-family: inherit; }
+.del { background: none; border: none; color: var(--error); cursor: pointer; font-size: .8rem; padding: 4px; }
+.del:hover { text-decoration: underline; }
+.empty { color: var(--text-muted); text-align: center; padding: 28px 0; font-size: .9rem; }
+.timeline { list-style: none; }
+.timeline li { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.timeline li:last-child { border-bottom: none; }
+.timeline .date { font-family: var(--mono); font-size: .78rem; color: var(--text-dim); min-width: 86px; padding-top: 2px; }
+.timeline .tt { font-weight: 500; font-size: .88rem; }
+.timeline .td { color: var(--text-dim); font-size: .82rem; }
+.timeline .src { color: var(--text-muted); font-size: .75rem; }
+.reason { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.reason:last-child { border-bottom: none; }
+.reason .rt { font-weight: 500; font-size: .88rem; }
+.reason .rd { color: var(--text-dim); font-size: .82rem; margin-top: 2px; }
+.step { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.step:last-child { border-bottom: none; }
+.step input[type="checkbox"] { margin-top: 4px; accent-color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; }
+.step .st { font-weight: 500; font-size: .88rem; }
+.step .sd { color: var(--text-dim); font-size: .82rem; }
+.step.done .st { color: var(--text-muted); text-decoration: line-through; }
+.progress { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: .82rem; color: var(--text-dim); }
+.bar { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .2s; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 768px) {
+  .wrap { padding: 16px 12px 48px; }
+  .grid { grid-template-columns: 1fr 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .actions { flex-direction: column; }
+  .actions .btn { width: 100%; }
+  .table-scroll { overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Dana Tertahan Tracker</h1>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">Dark</button>
+  </header>
+
+  <div class="card banner" id="statusCard">
+    <h2 id="statusTitle">Memuat status...</h2>
+    <p id="statusDesc"></p>
+    <div class="src" id="statusSrc"></div>
+  </div>
+
+  <div class="grid">
+    <div class="stat"><div class="label">Total tertahan</div><div class="value" id="statTotal">Rp 0</div><div class="sub" id="statCases">0 kasus</div></div>
+    <div class="stat"><div class="label">Kasus terbuka</div><div class="value" id="statOpen">0</div><div class="sub">belum cair</div></div>
+    <div class="stat"><div class="label">Kasus tertua</div><div class="value" id="statOldest">-</div><div class="sub" id="statOldestDays"></div></div>
+    <div class="stat"><div class="label">Rata-rata dana</div><div class="value" id="statAvg">Rp 0</div><div class="sub">per kasus</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Tambah kasus</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label>Marketplace</label>
+        <select id="casePlatform"></select>
+      </div>
+      <div class="field" id="caseAmountField">
+        <label>Jumlah dana tertahan (Rp)</label>
+        <input type="number" id="caseAmount" min="1" placeholder="mis. 50000000">
+        <div class="err" id="caseAmountError">Jumlah dana harus lebih dari 0</div>
+      </div>
+      <div class="field" id="caseSinceField">
+        <label>Sejak tanggal</label>
+        <input type="date" id="caseSince">
+        <div class="err" id="caseSinceError">Tanggal wajib diisi</div>
+      </div>
+      <div class="field">
+        <label>Alasan penahanan</label>
+        <select id="caseReason"></select>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="caseStatus"></select>
+      </div>
+      <div class="field">
+        <label>Nominal contoh</label>
+        <input type="text" id="caseExample" value="Rp 50.000.000" disabled>
+      </div>
+      <div class="field full">
+        <label>Catatan</label>
+        <input type="text" id="caseNote" maxlength="200" placeholder="mis. sudah lapor CS, nomor tiket 12345">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="addBtn" onclick="addCase()">Tambah kasus</button>
+      <button class="btn" onclick="fillExample()">Isi contoh</button>
+      <button class="btn" onclick="seedData()">Muat contoh data</button>
+      <button class="btn btn-ghost" onclick="exportCsv()">Export CSV</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Daftar kasus</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Platform</th><th>Dana</th><th>Sejak</th><th>Hari</th><th>Alasan</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="caseRows"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="emptyState">Belum ada kasus. Tambahkan kasus di atas atau klik "Muat contoh data".</div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>Kronologi kasus</h3>
+      <ul class="timeline" id="timeline"></ul>
+    </div>
+    <div class="card">
+      <h3>Kenapa saldo bisa tertahan</h3>
+      <div id="reasons"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Langkah eskalasi</h3>
+    <div class="progress"><span id="stepCount">0 dari 5 selesai</span><div class="bar"><i id="stepBar" style="width:0%"></i></div></div>
+    <div id="escalation"></div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let META = null;
+
+function fmtRp(n) {
+  return 'Rp ' + Number(n || 0).toLocaleString('id-ID');
+}
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  $('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+}
+(function () {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  $('themeBtn').textContent = saved === 'dark' ? 'Light' : 'Dark';
+})();
+
+async function loadMeta() {
+  const r = await fetch('/api/meta');
+  META = await r.json();
+  $('casePlatform').innerHTML = META.platforms.map((p) => `<option value="${p.id}">${p.name}</option>`).join('');
+  $('caseReason').innerHTML = META.reasons.map((r2) => `<option value="${r2.id}">${r2.label}</option>`).join('');
+  $('caseStatus').innerHTML = META.statuses.map((s) => `<option value="${s.id}">${s.label}</option>`).join('');
+  $('timeline').innerHTML = META.timeline.map((t) => `
+    <li>
+      <div class="date">${t.date}</div>
+      <div>
+        <div class="tt">${t.title}</div>
+        <div class="td">${t.detail}</div>
+        <div class="src">Sumber: ${t.source}</div>
+      </div>
+    </li>`).join('');
+  $('reasons').innerHTML = META.reasons.map((r2) => `
+    <div class="reason">
+      <div class="rt">${r2.label}</div>
+      <div class="rd">${r2.detail}</div>
+    </div>`).join('');
+  $('escalation').innerHTML = META.escalation.map((e) => `
+    <div class="step" id="step-${e.step}">
+      <input type="checkbox" id="chk-${e.step}" onchange="updateSteps()">
+      <div>
+        <div class="st">${e.step}. ${e.label}</div>
+        <div class="sd">${e.detail}</div>
+      </div>
+    </div>`).join('');
+}
+
+function updateSteps() {
+  const total = META.escalation.length;
+  let done = 0;
+  for (let i = 1; i <= total; i++) {
+    const chk = $('chk-' + i);
+    const step = $('step-' + i);
+    if (chk.checked) { done++; step.classList.add('done'); }
+    else step.classList.remove('done');
+  }
+  $('stepCount').textContent = done + ' dari ' + total + ' selesai';
+  $('stepBar').style.width = Math.round((done / total) * 100) + '%';
+}
+
+async function loadStatus() {
+  const r = await fetch('/api/status');
+  const s = await r.json();
+  $('statusTitle').textContent = s.label;
+  $('statusDesc').textContent = s.description;
+  $('statusSrc').textContent = 'Diperbarui ' + s.updated + '. Sumber: ' + s.sources.join(', ');
+}
+
+async function loadCases() {
+  const r = await fetch('/api/cases');
+  const cases = await r.json();
+  const rows = $('caseRows');
+  rows.innerHTML = '';
+  $('emptyState').style.display = cases.length ? 'none' : 'block';
+  cases.forEach((c) => {
+    const reason = META.reasons.find((x) => x.id === c.reason);
+    const status = META.statuses.find((x) => x.id === c.status);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${META.platforms.find((p) => p.id === c.platform)?.name || c.platform}</td>
+      <td class="num">${fmtRp(c.amount)}</td>
+      <td class="num">${c.since}</td>
+      <td class="num">${c.age_days}</td>
+      <td>${reason ? reason.label : c.reason}</td>
+      <td>
+        <select class="mini" onchange="updateStatus('${c.id}', this.value)">
+          ${META.statuses.map((s) => `<option value="${s.id}" ${s.id === c.status ? 'selected' : ''}>${s.label}</option>`).join('')}
+        </select>
+      </td>
+      <td><button class="del" onclick="removeCase('${c.id}')">Hapus</button></td>`;
+    if (c.note) {
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.textContent = c.note;
+      tr.querySelector('td:nth-child(6)').appendChild(note);
+    }
+    rows.appendChild(tr);
+  });
+}
+
+async function loadSummary() {
+  const r = await fetch('/api/summary');
+  const s = await r.json();
+  $('statTotal').textContent = fmtRp(s.total_amount);
+  $('statCases').textContent = s.total_cases + ' kasus';
+  $('statOpen').textContent = s.open_cases;
+  $('statOldest').textContent = s.oldest_since || '-';
+  $('statOldestDays').textContent = s.oldest_since ? s.oldest_days + ' hari tertahan' : '';
+  $('statAvg').textContent = s.total_cases ? fmtRp(Math.round(s.total_amount / s.total_cases)) : 'Rp 0';
+}
+
+function clearErrors() {
+  ['caseAmount', 'caseSince'].forEach((id) => {
+    $(id).classList.remove('invalid');
+    $(id + 'Error').style.display = 'none';
+  });
+}
+
+function validate() {
+  clearErrors();
+  let ok = true;
+  const amount = Number($('caseAmount').value);
+  const since = $('caseSince').value;
+  if (!amount || amount <= 0) {
+    $('caseAmount').classList.add('invalid');
+    $('caseAmountError').style.display = 'block';
+    ok = false;
+  }
+  if (!since) {
+    $('caseSince').classList.add('invalid');
+    $('caseSinceError').style.display = 'block';
+    ok = false;
+  }
+  return ok;
+}
+
+async function addCase() {
+  if (!validate()) return;
+  const btn = $('addBtn');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+  try {
+    const r = await fetch('/api/cases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        platform: $('casePlatform').value,
+        amount: Number($('caseAmount').value),
+        since: $('caseSince').value,
+        reason: $('caseReason').value,
+        status: $('caseStatus').value,
+        note: $('caseNote').value,
+      }),
+    });
+    const data = await r.json();
+    if (!r.ok) {
+      if (data.error === 'jumlah dana harus lebih dari 0') {
+        $('caseAmount').classList.add('invalid');
+        $('caseAmountError').style.display = 'block';
+      }
+      return;
+    }
+    $('caseAmount').value = '';
+    $('caseSince').value = '';
+    $('caseNote').value = '';
+    await Promise.all([loadCases(), loadSummary()]);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Tambah kasus';
+  }
+}
+
+async function updateStatus(id, status) {
+  await fetch('/api/cases/' + id, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+  });
+  await Promise.all([loadCases(), loadSummary()]);
+}
+
+async function removeCase(id) {
+  await fetch('/api/cases/' + id, { method: 'DELETE' });
+  await Promise.all([loadCases(), loadSummary()]);
+}
+
+function fillExample() {
+  $('casePlatform').value = 'tiktok';
+  $('caseAmount').value = '50000000';
+  $('caseSince').value = '2026-07-05';
+  $('caseReason').value = 'akun-beku';
+  $('caseStatus').value = 'baru';
+  $('caseNote').value = 'Akun dibekukan setelah penjualan ramai, belum ada kejelasan dari CS.';
+  clearErrors();
+}
+
+async function seedData() {
+  await fetch('/api/seed', { method: 'POST' });
+  await Promise.all([loadCases(), loadSummary()]);
+}
+
+function exportCsv() {
+  window.location.href = '/api/export';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.tagName !== 'SELECT') addCase();
+  if (e.key === 'Escape') {
+    clearErrors();
+    $('caseAmount').value = '';
+    $('caseSince').value = '';
+    $('caseNote').value = '';
+  }
+});
+
+(async function init() {
+  await loadMeta();
+  await loadStatus();
+  await loadCases();
+  await loadSummary();
+})();
+</script>
+</body>
+</html>
