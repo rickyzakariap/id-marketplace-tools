@@ -1,0 +1,29 @@
+{
+  "date": "2026-08-24",
+  "sources": ["google news rss", "nusantaranews.co", "suara.com", "kompas.com", "ikpi.or.id", "ukmindonesia.id"],
+  "pain_points": [
+    {
+      "category": "Biaya Marketplace",
+      "description": "Marketplace terus menaikkan biaya di 2026 (Shopee admin fee hingga 10%, TikTok Shop komisi 18 Mei 2026 dengan cap Rp650.000, biaya layanan logistik TikTok 1 Mei 2026, Gratis Ongkir XTRA Shopee 2 Mei 2026). Seller mengeluh diterapkan tanpa ruang negosiasi. Pemerintah merespons dengan Permendag 19/2026 (revisi Permendag 31/2023 PMSE, diumumkan Mendag Budi Santoso 8 Juni 2026) yang mewajibkan marketplace memperoleh persetujuan penjual sebelum mengubah biaya, komisi, atau mekanisme layanan. Seller tidak tahu hak barunya ini dan bagaimana menolak perubahan yang merugikan.",
+      "frequency": "HIGH",
+      "sources": [
+        "nusantaranews.co: Permendag 19/2026 Terbit, Jutaan Penjual Online Kini Punya Hak Tolak Kebijakan Sepihak Marketplace (Agu 2026)",
+        "suara.com: Marketplace Tak Bisa Lagi Naikkan Biaya Sepihak, Seller Kini Wajib Setujui Perubahan Kontrak",
+        "kompas.com: Mendag Serap Keluhan Penjual Marketplace, Revisi Permendag 31 Disiapkan",
+        "ikpi.or.id: UMKM Kini Bisa Protes Kenaikan Biaya Marketplace, Ini Aturan Barunya",
+        "ukmindonesia.id: Permendag 19 Tahun 2026 Sudah Berlaku, UMKM Wajib Tahu 5 Perubahan Ini"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Hak Tolak Seller",
+      "type": "Web",
+      "tech": "Go 1.26 single binary (net/http, JSON file storage)",
+      "description": "Cek apakah perubahan kebijakan marketplace (biaya baru, komisi, mekanisme layanan) termasuk yang wajib persetujuan penjual sesuai Permendag 19/2026, bandingkan tanggal berlaku dengan 8 Juni 2026, generate surat keberatan formal siap kirim ke seller center, dan lacak kasus dari draft sampai eskalasi (CS platform -> Kemendag Ditjen PDN -> Kemenkop UKM -> Komisi VI DPR -> bantuan hukum/media).",
+      "category": "Web / Data & Analytics",
+      "priority": 1,
+      "why": "Seller bingung dan marah atas kenaikan biaya sepihak 2026. Aturan baru justru memberi mereka hak tolak, tapi tidak ada yang mengubah hak itu jadi tindakan. Tool ini jawab langsung: berhak atau tidak, lalu kasih suratnya. Pola sama dengan #22-29: aturan baru + kebingungan seller = tool bernilai tinggi."
+    }
+  ]
+}
