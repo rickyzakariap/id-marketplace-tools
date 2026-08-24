@@ -486,3 +486,16 @@
 - Lesson: Kasus "cair" harus dikeluarkan dari statistik terbuka - summary open_cases terpisah dari total, kasus tertua dihitung dari kasus yang belum cair (jangan sampai UI kontradiktif)
 - Lesson: kill node server di Windows via git-bash: taskkill //F gagal (MSYS path mangling), pakai powershell Stop-Process -Id
 - Next: Tambah pengingat Telegram saat ada kabar baru soal pencairan, tambah import CSV
+
+## 2026-08-24 - Hak Tolak Seller
+- Works: Go 1.26 single binary, zero external dependencies
+- Works: Research-first via Google News RSS - found Permendag 19/2026 (revisi Permendag 31/2023 PMSE, diumumkan Mendag Budi Santoso 8 Juni 2026) mewajibkan marketplace memperoleh persetujuan penjual SEBELUM memberlakukan perubahan biaya, komisi, atau mekanisme layanan. Full article verified from nusantaranews.co (bukan cuma headline)
+- Works: Cek hak tolak date-aware (bandingkan tanggal berlaku vs 8 Juni 2026) dengan 5 verdict: berhak tolak, sebelum aturan, sudah disetujui, di luar cakupan, data kurang
+- Works: Surat keberatan generator dengan 2 varian (belum/sudah dimintai persetujuan), otomatis tersimpan ke lacak kasus
+- Works: Lacak kasus dengan status lifecycle (draft -> dikirim -> ditanggapi -> eskalasi -> selesai), seed contoh 3 kasus nyata (TikTok logistik 1 Mei, TikTok komisi 18 Mei, contoh Shopee pasca-aturan), export CSV
+- Works: Semua API verified via curl (policy, meta, check x5 cabang, letter, CRUD, seed, export), semua 50 element ID cocok dengan HTML, light theme + responsive + dark toggle
+- Issues: Go time.Format("2 Januari 2006") salah - "Januari" bukan token format Go (hanya "January"), hasilnya "24 Januari 2026" padahal Agustus. Bulan harus diambil manual dari array nama bulan Indonesia
+- Fix: formatIDDate() dengan array idMonths, dan tambah spasi sebelum "yang diumumkan" di template surat (detail + announceLine nyambung tanpa spasi)
+- Lesson: JANGAN pernah campur teks bahasa asing ke layout string Go time.Format - token bulan cuma "January", sisanya literal. Kalau butuh nama bulan lokal, petakan manual
+- Lesson: Pola "aturan baru + seller bingung" berlanjut (#22 PPh 22, #23 diskon layanan, #24 NIB, #30 hak tolak) - kali ini aturannya justru MEMBERI hak ke seller, bukan membebani. Tool yang mengubah hak legal jadi tindakan (surat) lebih actionable daripada sekadar info
+- Next: Tambah template surat per jenis perubahan, update saat ada putusan baru soal penerapan Permendag 19/2026
