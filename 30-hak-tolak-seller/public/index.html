@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hak Tolak Seller - Keberatan Perubahan Kebijakan Marketplace</title>
+<style>
+:root {
+  --bg: #fafafa; --card: #fff; --border: #e5e5e5;
+  --text: #1a1a1a; --text-dim: #666; --text-muted: #999;
+  --accent: #4a9; --accent-soft: #e6f5ef;
+  --red: #dc2626; --red-soft: #fef2f2;
+  --amber: #d97706; --amber-soft: #fffbeb;
+  --green: #22c55e; --green-soft: #f0fdf4;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px; line-height: 1.55;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 20px; }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+header h1 { font-size: 1.35rem; font-weight: 600; }
+header h1 span { color: var(--accent); }
+header .sub { font-size: .85rem; color: var(--text-dim); }
+.theme-btn {
+  background: none; border: 1px solid var(--border); color: var(--text-dim);
+  padding: 5px 12px; border-radius: 6px; font-size: .8rem; cursor: pointer; font-family: inherit;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--text); }
+.banner {
+  background: var(--accent-soft); border: 1px solid #cfe8dd; border-left: 3px solid var(--accent);
+  border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; font-size: .9rem;
+}
+.banner b { color: #1f3a31; }
+.banner .meta { color: var(--text-dim); font-size: .8rem; margin-top: 4px; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 18px; flex-wrap: wrap; }
+.tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 9px 14px; font-size: .9rem; color: var(--text-dim); cursor: pointer; font-family: inherit;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+.panel { display: none; }
+.panel.active { display: block; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+.card h2 { font-size: 1.02rem; font-weight: 600; margin-bottom: 4px; }
+.card .desc { font-size: .85rem; color: var(--text-dim); margin-bottom: 14px; }
+label { display: block; font-size: .82rem; font-weight: 500; margin: 12px 0 4px; color: var(--text); }
+input[type=text], input[type=date], textarea, select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 7px;
+  font-size: .92rem; font-family: inherit; background: var(--card); color: var(--text);
+}
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+textarea { min-height: 74px; resize: vertical; }
+input.error, select.error, textarea.error { border-color: var(--red); }
+.err { color: var(--red); font-size: .78rem; margin-top: 3px; display: none; }
+.err.show { display: block; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.chip {
+  border: 1px solid var(--border); background: var(--card); color: var(--text);
+  padding: 6px 12px; border-radius: 20px; font-size: .82rem; cursor: pointer; font-family: inherit;
+}
+.chip:hover { border-color: var(--accent); }
+.chip.sel { background: var(--accent-soft); border-color: var(--accent); color: #1f3a31; font-weight: 500; }
+.radio-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+.radio-row label { display: flex; align-items: center; gap: 6px; margin: 0; font-weight: 400; font-size: .88rem; cursor: pointer; }
+.btn {
+  border: none; border-radius: 7px; padding: 9px 18px; font-size: .9rem; font-weight: 500;
+  cursor: pointer; font-family: inherit; margin-top: 14px;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #3d8a6f; }
+.btn-primary:disabled { opacity: .55; cursor: default; }
+.btn-ghost { background: var(--card); border: 1px solid var(--border); color: var(--text); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+.btn-sm { padding: 4px 10px; font-size: .78rem; margin-top: 0; }
+.btn-danger { background: none; border: 1px solid var(--border); color: var(--text-dim); }
+.btn-danger:hover { border-color: var(--red); color: var(--red); }
+.example-row { margin-top: 10px; }
+.verdict { display: none; border-radius: 10px; padding: 16px; margin-top: 14px; }
+.verdict.show { display: block; }
+.verdict.red { background: var(--red-soft); border: 1px solid #f5c6c6; border-left: 3px solid var(--red); }
+.verdict.amber { background: var(--amber-soft); border: 1px solid #f3dfb8; border-left: 3px solid var(--amber); }
+.verdict.green { background: var(--green-soft); border: 1px solid #bce8c9; border-left: 3px solid var(--green); }
+.verdict.gray { background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--text-muted); }
+.verdict h3 { font-size: .98rem; margin-bottom: 6px; }
+.verdict p { font-size: .88rem; color: var(--text); }
+.verdict ul { margin: 8px 0 0 18px; font-size: .85rem; color: var(--text-dim); }
+.verdict ul li { margin-bottom: 3px; }
+.letter-out {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; font-family: var(--mono); font-size: .8rem; line-height: 1.6;
+  white-space: pre-wrap; margin-top: 12px; max-height: 420px; overflow-y: auto;
+}
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.checkbox-row { display: flex; align-items: center; gap: 7px; margin-top: 12px; font-size: .86rem; cursor: pointer; }
+.checkbox-row input { width: auto; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+.stat .k { font-size: .75rem; color: var(--text-dim); }
+.stat .v { font-family: var(--mono); font-size: 1.1rem; font-weight: 600; margin-top: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+th { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-weight: 600; white-space: nowrap; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+td .t { font-weight: 500; }
+td .d { color: var(--text-dim); font-size: .78rem; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: .72rem; font-weight: 500; white-space: nowrap; }
+.tag.draft { background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); }
+.tag.dikirim { background: var(--amber-soft); border: 1px solid #f3dfb8; color: var(--amber); }
+.tag.ditanggapi { background: var(--green-soft); border: 1px solid #bce8c9; color: #15803d; }
+.tag.eskalasi { background: var(--red-soft); border: 1px solid #f5c6c6; color: var(--red); }
+.tag.selesai { background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); }
+select.status-sel { padding: 3px 6px; font-size: .76rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; background: var(--card); color: var(--text); }
+.empty { color: var(--text-muted); font-size: .86rem; text-align: center; padding: 22px 10px; }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.tl { border-left: 2px solid var(--border); margin: 10px 0 0 6px; padding-left: 16px; }
+.tl .item { position: relative; margin-bottom: 14px; }
+.tl .item::before {
+  content: ""; position: absolute; left: -21px; top: 5px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--card); border: 2px solid var(--accent);
+}
+.tl .dt { font-family: var(--mono); font-size: .75rem; color: var(--text-muted); }
+.tl .tt { font-weight: 600; font-size: .88rem; }
+.tl .dd { font-size: .82rem; color: var(--text-dim); }
+ol.steps { margin: 8px 0 0 18px; font-size: .86rem; }
+ol.steps li { margin-bottom: 8px; }
+ol.steps b { display: block; font-size: .88rem; }
+ol.steps span { color: var(--text-dim); font-size: .82rem; }
+.src { font-size: .78rem; color: var(--text-dim); margin-bottom: 5px; }
+.note { font-size: .78rem; color: var(--text-muted); margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; }
+.footer { text-align: center; color: var(--text-muted); font-size: .75rem; margin: 24px 0 8px; }
+body.dark {
+  --bg: #1a1a1a; --card: #242424; --border: #333;
+  --text: #eee; --text-dim: #aaa; --text-muted: #777;
+  --accent-soft: #1f3a31;
+}
+body.dark .banner { border-color: #2c4a3f; }
+body.dark .banner b { color: #8fd6b8; }
+body.dark .verdict.gray { background: #242424; }
+body.dark .chip.sel { color: #8fd6b8; }
+@media (max-width: 768px) {
+  .wrap { padding: 12px; }
+  .row2 { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .tabs { overflow-x: auto; flex-wrap: nowrap; }
+  .tab { white-space: nowrap; }
+  .card { padding: 14px; }
+  table { font-size: .76rem; }
+  th, td { padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Hak Tolak <span>Seller</span></h1>
+      <div class="sub">Keberatan atas perubahan kebijakan sepihak marketplace</div>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Dark</button>
+  </header>
+
+  <div class="banner" id="policyBanner">
+    <b>Permendag 19/2026 berlaku sejak 8 Juni 2026.</b> Marketplace wajib memperoleh persetujuan penjual sebelum memberlakukan perubahan biaya, komisi, atau mekanisme layanan. Cek perubahan yang kamu terima, lalu kirim surat keberatan.
+    <div class="meta" id="policyMeta">Memuat status kebijakan...</div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="cek" type="button">Cek Perubahan</button>
+    <button class="tab" data-tab="surat" type="button">Surat Keberatan</button>
+    <button class="tab" data-tab="lacak" type="button">Lacak Kasus</button>
+    <button class="tab" data-tab="aturan" type="button">Aturan &amp; Sumber</button>
+  </nav>
+
+  <!-- TAB 1: CEK PERUBAHAN -->
+  <section class="panel active" id="panel-cek">
+    <div class="card">
+      <h2>Cek Hak Saya</h2>
+      <div class="desc">Masukkan detail perubahan yang diumumkan marketplace. Tool ini membandingkannya dengan kewajiban persetujuan Permendag 19/2026.</div>
+      <form id="checkForm" novalidate>
+        <label for="checkPlatform">Platform</label>
+        <select id="checkPlatform">
+          <option value="">Pilih platform</option>
+          <option value="Shopee">Shopee</option>
+          <option value="Tokopedia">Tokopedia</option>
+          <option value="TikTok Shop">TikTok Shop</option>
+          <option value="Lazada">Lazada</option>
+          <option value="Bukalapak">Bukalapak</option>
+          <option value="Blibli">Blibli</option>
+        </select>
+        <div class="err" id="checkPlatformError"></div>
+
+        <label>Jenis perubahan</label>
+        <div class="chips" id="checkTypeChips">
+          <button type="button" class="chip" data-type="biaya-baru">Biaya baru</button>
+          <button type="button" class="chip" data-type="komisi">Komisi</button>
+          <button type="button" class="chip" data-type="mekanisme-layanan">Mekanisme layanan</button>
+          <button type="button" class="chip" data-type="harga-produk">Harga produk</button>
+          <button type="button" class="chip" data-type="lainnya">Lainnya</button>
+        </div>
+        <input type="hidden" id="checkType" value="">
+        <div class="err" id="checkTypeError"></div>
+
+        <div class="row2">
+          <div>
+            <label for="checkEffective">Tanggal berlaku</label>
+            <input type="date" id="checkEffective">
+            <div class="err" id="checkEffectiveError"></div>
+          </div>
+          <div>
+            <label>Apakah kamu dimintai persetujuan?</label>
+            <div class="radio-row">
+              <label><input type="radio" name="checkConsent" value="ya"> Sudah</label>
+              <label><input type="radio" name="checkConsent" value="belum"> Belum</label>
+              <label><input type="radio" name="checkConsent" value="tidak-tahu"> Tidak tahu</label>
+            </div>
+            <div class="err" id="checkConsentError"></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="checkBtn" type="submit">Cek Hak Saya</button>
+        <div class="example-row">
+          <button class="btn btn-ghost btn-sm" id="checkExampleBtn" type="button">Contoh: Shopee biaya baru, berlaku 1 Sep 2026, tanpa persetujuan</button>
+        </div>
+      </form>
+
+      <div class="verdict" id="checkVerdict">
+        <h3 id="verdictTitle"></h3>
+        <p id="verdictSummary"></p>
+        <ul id="verdictBullets"></ul>
+        <button class="btn btn-primary btn-sm" id="verdictCta" type="button" style="display:none">Buat Surat Keberatan</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: SURAT KEBERATAN -->
+  <section class="panel" id="panel-surat">
+    <div class="card">
+      <h2>Surat Keberatan</h2>
+      <div class="desc">Isi data toko dan detail perubahan. Surat dibuat berdasarkan Permendag 19/2026, tinggal salin dan kirim ke seller center.</div>
+      <form id="letterForm" novalidate>
+        <div class="row2">
+          <div>
+            <label for="letName">Nama</label>
+            <input type="text" id="letName" placeholder="Nama pemilik toko">
+            <div class="err" id="letNameError"></div>
+          </div>
+          <div>
+            <label for="letShop">Nama toko</label>
+            <input type="text" id="letShop" placeholder="Nama toko di marketplace">
+            <div class="err" id="letShopError"></div>
+          </div>
+        </div>
+        <div class="row2">
+          <div>
+            <label for="letPlatform">Platform</label>
+            <select id="letPlatform">
+              <option value="">Pilih platform</option>
+              <option value="Shopee">Shopee</option>
+              <option value="Tokopedia">Tokopedia</option>
+              <option value="TikTok Shop">TikTok Shop</option>
+              <option value="Lazada">Lazada</option>
+              <option value="Bukalapak">Bukalapak</option>
+              <option value="Blibli">Blibli</option>
+            </select>
+            <div class="err" id="letPlatformError"></div>
+          </div>
+          <div>
+            <label for="letType">Jenis perubahan</label>
+            <select id="letType">
+              <option value="">Pilih jenis</option>
+              <option value="biaya-baru">Biaya baru</option>
+              <option value="komisi">Komisi</option>
+              <option value="mekanisme-layanan">Mekanisme layanan</option>
+              <option value="harga-produk">Harga produk</option>
+              <option value="lainnya">Kebijakan lain</option>
+            </select>
+            <div class="err" id="letTypeError"></div>
+          </div>
+        </div>
+        <label for="letDetail">Detail perubahan</label>
+        <textarea id="letDetail" placeholder="Contoh: biaya layanan baru per pesanan sebesar 2% dari harga produk, diumumkan tanpa pemberitahuan tertulis."></textarea>
+        <div class="err" id="letDetailError"></div>
+        <div class="row2">
+          <div>
+            <label for="letAnnounced">Tanggal diumumkan</label>
+            <input type="date" id="letAnnounced">
+          </div>
+          <div>
+            <label for="letEffective">Tanggal berlaku</label>
+            <input type="date" id="letEffective">
+          </div>
+        </div>
+        <div class="row2">
+          <div>
+            <label>Apakah kamu dimintai persetujuan?</label>
+            <div class="radio-row">
+              <label><input type="radio" name="letConsent" value="belum" checked> Belum</label>
+              <label><input type="radio" name="letConsent" value="ya"> Sudah</label>
+            </div>
+          </div>
+          <div>
+            <label for="letCity">Kota (opsional)</label>
+            <input type="text" id="letCity" placeholder="Jakarta">
+          </div>
+        </div>
+        <label class="checkbox-row"><input type="checkbox" id="letSave" checked> Simpan ke Lacak Kasus</label>
+        <button class="btn btn-primary" id="letBtn" type="submit">Buat Surat</button>
+        <div class="example-row">
+          <button class="btn btn-ghost btn-sm" id="letExampleBtn" type="button">Isi contoh</button>
+        </div>
+      </form>
+      <pre class="letter-out" id="letterOut" style="display:none"></pre>
+      <button class="btn btn-ghost btn-sm" id="copyBtn" type="button" style="display:none">Salin Surat</button>
+      <div class="note" id="letNote"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: LACAK KASUS -->
+  <section class="panel" id="panel-lacak">
+    <div class="card">
+      <h2>Lacak Kasus</h2>
+      <div class="desc">Pantau surat keberatan yang sudah dikirim, dari draft sampai eskalasi.</div>
+      <div class="stats">
+        <div class="stat"><div class="k">Total kasus</div><div class="v" id="statTotal">0</div></div>
+        <div class="stat"><div class="k">Aktif (draft/selesai di luar)</div><div class="v" id="statActive">0</div></div>
+        <div class="stat"><div class="k">Eskalasi</div><div class="v" id="statEsc">0</div></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-ghost btn-sm" id="seedBtn" type="button">Muat contoh data</button>
+        <button class="btn btn-ghost btn-sm" id="exportBtn" type="button">Export CSV</button>
+      </div>
+      <div class="err" id="seedError"></div>
+      <table id="casesTable">
+        <thead>
+          <tr><th>Platform</th><th>Perubahan</th><th>Berlaku</th><th>Persetujuan</th><th>Status</th><th>Aksi</th></tr>
+        </thead>
+        <tbody id="casesBody"></tbody>
+      </table>
+      <div class="empty" id="casesEmpty">Belum ada kasus. Buat surat keberatan dengan centang "Simpan ke Lacak Kasus", atau muat contoh data.</div>
+    </div>
+  </section>
+
+  <!-- TAB 4: ATURAN & SUMBER -->
+  <section class="panel" id="panel-aturan">
+    <div class="card">
+      <h2>Apa yang wajib persetujuan</h2>
+      <div class="desc">Menurut pemberitaan Permendag 19/2026, marketplace wajib minta persetujuan penjual sebelum memberlakukan:</div>
+      <ul style="margin:0 0 0 18px;font-size:.88rem">
+        <li>Pengenaan biaya baru (biaya layanan, admin, retur, logistik)</li>
+        <li>Perubahan komisi atau tarif penjual</li>
+        <li>Penyesuaian mekanisme layanan atau program (gratis ongkir, voucher)</li>
+      </ul>
+      <div class="note">Di luar kategori itu (harga produk, tata tertib umum), kewajiban persetujuan belum terkonfirmasi dari pemberitaan.</div>
+    </div>
+    <div class="card">
+      <h2>Kronologi</h2>
+      <div class="tl" id="timelineBox"></div>
+    </div>
+    <div class="card">
+      <h2>Jalur eskalasi</h2>
+      <ol class="steps" id="escBox"></ol>
+    </div>
+    <div class="card">
+      <h2>Sumber</h2>
+      <div id="srcBox"></div>
+      <div class="note">Alat ini disusun dari pemberitaan, bukan nasihat hukum. Untuk kasus spesifik, konsultasikan ke Kemendag atau ahli hukum.</div>
+    </div>
+  </section>
+
+  <div class="footer">Hak Tolak Seller - dibangun dari pemberitaan Permendag 19/2026 (Juni-Agustus 2026)</div>
+</div>
+
+<script>
+var CHANGE_TYPES = {
+  "biaya-baru": "Biaya baru (layanan, admin, retur, logistik)",
+  "komisi": "Perubahan komisi / tarif penjual",
+  "mekanisme-layanan": "Perubahan mekanisme layanan / program (gratis ongkir, voucher)",
+  "harga-produk": "Penetapan / intervensi harga produk",
+  "lainnya": "Kebijakan lain (AI, data, tata tertib)"
+};
+var STATUS_LABEL = { draft: "Draft", dikirim: "Dikirim", ditanggapi: "Ditanggapi", eskalasi: "Eskalasi", selesai: "Selesai" };
+
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+async function api(url, opts) {
+  var res = await fetch(url, opts);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+
+// --- Tabs ---
+document.querySelectorAll(".tab").forEach(function (b) {
+  b.addEventListener("click", function () {
+    document.querySelectorAll(".tab").forEach(function (x) { x.classList.remove("active"); });
+    document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("active"); });
+    b.classList.add("active");
+    $("panel-" + b.dataset.tab).classList.add("active");
+    if (b.dataset.tab === "lacak") loadCases();
+    if (b.dataset.tab === "aturan") loadMeta();
+  });
+});
+
+// --- Theme ---
+var savedTheme = localStorage.getItem("htTheme") || "light";
+if (savedTheme === "dark") document.body.classList.add("dark");
+function syncThemeBtn() {
+  $("themeBtn").textContent = document.body.classList.contains("dark") ? "Light" : "Dark";
+}
+syncThemeBtn();
+$("themeBtn").addEventListener("click", function () {
+  var dark = document.body.classList.toggle("dark");
+  localStorage.setItem("htTheme", dark ? "dark" : "light");
+  syncThemeBtn();
+});
+
+// --- Policy banner ---
+api("/api/policy").then(function (p) {
+  $("policyMeta").textContent = "Berlaku sejak " + p.effective + " (" + p.days_active + " hari). " + p.detail;
+}).catch(function () { $("policyMeta").textContent = "Gagal memuat status kebijakan."; });
+
+// --- Tab 1: check ---
+var selType = "";
+$("checkTypeChips").addEventListener("click", function (e) {
+  var chip = e.target.closest(".chip");
+  if (!chip) return;
+  document.querySelectorAll("#checkTypeChips .chip").forEach(function (c) { c.classList.remove("sel"); });
+  chip.classList.add("sel");
+  selType = chip.dataset.type;
+  $("checkType").value = selType;
+  $("checkTypeError").classList.remove("show");
+});
+
+function clearErrors(ids) {
+  ids.forEach(function (id) {
+    var el = $(id);
+    if (el) el.classList.remove("error");
+    var errEl = $(id + "Error");
+    if (errEl) errEl.classList.remove("show");
+  });
+}
+
+$("checkForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  clearErrors(["checkPlatform", "checkType", "checkEffective", "checkConsent"]);
+  var ok = true;
+  if (!$("checkPlatform").value) { $("checkPlatform").classList.add("error"); $("checkPlatformError").textContent = "Pilih platform."; $("checkPlatformError").classList.add("show"); ok = false; }
+  if (!selType) { $("checkTypeError").textContent = "Pilih jenis perubahan."; $("checkTypeError").classList.add("show"); ok = false; }
+  if (!$("checkEffective").value) { $("checkEffective").classList.add("error"); $("checkEffectiveError").textContent = "Isi tanggal berlaku."; $("checkEffectiveError").classList.add("show"); ok = false; }
+  var consent = document.querySelector('input[name=checkConsent]:checked');
+  if (!consent) { $("checkConsentError").textContent = "Pilih status persetujuan."; $("checkConsentError").classList.add("show"); ok = false; }
+  if (!ok) return;
+
+  var btn = $("checkBtn");
+  btn.disabled = true; btn.textContent = "Mengecek...";
+  api("/api/check", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      platform: $("checkPlatform").value,
+      change_type: selType,
+      effective_at: $("checkEffective").value,
+      asked_consent: consent.value === "ya" ? true : (consent.value === "belum" ? false : null)
+    })
+  }).then(function (v) {
+    var box = $("checkVerdict");
+    box.className = "verdict show " + v.color;
+    $("verdictTitle").textContent = v.title;
+    $("verdictSummary").textContent = v.summary;
+    var ul = $("verdictBullets");
+    ul.innerHTML = "";
+    (v.bullets || []).forEach(function (b) {
+      var li = document.createElement("li");
+      li.textContent = b;
+      ul.appendChild(li);
+    });
+    var cta = $("verdictCta");
+    if (v.code === "berhak-tolak") {
+      cta.style.display = "inline-block";
+      cta.onclick = function () { prefillLetter(); goTab("surat"); };
+    } else {
+      cta.style.display = "none";
+    }
+  }).catch(function () {
+    var box = $("checkVerdict");
+    box.className = "verdict show gray";
+    $("verdictTitle").textContent = "Gagal memproses";
+    $("verdictSummary").textContent = "Coba lagi sebentar.";
+    $("verdictBullets").innerHTML = "";
+    $("verdictCta").style.display = "none";
+  }).finally(function () {
+    btn.disabled = false; btn.textContent = "Cek Hak Saya";
+  });
+});
+
+$("checkExampleBtn").addEventListener("click", function () {
+  $("checkPlatform").value = "Shopee";
+  selType = "biaya-baru";
+  $("checkType").value = "biaya-baru";
+  document.querySelectorAll("#checkTypeChips .chip").forEach(function (c) {
+    c.classList.toggle("sel", c.dataset.type === "biaya-baru");
+  });
+  $("checkEffective").value = "2026-09-01";
+  var r = document.querySelector('input[name=checkConsent][value=belum]');
+  if (r) r.checked = true;
+});
+
+function goTab(name) {
+  document.querySelectorAll(".tab").forEach(function (x) { x.classList.toggle("active", x.dataset.tab === name); });
+  document.querySelectorAll(".panel").forEach(function (p) { p.classList.toggle("active", p.id === "panel-" + name); });
+  if (name === "lacak") loadCases();
+  if (name === "aturan") loadMeta();
+}
+
+function prefillLetter() {
+  var platform = $("checkPlatform").value;
+  if (platform) $("letPlatform").value = platform;
+  if (selType) $("letType").value = selType;
+  if ($("checkEffective").value) $("letEffective").value = $("checkEffective").value;
+  var c = document.querySelector('input[name=checkConsent]:checked');
+  if (c && c.value === "ya") {
+    var r = document.querySelector('input[name=letConsent][value=ya]');
+    if (r) r.checked = true;
+  } else {
+    var r2 = document.querySelector('input[name=letConsent][value=belum]');
+    if (r2) r2.checked = true;
+  }
+}
+
+// --- Tab 2: letter ---
+$("letterForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  clearErrors(["letName", "letShop", "letPlatform", "letType", "letDetail"]);
+  var ok = true;
+  if (!$("letName").value.trim()) { $("letName").classList.add("error"); $("letNameError").textContent = "Isi nama."; $("letNameError").classList.add("show"); ok = false; }
+  if (!$("letShop").value.trim()) { $("letShop").classList.add("error"); $("letShopError").textContent = "Isi nama toko."; $("letShopError").classList.add("show"); ok = false; }
+  if (!$("letPlatform").value) { $("letPlatform").classList.add("error"); $("letPlatformError").textContent = "Pilih platform."; $("letPlatformError").classList.add("show"); ok = false; }
+  if (!$("letType").value) { $("letType").classList.add("error"); $("letTypeError").textContent = "Pilih jenis perubahan."; $("letTypeError").classList.add("show"); ok = false; }
+  if (!$("letDetail").value.trim()) { $("letDetail").classList.add("error"); $("letDetailError").textContent = "Jelaskan detail perubahannya."; $("letDetailError").classList.add("show"); ok = false; }
+  if (!ok) return;
+
+  var btn = $("letBtn");
+  btn.disabled = true; btn.textContent = "Membuat surat...";
+  var consent = document.querySelector('input[name=letConsent]:checked');
+  api("/api/letter", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: $("letName").value.trim(),
+      shop: $("letShop").value.trim(),
+      platform: $("letPlatform").value,
+      change_type: $("letType").value,
+      detail: $("letDetail").value.trim(),
+      announced_at: $("letAnnounced").value,
+      effective_at: $("letEffective").value,
+      asked_consent: consent && consent.value === "ya",
+      city: $("letCity").value.trim(),
+      save: $("letSave").checked
+    })
+  }).then(function (r) {
+    if (r.error) { $("letNote").textContent = r.error; return; }
+    $("letterOut").textContent = r.letter;
+    $("letterOut").style.display = "block";
+    $("copyBtn").style.display = "inline-block";
+    $("letNote").textContent = r.saved ? "Surat dibuat dan disimpan ke Lacak Kasus." : "Surat dibuat. Centang simpan kalau mau dicatat.";
+  }).catch(function () {
+    $("letNote").textContent = "Gagal membuat surat, coba lagi.";
+  }).finally(function () {
+    btn.disabled = false; btn.textContent = "Buat Surat";
+  });
+});
+
+$("letExampleBtn").addEventListener("click", function () {
+  $("letName").value = "Rina Puspita";
+  $("letShop").value = "Rina Store Official";
+  $("letPlatform").value = "Shopee";
+  $("letType").value = "biaya-baru";
+  $("letDetail").value = "Biaya layanan baru per pesanan sebesar 2% dari harga produk untuk semua kategori, diumumkan lewat pengumuman seller center tanpa pemberitahuan tertulis terlebih dahulu.";
+  $("letAnnounced").value = "2026-08-10";
+  $("letEffective").value = "2026-09-01";
+  var r = document.querySelector('input[name=letConsent][value=belum]');
+  if (r) r.checked = true;
+  $("letCity").value = "Jakarta";
+});
+
+$("copyBtn").addEventListener("click", function () {
+  var txt = $("letterOut").textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(function () {
+      $("copyBtn").textContent = "Tersalin";
+      setTimeout(function () { $("copyBtn").textContent = "Salin Surat"; }, 1600);
+    });
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta);
+    $("copyBtn").textContent = "Tersalin";
+    setTimeout(function () { $("copyBtn").textContent = "Salin Surat"; }, 1600);
+  }
+});
+
+// --- Tab 3: cases ---
+function loadCases() {
+  api("/api/cases").then(function (list) {
+    renderCases(list);
+  }).catch(function () {});
+}
+
+function renderCases(list) {
+  var total = list.length;
+  var active = list.filter(function (c) { return c.status !== "selesai"; }).length;
+  var esc = list.filter(function (c) { return c.status === "eskalasi"; }).length;
+  $("statTotal").textContent = total;
+  $("statActive").textContent = active;
+  $("statEsc").textContent = esc;
+  var body = $("casesBody");
+  body.innerHTML = "";
+  if (!total) {
+    $("casesEmpty").style.display = "block";
+    $("casesTable").style.display = "none";
+    return;
+  }
+  $("casesEmpty").style.display = "none";
+  $("casesTable").style.display = "table";
+  list.forEach(function (c) {
+    var tr = document.createElement("tr");
+    var typeLabel = CHANGE_TYPES[c.change_type] || c.change_type || "-";
+    tr.innerHTML =
+      "<td>" + esc(c.platform) + "</td>" +
+      "<td><div class='t'>" + esc(c.title || typeLabel) + "</div><div class='d'>" + esc(typeLabel) + "</div><div class='d'>" + esc(c.detail || "") + "</div></td>" +
+      "<td><span class='d'>" + esc(c.effective_at || "-") + "</span></td>" +
+      "<td><span class='d'>" + (c.asked_consent ? "Sudah" : "Belum") + "</span></td>" +
+      "<td><span class='tag " + esc(c.status) + "'>" + esc(STATUS_LABEL[c.status] || c.status) + "</span></td>" +
+      "<td>" +
+        "<select class='status-sel' data-id='" + esc(c.id) + "'>" +
+          Object.keys(STATUS_LABEL).map(function (s) {
+            return "<option value='" + s + "'" + (s === c.status ? " selected" : "") + ">" + STATUS_LABEL[s] + "</option>";
+          }).join("") +
+        "</select> " +
+        "<button class='btn btn-danger btn-sm del-btn' data-id='" + esc(c.id) + "' type='button'>Hapus</button>" +
+      "</td>";
+    body.appendChild(tr);
+  });
+}
+
+$("casesBody").addEventListener("change", function (e) {
+  var sel = e.target.closest(".status-sel");
+  if (!sel) return;
+  api("/api/cases/" + sel.dataset.id, {
+    method: "PATCH", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status: sel.value })
+  }).then(function () { loadCases(); }).catch(function () {});
+});
+
+$("casesBody").addEventListener("click", function (e) {
+  var btn = e.target.closest(".del-btn");
+  if (!btn) return;
+  if (!confirm("Hapus kasus ini?")) return;
+  api("/api/cases/" + btn.dataset.id, { method: "DELETE" }).then(function () {
+    loadCases();
+  }).catch(function () {});
+});
+
+$("seedBtn").addEventListener("click", function () {
+  var errEl = $("seedError");
+  errEl.classList.remove("show");
+  api("/api/seed", { method: "POST" }).then(function (r) {
+    if (r.error) { errEl.textContent = r.error; errEl.classList.add("show"); return; }
+    loadCases();
+  }).catch(function () {
+    errEl.textContent = "Gagal memuat contoh.";
+    errEl.classList.add("show");
+  });
+});
+
+$("exportBtn").addEventListener("click", function () {
+  window.location.href = "/api/export";
+});
+
+// --- Tab 4: meta ---
+function loadMeta() {
+  api("/api/meta").then(function (m) {
+    var tl = $("timelineBox");
+    tl.innerHTML = "";
+    m.timeline.forEach(function (t) {
+      var div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = "<div class='dt'>" + esc(t.date) + "</div><div class='tt'>" + esc(t.title) + "</div><div class='dd'>" + esc(t.detail) + "</div>";
+      tl.appendChild(div);
+    });
+    var escBox = $("escBox");
+    escBox.innerHTML = "";
+    m.escalation.forEach(function (s) {
+      var li = document.createElement("li");
+      li.innerHTML = "<b>" + s.step + ". " + esc(s.label) + "</b><span>" + esc(s.detail) + "</span>";
+      escBox.appendChild(li);
+    });
+    var src = $("srcBox");
+    src.innerHTML = "";
+    m.sources.forEach(function (s) {
+      var d = document.createElement("div");
+      d.className = "src";
+      d.textContent = s;
+      src.appendChild(d);
+    });
+  }).catch(function () {});
+}
+
+// Enter submit, Escape clear
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type !== "checkbox" && e.target.type !== "radio") {
+    var form = e.target.closest("form");
+    if (form) { e.preventDefault(); form.requestSubmit(); }
+  }
+  if (e.key === "Escape") {
+    ["checkForm", "letterForm"].forEach(function (id) {
+      var form = $(id);
+      if (form && form.contains(document.activeElement)) form.reset();
+    });
+  }
+});
+</script>
+</body>
+</html>
