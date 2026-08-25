@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biaya Retur Tracker</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --muted: #666666;
+  --faint: #999999;
+  --accent: #4a9;
+  --accent-dark: #3a8;
+  --danger: #dc2626;
+  --success: #22c55e;
+  --warn: #d97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  padding: 20px;
+}
+.wrap { max-width: 900px; margin: 0 auto; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+h1 { font-size: 1.25rem; font-weight: 600; }
+h1 small { display: block; font-size: 0.8rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+#themeBtn { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
+.banner {
+  background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--warn);
+  padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; color: var(--muted); margin-bottom: 16px;
+}
+.banner b { color: var(--text); }
+.tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.tab {
+  background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+  padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: inherit;
+}
+.tab.active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.panel { display: none; }
+.panel.active { display: block; }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 20px; margin-bottom: 16px;
+}
+.card h2 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field.full { grid-column: 1 / -1; }
+label { font-size: 0.8rem; color: var(--muted); }
+input[type=text], input[type=number], select, textarea {
+  border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
+  font-size: 0.9rem; font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  background: var(--surface); color: var(--text); width: 100%;
+}
+textarea { font-family: 'Inter', sans-serif; resize: vertical; min-height: 60px; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+input.error, select.error, textarea.error { border-color: var(--danger); }
+.err { color: var(--danger); font-size: 0.78rem; min-height: 16px; }
+.err.show { display: block; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text); }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); }
+.actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.btn {
+  background: var(--accent); color: #fff; border: none; border-radius: 6px;
+  padding: 9px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: background 0.15s;
+}
+.btn:hover { background: var(--accent-dark); }
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn.ghost { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn.danger { background: var(--surface); color: var(--danger); border: 1px solid var(--border); }
+.btn.danger:hover { border-color: var(--danger); }
+#calResult { margin-top: 16px; display: none; }
+#calResult.show { display: block; }
+.loss-total {
+  border: 1px solid var(--border); border-left: 3px solid var(--danger);
+  border-radius: 6px; padding: 14px; margin-bottom: 12px;
+}
+.loss-total .num { font-size: 1.6rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.loss-total .label { font-size: 0.8rem; color: var(--muted); }
+.verdict { font-size: 0.9rem; font-weight: 600; margin-top: 6px; }
+.verdict.kritis { color: var(--danger); }
+.verdict.signifikan { color: var(--warn); }
+.verdict.terkendali { color: var(--success); }
+.verdict.rugi-dasar { color: var(--danger); }
+.breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; }
+.breakdown .item { border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; }
+.breakdown .item span:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+td.num, th.num { font-family: 'JetBrains Mono', monospace; text-align: right; white-space: nowrap; }
+.status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 500; }
+.st-baru { background: #f0f0f0; color: var(--muted); }
+.st-bukti { background: #e8f5ee; color: #1f7a4d; }
+.st-diajukan { background: #fff7e6; color: var(--warn); }
+.st-diproses { background: #e8f0fe; color: #1a56db; }
+.st-disetujui { background: #e8f5ee; color: #1f7a4d; }
+.st-ditolak { background: #fdeeee; color: var(--danger); }
+.st-kompensasi { background: #f3e8ff; color: #7c3aed; }
+select.small { padding: 3px 6px; font-size: 0.75rem; width: auto; }
+.muted { color: var(--muted); }
+.faint { color: var(--faint); font-size: 0.75rem; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+ul.plain { list-style: none; }
+ul.plain li { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; display: flex; gap: 8px; align-items: flex-start; }
+ul.plain li:last-child { border-bottom: none; }
+ul.plain .idx { color: var(--accent); font-weight: 700; font-family: 'JetBrains Mono', monospace; min-width: 20px; }
+.src-list { font-size: 0.78rem; color: var(--faint); margin-top: 10px; }
+.src-list li { padding: 2px 0; border: none; }
+.empty { color: var(--faint); text-align: center; padding: 24px; font-size: 0.85rem; }
+.ev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.ev-grid label { font-size: 0.78rem; display: flex; gap: 6px; align-items: flex-start; color: var(--text); cursor: pointer; }
+.summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.summary-cards .sc { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--surface); }
+.summary-cards .sc .v { font-size: 1.25rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.summary-cards .sc .k { font-size: 0.75rem; color: var(--muted); }
+@media (max-width: 768px) {
+  body { padding: 12px; }
+  .grid { grid-template-columns: 1fr; }
+  .breakdown { grid-template-columns: 1fr; }
+  .ev-grid { grid-template-columns: 1fr; }
+  .summary-cards { grid-template-columns: 1fr; gap: 8px; }
+  .card { padding: 14px; }
+  .actions { flex-direction: column; }
+  .btn { width: 100%; }
+  th, td { padding: 6px 8px; }
+}
+body.dark {
+  --bg: #1a1a1a; --surface: #242424; --border: #333333;
+  --text: #e5e5e5; --muted: #aaaaaa; --faint: #777777;
+}
+body.dark .st-baru { background: #2a2a2a; color: #aaa; }
+body.dark .st-bukti { background: #123524; color: #4ade80; }
+body.dark .st-diajukan { background: #33291a; color: #fbbf24; }
+body.dark .st-diproses { background: #17263d; color: #60a5fa; }
+body.dark .st-disetujui { background: #123524; color: #4ade80; }
+body.dark .st-ditolak { background: #3d1717; color: #f87171; }
+body.dark .st-kompensasi { background: #2b1f3d; color: #c084fc; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Biaya Retur Tracker<small>Hitung kerugian nyata per retur dan lacak kasus retur bermasalah</small></h1>
+    <button id="themeBtn" onclick="toggleTheme()">Dark</button>
+  </header>
+
+  <div class="banner">
+    <b>TikTok Shop 2026:</b> biaya pengiriman gagal dan retur kini ditanggung seller (Bisnis Tekno, 31 Mei 2026).
+    Menteri UMKM geram dan ancam tindak tegas. Kebijakan retur Shopee dan TikTok Shop berbeda. Satu retur bisa menghapus profit banyak penjualan.
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="calc" onclick="switchTab('calc')">Kalkulator</button>
+    <button class="tab" data-tab="guide" onclick="switchTab('guide')">Panduan Retur</button>
+    <button class="tab" data-tab="cases" onclick="switchTab('cases')">Lacak Kasus</button>
+  </div>
+
+  <div id="panel-calc" class="panel active">
+    <div class="card">
+      <h2>Hitung kerugian per retur</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="calMarketplace">Marketplace</label>
+          <select id="calMarketplace"></select>
+          <div class="err" id="calMarketplaceError"></div>
+        </div>
+        <div class="field">
+          <label for="calCommission">Komisi marketplace (%)</label>
+          <input type="number" id="calCommission" step="0.1" min="0" max="30" value="6.5">
+          <div class="err" id="calCommissionError"></div>
+        </div>
+        <div class="field">
+          <label for="calSelling">Harga jual (Rp)</label>
+          <input type="number" id="calSelling" placeholder="150000">
+          <div class="err" id="calSellingError"></div>
+        </div>
+        <div class="field">
+          <label for="calCost">Harga modal (Rp)</label>
+          <input type="number" id="calCost" placeholder="80000">
+          <div class="err" id="calCostError"></div>
+        </div>
+        <div class="field">
+          <label for="calShipOut">Ongkir kirim awal yang dibayar seller (Rp)</label>
+          <input type="number" id="calShipOut" placeholder="15000">
+          <div class="err" id="calShipOutError"></div>
+        </div>
+        <div class="field">
+          <label for="calShipReturn">Ongkir retur (Rp)</label>
+          <input type="number" id="calShipReturn" placeholder="20000">
+          <div class="err" id="calShipReturnError"></div>
+        </div>
+        <div class="field full">
+          <label class="check"><input type="checkbox" id="calSellerPaysReturn" checked> Seller yang menanggung ongkir retur</label>
+        </div>
+        <div class="field">
+          <label for="calPackaging">Biaya kemasan (Rp)</label>
+          <input type="number" id="calPackaging" placeholder="3000">
+          <div class="err" id="calPackagingError"></div>
+        </div>
+        <div class="field">
+          <label for="calResellable">Barang bisa dijual ulang?</label>
+          <select id="calResellable">
+            <option value="no">Tidak, barang hangus</option>
+            <option value="yes" selected>Ya, masih layak jual</option>
+          </select>
+          <div class="err" id="calResellableError"></div>
+        </div>
+        <div class="field full" id="resellValueField">
+          <label for="calResellValue">Nilai sisa barang (%, 100 = masih utuh)</label>
+          <input type="number" id="calResellValue" min="0" max="100" value="50">
+          <div class="err" id="calResellValueError"></div>
+        </div>
+      </div>
+      <div class="err" id="calError"></div>
+      <div class="actions">
+        <button class="btn" id="btnCalc" onclick="doCalc()">Hitung</button>
+        <button class="btn ghost" onclick="fillExample()">Isi contoh</button>
+        <button class="btn ghost" onclick="clearCalc()">Bersihkan</button>
+      </div>
+      <div id="calResult"></div>
+    </div>
+  </div>
+
+  <div id="panel-guide" class="panel">
+    <div class="card">
+      <h2>Kebijakan retur per marketplace</h2>
+      <div style="overflow-x:auto">
+        <table id="mpTable">
+          <thead><tr><th>Marketplace</th><th>Komisi</th><th>Catatan retur</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="faint">Tabel komisi adalah estimasi 2026 dan bisa berubah. Cek pusat bantuan seller center masing-masing untuk tarif resmi.</p>
+    </div>
+    <div class="card">
+      <h2>Checklist bukti saat barang retur tiba</h2>
+      <ul class="plain" id="evidenceList"></ul>
+      <p class="faint">Tanpa bukti, banding ke CS platform sering ditolak. Dokumentasi langsung saat paket tiba, jangan ditunda.</p>
+    </div>
+    <div class="card">
+      <h2>Red flag retur bodong</h2>
+      <ul class="plain" id="redFlagList"></ul>
+    </div>
+    <div class="card">
+      <h2>Sumber</h2>
+      <ul class="plain src-list" id="sourceList"></ul>
+    </div>
+  </div>
+
+  <div id="panel-cases" class="panel">
+    <div class="summary-cards">
+      <div class="sc"><div class="v" id="sumTotal">0</div><div class="k">Total kasus</div></div>
+      <div class="sc"><div class="v" id="sumActive">0</div><div class="k">Belum selesai</div></div>
+      <div class="sc"><div class="v" id="sumAmount">Rp 0</div><div class="k">Nilai order berisiko</div></div>
+    </div>
+    <div class="card">
+      <h2>Tambah kasus retur</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="casePlatform">Platform</label>
+          <select id="casePlatform"><option value="">Pilih platform</option></select>
+          <div class="err" id="casePlatformError"></div>
+        </div>
+        <div class="field">
+          <label for="caseStatus">Status</label>
+          <select id="caseStatus"></select>
+          <div class="err" id="caseStatusError"></div>
+        </div>
+        <div class="field">
+          <label for="caseOrder">Nomor order</label>
+          <input type="text" id="caseOrder" placeholder="contoh: SP-2026-12345">
+          <div class="err" id="caseOrderError"></div>
+        </div>
+        <div class="field">
+          <label for="caseAmount">Nilai order (Rp)</label>
+          <input type="number" id="caseAmount" placeholder="150000">
+          <div class="err" id="caseAmountError"></div>
+        </div>
+        <div class="field full">
+          <label for="caseProduct">Produk</label>
+          <input type="text" id="caseProduct" placeholder="contoh: Sepatu sneakers size 42">
+          <div class="err" id="caseProductError"></div>
+        </div>
+        <div class="field full">
+          <label for="caseReason">Alasan retur / masalah</label>
+          <textarea id="caseReason" placeholder="contoh: Barang diretur tanpa isi, dana dikembalikan ke pembeli"></textarea>
+          <div class="err" id="caseReasonError"></div>
+        </div>
+        <div class="field full">
+          <label>Bukti yang sudah dikumpulkan</label>
+          <div class="ev-grid" id="caseEvidence"></div>
+        </div>
+        <div class="field full">
+          <label for="caseNote">Catatan</label>
+          <textarea id="caseNote" placeholder="Langkah lanjutan, jawaban CS, tenggat banding"></textarea>
+          <div class="err" id="caseNoteError"></div>
+        </div>
+      </div>
+      <div class="err" id="caseError"></div>
+      <div class="actions">
+        <button class="btn" id="btnAddCase" onclick="addCase()">Simpan kasus</button>
+        <button class="btn ghost" onclick="seedExample()">Isi contoh</button>
+        <button class="btn ghost" onclick="exportCsv()">Export CSV</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Daftar kasus</h2>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>Tanggal</th><th>Platform</th><th>Order</th><th>Produk</th>
+            <th class="num">Nilai</th><th>Status</th><th>Catatan</th><th></th>
+          </tr></thead>
+          <tbody id="caseTable"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="caseEmpty">Belum ada kasus. Tambah kasus retur di form atas.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const fmt = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+let META = null;
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  $('panel-' + name).classList.add('active');
+}
+
+function toggleTheme() {
+  const dark = document.body.classList.toggle('dark');
+  $('themeBtn').textContent = dark ? 'Light' : 'Dark';
+  try { localStorage.setItem('rt-theme', dark ? 'dark' : 'light'); } catch (e) {}
+}
+
+function initTheme() {
+  try {
+    if (localStorage.getItem('rt-theme') === 'dark') {
+      document.body.classList.add('dark');
+      $('themeBtn').textContent = 'Light';
+    }
+  } catch (e) {}
+}
+
+async function loadMeta() {
+  const res = await fetch('/api/meta');
+  META = await res.json();
+  const mpSel = $('calMarketplace');
+  const caseSel = $('casePlatform');
+  META.marketplaces.forEach(m => {
+    const o1 = document.createElement('option');
+    o1.value = m.name; o1.textContent = m.name;
+    mpSel.appendChild(o1);
+    const o2 = document.createElement('option');
+    o2.value = m.name; o2.textContent = m.name;
+    caseSel.appendChild(o2);
+  });
+  $('casePlatform').insertAdjacentHTML('afterbegin', '<option value="">Pilih platform</option>');
+  $('calMarketplace').value = 'Shopee';
+  setCommission();
+  $('calMarketplace').addEventListener('change', setCommission);
+
+  $('caseStatus').innerHTML = META.statuses.map(s => '<option value="' + s + '">' + s + '</option>').join('');
+
+  $('mpTable').querySelector('tbody').innerHTML = META.marketplaces.map(m =>
+    '<tr><td>' + m.name + '</td><td class="num">' + m.commission + '%</td><td>' + m.return_note + '</td></tr>').join('');
+
+  $('evidenceList').innerHTML = META.evidence.map((e, i) => '<li><span class="idx">' + (i + 1) + '</span><span>' + e + '</span></li>').join('');
+  $('redFlagList').innerHTML = META.red_flags.map((r, i) => '<li><span class="idx">' + (i + 1) + '</span><span>' + r + '</span></li>').join('');
+  $('sourceList').innerHTML = META.sources.map(s => '<li>' + s + '</li>').join('');
+
+  $('caseEvidence').innerHTML = META.evidence.map((e, i) =>
+    '<label class="check"><input type="checkbox" id="caseEv' + i + '" value="' + i + '"> ' + e + '</label>').join('');
+
+  $('calResellable').addEventListener('change', () => {
+    $('resellValueField').style.display = $('calResellable').value === 'yes' ? 'flex' : 'none';
+  });
+  loadCases();
+}
+
+function setCommission() {
+  const name = $('calMarketplace').value;
+  const m = META.marketplaces.find(x => x.name === name);
+  if (m) $('calCommission').value = m.commission;
+}
+
+function clearErrors() {
+  ['calMarketplace', 'calCommission', 'calSelling', 'calCost', 'calShipOut', 'calShipReturn',
+   'calPackaging', 'calResellable', 'calResellValue'].forEach(id => {
+    $(id).classList.remove('error');
+    $(id + 'Error').textContent = '';
+  });
+  $('calError').textContent = '';
+}
+
+function fillExample() {
+  clearErrors();
+  $('calMarketplace').value = 'Shopee';
+  setCommission();
+  $('calSelling').value = 150000;
+  $('calCost').value = 80000;
+  $('calShipOut').value = 15000;
+  $('calShipReturn').value = 20000;
+  $('calSellerPaysReturn').checked = true;
+  $('calPackaging').value = 3000;
+  $('calResellable').value = 'yes';
+  $('calResellValue').value = 50;
+  $('resellValueField').style.display = 'flex';
+}
+
+function clearCalc() {
+  clearErrors();
+  ['calSelling', 'calCost', 'calShipOut', 'calShipReturn', 'calPackaging'].forEach(id => $(id).value = '');
+  $('calResellValue').value = 50;
+  $('calResellable').value = 'yes';
+  $('resellValueField').style.display = 'flex';
+  $('calSellerPaysReturn').checked = true;
+  $('calResult').classList.remove('show');
+}
+
+async function doCalc() {
+  clearErrors();
+  let ok = true;
+  if (!$('calSelling').value) { $('calSelling').classList.add('error'); $('calSellingError').textContent = 'Isi harga jual.'; ok = false; }
+  if (!$('calCost').value) { $('calCost').classList.add('error'); $('calCostError').textContent = 'Isi harga modal.'; ok = false; }
+  if (!ok) return;
+  const btn = $('btnCalc');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const body = {
+      marketplace: $('calMarketplace').value,
+      commission_pct: parseFloat($('calCommission').value) || 0,
+      selling_price: parseFloat($('calSelling').value) || 0,
+      product_cost: parseFloat($('calCost').value) || 0,
+      shipping_out: parseFloat($('calShipOut').value) || 0,
+      shipping_return: parseFloat($('calShipReturn').value) || 0,
+      seller_pays_return: $('calSellerPaysReturn').checked,
+      packaging: parseFloat($('calPackaging').value) || 0,
+      resellable: $('calResellable').value === 'yes',
+      resell_value_pct: parseFloat($('calResellValue').value) || 0
+    };
+    const res = await fetch('/api/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.error) {
+      $('calError').textContent = data.error;
+      $('calResult').classList.remove('show');
+      return;
+    }
+    const c = data.components;
+    const cover = data.sales_to_cover !== null && data.sales_to_cover !== undefined
+      ? '<div class="verdict ' + data.severity + '">' + data.severity_label + ' - butuh ' + data.sales_to_cover + ' penjualan normal untuk menutup 1 retur ini.</div>'
+      : '<div class="verdict ' + data.severity + '">' + data.severity_label + '. Perbaiki harga atau biaya dulu.</div>';
+    $('calResult').innerHTML =
+      '<div class="loss-total">' +
+        '<div class="label">Total kerugian per retur</div>' +
+        '<div class="num">' + fmt(data.total_loss) + '</div>' +
+        cover +
+      '</div>' +
+      '<div class="breakdown">' +
+        '<div class="item"><span>Barang (modal hangus / turun nilai)</span><span>' + fmt(c.product_loss) + '</span></div>' +
+        '<div class="item"><span>Ongkir kirim awal</span><span>' + fmt(c.shipping_out) + '</span></div>' +
+        '<div class="item"><span>Ongkir retur (ditanggung seller)</span><span>' + fmt(c.shipping_return) + '</span></div>' +
+        '<div class="item"><span>Biaya kemasan</span><span>' + fmt(c.packaging) + '</span></div>' +
+        '<div class="item"><span>Profit per penjualan normal (setelah komisi ' + fmt(data.fee) + ')</span><span>' + fmt(data.net_profit_per_sale) + '</span></div>' +
+        '<div class="item"><span>Margin penjualan normal</span><span>' + data.margin_pct + '%</span></div>' +
+      '</div>';
+    $('calResult').classList.add('show');
+  } catch (e) {
+    $('calError').textContent = 'Gagal menghitung: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung';
+  }
+}
+
+function getEv() {
+  const ev = [];
+  if (META) META.evidence.forEach((_, i) => {
+    const el = $('caseEv' + i);
+    if (el && el.checked) ev.push(i);
+  });
+  return ev;
+}
+
+function setEv(ids) {
+  if (!META) return;
+  META.evidence.forEach((_, i) => {
+    const el = $('caseEv' + i);
+    if (el) el.checked = ids.includes(i);
+  });
+}
+
+function clearCaseErrors() {
+  ['casePlatform', 'caseOrder', 'caseProduct', 'caseAmount', 'caseReason'].forEach(id => {
+    $(id).classList.remove('error');
+    $(id + 'Error').textContent = '';
+  });
+  $('caseError').textContent = '';
+}
+
+function seedExample() {
+  clearCaseErrors();
+  $('casePlatform').value = 'TikTok Shop';
+  $('caseOrder').value = 'TIK-2026-' + Math.floor(1000 + Math.random() * 9000);
+  $('caseProduct').value = 'Jam tangan pria';
+  $('caseAmount').value = 850000;
+  $('caseReason').value = 'Barang diretur tanpa isi, dana dikembalikan ke pembeli';
+  $('caseStatus').value = 'baru';
+  $('caseNote').value = 'Siapkan video unboxing dan foto timbangan paket.';
+  setEv([0, 1, 2]);
+}
+
+async function addCase() {
+  clearCaseErrors();
+  let ok = true;
+  if (!$('casePlatform').value) { $('casePlatform').classList.add('error'); $('casePlatformError').textContent = 'Pilih platform.'; ok = false; }
+  if (!$('caseProduct').value) { $('caseProduct').classList.add('error'); $('caseProductError').textContent = 'Isi nama produk.'; ok = false; }
+  if (!$('caseOrder').value) { $('caseOrder').classList.add('error'); $('caseOrderError').textContent = 'Isi nomor order.'; ok = false; }
+  if (!$('caseAmount').value) { $('caseAmount').classList.add('error'); $('caseAmountError').textContent = 'Isi nilai order.'; ok = false; }
+  if (!$('caseReason').value) { $('caseReason').classList.add('error'); $('caseReasonError').textContent = 'Isi alasan retur.'; ok = false; }
+  if (!ok) return;
+  const btn = $('btnAddCase');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+  try {
+    const body = {
+      platform: $('casePlatform').value,
+      order_id: $('caseOrder').value.trim(),
+      product: $('caseProduct').value.trim(),
+      amount: parseFloat($('caseAmount').value) || 0,
+      reason: $('caseReason').value.trim(),
+      status: $('caseStatus').value,
+      note: $('caseNote').value.trim(),
+      evidence: getEv()
+    };
+    const res = await fetch('/api/cases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.error) { $('caseError').textContent = data.error; return; }
+    $('caseOrder').value = ''; $('caseProduct').value = ''; $('caseAmount').value = '';
+    $('caseReason').value = ''; $('caseNote').value = ''; setEv([]);
+    loadCases();
+  } catch (e) {
+    $('caseError').textContent = 'Gagal menyimpan: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Simpan kasus';
+  }
+}
+
+async function loadCases() {
+  const res = await fetch('/api/cases');
+  const cases = await res.json();
+  const tb = $('caseTable');
+  tb.innerHTML = cases.map(c => {
+    const evCount = (c.evidence || []).length;
+    const evBadge = evCount > 0 ? ' <span class="faint">(' + evCount + ' bukti)</span>' : '';
+    return '<tr>' +
+      '<td class="mono">' + (c.date || '') + '</td>' +
+      '<td>' + c.platform + '</td>' +
+      '<td class="mono">' + esc(c.order_id) + '</td>' +
+      '<td>' + esc(c.product) + '</td>' +
+      '<td class="num">' + fmt(c.amount || 0) + '</td>' +
+      '<td><span class="status st-' + c.status + '">' + c.status + '</span></td>' +
+      '<td>' + esc(c.note || '') + evBadge + '</td>' +
+      '<td>' +
+        '<select class="small" onchange="updateStatus(\'' + c.id + '\', this.value)">' +
+          (META ? META.statuses.map(s => '<option value="' + s + '"' + (s === c.status ? ' selected' : '') + '>' + s + '</option>').join('') : '') +
+        '</select> ' +
+        '<button class="btn danger" style="padding:2px 8px;font-size:0.7rem" onclick="deleteCase(\'' + c.id + '\')">Hapus</button>' +
+      '</td>' +
+    '</tr>';
+  }).join('');
+  $('caseEmpty').style.display = cases.length ? 'none' : 'block';
+
+  const total = cases.length;
+  const active = cases.filter(c => !['disetujui', 'ditolak', 'kompensasi'].includes(c.status)).length;
+  const amount = cases.reduce((s, c) => s + (c.amount || 0), 0);
+  $('sumTotal').textContent = total;
+  $('sumActive').textContent = active;
+  $('sumAmount').textContent = fmt(amount);
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+async function updateStatus(id, status) {
+  await fetch('/api/cases/update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: id, status: status })
+  });
+  loadCases();
+}
+
+async function deleteCase(id) {
+  if (!confirm('Hapus kasus ini?')) return;
+  await fetch('/api/cases/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: id })
+  });
+  loadCases();
+}
+
+function exportCsv() {
+  window.location.href = '/api/export';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && document.activeElement && document.activeElement.id.startsWith('cal')) {
+    e.preventDefault();
+    doCalc();
+  }
+  if (e.key === 'Escape') {
+    clearCalc();
+  }
+});
+
+initTheme();
+loadMeta();
+loadCases();
+</script>
+</body>
+</html>
