@@ -1,0 +1,30 @@
+{
+  "date": "2026-08-25",
+  "sources": ["google news rss", "Bisnis Tekno", "detikFinance", "Media Konsumen", "BeritaSatu", "Harian Jogja"],
+  "pain_points": [
+    {
+      "category": "Biaya Retur & Pengiriman Gagal",
+      "description": "TikTok Shop membebankan biaya pengiriman gagal dan biaya retur ke seller (Bisnis Tekno 31 Mei 2026, aturan baru berlaku setelah masa tenggang 3 bulan per Harian Jogja 31 Mei 2026). Menteri UMKM buka suara dan geram, ancam tindak tegas (detikFinance 21 Mei 2026, CNBC 21 Mei 2026). Kebijakan biaya retur Shopee dan TikTok Shop berbeda (Bisnis Tekno 14 Apr 2026). Kasus retur bermasalah marak: barang diretur kosong tapi dana dikembalikan ke pembeli (Media Konsumen 4 Mar 2026), barang dikembalikan tanpa label (Media Konsumen 2 Jun 2026), bukti tidak dipertimbangkan dan saldo minus (Media Konsumen 8 Apr 2026), barang retur diduga dijual lagi (BeritaSatu 15 Mei 2026). Seller tidak punya alat hitung kerugian nyata per retur dan tidak melacak kasusnya.",
+      "frequency": "HIGH",
+      "sources": [
+        "Bisnis Tekno: TikTok Shop Bebankan Biaya Pengiriman Gagal dan Retur ke Seller (31 Mei 2026)",
+        "Bisnis Tekno: Beda Kebijakan Shopee dan TikTok Shop soal Biaya Retur Seller (14 Apr 2026)",
+        "detikFinance: Menteri UMKM Buka Suara soal Penjual Ikut Tanggung Biaya Retur di TikTok Shop (21 Mei 2026)",
+        "Harian Jogja: Aturan Baru TikTok Shop Berlaku Setelah Masa Tenggang 3 Bulan (31 Mei 2026)",
+        "Media Konsumen: Barang Diretur ke Penjual Tanpa Isinya, TikTok Shop Malah Mengembalikan Dana ke Pembeli (4 Mar 2026)",
+        "BeritaSatu: Seller Menjerit, Untung Tergerus dan Barang Retur Diduga Dijual Lagi (15 Mei 2026)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Biaya Retur Tracker",
+      "type": "Web",
+      "tech": "Python 3 stdlib http.server, JSON file storage",
+      "description": "Hitung kerugian nyata per retur (refund + ongkir dua arah + kemasan + barang tidak bisa dijual ulang), berapa penjualan tambahan untuk menutup satu retur, panduan siapa penanggung ongkir retur per marketplace (termasuk aturan baru TikTok Shop 2026), lacak kasus retur bermasalah dengan checklist bukti (video unboxing, foto, resi) dan red flag retur bodong, export CSV.",
+      "category": "Web / Data & Analytics",
+      "priority": 1,
+      "why": "Biaya retur adalah biaya tersembunyi yang paling sering tidak dihitung seller. Satu retur bisa menghapus profit 5-10 penjualan. TikTok Shop baru saja (2026) membebankan biaya pengiriman gagal dan retur ke seller, Menteri UMKM sampai geram. Seller butuh alat untuk menghitung kerugian riil dan melacak kasus retur bermasalah dengan bukti yang benar."
+    }
+  ]
+}
