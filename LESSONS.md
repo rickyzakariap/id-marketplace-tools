@@ -499,3 +499,16 @@
 - Lesson: JANGAN pernah campur teks bahasa asing ke layout string Go time.Format - token bulan cuma "January", sisanya literal. Kalau butuh nama bulan lokal, petakan manual
 - Lesson: Pola "aturan baru + seller bingung" berlanjut (#22 PPh 22, #23 diskon layanan, #24 NIB, #30 hak tolak) - kali ini aturannya justru MEMBERI hak ke seller, bukan membebani. Tool yang mengubah hak legal jadi tindakan (surat) lebih actionable daripada sekadar info
 - Next: Tambah template surat per jenis perubahan, update saat ada putusan baru soal penerapan Permendag 19/2026
+
+## 2026-08-25 - Biaya Retur Tracker
+- Works: Python 3 stdlib http.server, zero dependencies, JSON file storage
+- Works: Research-first via Google News RSS - TikTok Shop 2026 bebankan biaya pengiriman gagal + retur ke seller (Bisnis Tekno 31 Mei 2026), Menteri UMKM geram (detikFinance 21 Mei 2026), kasus retur kosong (Media Konsumen 4 Mar 2026) dan retur dijual lagi (BeritaSatu 15 Mei 2026) jadi pain point nyata tanpa tool
+- Works: Kalkulator kerugian retur itemized (modal hangus/turun nilai, ongkir kirim, ongkir retur, kemasan), profit per penjualan normal, "1 retur = N penjualan harus ditutup" dengan severity (terkendali/signifikan/kritis)
+- Works: 4 branch kalkulator verified via curl (resellable, hangus total, buyer tanggung ongkir retur, invalid input, penjualan sudah rugi), CRUD kasus + seed + validation + CSV export verified
+- Works: Light minimal theme, responsive, auto-fill contoh, 41/41 element ID cocok, JS syntax OK, tanpa em dash
+- Issues: Artikel sumber (Bisnis Tekno "Beda Kebijakan Shopee dan TikTok Shop") tidak bisa di-fetch langsung - Google News redirect 400, DuckDuckGo HTML kena challenge 202, Bing return tanpa link. Pakai fakta level headline dari banyak outlet
+- Fix: Grounding cukup dari headline multi-outlet; kebijakan retur per marketplace ditandai "estimasi, cek seller center" di UI
+- Lesson: Biaya retur adalah biaya tersembunyi yang tidak pernah dihitung seller - 1 retur bisa hapus profit 4-8 penjualan untuk margin tipis. Kalkulator yang menampilkan "N penjualan untuk nutup 1 retur" lebih actionable daripada sekadar total rupiah
+- Lesson: Seller kalah banding retur karena tidak punya bukti - checklist bukti (video unboxing, foto timbangan, screenshot chat) dan red flag retur bodong jadi bagian penting tool, bukan pelengkap
+- Lesson: Sebelumnya fix #30 ketemu server lama masih pegang port dan serve binary lama - selalu cek netstat + StartTime process sebelum restart
+- Next: Tambah estimasi fee marketplace yang tidak dikembalikan saat refund, notifikasi Telegram saat kasus retur melewati tenggat banding
