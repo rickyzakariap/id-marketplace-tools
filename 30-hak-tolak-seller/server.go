@@ -26,6 +26,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -267,8 +268,14 @@ func handleCheck(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	label := ct.Label
+	if strings.HasPrefix(label, "Perubahan ") {
+		// label sudah diawali "Perubahan", jangan duplikat
+	} else {
+		label = "Perubahan " + strings.ToLower(label[:1]) + label[1:]
+	}
 	writeJSON(w, CheckResult{Code: "berhak-tolak", Title: "Kamu berhak menolak", Color: "red",
-		Summary: "Perubahan " + ct.Label + " di " + req.Platform + " berlaku setelah 8 Juni 2026 tanpa persetujuanmu. Ini melanggar kewajiban Permendag 19/2026.",
+		Summary: label + " di " + req.Platform + " berlaku setelah 8 Juni 2026 tanpa persetujuanmu. Ini melanggar kewajiban Permendag 19/2026.",
 		Bullets: []string{
 			"Kirim surat keberatan ke seller center dan minta jawaban tertulis.",
 			"Kalau tidak ditanggapi, eskalasi ke Kemendag (Ditjen PDN) dan Kemenkop UKM.",
