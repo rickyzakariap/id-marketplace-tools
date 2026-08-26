@@ -1,0 +1,12 @@
+{
+  "name": "fmcg-trend-analyzer",
+  "version": "1.0.0",
+  "description": "Peta tren kategori FMCG e-commerce Indonesia dari data Compas.co.id S1 2026",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

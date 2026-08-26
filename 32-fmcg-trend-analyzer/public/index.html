@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peta Tren FMCG E-commerce</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --muted: #666666;
+  --faint: #999999;
+  --accent: #4a9;
+  --accent-dark: #3a8;
+  --danger: #dc2626;
+  --success: #22c55e;
+  --warn: #d97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  padding: 20px;
+}
+.wrap { max-width: 920px; margin: 0 auto; }
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+h1 { font-size: 22px; font-weight: 600; }
+.sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+.sub a { color: var(--accent-dark); }
+button {
+  font-family: inherit;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button:active { background: #f0f0f0; }
+button:disabled { opacity: 0.5; cursor: default; }
+#themeToggle { font-size: 12px; }
+.overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.ov-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.ov-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); margin-bottom: 4px; }
+.ov-card .value { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 20px; font-weight: 600; }
+.ov-card .note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+section { margin-bottom: 28px; }
+h2 { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.note-line { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  font-weight: 600;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--accent-dark); }
+td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tr.cat-row { cursor: pointer; }
+tr.cat-row:hover td { background: #f5f5f5; }
+td.num, th.num { text-align: right; font-family: 'JetBrains Mono', Consolas, monospace; }
+.bar-wrap { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--accent);
+  min-width: 2px;
+  max-width: 140px;
+}
+.bar.dim { background: #c4c4c4; }
+.leader-tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.leader-tag.hot { color: var(--accent-dark); border-color: var(--accent); }
+#detailSection { display: none; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.detail-grid .col { min-width: 0; }
+.detail-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); margin-bottom: 6px; }
+.chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.chip b { color: var(--accent-dark); }
+.close-detail { margin-top: 12px; }
+form .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); }
+.field input, .field select {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  min-width: 160px;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field input.num-input { font-family: 'JetBrains Mono', Consolas, monospace; }
+.form-actions { display: flex; gap: 8px; }
+#paceResult { margin-top: 14px; display: none; }
+.result-box {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: var(--bg);
+  font-size: 13px;
+}
+.result-box.above { border-left-color: var(--success); }
+.result-box.below { border-left-color: var(--danger); }
+.result-box .big { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 18px; font-weight: 600; margin: 4px 0; }
+.result-box .muted { color: var(--muted); font-size: 12px; }
+.result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0; }
+.result-grid .cell { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; }
+.result-grid .cell .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); }
+.result-grid .cell .val { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 14px; font-weight: 600; }
+.caveat { font-size: 12px; color: var(--faint); margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px; }
+.sources { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.sources li { margin-left: 18px; margin-bottom: 2px; }
+@media (max-width: 768px) {
+  body { padding: 12px; }
+  .overview { grid-template-columns: 1fr; gap: 8px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr; }
+  .field input, .field select { min-width: 100%; }
+  form .row { flex-direction: column; align-items: stretch; }
+  .form-actions { flex-wrap: wrap; }
+  th, td { padding: 8px 6px; }
+  .bar { max-width: 80px; }
+}
+body.dark {
+  --bg: #1a1a1a;
+  --surface: #242424;
+  --border: #333333;
+  --text: #e8e8e8;
+  --muted: #a0a0a0;
+  --faint: #777777;
+  --accent: #4a9;
+  --accent-dark: #6bc;
+}
+body.dark tr.cat-row:hover td { background: #2a2a2a; }
+body.dark button:active { background: #2e2e2e; }
+body.dark .chip, body.dark .result-box { background: #1e1e1e; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Peta Tren FMCG E-commerce</h1>
+    <button id="themeToggle" type="button">Dark</button>
+  </header>
+  <p class="sub">Data Compas.co.id S1 2026 (rilis 25 Agu 2026). Lihat kategori mana yang tumbuh dan di platform mana sebelum menentukan strategi.</p>
+
+  <div class="overview" id="overview"></div>
+
+  <section>
+    <h2>Pertumbuhan per kategori</h2>
+    <p class="note-line" id="platformNote"></p>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th class="num sortable" id="sortValue">Nilai</th>
+            <th class="num sortable" id="sortVolume">Volume</th>
+            <th>Platform dominan</th>
+          </tr>
+        </thead>
+        <tbody id="catTbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="detailSection">
+    <h2 id="detailTitle">Detail kategori</h2>
+    <div class="card">
+      <div class="detail-grid">
+        <div class="col">
+          <div class="detail-label">Dinamika platform</div>
+          <p class="note-line" id="detailPlatform" style="margin-bottom:0"></p>
+        </div>
+        <div class="col">
+          <div class="detail-label">Produk dengan kenaikan tertinggi</div>
+          <div class="chip-list" id="detailMovers"></div>
+        </div>
+      </div>
+      <button class="close-detail" id="closeDetail" type="button">Tutup</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Produk dengan pertumbuhan tertinggi</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Produk</th>
+            <th class="num">Pertumbuhan nilai</th>
+          </tr>
+        </thead>
+        <tbody id="moverTbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Kalkulator keep-pace</h2>
+    <p class="note-line">Pasar kategori tumbuh dengan laju tertentu per tahun. Kalau penjualan kamu tumbuh di bawah pasar, pangsa kamu menyusut meski angka penjualan naik.</p>
+    <div class="card">
+      <form id="paceForm">
+        <div class="row">
+          <div class="field">
+            <label for="paceCategory">Kategori</label>
+            <select id="paceCategory"></select>
+          </div>
+          <div class="field">
+            <label for="paceSales">Penjualan bulanan (Rp)</label>
+            <input class="num-input" id="paceSales" type="text" inputmode="numeric" placeholder="15000000">
+          </div>
+          <div class="field">
+            <label for="paceGrowth">Rencana pertumbuhan 12 bulan (%)</label>
+            <input class="num-input" id="paceGrowth" type="text" inputmode="numeric" placeholder="20">
+          </div>
+          <div class="form-actions">
+            <button type="button" id="paceExample">Isi contoh</button>
+            <button type="submit" id="paceCalc">Hitung</button>
+          </div>
+        </div>
+      </form>
+      <div id="paceResult"></div>
+    </div>
+  </section>
+
+  <p class="caveat" id="caveat"></p>
+  <ul class="sources" id="sources"></ul>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+// Theme
+const themeToggle = $('themeToggle');
+if (localStorage.getItem('fmcgTheme') === 'dark') {
+  document.body.classList.add('dark');
+  themeToggle.textContent = 'Light';
+}
+themeToggle.addEventListener('click', () => {
+  const dark = document.body.classList.toggle('dark');
+  localStorage.setItem('fmcgTheme', dark ? 'dark' : 'light');
+  themeToggle.textContent = dark ? 'Light' : 'Dark';
+});
+
+const fmtRp = (n) => 'Rp ' + Number(n).toLocaleString('id-ID');
+const fmtPct = (n) => (n > 0 ? '+' : '') + Number(n).toLocaleString('id-ID') + '%';
+const barWidth = (v, max) => Math.max(2, Math.round((v / max) * 140));
+
+let categories = [];
+let sortKey = 'value_growth';
+let sortDir = -1;
+
+// Overview + notes
+fetch('/api/meta')
+  .then((r) => r.json())
+  .then((m) => {
+    $('overview').innerHTML =
+      '<div class="ov-card"><div class="label">Total transaksi H1 2026</div><div class="value">' + fmtRp(m.total_gmv) +
+      '</div><div class="note">5 kategori FMCG</div></div>' +
+      '<div class="ov-card"><div class="label">Pertumbuhan YoY</div><div class="value">+' + m.total_growth_pct +
+      '%</div><div class="note">nilai transaksi vs H1 2025</div></div>' +
+      '<div class="ov-card"><div class="label">Konsolidasi pasar</div><div class="value">99%</div><div class="note">Shopee + TikTok ShopTokopedia</div></div>';
+    $('platformNote').textContent = m.platform_note;
+    $('caveat').textContent = m.caveat;
+    $('sources').innerHTML = m.sources.map((s) => '<li>' + s + '</li>').join('');
+  });
+
+// Categories
+fetch('/api/categories')
+  .then((r) => r.json())
+  .then((data) => {
+    categories = data;
+    renderCategories();
+    $('paceCategory').innerHTML = data
+      .map((c) => '<option value="' + c.id + '">' + c.name + ' (+' + c.value_growth + '%)</option>')
+      .join('');
+  });
+
+function renderCategories() {
+  const maxVal = Math.max(...categories.map((c) => c.value_growth));
+  const maxVol = Math.max(...categories.map((c) => c.volume_growth));
+  const sorted = categories.slice().sort((a, b) => sortDir * (a[sortKey] - b[sortKey]));
+  $('catTbody').innerHTML = sorted
+    .map((c) => {
+      const leaderHot = c.leader === 'Shopee' && c.leader_share;
+      const leaderText = leaderHot
+        ? c.leader + ' ' + c.leader_share + '%'
+        : c.leader;
+      return '<tr class="cat-row" data-id="' + c.id + '">' +
+        '<td>' + c.name + '</td>' +
+        '<td class="num"><div class="bar-wrap"><div class="bar" style="width:' + barWidth(c.value_growth, maxVal) +
+        'px"></div>' + fmtPct(c.value_growth) + '</div></td>' +
+        '<td class="num"><div class="bar-wrap"><div class="bar dim" style="width:' + barWidth(c.volume_growth, maxVol) +
+        'px"></div>' + fmtPct(c.volume_growth) + '</div></td>' +
+        '<td><span class="leader-tag' + (leaderHot ? ' hot' : '') + '">' + leaderText + '</span></td>' +
+        '</tr>';
+    })
+    .join('');
+}
+
+$('sortValue').addEventListener('click', () => { sortKey = 'value_growth'; sortDir = -sortDir; renderCategories(); });
+$('sortVolume').addEventListener('click', () => { sortKey = 'volume_growth'; sortDir = -sortDir; renderCategories(); });
+
+// Category detail
+$('catTbody').addEventListener('click', (e) => {
+  const row = e.target.closest('.cat-row');
+  if (!row) return;
+  fetch('/api/categories/' + row.dataset.id)
+    .then((r) => r.json())
+    .then((c) => {
+      $('detailTitle').textContent = 'Detail: ' + c.name;
+      let platformText = c.platform_note;
+      if (c.leader_share) {
+        platformText += ' Pangsa Shopee ' + c.leader_share + '%, naik ' + c.leader_share_delta + ' poin dalam satu semester.';
+      }
+      $('detailPlatform').textContent = platformText;
+      $('detailMovers').innerHTML = c.movers.length
+        ? c.movers.map((m) => '<span class="chip">' + m.product + ' <b>+' + m.growth + '%</b></span>').join('')
+        : '<span class="chip">tidak ada data produk</span>';
+      $('detailSection').style.display = 'block';
+      $('detailSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+$('closeDetail').addEventListener('click', () => {
+  $('detailSection').style.display = 'none';
+});
+
+// Movers
+fetch('/api/movers')
+  .then((r) => r.json())
+  .then((movers) => {
+    const maxMover = Math.max(...movers.map((m) => m.growth));
+    $('moverTbody').innerHTML = movers
+      .map((m) => '<tr>' +
+        '<td>' + m.category + '</td>' +
+        '<td>' + m.product + '</td>' +
+        '<td class="num"><div class="bar-wrap"><div class="bar" style="width:' + barWidth(m.growth, maxMover) +
+        'px"></div>+' + m.growth + '%</div></td>' +
+        '</tr>')
+      .join('');
+  });
+
+// Keep-pace calculator
+const parseNum = (s) => Number(String(s).replace(/[^0-9.-]/g, ''));
+
+$('paceExample').addEventListener('click', () => {
+  $('paceCategory').value = 'homecare';
+  $('paceSales').value = '15000000';
+  $('paceGrowth').value = '20';
+  $('paceResult').style.display = 'none';
+});
+
+$('paceForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const btn = $('paceCalc');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  fetch('/api/keep-pace', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      category: $('paceCategory').value,
+      monthly_sales: parseNum($('paceSales').value),
+      planned_growth: parseNum($('paceGrowth').value)
+    })
+  })
+    .then((r) => r.json())
+    .then((d) => {
+      if (d.error) {
+        $('paceResult').innerHTML = '<div class="result-box below"><b>' + d.error + '</b></div>';
+      } else {
+        const cls = d.verdict === 'atas' ? 'above' : (d.verdict === 'bawah' ? 'below' : '');
+        $('paceResult').innerHTML =
+          '<div class="result-box ' + cls + '">' +
+          '<div class="muted">Kategori ' + d.category + ', pasar tumbuh +' + d.market_growth_pct + '% per tahun</div>' +
+          '<div class="result-grid">' +
+          '<div class="cell"><div class="lbl">Keep-pace target (12 bln)</div><div class="val">' + fmtRp(d.keep_pace_target) + '</div></div>' +
+          '<div class="cell"><div class="lbl">Proyeksi kamu</div><div class="val">' + fmtRp(d.your_projection) + '</div></div>' +
+          '<div class="cell"><div class="lbl">Selisih</div><div class="val">' + fmtRp(d.gap) + '</div></div>' +
+          '</div>' +
+          '<div>' + d.note + '</div>' +
+          '</div>';
+      }
+      $('paceResult').style.display = 'block';
+    })
+    .catch(() => {
+      $('paceResult').innerHTML = '<div class="result-box below"><b>Gagal menghitung, coba lagi.</b></div>';
+      $('paceResult').style.display = 'block';
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = 'Hitung';
+    });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    $('paceSales').value = '';
+    $('paceGrowth').value = '';
+    $('paceResult').style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
