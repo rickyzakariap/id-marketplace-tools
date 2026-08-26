@@ -512,3 +512,17 @@
 - Lesson: Seller kalah banding retur karena tidak punya bukti - checklist bukti (video unboxing, foto timbangan, screenshot chat) dan red flag retur bodong jadi bagian penting tool, bukan pelengkap
 - Lesson: Sebelumnya fix #30 ketemu server lama masih pegang port dan serve binary lama - selalu cek netstat + StartTime process sebelum restart
 - Next: Tambah estimasi fee marketplace yang tidak dikembalikan saat refund, notifikasi Telegram saat kasus retur melewati tenggat banding
+
+## 2026-08-26 - FMCG Trend Analyzer
+- Works: Node.js + Express web tool, single dep (express)
+- Works: Research-first via Google News RSS - found Compas.co.id FMCG E-commerce Market Insight S1 2026 report (Rp 88,4 triliun H1 2026, +29,4% YoY, Shopee + TikTok ShopTokopedia 99% di semua kategori). Full data extracted from youngster.id article (26 Agu), cross-checked with Gizmologi (25 Agu) and Katadata headlines
+- Works: 5 kategori dengan growth nilai + volume (Homecare 78,3%/42%, F&B 52,1%/33%, Healthcare 24,4%/20%, Beauty 20,8%/12,8%, Mom and Baby 18,7%/3,6%), sortable table dengan bar visual
+- Works: Detail kategori per platform (Shopee 69% Homecare naik 8 poin, Official Store TikTok agresif di 4 kategori lain), top movers (Mineral Water +219%, Insektisida +162%), seasonality Ramadan/Lebaran
+- Works: Kalkulator keep-pace (POST /api/keep-pace): target 12 bulan agar pangsa tidak menyusut = penjualan * (1 + growth pasar). Verified math: homecare 15jt -> target 26.745.000, verdict bawah/sejalan/atas dengan ambang +-10 poin
+- Works: Light minimal theme, responsive, auto-fill contoh, Enter hitung / Escape bersihkan, 21/21 element ID cocok, inline JS syntax OK, tanpa em dash
+- Issues: Nilai rupiah per kategori tidak dipublikasikan Compas - tool hanya punya growth % dan total Rp 88,4T. Kalkulator keep-pace adalah estimasi matematis, ditandai di UI (caveat)
+- Issues: Kasus baru saldo Shopee Rp 6,3 M tertahan + akun terkunci (Bloomberg Technoz, Peradaban.id) = kelanjutan saga #29, tapi #29 tidak di-update hari ini (fokus #32, dicatat sebagai Next)
+- Lesson: Data pasar (market report) adalah pain point yang belum tersentuh 31 proyek sebelumnya - semua tool fokus biaya/aturan/retur, belum ada yang jawab "kategori apa yang tumbuh dan di platform mana". Seller butuh data untuk keputusan kategori, bukan cuma kalkulator
+- Lesson: Google News RSS -> youngster.id full article bisa di-fetch langsung (beda dari detik/bisnis yang anti-bot). Satu artikel detail > 5 headline
+- Lesson: Keep-pace framing lebih actionable daripada sekadar growth %: "pasar tumbuh 78%, kamu cuma 20%, pangsa menyusut" - seller merasa kalah kalau cuma lihat angka penjualan naik
+- Next: Update #29 dengan kasus Shopee Rp 6,3 M (akun terkunci) + reaksi Kemendag soal transparansi biaya. Tambah sumber data Compas per kuartal saat rilis S2 2026
