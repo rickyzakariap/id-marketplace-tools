@@ -1,0 +1,54 @@
+{
+  "date": "2026-08-26",
+  "sources": [
+    "Compas.co.id FMCG E-commerce Market Insight S1 2026",
+    "youngster.id (26 Agu 2026): Belanja Kebutuhan Sehari-hari Makin Online, Transaksi FMCG Tembus Rp88,4 Triliun",
+    "Gizmologi.id (25 Agu 2026): Pasar FMCG E-commerce Indonesia Tumbuh Rp88,4 Triliun, Dikuasai Dua Pemain Utama",
+    "Katadata.co.id: Belanja Kebutuhan Harian Makin Pindah ke E-commerce, Transaksi Rp 88 Triliun",
+    "indotelko.com (18 Agu 2026): FMCG eCommerce tembus Rp88,4 triliun hingga semester I 2026",
+    "Bloomberg Technoz: Cerita Saldo Rp6 Miliar Milik Seller Shopee Sulit Ditarik",
+    "Tribunnews: Transparansi Biaya Penjual, Kemendag Dorong Platform Lain Contoh Milik Shopee"
+  ],
+  "pain_points": [
+    {
+      "category": "Tren Kategori & Keputusan Platform",
+      "description": "Pasar FMCG e-commerce Indonesia Rp 88,4 triliun H1 2026 (+29,4% YoY), dikuasai Shopee + TikTok ShopTokopedia (99% di semua kategori). Seller tidak tahu kategori mana yang tumbuh, platform mana yang tepat per kategori, dan sub-kategori apa yang lagi naik. Homecare tumbuh 78,3%, F&B 52,1%, tapi strategi Shopee vs TikTok beda: Official Store TikTok agresif di Beauty/F&B/Healthcare/Mom & Baby, Shopee dominan Homecare (69%, naik 8 poin dalam satu semester). Seasonality Ramadan/Lebaran: Mineral Water +219%, Insektisida +162%, Cooking Oil +123%. Seller FMCG butuh peta tren kategori + kalkulator keep-pace (berapa penjualan minimal agar pangsa tidak menyusut).",
+      "frequency": "MEDIUM-HIGH",
+      "sources": [
+        "Compas.co.id: FMCG E-commerce Market Insight S1 2026 (via youngster.id 26 Agu 2026)",
+        "Gizmologi.id: Pasar FMCG E-commerce Indonesia Tumbuh Rp88,4 Triliun (25 Agu 2026)",
+        "Katadata: Transaksi FMCG Tembus Rp 88 Triliun"
+      ]
+    },
+    {
+      "category": "Saldo Tertahan & Akun Terkunci (Shopee)",
+      "description": "Kasus baru: saldo penjual Shopee Rp 6,3 miliar tertahan dan akun terkunci (Peradaban.id, asatunews.co.id), Cerita Saldo Rp6 Miliar Milik Seller Shopee Sulit Ditarik (Bloomberg Technoz). Kemendag minta platform lain mencontoh transparansi biaya Shopee (Tribunnews). Kelanjutan saga dana tertahan #29 yang sebelumnya fokus TikTok Shop Rp 3T.",
+      "frequency": "HIGH",
+      "sources": [
+        "Bloomberg Technoz: Cerita Saldo Rp6 Miliar Milik Seller Shopee Sulit Ditarik",
+        "Peradaban.id: Saldo Rp6,3 Miliar Penjual Shopee Tertahan dan Akun Terkunci",
+        "Tribunnews: Kemendag Dorong Platform Lain Contoh Transparansi Biaya Shopee"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "FMCG Trend Analyzer",
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Peta tren kategori FMCG e-commerce dari data Compas S1 2026: pertumbuhan nilai + volume per kategori (Homecare 78%, F&B 52%), dominasi platform per kategori (Shopee vs TikTok Official Store), top movers sub-kategori (Mineral Water 219%, Insektisida 162%), seasonality Ramadan, dan kalkulator keep-pace: berapa target penjualan 12 bulan agar pangsa pasar tidak menyusut.",
+      "category": "Data & Analytics",
+      "priority": 1,
+      "why": "Semua tool sebelumnya berfokus biaya/aturan/retur. Belum ada tool data pasar yang jawab 'kategori apa yang tumbuh dan di platform mana'. Data Compas S1 2026 fresh (rilis 25 Agu) dan actionable: seller bisa pilih kategori + platform berdasarkan pertumbuhan riil, bukan feeling."
+    },
+    {
+      "name": "Saldo Beku Shopee Case Update (#29)",
+      "type": "Update",
+      "tech": "Node.js + Express",
+      "description": "Update #29 dengan kasus Shopee Rp 6,3 M + akun terkunci dan reaksi Kemendag soal transparansi biaya.",
+      "category": "Maintenance",
+      "priority": 2,
+      "why": "Saga dana tertahan pindah dari TikTok ke Shopee dengan dimensi baru: akun terkunci."
+    }
+  ]
+}
