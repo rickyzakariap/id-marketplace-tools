@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanal Sendiri vs Marketplace</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #fff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --text-dim: #666;
+  --text-muted: #999;
+  --accent: #4a9;
+  --accent-dark: #3a8;
+  --accent-soft: #e6f5ef;
+  --error: #dc2626;
+  --success: #22c55e;
+  --warn: #d97706;
+  --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --card: #242424;
+  --border: #333;
+  --text: #eee;
+  --text-dim: #aaa;
+  --text-muted: #777;
+  --accent-soft: #1f3a31;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 15px;
+}
+.wrap { max-width: 960px; margin: 0 auto; padding: 24px 20px 60px; }
+header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-wrap: wrap; gap: 10px; }
+h1 { font-size: 1.35rem; font-weight: 600; }
+.sub { color: var(--text-dim); font-size: .85rem; margin-bottom: 20px; }
+.sub a { color: var(--accent-dark); }
+.theme-btn {
+  background: none; border: 1px solid var(--border); color: var(--text-dim);
+  padding: 6px 14px; border-radius: 6px; font-size: .85rem; cursor: pointer; font-family: inherit;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--text); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+h2 { font-size: .95rem; margin-bottom: 12px; font-weight: 600; }
+h2 .step-num { color: var(--accent-dark); font-family: var(--mono); margin-right: 6px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.field { margin-bottom: 4px; }
+.field label { display: block; font-size: .8rem; color: var(--text-dim); margin-bottom: 4px; }
+.field label .hint { color: var(--text-muted); font-weight: 400; }
+.field input, .field select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+  font-size: .9rem; background: var(--card); color: var(--text); font-family: inherit;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field input[type="number"] { font-family: var(--mono); }
+.field .err { color: var(--error); font-size: .75rem; display: none; margin-top: 3px; }
+.field.invalid input, .field.invalid select { border-color: var(--error); }
+.field.invalid .err { display: block; }
+.field.full { grid-column: 1 / -1; }
+.actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+.btn {
+  padding: 9px 18px; border-radius: 6px; font-size: .9rem; cursor: pointer;
+  border: 1px solid var(--border); background: var(--card); color: var(--text);
+  font-family: inherit; transition: border-color .15s, background .15s;
+}
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
+.btn-primary:hover { filter: brightness(.95); }
+.btn-ghost { background: none; color: var(--text-dim); }
+.note-line { font-size: .8rem; color: var(--text-muted); }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.verdict { border-left: 3px solid var(--accent); padding: 14px 16px; background: var(--accent-soft); border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+.verdict h3 { font-size: .95rem; margin-bottom: 4px; }
+.verdict p { font-size: .88rem; color: var(--text-dim); }
+.row-line { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: .88rem; }
+.row-line:last-child { border-bottom: none; }
+.row-line .k { color: var(--text-dim); }
+.row-line .v { font-family: var(--mono); font-weight: 500; }
+.row-line.total { border-top: 2px solid var(--border); margin-top: 4px; padding-top: 10px; }
+.row-line.total .v { color: var(--accent-dark); font-weight: 700; font-size: 1rem; }
+.row-line .v.neg { color: var(--error); }
+.winner-tag { display: inline-block; font-size: .72rem; padding: 2px 8px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-dark); }
+.section-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin-bottom: 8px; }
+.empty { color: var(--text-muted); text-align: center; padding: 28px 0; font-size: .9rem; }
+#resultSection { display: none; }
+@media (max-width: 768px) {
+  .wrap { padding: 16px 12px 48px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr; }
+  .actions { flex-direction: column; align-items: stretch; }
+  .actions .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kanal Sendiri vs Marketplace</h1>
+    <button class="theme-btn" id="themeToggle" type="button">Dark</button>
+  </header>
+  <p class="sub">Hitung untung-rugi jualan di marketplace vs kanal sendiri (WhatsApp, IG, website, toko offline). Latar: biaya marketplace berlapis makin naik, banyak brand pindah ke kanal sendiri. <a href="https://theconversation.com" target="_blank" rel="noopener">The Conversation, 4 Agu 2026</a></p>
+
+  <div class="card">
+    <h2><span class="step-num">1</span>Kondisi jualan sekarang</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>Harga jual per item (Rp)</label>
+        <input type="number" id="price" inputmode="numeric" placeholder="150000">
+        <div class="err" id="priceError">Isi harga jual</div>
+      </div>
+      <div class="field">
+        <label>Modal (HPP) per item (Rp)</label>
+        <input type="number" id="hpp" inputmode="numeric" placeholder="85000">
+        <div class="err" id="hppError">Isi modal per item</div>
+      </div>
+      <div class="field">
+        <label>Penjualan per bulan (unit)</label>
+        <input type="number" id="monthlyUnits" inputmode="numeric" placeholder="120">
+        <div class="err" id="monthlyUnitsError">Isi jumlah penjualan</div>
+      </div>
+      <div class="field">
+        <label>Marketplace</label>
+        <select id="marketplaceId"></select>
+      </div>
+      <div class="field">
+        <label>Komisi marketplace <span class="hint">% (default per platform)</span></label>
+        <input type="number" id="commission" inputmode="decimal" step="0.1" placeholder="5">
+      </div>
+      <div class="field">
+        <label>Biaya layanan <span class="hint">%</span></label>
+        <input type="number" id="serviceFee" inputmode="decimal" step="0.1" placeholder="2">
+      </div>
+      <div class="field">
+        <label>Iklan marketplace per bulan (Rp)</label>
+        <input type="number" id="adsSpend" inputmode="numeric" placeholder="500000">
+      </div>
+      <div class="field">
+        <label>Ongkir ditanggung seller per unit (Rp)</label>
+        <input type="number" id="ongkirUnit" inputmode="numeric" placeholder="8000">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step-num">2</span>Kanal sendiri (WhatsApp / IG / website)</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>% pembeli yang realistis pindah ke kanal sendiri</label>
+        <input type="number" id="ownUnitsPct" inputmode="decimal" step="1" placeholder="20">
+        <div class="err" id="ownUnitsPctError">Isi persentase pindah</div>
+      </div>
+      <div class="field">
+        <label>Budget iklan kanal sendiri per bulan (Rp)</label>
+        <input type="number" id="ownAdsBudget" inputmode="numeric" placeholder="300000">
+      </div>
+      <div class="field">
+        <label>Fee payment gateway <span class="hint">% (default 2,9)</span></label>
+        <input type="number" id="gatewayPct" inputmode="decimal" step="0.1" placeholder="2.9">
+      </div>
+      <div class="field">
+        <label>Fee tetap gateway per transaksi (Rp)</label>
+        <input type="number" id="gatewayFixed" inputmode="numeric" placeholder="2000">
+      </div>
+      <div class="field">
+        <label>Ongkir per unit kanal sendiri (Rp)</label>
+        <input type="number" id="ownOngkirUnit" inputmode="numeric" placeholder="15000">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="calcBtn" type="button">Hitung</button>
+      <button class="btn btn-ghost" id="fillBtn" type="button">Isi contoh</button>
+    </div>
+    <p class="note-line" style="margin-top:10px">Angka default komisi dan gateway bisa diedit. Tarif marketplace berubah per kategori dan periode, cek seller center untuk nilai pasti.</p>
+  </div>
+
+  <div id="resultSection">
+    <div class="card" id="verdictCard">
+      <div class="verdict" id="verdictBox"></div>
+    </div>
+    <div class="result-grid">
+      <div class="card">
+        <h2>Marketplace</h2>
+        <div id="mpResult"></div>
+      </div>
+      <div class="card">
+        <h2>Kanal sendiri</h2>
+        <div id="ownResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Dasar data</h2>
+    <div id="sources" class="note-line"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  var tb = document.getElementById('themeToggle');
+  tb.textContent = theme === 'dark' ? 'Light' : 'Dark';
+  tb.addEventListener('click', function () {
+    var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    tb.textContent = next === 'dark' ? 'Light' : 'Dark';
+  });
+})();
+
+var META = null;
+function $(id) { return document.getElementById(id); }
+
+function clearErrors() {
+  ['price', 'hpp', 'monthlyUnits', 'ownUnitsPct'].forEach(function (id) {
+    $(id).classList.remove('invalid');
+    $(id + 'Error').classList.remove('show');
+  });
+}
+
+function setInvalid(id) {
+  $(id).classList.add('invalid');
+  $(id + 'Error').style.display = 'block';
+}
+
+function fmtRp(v) {
+  var n = Math.round(Number(v) || 0);
+  return 'Rp ' + n.toLocaleString('id-ID');
+}
+
+function fmtNum(v) {
+  var n = Number(v) || 0;
+  return n.toLocaleString('id-ID', { maximumFractionDigits: 0 });
+}
+
+async function loadMeta() {
+  var r = await fetch('/api/meta');
+  META = await r.json();
+  var sel = $('marketplaceId');
+  sel.innerHTML = META.marketplaces.map(function (m) {
+    return '<option value="' + m.id + '">' + m.name + '</option>';
+  }).join('');
+  sel.addEventListener('change', function () {
+    var m = META.marketplaces.find(function (x) { return x.id === sel.value; });
+    if (m) {
+      $('commission').value = m.commission;
+      $('serviceFee').value = m.service_fee;
+    }
+  });
+  var first = META.marketplaces[0];
+  $('commission').value = first.commission;
+  $('serviceFee').value = first.service_fee;
+  $('gatewayPct').value = META.gateway_pct;
+  $('gatewayFixed').value = META.gateway_fixed;
+  $('sources').innerHTML = META.sources.map(function (s) { return '<div style="margin-bottom:4px">- ' + s + '</div>'; }).join('');
+}
+
+function row(k, v, cls) {
+  return '<div class="row-line"><span class="k">' + k + '</span><span class="v ' + (cls || '') + '">' + v + '</span></div>';
+}
+
+function renderResult(d) {
+  $('resultSection').style.display = 'block';
+  var mp = d.marketplace;
+  var own = d.own_channel;
+
+  var mpTag = d.verdict === 'marketplace' ? ' <span class="winner-tag">lebih untung</span>' : '';
+  var ownTag = d.verdict === 'kanal-sendiri' ? ' <span class="winner-tag">lebih untung</span>' : '';
+
+  $('mpResult').innerHTML =
+    '<div class="section-label">Per bulan (asumsi ' + fmtNum($('monthlyUnits').value) + ' unit)</div>' +
+    row('Omzet', fmtRp(mp.revenue)) +
+    row('Modal (HPP)', fmtRp(mp.hpp)) +
+    row('Komisi', fmtRp(mp.commission)) +
+    row('Biaya layanan', fmtRp(mp.service_fee)) +
+    row('Iklan', fmtRp(mp.ads)) +
+    row('Ongkir', fmtRp(mp.ongkir)) +
+    row('Profit bersih', fmtRp(mp.profit), mp.profit < 0 ? 'neg' : '') +
+    row('Margin', mp.margin_pct.toFixed(1) + '%', mp.margin_pct < 0 ? 'neg' : '') +
+    '<div class="row-line total"><span class="k">Hasil' + mpTag + '</span></div>';
+
+  $('ownResult').innerHTML =
+    '<div class="section-label">Per bulan (asumsi ' + fmtNum(own.units) + ' unit, ' + fmtNum($('ownUnitsPct').value) + '% volume pindah)</div>' +
+    row('Omzet', fmtRp(own.revenue)) +
+    row('Modal (HPP)', fmtRp(own.hpp)) +
+    row('Fee gateway', fmtRp(own.gateway)) +
+    row('Iklan', fmtRp(own.ads)) +
+    row('Ongkir', fmtRp(own.ongkir)) +
+    row('Profit bersih', fmtRp(own.profit), own.profit < 0 ? 'neg' : '') +
+    row('Margin', own.margin_pct.toFixed(1) + '%', own.margin_pct < 0 ? 'neg' : '') +
+    row('Break-even', fmtNum(d.break_even_units) + ' unit/bulan (' + d.break_even_pct.toFixed(0) + '% volume)') +
+    '<div class="row-line total"><span class="k">Hasil' + ownTag + '</span></div>';
+
+  $('verdictBox').innerHTML = '<h3>' + (d.verdict === 'kanal-sendiri' ? 'Kanal sendiri lebih untung' : d.verdict === 'keduanya-rugi' ? 'Keduanya rugi - cek margin produk' : 'Marketplace lebih untung') + '</h3><p>' + d.verdict_note + '</p>';
+}
+
+async function calc() {
+  clearErrors();
+  var ok = true;
+  if (!(Number($('price').value) > 0)) { setInvalid('price'); ok = false; }
+  if (!(Number($('hpp').value) >= 0) || $('hpp').value === '') { setInvalid('hpp'); ok = false; }
+  if (!(Number($('monthlyUnits').value) > 0)) { setInvalid('monthlyUnits'); ok = false; }
+  if (!(Number($('ownUnitsPct').value) > 0)) { setInvalid('ownUnitsPct'); ok = false; }
+  if (!ok) return;
+
+  var btn = $('calcBtn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    var body = {
+      price: Number($('price').value),
+      hpp: Number($('hpp').value),
+      monthly_units: Number($('monthlyUnits').value),
+      marketplace_id: $('marketplaceId').value,
+      commission: Number($('commission').value) || 0,
+      service_fee: Number($('serviceFee').value) || 0,
+      ads_spend: Number($('adsSpend').value) || 0,
+      ongkir_unit: Number($('ongkirUnit').value) || 0,
+      own_units_pct: Number($('ownUnitsPct').value),
+      own_ads_budget: Number($('ownAdsBudget').value) || 0,
+      gateway_pct: Number($('gatewayPct').value) || 2.9,
+      gateway_fixed: Number($('gatewayFixed').value) || 2000,
+      own_ongkir_unit: Number($('ownOngkirUnit').value) || 0
+    };
+    var r = await fetch('/api/compare', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    var d = await r.json();
+    if (!r.ok) { alert(d.error || 'Gagal menghitung'); return; }
+    renderResult(d);
+  } catch (e) {
+    alert('Terjadi kesalahan, coba lagi');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung';
+  }
+}
+
+function fillExample() {
+  $('price').value = 150000;
+  $('hpp').value = 85000;
+  $('monthlyUnits').value = 120;
+  $('marketplaceId').value = 'shopee';
+  var m = META.marketplaces.find(function (x) { return x.id === 'shopee'; });
+  $('commission').value = m.commission;
+  $('serviceFee').value = m.service_fee;
+  $('adsSpend').value = 500000;
+  $('ongkirUnit').value = 8000;
+  $('ownUnitsPct').value = 20;
+  $('ownAdsBudget').value = 300000;
+  $('gatewayPct').value = 2.9;
+  $('gatewayFixed').value = 2000;
+  $('ownOngkirUnit').value = 15000;
+}
+
+$('calcBtn').addEventListener('click', calc);
+$('fillBtn').addEventListener('click', fillExample);
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') calc();
+  if (e.key === 'Escape') { clearErrors(); $('resultSection').style.display = 'none'; }
+});
+loadMeta();
+</script>
+</body>
+</html>
