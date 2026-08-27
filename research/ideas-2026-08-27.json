@@ -1,0 +1,67 @@
+{
+  "date": "2026-08-27",
+  "sources": [
+    "Bloomberg Technoz (24 Agu 2026): Cerita Saldo Rp6 Miliar Milik Seller Shopee Sulit Ditarik",
+    "Bloomberg Technoz (26 Agu 2026): Shopee Menjawab Terkait Pengakuan Seller Sulit Tarik Dana",
+    "Peradaban.id (24 Agu 2026): Saldo Rp6,3 Miliar Penjual Shopee Tertahan dan Akun Terkunci",
+    "achmadnurhidayat.id (24 Agu 2026): Penjual Shopee Mengaku Saldo Rp63 Miliar Tertahan",
+    "The Conversation (4 Agu 2026): Brand ramai-ramai keluar dari marketplace: apakah jualan di kanal sendiri bisa lebih untung?",
+    "Katadata.co.id (20 Mei 2026): Untung Makin Tipis, Seller Online Terimpit Biaya Berlapis di Marketplace",
+    "kontan.co.id (9 Mei 2026): Tekanan Biaya E-Commerce 2026, Seller Mulai Cari Kanal Penjualan Alternatif",
+    "UKMINDONESIA.ID (22 Mei 2026): Biaya Admin Marketplace Naik? Ini Cara UMKM Mulai Jualan Mandiri",
+    "Bisnis.com (23 Agu 2026): Menteri Maman Pastikan Kepmen Potongan Biaya Layanan 50% Segera Terbit",
+    "detikFinance (21 Agu 2026): Menteri UMKM Targetkan Diskon 50% Biaya Layanan Berlaku Pekan Depan"
+  ],
+  "pain_points": [
+    {
+      "category": "Saldo Tertahan Shopee (kelanjutan saga #29)",
+      "description": "Kasus Adi (Pekalongan, seller kemeja): saldo Rp 6,3 M tertahan sejak Nov 2025, akun terkunci sejak Juni 2026. Des 2025 pengiriman Rp 90 juta hanya cair Rp 24,5 juta. CS Shopee menyarankan tarik bertahap via ShopeePay. Shopee merespons resmi 26 Agu 2026 (Bloomberg Technoz). Kasus jadi ujian transparansi pencairan dana platform.",
+      "frequency": "HIGH",
+      "sources": [
+        "Bloomberg Technoz (24 + 26 Agu 2026)",
+        "Peradaban.id (24 Agu 2026)",
+        "achmadnurhidayat.id (24 Agu 2026)"
+      ]
+    },
+    {
+      "category": "Eksodus Seller ke Kanal Sendiri",
+      "description": "Biaya marketplace berlapis (komisi + biaya layanan + ongkir + iklan) makin menekan margin. The Conversation (4 Agu) mengangkat pertanyaan: apakah jualan di kanal sendiri (WhatsApp, IG, website) bisa lebih untung? Katadata (20 Mei): seller terimpit biaya berlapis. kontan (9 Mei): seller cari kanal alternatif. UKMINDONESIA (22 Mei): panduan jualan mandiri. Belum ada tool yang menghitung untung-rugi pindah dengan angka.",
+      "frequency": "MEDIUM-HIGH",
+      "sources": [
+        "The Conversation (4 Agu 2026)",
+        "Katadata (20 Mei 2026)",
+        "kontan.co.id (9 Mei 2026)",
+        "UKMINDONESIA.ID (22 Mei 2026)"
+      ]
+    },
+    {
+      "category": "Kepmen Diskon Biaya Layanan 50%",
+      "description": "Kepmen diskon 50% biaya layanan masih belum diteken per 23 Agu (Menteri Maman 'pastikan segera terbit'), target berlaku akhir Agustus 2026. #23 masih akurat dengan banner 'target pekan 24-28 Agu'.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Bisnis.com (23 Agu 2026)",
+        "detikFinance (21 Agu 2026)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Kanal Sendiri vs Marketplace",
+      "type": "Web",
+      "tech": "Go 1.26",
+      "description": "Kalkulator untung-rugi jualan di marketplace vs kanal sendiri: profit bersih per kanal, break-even unit di kanal sendiri agar menyamai profit marketplace, verdict pindah/tetap/keduanya rugi. Input: harga, HPP, volume bulanan, komisi marketplace, iklan, fee gateway (pola Midtrans/Xendit 2,9% + Rp 2.000), persen pembeli yang pindah.",
+      "category": "Data & Analytics",
+      "priority": 1,
+      "why": "Pertanyaan 'apakah jualan di kanal sendiri bisa lebih untung?' (The Conversation, 4 Agu 2026) belum dijawab tool mana pun dengan angka. Semua tool sebelumnya fokus di dalam marketplace, tidak ada yang membandingkan keluar marketplace."
+    },
+    {
+      "name": "Saldo Beku Shopee Update (#29)",
+      "type": "Update",
+      "tech": "Node.js + Express",
+      "description": "Update #29 dengan kasus Shopee Rp 6,3 M + akun terkunci (24 Agu) dan respons resmi Shopee (26 Agu).",
+      "category": "Maintenance",
+      "priority": 2,
+      "why": "Ditelan LESSONS #32 sebagai Next. Kasus Shopee jadi sorotan nasional dan Shopee sudah merespons."
+    }
+  ]
+}
