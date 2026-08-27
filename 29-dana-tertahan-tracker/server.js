@@ -6,6 +6,9 @@
 // - 3 Jul 2026: bos e-commerce dipanggil DPR (CNBC)
 // - 9 Jul 2026: 500 akun TikTok Shop beku, Rp 3 triliun tak bisa ditarik (CNBC)
 // - 21 Agu 2026: penangguhan berakhir, saldo Tokopedia/TikTok masih belum cair (detikNews)
+// - 24 Agu 2026: kasus Adi (Pekalongan), saldo Shopee Rp 6,3 M tertahan sejak Nov 2025,
+//   akun terkunci sejak Juni 2026 (Bloomberg Technoz, Peradaban.id)
+// - 26 Agu 2026: Shopee merespons resmi kasus penarikan dana seller (Bloomberg Technoz)
 // Timeline dan alasan di bawah adalah ringkasan berita, bukan dokumen hukum.
 
 const express = require('express');
@@ -59,6 +62,7 @@ const PLATFORMS = [
 
 const REASONS = [
   { id: 'akun-beku', label: 'Akun dibekukan mendadak', detail: 'Ratusan akun dibekukan tanpa pemberitahuan jelas. Kasus terbesar: 500 akun TikTok Shop dengan total dana Rp 3 triliun tak bisa ditarik (CNBC, 9 Jul 2026).' },
+  { id: 'akun-terkunci', label: 'Akun terkunci, saldo mengendap', detail: 'Akun seller tidak bisa diakses sehingga saldo tidak bisa ditarik. Kasus Adi (Pekalongan): saldo Shopee Rp 6,3 M tertahan sejak Nov 2025, akun terkunci sejak Juni 2026 (Bloomberg Technoz, 24 Agu 2026).' },
   { id: 'penangguhan', label: 'Penangguhan pencairan platform', detail: 'Platform menangguhkan pencairan saldo. Penangguhan resmi berakhir 21 Agu 2026, tapi saldo Tokopedia/TikTok masih belum bisa dicairkan (detikNews).' },
   { id: 'komisi-afiliasi', label: 'Komisi afiliator dibekukan', detail: 'Komisi afiliator dibekukan, salah satunya terkait program gratis ongkir yang dinilai tidak sesuai ketentuan (CNBC, 7 Jul 2026).' },
   { id: 'verifikasi', label: 'Verifikasi data belum lengkap', detail: 'Dokumen toko/KYC belum lengkap sehingga pencairan ditahan sampai verifikasi selesai. Umum di semua marketplace.' },
@@ -80,6 +84,8 @@ const TIMELINE = [
   { date: '2026-07-07', title: 'Komisi afiliator dibekukan', detail: 'Komisi afiliator TikTok Shop dibekukan, salah satunya perkara gratis ongkir.', source: 'CNBC Indonesia' },
   { date: '2026-07-09', title: '500 akun beku, Rp 3 triliun tertahan', detail: '500 akun TikTok Shop mendadak beku, Rp 3 triliun tak bisa ditarik. Pemerintah merespons.', source: 'CNBC Indonesia, detikFinance' },
   { date: '2026-08-21', title: 'Penangguhan berakhir, saldo belum cair', detail: 'Masa penangguhan berakhir, tapi saldo Tokopedia dan TikTok masih belum dapat dicairkan.', source: 'detikNews' },
+  { date: '2026-08-24', title: 'Kasus Shopee: saldo Rp 6,3 M tertahan, akun terkunci', detail: 'Adi (Pekalongan, seller kemeja) melaporkan saldo Rp 6,3 M tertahan sejak Nov 2025. Akun terkunci sejak Juni 2026. Des 2025: pengiriman Rp 90 juta cuma cair Rp 24,5 juta. CS Shopee sempat menyarankan tarik bertahap via ShopeePay.', source: 'Bloomberg Technoz, Peradaban.id' },
+  { date: '2026-08-26', title: 'Shopee merespons resmi', detail: 'Shopee menjawab pengakuan seller soal sulit tarik dana. Kasus ini jadi ujian nyata transparansi pencairan dana platform.', source: 'Bloomberg Technoz' },
 ];
 
 const STATUSES = [
@@ -99,7 +105,7 @@ function sagaStatus() {
     return { status: 'berlangsung', label: 'Kasus saldo tertahan berlangsung', description: 'Ribuan seller melaporkan saldo tidak bisa ditarik. DPR dan pemerintah sudah turun tangan, penangguhan masih berjalan.' };
   }
   if (today < '2026-09-30') {
-    return { status: 'pasca', label: 'Penangguhan berakhir, saldo masih tertahan', description: 'Masa penangguhan resmi berakhir 21 Agu 2026, tapi banyak seller melaporkan saldo Tokopedia/TikTok masih belum bisa dicairkan. Pantau seller center dan lanjutkan eskalasi jika belum cair.' };
+    return { status: 'pasca', label: 'Penangguhan berakhir, saldo masih tertahan', description: 'Masa penangguhan resmi berakhir 21 Agu 2026, tapi banyak seller melaporkan saldo Tokopedia/TikTok masih belum bisa dicairkan. Kasus baru Shopee (saldo Rp 6,3 M, akun terkunci) jadi sorotan dan Shopee sudah merespons. Pantau seller center dan lanjutkan eskalasi jika belum cair.' };
   }
   return { status: 'lanjut', label: 'Kasus berlanjut', description: 'Penangguhan sudah berakhir lama. Jika saldo masih tertahan, gunakan jalur eskalasi (Kemenkop UKM, Komisi VII DPR, bantuan hukum).' };
 }
@@ -108,7 +114,7 @@ function sagaStatus() {
 
 app.get('/api/status', (req, res) => {
   const s = sagaStatus();
-  res.json({ ...s, updated: '2026-08-23', sources: ['ANTARA', 'CNBC Indonesia', 'detikNews', 'detikFinance'] });
+  res.json({ ...s, updated: '2026-08-27', sources: ['ANTARA', 'CNBC Indonesia', 'detikNews', 'detikFinance', 'Bloomberg Technoz', 'Peradaban.id'] });
 });
 
 app.get('/api/meta', (req, res) => {
@@ -201,6 +207,7 @@ app.post('/api/seed', (req, res) => {
     { platform: 'tiktok', amount: 85000000, since: '2026-07-05', reason: 'akun-beku', status: 'escalated', note: 'Akun dibekukan setelah penjualan ramai. Sudah lapor CS dan menunggu kepastian.' },
     { platform: 'tiktok', amount: 23000000, since: '2026-07-20', reason: 'komisi-afiliasi', status: 'proses-cs', note: 'Komisi afiliasi dibekukan terkait program gratis ongkir.' },
     { platform: 'tokopedia', amount: 147500000, since: '2026-06-28', reason: 'penangguhan', status: 'baru', note: 'Saldo belum bisa dicairkan meski penangguhan sudah berakhir.' },
+    { platform: 'shopee', amount: 6300000000, since: '2025-11-01', reason: 'akun-terkunci', status: 'escalated', note: 'Kasus Adi (Pekalongan). Saldo Rp 6,3 M tertahan sejak Nov 2025, akun terkunci sejak Juni 2026. Shopee sudah merespons 26 Agu 2026.' },
   ];
   const cases = examples.map((e, i) => ({
     id: 'ex' + (i + 1),
