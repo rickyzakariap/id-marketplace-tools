@@ -38,6 +38,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 30 | [30-hak-tolak-seller](30-hak-tolak-seller/) | Web | Go 1.26 | Check seller right to reject unilateral marketplace policy changes (Permendag 19/2026), generate formal objection letter, track cases |
 | 31 | [31-biaya-retur-tracker](31-biaya-retur-tracker/) | Web | Python (stdlib) | Calculate real loss per return (product, shipping both ways, packaging), sales needed to cover it, return policy per marketplace, track return disputes with evidence checklist |
 | 32 | [32-fmcg-trend-analyzer](32-fmcg-trend-analyzer/) | Web | Node.js + Express | FMCG e-commerce category trend dashboard (Compas S1 2026): value/volume growth per category, platform dominance, top movers, keep-pace calculator |
+| 33 | [33-kanal-sendiri-vs-marketplace](33-kanal-sendiri-vs-marketplace/) | Web | Go 1.26 | Compare real profit selling on marketplace vs own channel (WhatsApp/IG/website): fees vs gateway cost, break-even units, verdict stay/leave/both lose money |
 
 ## Contributing
 

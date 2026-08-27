@@ -526,3 +526,21 @@
 - Lesson: Google News RSS -> youngster.id full article bisa di-fetch langsung (beda dari detik/bisnis yang anti-bot). Satu artikel detail > 5 headline
 - Lesson: Keep-pace framing lebih actionable daripada sekadar growth %: "pasar tumbuh 78%, kamu cuma 20%, pangsa menyusut" - seller merasa kalah kalau cuma lihat angka penjualan naik
 - Next: Update #29 dengan kasus Shopee Rp 6,3 M (akun terkunci) + reaksi Kemendag soal transparansi biaya. Tambah sumber data Compas per kuartal saat rilis S2 2026
+
+---
+
+## 2026-08-27 - Kanal Sendiri vs Marketplace
+- Works: Go 1.26 single binary, zero external dependencies, embed HTML
+- Works: Research-first via Google News RSS - found the exodus trend arc: The Conversation (4 Agu) "brand ramai-ramai keluar dari marketplace, apakah jualan di kanal sendiri bisa lebih untung?" + Katadata (20 Mei) "seller terimpit biaya berlapis" + kontan (9 Mei) "seller cari kanal alternatif" + UKMINDONESIA (22 Mei) "cara UMKM jualan mandiri". Pertanyaan yang belum dijawab tool mana pun dengan angka
+- Works: Kalkulator membandingkan profit marketplace vs kanal sendiri: komisi + biaya layanan + iklan + ongkir vs fee gateway (pola Midtrans/Xendit 2,9% + Rp 2.000) + iklan + ongkir, dengan asumsi % pembeli yang pindah
+- Works: Break-even unit di kanal sendiri agar profit menyamai marketplace (verified: 150rb/85rb/120 unit Shopee 5%+2% -> mp profit 5,08jt, own 747rb, break-even 123 unit = 103% volume, verdict marketplace)
+- Works: 4 cabang verdict verified via curl: marketplace menang, kanal sendiri menang, marketplace rugi tapi kanal sendiri untung, keduanya rugi (verdict ketiga ditemukan lewat test, bukan direncanakan)
+- Works: Update #29 (Next dari LESSONS #32): kasus Shopee Rp 6,3 M (Adi Pekalongan, akun terkunci Juni 2026) + respons resmi Shopee 26 Agu + reason baru 'akun-terkunci' + seed case + status updated 27 Agu, semua API verified
+- Issues: Verdict logic awalnya salah untuk kasus keduanya rugi - own (-376rb) > mp (-2,1jt) tapi dua-duanya rugi, verdict 'kanal-sendiri' menyesatkan
+- Fix: Branch baru 'keduanya-rugi' dengan pesan "masalahnya bukan pilihan kanal, tapi margin produk" - verified via curl
+- Issues: Server lama masih pegang port 8029 dan serve code lama (updated masih 23 Agu) - pola yang sama dengan lesson #31
+- Fix: netstat cek PID 21824, powershell Stop-Process, restart bersih
+- Lesson: Pola "biaya berlapis marketplace" sudah jadi cerita besar (eksodus seller, Toco, TikTok komisi) - tool yang menjawab "pindah atau bertahan?" dengan angka lebih actionable daripada sekadar tabel fee
+- Lesson: Kanal sendiri bukan otomatis lebih murah - fee gateway 2,9% + Rp 2.000 + iklan + ongkir penuh bisa lebih mahal dari komisi marketplace kalau volume kecil. Break-even unit adalah angka yang paling jujur
+- Lesson: Verdict logic harus punya branch "keduanya rugi" - kalau dua kanal negatif, jangan pilih yang "kurang rugi" sebagai pemenang, itu menyesatkan seller
+- Next: Tambah perbandingan ongkir subsidized (gratis ongkir marketplace vs bayar penuh), tambah mode multi-produk, update #29 saat ada perkembangan kasus Shopee
