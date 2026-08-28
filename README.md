@@ -39,6 +39,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 31 | [31-biaya-retur-tracker](31-biaya-retur-tracker/) | Web | Python (stdlib) | Calculate real loss per return (product, shipping both ways, packaging), sales needed to cover it, return policy per marketplace, track return disputes with evidence checklist |
 | 32 | [32-fmcg-trend-analyzer](32-fmcg-trend-analyzer/) | Web | Node.js + Express | FMCG e-commerce category trend dashboard (Compas S1 2026): value/volume growth per category, platform dominance, top movers, keep-pace calculator |
 | 33 | [33-kanal-sendiri-vs-marketplace](33-kanal-sendiri-vs-marketplace/) | Web | Go 1.26 | Compare real profit selling on marketplace vs own channel (WhatsApp/IG/website): fees vs gateway cost, break-even units, verdict stay/leave/both lose money |
+| 34 | [34-insentif-permen-2026](34-insentif-permen-2026/) | Web | Python (stdlib) | Check eligibility for 50% marketplace service fee discount (Permen UMKM 3/2026 final text): exclusions, savings per marketplace, SAPA UMKM application steps, objection letter generator |
 
 ## Contributing
 

@@ -544,3 +544,15 @@
 - Lesson: Kanal sendiri bukan otomatis lebih murah - fee gateway 2,9% + Rp 2.000 + iklan + ongkir penuh bisa lebih mahal dari komisi marketplace kalau volume kecil. Break-even unit adalah angka yang paling jujur
 - Lesson: Verdict logic harus punya branch "keduanya rugi" - kalau dua kanal negatif, jangan pilih yang "kurang rugi" sebagai pemenang, itu menyesatkan seller
 - Next: Tambah perbandingan ongkir subsidized (gratis ongkir marketplace vs bayar penuh), tambah mode multi-produk, update #29 saat ada perkembangan kasus Shopee
+
+## 2026-08-28 - Cek Insentif Permen UMKM 3/2026
+- Works: Research-first via Google News RSS + ANTARA search - found teks lengkap Permen UMKM 3/2026 (ANTARA 22 Juni 2026, fetched penuh): marketplace WAJIB potongan biaya layanan paling sedikit 50% untuk UMK yang hanya menjual produk dalam negeri. Biaya layanan = administrasi + komisi + jasa aplikasi, kisaran 10-18%. Syarat: UMK terverifikasi, HANYA produk dalam negeri, NIB, info usaha benar, standar mutu, terdaftar SAPA UMKM. Pengecualian eksplisit: pangan olahan siap saji + elektronik industri besar
+- Works: Timeline implementasi (ANTARA 8 Juli 2026): Permen kasih platform maksimal 6 bulan, target 1 Agustus geser ke akhir Agustus 2026, 4 marketplace siap. #23 (dibuat saat aturan masih wacana) tidak punya aturan pengecualian, alur SAPA UMKM, dan mekanisme keberatan - tool ini pakai teks regulasi final
+- Works: 10 branch API verified via curl (layak, 2 pengecualian, skala menengah, produk impor, hampir-layak, invalid skala, surat ditolak, surat dihentikan, surat invalid), math verified (50jt @12% + 25jt @8% = 8jt fee -> 4jt setelah diskon, hemat 48jt/tahun), 27/27 element ID cocok, JS syntax OK, light theme + responsive + tanpa em dash, path traversal blocked
+- Issues: ANTARA search + article fetch rate-limit parah kalau dipanggil berurutan (size 0), perlu sleep 3-5 detik antar request
+- Issues: #23 punya syarat BPJS yang TIDAK ada di teks Permen 3/2026 (ANTARA) - kuis #23 kurang akurat, dicatat supaya tidak ikut dipakai
+- Fix: Fetch artikel ANTARA satu per satu dengan jeda; grounding hanya dari teks regulasi yang berhasil di-fetch
+- Lesson: Saat aturan sudah final, tool lama yang dibangun dari wacana bisa salah syarat. Verifikasi ulang tool regulasi lama saat regulasi final terbit
+- Lesson: Pengecualian kategori (pangan olahan siap saji, elektronik industri besar) adalah nilai tool yang tidak terlihat di headline - seller produk kategori ini bakal kaget kalau tidak dicek
+- Lesson: Surat keberatan generator (pola #30) bekerja bagus untuk hak baru seller - mekanisme klarifikasi/keberatan di Permen 3/2026 adalah fitur yang membuat tool actionable, bukan sekadar info
+- Next: Update #23 dengan syarat final Permen 3/2026 (hapus BPJS, tambah pengecualian), pantau konfirmasi tanggal efektif dari masing-masing platform
