@@ -72,6 +72,7 @@ pre.letter{background:var(--card-alt);border:1px solid var(--border);border-radi
 .tl-date{font-family:'JetBrains Mono',Consolas,monospace;color:var(--text-muted);font-size:12px;min-width:130px}
 .tl-status{font-size:11px;font-weight:600;padding:1px 8px;border-radius:8px;background:var(--accent-light);color:var(--green);white-space:nowrap}
 .tl-status.target{background:var(--card-alt);color:var(--amber)}
+.tl-status.progres{background:var(--card-alt);color:var(--amber)}
 .hidden{display:none}
 #letterOutput{margin-top:12px}
 @media(max-width:768px){
@@ -213,7 +214,7 @@ function loadStatus() {
       const d = document.createElement('div');
       d.className = 'tl-item';
       d.innerHTML = '<span class="tl-date">' + t.date + '</span><span>' + t.label + '</span>' +
-        '<span class="tl-status ' + t.status + '">' + (t.status === 'selesai' ? 'selesai' : 'target') + '</span>';
+        '<span class="tl-status ' + t.status + '">' + (t.status === 'selesai' ? 'selesai' : (t.status === 'progres' ? 'progres' : 'target')) + '</span>';
       tl.appendChild(d);
     });
   }).catch(() => {

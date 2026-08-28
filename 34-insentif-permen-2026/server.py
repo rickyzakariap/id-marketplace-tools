@@ -43,25 +43,26 @@ EXCLUSIONS = [
 ]
 
 # Status kebijakan. Tanggal efektif = target resmi, bukan tanggal pasti.
-# Permen ditetapkan Juni 2026. Target mulai berlaku akhir Agustus 2026.
+# Permen ditetapkan Juni 2026. Per 27 Agustus 2026 implementasi ~95%,
+# tinggal jadwal integrasi teknis dengan sistem SAPA UMKM (ANTARA).
 # Platform diberi waktu paling lama 6 bulan untuk implementasi.
 POLICY = {
-    "status": "target-berlaku",
-    "label": "Diskon 50% biaya layanan: target mulai akhir Agustus 2026",
+    "status": "progres-95",
+    "label": "Diskon 50% biaya layanan: implementasi ~95%, tinggal jadwal integrasi",
     "description": (
         "Permen UMKM Nomor 3 Tahun 2026 sudah ditetapkan (Juni 2026). Marketplace wajib "
         "memberikan potongan biaya layanan paling sedikit 50% kepada UMK yang hanya menjual "
-        "produk dalam negeri dan memenuhi syarat. Pemerintah menargetkan berlaku akhir Agustus "
-        "2026, platform diberi waktu paling lama 6 bulan untuk implementasi. Empat marketplace "
-        "menyatakan siap. Cek seller center untuk tarif aktual."
+        "produk dalam negeri dan memenuhi syarat. Per 27 Agustus 2026 implementasi sudah ~95%, "
+        "yang tersisa hanya jadwal integrasi teknis dengan sistem SAPA UMKM. Platform diberi "
+        "waktu paling lama 6 bulan untuk implementasi. Cek seller center untuk tarif aktual."
     ),
     "timeline": [
         {"date": "Juni 2026", "label": "Permen UMKM 3/2026 ditetapkan", "status": "selesai"},
-        {"date": "12-13 Agustus 2026", "label": "Kepmen teknis diteken (per pemberitaan)", "status": "selesai"},
+        {"date": "27 Agustus 2026", "label": "Implementasi ~95%, tinggal jadwal integrasi SAPA UMKM", "status": "progres"},
         {"date": "Akhir Agustus 2026", "label": "Target diskon mulai berlaku", "status": "target"},
         {"date": "Maksimal 6 bulan sejak Permen", "label": "Batas platform implementasi", "status": "target"},
     ],
-    "source": "ANTARA 22 Juni 2026, ANTARA 8 Juli 2026, Suara Surabaya (akhir Agustus 2026)",
+    "source": "ANTARA 22 Juni 2026, ANTARA 8 Juli 2026, ANTARA 27 Agustus 2026",
 }
 
 

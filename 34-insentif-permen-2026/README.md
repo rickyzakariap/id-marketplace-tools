@@ -27,5 +27,5 @@ Buka http://localhost:8034
 ## Notes
 
 - Tarif default estimasi 2026, sesuaikan dengan seller center
-- Tanggal efektif (akhir Agustus 2026) adalah target resmi, bukan tanggal pasti
-- Sumber: ANTARA 22 Juni 2026 (teks lengkap Permen UMKM 3/2026), ANTARA 8 Juli 2026 (timeline implementasi)
+- Per 27 Agustus 2026 implementasi ~95%, tinggal jadwal integrasi teknis dengan SAPA UMKM (ANTARA)
+- Sumber: ANTARA 22 Juni 2026 (teks lengkap Permen UMKM 3/2026), ANTARA 8 Juli 2026 + 27 Agustus 2026 (timeline implementasi)
