@@ -1,0 +1,44 @@
+{
+  "date": "2026-08-28",
+  "sources": [
+    "ANTARA (22 Juni 2026): Lokapasar wajib diskon biaya layanan 50 persen untuk produk lokal - full article fetched, isi Permen UMKM 3/2026",
+    "ANTARA (8 Juli 2026): Diskon biaya layanan marketplace ditargetkan berlaku Agustus 2026 - full article fetched, timeline 6 bulan implementasi",
+    "ANTARA News (paling baru): Menteri UMKM: Diskon biaya layanan lokapasar mulai akhir Agustus 2026",
+    "Suara Surabaya (paling baru): Diskon Biaya Layanan Marketplace Berlaku Akhir Agustus",
+    "Bisnis.com: Menteri Maman Pastikan Kepmen Potongan Biaya Layanan 50% Shopee Cs Segera Terbit",
+    "Fraksi Partai Golkar: Menteri Maman: Empat Marketplace Siap Pangkas Biaya Layanan UMKM 50 Persen",
+    "detikFinance: Seller Toko Online Dapat Potongan Biaya Layanan 50%, Kapan Mulai Berlaku?",
+    "Kompas.com: Kapan Diskon 50 Persen Biaya Layanan Marketplace untuk UMKM Diberlakukan?"
+  ],
+  "pain_points": [
+    {
+      "category": "Permen UMKM 3/2026 diskon biaya layanan 50% (regulasi final, detail kelayakan tidak diketahui seller)",
+      "description": "Permen UMKM Nomor 3 Tahun 2026 tentang Pelindungan dan Peningkatan Daya Saing UMK dalam PMSE sudah ditetapkan (Juni 2026). Marketplace WAJIB potongan biaya layanan paling sedikit 50% untuk UMK yang hanya menjual produk dalam negeri. Biaya layanan saat ini 10-18% (definisi resmi: biaya administrasi + komisi + jasa aplikasi). Syarat: UMK terverifikasi, HANYA menjual produk dalam negeri, punya NIB, informasi usaha benar dan jelas, produk memenuhi standar mutu dan keamanan, terdaftar SAPA UMKM. PENGECUALIAN: produk pangan olahan siap saji dan produk elektronik dari industri besar dalam negeri TIDAK dapat insentif. Lokapasar bisa menolak/menghentikan insentif jika UMK menjual produk non-dalam-negeri, UMK bisa klarifikasi/keberatan. Berlaku target akhir Agustus 2026, platform diberi maksimal 6 bulan implementasi. #23 (kuis 5 syarat generik + simpanan) TIDAK punya aturan pengecualian, alur pengajuan SAPA UMKM, dan mekanisme keberatan.",
+      "frequency": "HIGH",
+      "sources": [
+        "ANTARA 22 Juni 2026 (full text fetched)",
+        "ANTARA 8 Juli 2026 (full text fetched)",
+        "Suara Surabaya, ANTARA, kabarpublik (akhir Agustus 2026)"
+      ]
+    },
+    {
+      "category": "KPPU tindaklanjuti dugaan monopoli ekosistem perdagangan digital",
+      "description": "ANTARA: KPPU tindaklanjuti dugaan monopoli ekosistem perdagangan digital. Arah kebijakan: transparansi biaya dan kewajaran ekosistem. Belum ada tool yang menjawab.",
+      "frequency": "LOW-MEDIUM",
+      "sources": [
+        "ANTARA (berita 5534620)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Cek Insentif Permen UMKM 3/2026",
+      "type": "Web",
+      "tech": "Python 3 stdlib",
+      "description": "Verifikator kelayakan diskon biaya layanan 50% berdasarkan Permen UMKM 3/2026 versi regulasi final: kuis kelayakan 6 syarat + 2 pengecualian (pangan olahan siap saji, elektronik industri besar), kalkulator penghematan per marketplace (definisi biaya layanan 10-18%), checklist pengajuan SAPA UMKM, dan generator surat keberatan/klarifikasi saat marketplace menolak atau menghentikan insentif. Status kebijakan real-time (target berlaku akhir Agustus 2026, 4 marketplace siap).",
+      "category": "Data & Analytics",
+      "priority": 1,
+      "why": "Diskon mulai berlaku SEKARANG (akhir Agustus 2026) tapi mayoritas seller tidak tahu syarat detail, kategori yang dikecualikan, cara pengajuan via SAPA UMKM, dan cara keberatan jika ditolak. #23 dibuat saat aturan masih wacana (Kepmen belum diteken) dengan 5 syarat generik termasuk BPJS yang tidak ada di Permen 3/2026. Tool ini memakai teks regulasi final dari ANTARA."
+    }
+  ]
+}
