@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cek Insentif Permen UMKM 3/2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--card:#fff;--card-alt:#f8f8f8;--border:#e5e5e5;
+  --text:#1a1a1a;--text-dim:#666;--text-muted:#999;
+  --input-bg:#fff;--input-border:#ddd;
+  --accent:#4a9;--accent-hover:#3a8;--accent-light:#f0f7f5;
+  --green:#16a34a;--red:#dc2626;--amber:#d97706;
+}
+[data-theme="dark"]{
+  --bg:#1a1a1a;--card:#242424;--card-alt:#2a2a2a;--border:#333;
+  --text:#e0e0e0;--text-dim:#aaa;--text-muted:#777;
+  --input-bg:#2a2a2a;--input-border:#444;
+  --accent:#4a9;--accent-hover:#5ba8;--accent-light:#1a2a25;
+  --green:#4ade80;--red:#f87171;--amber:#fbbf24;
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;padding:20px}
+.container{max-width:860px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+h1{font-size:20px;font-weight:600}
+h2{font-size:15px;font-weight:600;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px}
+.card h2{border-bottom:1px solid var(--border);padding-bottom:8px}
+p.desc{color:var(--text-dim);font-size:13px;margin-bottom:12px}
+.num{font-family:'JetBrains Mono',Consolas,monospace;font-variant-numeric:tabular-nums}
+button{font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card-alt);color:var(--text);padding:7px 14px;border-radius:6px;transition:background 0.15s,border-color 0.15s}
+button:hover{border-color:var(--accent)}
+button:active{background:var(--accent-light)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{background:var(--accent-hover)}
+button.primary:disabled{opacity:0.5;cursor:not-allowed}
+button.small{padding:4px 10px;font-size:12px}
+label{display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer;font-size:14px}
+label input{margin-top:3px;accent-color:var(--accent)}
+label .req-detail{display:block;color:var(--text-muted);font-size:12px}
+label.warn{color:var(--amber)}
+input[type=text],input[type=number],select,textarea{width:100%;padding:8px 10px;border:1px solid var(--input-border);border-radius:6px;background:var(--input-bg);color:var(--text);font-family:inherit;font-size:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.field{margin-bottom:10px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.market-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;align-items:center;padding:6px 0}
+.market-row .mp-name{font-size:13px;font-weight:500}
+.market-row input{font-family:'JetBrains Mono',Consolas,monospace}
+.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.verdict{border-left:4px solid var(--border);padding:12px 14px;border-radius:0 8px 8px 0;background:var(--card-alt);margin-bottom:12px}
+.verdict.layak{border-left-color:var(--green)}
+.verdict.hampir-layak{border-left-color:var(--amber)}
+.verdict.tidak-layak{border-left-color:var(--red)}
+.verdict h3{font-size:15px;font-weight:600;margin-bottom:4px}
+.verdict p{font-size:13px;color:var(--text-dim)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--border)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--text-muted);font-weight:500;font-size:12px}
+tr.total td{font-weight:600;border-top:2px solid var(--border)}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;margin-right:6px}
+.badge.ok{background:var(--accent-light);color:var(--green)}
+.badge.no{background:var(--card-alt);color:var(--text-muted)}
+.badge.warn{background:var(--card-alt);color:var(--amber)}
+ol.steps{padding-left:20px;font-size:14px}
+ol.steps li{margin-bottom:8px}
+ol.steps .step-detail{color:var(--text-muted);font-size:12px}
+pre.letter{background:var(--card-alt);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:12px;white-space:pre-wrap;font-family:'JetBrains Mono',Consolas,monospace;line-height:1.6;display:none}
+.timeline{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.tl-item{display:flex;gap:10px;font-size:13px;align-items:baseline}
+.tl-date{font-family:'JetBrains Mono',Consolas,monospace;color:var(--text-muted);font-size:12px;min-width:130px}
+.tl-status{font-size:11px;font-weight:600;padding:1px 8px;border-radius:8px;background:var(--accent-light);color:var(--green);white-space:nowrap}
+.tl-status.target{background:var(--card-alt);color:var(--amber)}
+.hidden{display:none}
+#letterOutput{margin-top:12px}
+@media(max-width:768px){
+  body{padding:12px}
+  .card{padding:12px}
+  .field-row{grid-template-columns:1fr}
+  .market-row{grid-template-columns:1fr 1fr}
+  .market-row .mp-name{grid-column:1/-1}
+  .tl-date{min-width:auto}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Cek Insentif Permen UMKM 3/2026</h1>
+    <button id="themeBtn" class="small" onclick="toggleTheme()">Dark</button>
+  </header>
+
+  <div class="card" id="statusCard">
+    <h2>Status Kebijakan</h2>
+    <p class="desc" id="statusDesc">Memuat status...</p>
+    <div class="timeline" id="statusTimeline"></div>
+  </div>
+
+  <div class="card">
+    <h2>Cek Kelayakan</h2>
+    <p class="desc">Diskon 50% biaya layanan untuk UMK yang hanya menjual produk dalam negeri (Permen UMKM 3/2026). Jawab sesuai kondisi toko.</p>
+
+    <div class="field">
+      <div class="req-label" style="font-size:14px;font-weight:500;margin-bottom:4px">Skala usaha</div>
+      <div class="field-row">
+        <label><input type="radio" name="skala" value="mikro"> Mikro<span class="req-detail">Omzet maks Rp 2 M/tahun (PP 7/2021)</span></label>
+        <label><input type="radio" name="skala" value="kecil"> Kecil<span class="req-detail">Omzet Rp 2-15 M/tahun</span></label>
+        <label><input type="radio" name="skala" value="menengah"> Menengah<span class="req-detail">Di luar cakupan insentif</span></label>
+        <label><input type="radio" name="skala" value="besar"> Besar<span class="req-detail">Di luar cakupan insentif</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><input type="checkbox" id="produkDalamNegeri"> Hanya menjual produk dalam negeri<span class="req-detail">Wajib 100% produk dalam negeri. Campur produk impor = lokapasar bisa tolak/hentikan insentif</span></label>
+      <label><input type="checkbox" id="nib"> Punya NIB (Nomor Induk Berusaha)</label>
+      <label><input type="checkbox" id="infoBenar"> Informasi usaha di seller center benar dan jelas</label>
+      <label><input type="checkbox" id="standarMutu"> Produk memenuhi standar mutu dan keamanan</label>
+      <label><input type="checkbox" id="sapa"> Terdaftar di SAPA UMKM<span class="req-detail">Pengajuan insentif dilakukan lewat layanan SAPA UMKM</span></label>
+    </div>
+
+    <div class="field" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+      <p class="desc" style="color:var(--amber);margin-bottom:0">Kategori yang TIDAK dapat insentif (pengecualian eksplisit di Permen):</p>
+      <label class="warn"><input type="checkbox" id="panganSiapSaji"> Saya menjual produk pangan olahan siap saji</label>
+      <label class="warn"><input type="checkbox" id="elektronikIndustriBesar"> Saya menjual produk elektronik produksi industri besar dalam negeri</label>
+    </div>
+
+    <div class="field" style="border-top:1px solid var(--border);margin-top:8px;padding-top:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+        <span style="font-size:14px;font-weight:500">Hitung Penghematan per Bulan</span>
+        <button class="small" onclick="fillContoh()">Isi Contoh</button>
+      </div>
+      <p class="desc">Biaya layanan = biaya administrasi + komisi + jasa aplikasi (definisi Permen). Angka default estimasi 2026, sesuaikan dengan seller center.</p>
+      <div id="marketRows"></div>
+    </div>
+
+    <div class="actions">
+      <button id="btnCek" class="primary" onclick="cekKelayakan()">Cek Kelayakan</button>
+      <button id="btnBersihkan" onclick="bersihkan()">Bersihkan</button>
+    </div>
+    <p class="desc" id="quizError" style="color:var(--red);display:none;margin-top:8px"></p>
+  </div>
+
+  <div class="card hidden" id="resultCard">
+    <h2>Hasil</h2>
+    <div class="verdict" id="resultVerdict"></div>
+    <div id="resultChecks"></div>
+    <div id="resultSavings"></div>
+  </div>
+
+  <div class="card">
+    <h2>Langkah Pengajuan SAPA UMKM</h2>
+    <ol class="steps">
+      <li>Pastikan punya NIB (buat gratis di OSS jika belum)<span class="step-detail"> - oss.go.id</span></li>
+      <li>Daftar atau login di layanan SAPA UMKM<span class="step-detail"> - Kementerian UMKM</span></li>
+      <li>Ajukan permohonan insentif biaya layanan dan lengkapi informasi usaha<span class="step-detail"> - data usaha harus benar dan jelas</span></li>
+      <li>Tunggu verifikasi Kementerian UMKM<span class="step-detail"> - lewat unit kerja data dan informasi</span></li>
+      <li>Cek tarif biaya layanan di seller center<span class="step-detail"> - potongan berlaku per transaksi produk dalam negeri</span></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Surat Keberatan Insentif</h2>
+    <p class="desc">Marketplace menolak atau menghentikan insentif kamu? Buat surat keberatan resmi sesuai mekanisme Permen UMKM 3/2026.</p>
+    <div class="field-row">
+      <div class="field"><label style="padding:0;margin-bottom:4px">Nama</label><input type="text" id="letterNama" placeholder="Nama pemilik toko"></div>
+      <div class="field"><label style="padding:0;margin-bottom:4px">Nama Toko</label><input type="text" id="letterToko" placeholder="Nama toko di marketplace"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label style="padding:0;margin-bottom:4px">Marketplace</label>
+        <select id="letterMarketplace">
+          <option value="">Pilih marketplace</option>
+        </select>
+      </div>
+      <div class="field"><label style="padding:0;margin-bottom:4px">Tanggal</label><input type="text" id="letterTanggal"></div>
+    </div>
+    <div class="field"><label style="padding:0;margin-bottom:4px">Jenis</label>
+      <select id="letterJenis">
+        <option value="ditolak">Permohonan insentif ditolak</option>
+        <option value="dihentikan">Insentif dihentikan</option>
+      </select>
+    </div>
+    <div class="field"><label style="padding:0;margin-bottom:4px">Keterangan tambahan (opsional)</label><textarea id="letterKeterangan" rows="3" placeholder="Contoh: sudah memenuhi syarat tapi tetap ditolak sejak September 2026"></textarea></div>
+    <div class="actions">
+      <button id="btnLetter" class="primary" onclick="buatSurat()">Buat Surat</button>
+      <button id="btnCopy" class="hidden" onclick="salinSurat()">Salin Surat</button>
+    </div>
+    <p class="desc" id="letterError" style="color:var(--red);display:none;margin-top:8px"></p>
+    <pre class="letter" id="letterOutput"></pre>
+  </div>
+</div>
+
+<script>
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+function toggleTheme() {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+}
+document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+
+let marketplaces = [];
+const rupiah = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+
+function loadStatus() {
+  fetch('/api/status').then(r => r.json()).then(s => {
+    document.getElementById('statusDesc').textContent = s.description;
+    const tl = document.getElementById('statusTimeline');
+    tl.innerHTML = '';
+    s.timeline.forEach(t => {
+      const d = document.createElement('div');
+      d.className = 'tl-item';
+      d.innerHTML = '<span class="tl-date">' + t.date + '</span><span>' + t.label + '</span>' +
+        '<span class="tl-status ' + t.status + '">' + (t.status === 'selesai' ? 'selesai' : 'target') + '</span>';
+      tl.appendChild(d);
+    });
+  }).catch(() => {
+    document.getElementById('statusDesc').textContent = 'Gagal memuat status kebijakan.';
+  });
+}
+
+function loadMarketplaces() {
+  return fetch('/api/marketplaces').then(r => r.json()).then(list => {
+    marketplaces = list;
+    const rows = document.getElementById('marketRows');
+    rows.innerHTML = '';
+    list.forEach(mp => {
+      const row = document.createElement('div');
+      row.className = 'market-row';
+      row.innerHTML =
+        '<span class="mp-name">' + mp.name + '</span>' +
+        '<input type="number" id="omzet-' + mp.id + '" placeholder="Omzet/bulan" min="0">' +
+        '<input type="number" id="rate-' + mp.id + '" placeholder="Fee %" min="0" max="50" step="0.1" value="' + mp.defaultRate + '">';
+      rows.appendChild(row);
+    });
+  });
+}
+
+function fillContoh() {
+  document.querySelector('input[name=skala][value=mikro]').checked = true;
+  document.getElementById('produkDalamNegeri').checked = true;
+  document.getElementById('nib').checked = true;
+  document.getElementById('infoBenar').checked = true;
+  document.getElementById('standarMutu').checked = true;
+  document.getElementById('sapa').checked = false;
+  document.getElementById('panganSiapSaji').checked = false;
+  document.getElementById('elektronikIndustriBesar').checked = false;
+  marketplaces.forEach((mp, i) => {
+    const omzet = document.getElementById('omzet-' + mp.id);
+    omzet.value = [50000000, 25000000, 15000000, 10000000, 5000000, 3000000][i] || 10000000;
+  });
+}
+
+function bersihkan() {
+  document.querySelectorAll('input[name=skala]').forEach(r => r.checked = false);
+  ['produkDalamNegeri', 'nib', 'infoBenar', 'standarMutu', 'sapa', 'panganSiapSaji', 'elektronikIndustriBesar'].forEach(id => {
+    document.getElementById(id).checked = false;
+  });
+  marketplaces.forEach(mp => {
+    document.getElementById('omzet-' + mp.id).value = '';
+  });
+  document.getElementById('resultCard').classList.add('hidden');
+}
+
+function cekKelayakan() {
+  const err = document.getElementById('quizError');
+  err.style.display = 'none';
+  const skala = document.querySelector('input[name=skala]:checked');
+  if (!skala) {
+    err.textContent = 'Pilih skala usaha dulu.';
+    err.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('btnCek');
+  btn.disabled = true;
+  btn.textContent = 'Memeriksa...';
+  try {
+    const entries = marketplaces.map(mp => ({
+      marketplace: mp.id,
+      omzet: Number(document.getElementById('omzet-' + mp.id).value) || 0,
+      rate: Number(document.getElementById('rate-' + mp.id).value) || 0
+    }));
+    const body = {
+      answers: {
+        skala: skala.value,
+        produk_dalam_negeri: document.getElementById('produkDalamNegeri').checked,
+        nib: document.getElementById('nib').checked,
+        info_benar: document.getElementById('infoBenar').checked,
+        standar_mutu: document.getElementById('standarMutu').checked,
+        sapa: document.getElementById('sapa').checked
+      },
+      exclusions: {
+        pangan_siap_saji: document.getElementById('panganSiapSaji').checked,
+        elektronik_industri_besar: document.getElementById('elektronikIndustriBesar').checked
+      },
+      entries: entries
+    };
+    fetch('/api/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(r => r.json()).then(res => {
+      if (res.error) {
+        err.textContent = res.error;
+        err.style.display = 'block';
+        return;
+      }
+      renderResult(res);
+    }).catch(() => {
+      err.textContent = 'Gagal memeriksa, coba lagi.';
+      err.style.display = 'block';
+    });
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Cek Kelayakan';
+  }
+}
+
+function renderResult(res) {
+  const card = document.getElementById('resultCard');
+  card.classList.remove('hidden');
+  const v = document.getElementById('resultVerdict');
+  v.className = 'verdict ' + res.verdict;
+  v.innerHTML = '<h3>' + res.verdict_label + '</h3><p>' + res.verdict_reason + '</p>';
+
+  const checks = document.getElementById('resultChecks');
+  checks.innerHTML = '<div style="font-size:13px;font-weight:500;margin-bottom:6px">Syarat:</div>';
+  res.checks.forEach(c => {
+    const row = document.createElement('div');
+    row.style.cssText = 'font-size:13px;padding:3px 0';
+    row.innerHTML = '<span class="badge ' + (c.ok ? 'ok' : 'no') + '">' + (c.ok ? 'OK' : 'BELUM') + '</span>' + c.label;
+    checks.appendChild(row);
+  });
+  res.exclusions.forEach(e => {
+    const row = document.createElement('div');
+    row.style.cssText = 'font-size:13px;padding:3px 0;color:var(--amber)';
+    row.innerHTML = '<span class="badge warn">DILARANG</span>' + e.label;
+    checks.appendChild(row);
+  });
+
+  const s = res.savings;
+  const sv = document.getElementById('resultSavings');
+  if (res.breakdown.length > 0) {
+    let rows = '';
+    res.breakdown.forEach(b => {
+      rows += '<tr><td>' + b.marketplace + '</td><td class="num">' + b.rate + '%</td><td class="num">' + rupiah(b.fee) + '</td><td class="num">' + rupiah(b.after) + '</td><td class="num">' + rupiah(b.saving) + '</td></tr>';
+    });
+    const label = s.active ? 'Setelah diskon 50%' : (res.verdict === 'hampir-layak' ? 'Potensi setelah syarat terpenuhi' : 'Tanpa diskon');
+    sv.innerHTML =
+      '<div style="font-size:13px;font-weight:500;margin:12px 0 6px">Penghematan bulanan:</div>' +
+      '<table><thead><tr><th>Marketplace</th><th>Fee %</th><th>Biaya layanan</th><th>' + label + '</th><th>Hemat</th></tr></thead>' +
+      '<tbody>' + rows +
+      '<tr class="total"><td>Total</td><td></td><td class="num">' + rupiah(s.feeMonthly) + '</td><td class="num">' + rupiah(s.afterMonthly) + '</td><td class="num">' + rupiah(s.savingMonthly) + '</td></tr>' +
+      '</tbody></table>' +
+      '<p class="desc" style="margin-top:8px">Estimasi setahun: <span class="num" style="font-weight:600;color:var(--green)">' + rupiah(s.savingAnnual) + '</span>' +
+      (s.active ? ' dari potongan 50% biaya layanan.' : (res.verdict === 'hampir-layak' ? ' setelah semua syarat terpenuhi.' : ' Insentif belum bisa dihitung.')) + '</p>';
+  } else {
+    sv.innerHTML = '<p class="desc" style="margin-top:10px">Isi omzet minimal satu marketplace untuk melihat penghematan.</p>';
+  }
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function todayID() {
+  const d = new Date();
+  return d.getDate() + ' ' + BULAN[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function loadLetterForm() {
+  document.getElementById('letterTanggal').value = todayID();
+  const sel = document.getElementById('letterMarketplace');
+  marketplaces.forEach(mp => {
+    const o = document.createElement('option');
+    o.value = mp.name;
+    o.textContent = mp.name;
+    sel.appendChild(o);
+  });
+}
+
+function buatSurat() {
+  const err = document.getElementById('letterError');
+  err.style.display = 'none';
+  const nama = document.getElementById('letterNama').value;
+  const toko = document.getElementById('letterToko').value;
+  const marketplace = document.getElementById('letterMarketplace').value;
+  if (!nama || !toko || !marketplace) {
+    err.textContent = 'Nama, nama toko, dan marketplace wajib diisi.';
+    err.style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('btnLetter');
+  btn.disabled = true;
+  btn.textContent = 'Membuat...';
+  try {
+    const body = {
+      nama: nama,
+      toko: toko,
+      marketplace: marketplace,
+      tanggal: document.getElementById('letterTanggal').value,
+      jenis: document.getElementById('letterJenis').value,
+      keterangan: document.getElementById('letterKeterangan').value
+    };
+    fetch('/api/letter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(r => r.json()).then(res => {
+      if (res.error) {
+        err.textContent = res.error;
+        err.style.display = 'block';
+        return;
+      }
+      const out = document.getElementById('letterOutput');
+      out.textContent = res.letter;
+      out.style.display = 'block';
+      document.getElementById('btnCopy').classList.remove('hidden');
+    }).catch(() => {
+      err.textContent = 'Gagal membuat surat, coba lagi.';
+      err.style.display = 'block';
+    });
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Buat Surat';
+  }
+}
+
+function salinSurat() {
+  const text = document.getElementById('letterOutput').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('btnCopy');
+    btn.textContent = 'Tersalin';
+    setTimeout(() => { btn.textContent = 'Salin Surat'; }, 1500);
+  }).catch(() => alert('Gagal menyalin, blok teks bisa diseleksi manual.'));
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') cekKelayakan();
+  if (e.key === 'Escape') bersihkan();
+});
+
+loadStatus();
+loadMarketplaces().then(loadLetterForm);
+</script>
+</body>
+</html>
