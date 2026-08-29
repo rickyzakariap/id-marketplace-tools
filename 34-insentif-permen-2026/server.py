@@ -32,8 +32,9 @@ REQUIREMENTS = [
     {"id": "produk_dalam_negeri", "label": "Hanya menjual produk dalam negeri", "detail": "Wajib 100% produk dalam negeri. Kalau campur produk impor, lokapasar bisa menolak atau menghentikan insentif"},
     {"id": "nib", "label": "Punya NIB (Nomor Induk Berusaha)", "detail": "NIB wajib sebagai identitas usaha"},
     {"id": "info_benar", "label": "Informasi usaha benar dan jelas", "detail": "Data usaha di seller center harus akurat"},
-    {"id": "standar_mutu", "label": "Produk memenuhi standar mutu dan keamanan", "detail": "Produk dalam negeri wajib lolos standar mutu dan keamanan"},
+    {"id": "standar_mutu", "label": "Produk memenuhi standar mutu dan keamanan", "detail": "Standar produk (misal sertifikasi halal, ketentuan BPOM). Ada masa tenggang 6 bulan untuk pemenuhannya"},
     {"id": "sapa", "label": "Terdaftar di SAPA UMKM", "detail": "Terdaftar di layanan SAPA UMKM Kementerian UMKM, pengajuan insentif lewat layanan ini"},
+    {"id": "bukan_high_risk", "label": "Bukan high risk user dan tidak dalam proses penegakan hukum", "detail": "Platform memastikan seller bukan kategori pengguna berisiko tinggi dan tidak sedang menjalani proses penegakan hukum"},
 ]
 
 # Kategori yang TIDAK dapat insentif (pengecualian eksplisit di Permen).
@@ -43,26 +44,31 @@ EXCLUSIONS = [
 ]
 
 # Status kebijakan. Tanggal efektif = target resmi, bukan tanggal pasti.
-# Permen ditetapkan Juni 2026. Per 27 Agustus 2026 implementasi ~95%,
-# tinggal jadwal integrasi teknis dengan sistem SAPA UMKM (ANTARA).
-# Platform diberi waktu paling lama 6 bulan untuk implementasi.
+# Permen ditetapkan Juni 2026. Alur pengajuan resmi diumumkan 28-29 Agustus 2026
+# (ANTARA): pengajuan via SAPA UMKM, verifikasi 2 tahap (KemenUMKM lalu platform),
+# grace period 6 bulan untuk standar produk, laporan realisasi bulanan platform.
+# Per 29 Agustus 2026 target memasuki tahapan final pekan depan (ANTARA 28-29 Agu).
 POLICY = {
-    "status": "progres-95",
-    "label": "Diskon 50% biaya layanan: implementasi ~95%, tinggal jadwal integrasi",
+    "status": "tahapan-final",
+    "label": "Diskon 50% biaya layanan: alur pengajuan diumumkan, target tahapan final pekan depan",
     "description": (
         "Permen UMKM Nomor 3 Tahun 2026 sudah ditetapkan (Juni 2026). Marketplace wajib "
         "memberikan potongan biaya layanan paling sedikit 50% kepada UMK yang hanya menjual "
-        "produk dalam negeri dan memenuhi syarat. Per 27 Agustus 2026 implementasi sudah ~95%, "
-        "yang tersisa hanya jadwal integrasi teknis dengan sistem SAPA UMKM. Platform diberi "
-        "waktu paling lama 6 bulan untuk implementasi. Cek seller center untuk tarif aktual."
+        "produk dalam negeri dan memenuhi syarat. Alur pengajuan resmi diumumkan 28-29 Agustus "
+        "2026: ajukan via SAPA UMKM (nama platform, identitas merchant, data produk), lalu "
+        "verifikasi 2 tahap - KemenUMKM cek syarat administratif, platform cek skala UMK, "
+        "produk dalam negeri, dan bukan high risk user. Standar produk (halal, BPOM) punya "
+        "masa tenggang 6 bulan. Target memasuki tahapan final pekan depan (pernyataan resmi "
+        "28-29 Agustus 2026, bisa berubah). Cek seller center untuk tarif aktual."
     ),
     "timeline": [
         {"date": "Juni 2026", "label": "Permen UMKM 3/2026 ditetapkan", "status": "selesai"},
-        {"date": "27 Agustus 2026", "label": "Implementasi ~95%, tinggal jadwal integrasi SAPA UMKM", "status": "progres"},
-        {"date": "Akhir Agustus 2026", "label": "Target diskon mulai berlaku", "status": "target"},
+        {"date": "27 Agustus 2026", "label": "Implementasi ~95%, tinggal jadwal integrasi SAPA UMKM", "status": "selesai"},
+        {"date": "28-29 Agustus 2026", "label": "Alur pengajuan diumumkan: 2 tahap verifikasi, grace period 6 bulan", "status": "selesai"},
+        {"date": "Pekan depan", "label": "Target tahapan final, diskon mulai berlaku", "status": "progres"},
         {"date": "Maksimal 6 bulan sejak Permen", "label": "Batas platform implementasi", "status": "target"},
     ],
-    "source": "ANTARA 22 Juni 2026, ANTARA 8 Juli 2026, ANTARA 27 Agustus 2026",
+    "source": "ANTARA 22 Juni 2026, ANTARA 8 Juli 2026, ANTARA 27-29 Agustus 2026",
 }
 
 
@@ -119,6 +125,14 @@ def check_eligibility(payload):
         verdict_reason = (
             "Insentif hanya untuk UMK yang HANYA menjual produk dalam negeri. Kalau toko masih "
             "menjual produk impor, lokapasar berhak menolak atau menghentikan insentif."
+        )
+    elif not answers.get("bukan_high_risk"):
+        verdict = "tidak-layak"
+        verdict_label = "Termasuk high risk user atau dalam proses penegakan hukum"
+        verdict_reason = (
+            "Platform memastikan seller bukan kategori pengguna berisiko tinggi (high risk user) "
+            "dan tidak sedang menjalani proses penegakan hukum. Seller dalam kategori ini tidak "
+            "dapat menerima insentif (ANTARA 28-29 Agustus 2026)."
         )
     else:
         missing = [c for c in checks if not c["ok"]]

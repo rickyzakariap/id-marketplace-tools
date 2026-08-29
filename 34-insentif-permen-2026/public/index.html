@@ -116,8 +116,9 @@ pre.letter{background:var(--card-alt);border:1px solid var(--border);border-radi
       <label><input type="checkbox" id="produkDalamNegeri"> Hanya menjual produk dalam negeri<span class="req-detail">Wajib 100% produk dalam negeri. Campur produk impor = lokapasar bisa tolak/hentikan insentif</span></label>
       <label><input type="checkbox" id="nib"> Punya NIB (Nomor Induk Berusaha)</label>
       <label><input type="checkbox" id="infoBenar"> Informasi usaha di seller center benar dan jelas</label>
-      <label><input type="checkbox" id="standarMutu"> Produk memenuhi standar mutu dan keamanan</label>
+      <label><input type="checkbox" id="standarMutu"> Produk memenuhi standar mutu dan keamanan<span class="req-detail">Contoh: sertifikasi halal, ketentuan BPOM. Ada masa tenggang 6 bulan untuk pemenuhannya</span></label>
       <label><input type="checkbox" id="sapa"> Terdaftar di SAPA UMKM<span class="req-detail">Pengajuan insentif dilakukan lewat layanan SAPA UMKM</span></label>
+      <label><input type="checkbox" id="bukanHighRisk"> Bukan high risk user dan tidak dalam proses penegakan hukum<span class="req-detail">Platform memverifikasi kategori ini di tahap kedua</span></label>
     </div>
 
     <div class="field" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
@@ -150,14 +151,16 @@ pre.letter{background:var(--card-alt);border:1px solid var(--border);border-radi
   </div>
 
   <div class="card">
-    <h2>Langkah Pengajuan SAPA UMKM</h2>
+    <h2>Alur Pengajuan Insentif</h2>
     <ol class="steps">
       <li>Pastikan punya NIB (buat gratis di OSS jika belum)<span class="step-detail"> - oss.go.id</span></li>
       <li>Daftar atau login di layanan SAPA UMKM<span class="step-detail"> - Kementerian UMKM</span></li>
-      <li>Ajukan permohonan insentif biaya layanan dan lengkapi informasi usaha<span class="step-detail"> - data usaha harus benar dan jelas</span></li>
-      <li>Tunggu verifikasi Kementerian UMKM<span class="step-detail"> - lewat unit kerja data dan informasi</span></li>
+      <li>Ajukan permohonan insentif di SAPA UMKM<span class="step-detail"> - cantumkan nama platform, identitas merchant, dan data produk yang dijual</span></li>
+      <li>Verifikasi tahap 1 oleh Kementerian UMKM<span class="step-detail"> - cek pemenuhan syarat administratif via SAPA UMKM</span></li>
+      <li>Verifikasi tahap 2 oleh platform<span class="step-detail"> - platform pastikan seller UMK, hanya produk dalam negeri, bukan high risk user</span></li>
       <li>Cek tarif biaya layanan di seller center<span class="step-detail"> - potongan berlaku per transaksi produk dalam negeri</span></li>
     </ol>
+    <p class="desc" style="margin-top:8px">Platform wajib melaporkan realisasi insentif ke SAPA UMKM setiap bulan (identitas merchant + nilai insentif). Masa tenggang 6 bulan berlaku untuk pemenuhan standar produk seperti sertifikasi halal dan BPOM.</p>
   </div>
 
   <div class="card">
@@ -246,6 +249,7 @@ function fillContoh() {
   document.getElementById('infoBenar').checked = true;
   document.getElementById('standarMutu').checked = true;
   document.getElementById('sapa').checked = false;
+  document.getElementById('bukanHighRisk').checked = true;
   document.getElementById('panganSiapSaji').checked = false;
   document.getElementById('elektronikIndustriBesar').checked = false;
   marketplaces.forEach((mp, i) => {
@@ -256,7 +260,7 @@ function fillContoh() {
 
 function bersihkan() {
   document.querySelectorAll('input[name=skala]').forEach(r => r.checked = false);
-  ['produkDalamNegeri', 'nib', 'infoBenar', 'standarMutu', 'sapa', 'panganSiapSaji', 'elektronikIndustriBesar'].forEach(id => {
+  ['produkDalamNegeri', 'nib', 'infoBenar', 'standarMutu', 'sapa', 'bukanHighRisk', 'panganSiapSaji', 'elektronikIndustriBesar'].forEach(id => {
     document.getElementById(id).checked = false;
   });
   marketplaces.forEach(mp => {
@@ -290,7 +294,8 @@ function cekKelayakan() {
         nib: document.getElementById('nib').checked,
         info_benar: document.getElementById('infoBenar').checked,
         standar_mutu: document.getElementById('standarMutu').checked,
-        sapa: document.getElementById('sapa').checked
+        sapa: document.getElementById('sapa').checked,
+        bukan_high_risk: document.getElementById('bukanHighRisk').checked
       },
       exclusions: {
         pangan_siap_saji: document.getElementById('panganSiapSaji').checked,
