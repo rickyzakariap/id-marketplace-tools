@@ -1,0 +1,40 @@
+{
+  "date": "2026-08-29",
+  "sources": [
+    "ANTARA (28 Agu 2026 21:46 WIB + 29 Agu 2026 9:05 WIB): Kementerian UMKM ungkap alur potongan biaya lokapasar 50 persen - full article fetched, alur resmi pengajuan",
+    "ANTARA (28 Agu 2026): Menkeu Purbaya sebut pemerintah bakal tambah lokapasar pemungut pajak (related, July 2026)",
+    "Google News RSS: Kepmen diskon biaya layanan UMKM BELUM diteken per 28-29 Agu, target tahapan final pekan depan",
+    "Bisnis.com/UKMINDONESIA (Jun 2026): Aturan BPJS untuk seller marketplace = BUKAN aturan baru (konfirmasi BPJS bukan syarat insentif di teks final Permen 3/2026)"
+  ],
+  "pain_points": [
+    {
+      "category": "Alur pengajuan insentif diskon 50% biaya layanan (regulasi final, alur resmi baru diumumkan)",
+      "description": "ANTARA 28-29 Agu merilis alur resmi: pengajuan via SAPA UMKM (cantumkan nama platform, identitas merchant, data produk), verifikasi 2 tahap (tahap 1 KemenUMKM cek syarat administratif, tahap 2 platform cek seller UMK, hanya produk dalam negeri, bukan high risk user), standar produk (halal, BPOM) grace period 6 bulan, platform wajib lapor realisasi insentif bulanan ke SAPA UMKM. Seller yang masuk high risk user atau dalam proses penegakan hukum TIDAK dapat insentif. Status: Kepmen belum diteken, target tahapan final pekan depan. #34 belum punya syarat high risk, alur 2 tahap, grace period, laporan bulanan. #23 masih punya syarat BPJS yang tidak ada di teks final.",
+      "frequency": "HIGH",
+      "sources": [
+        "ANTARA 28 Agu 2026 (full article fetched)",
+        "ANTARA 29 Agu 2026 (republish, full article fetched)"
+      ]
+    },
+    {
+      "category": "PPh 22 perluasan pemungut pajak (bertahap, bisa tunda lagi)",
+      "description": "Purbaya: semua e-commerce bakal jadi pemungut PPh 22, bertahap; buka opsi perpanjang penundaan kalau ekonomi tidak tumbuh 6%. Artikel Juli-Agustus 2026, sudah tercakup di #25/#26. Bukan cerita baru hari ini.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "VIVA.co.id (3 Jul 2026)",
+        "CNBC Indonesia (19 Agu 2026)"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Update #34 + fix #23 (alur pengajuan resmi insentif)",
+      "type": "Web",
+      "tech": "Python 3 stdlib + Node.js",
+      "description": "Update #34 dengan alur resmi ANTARA 28-29 Agu: verifikasi 2 tahap, syarat bukan high risk user, grace period 6 bulan standar produk, laporan realisasi bulanan platform, status tahapan final pekan depan. Fix #23: hapus syarat BPJS (tidak ada di teks final Permen 3/2026), tambah 2 pengecualian kategori, fix status Kepmen yang salah klaim diteken.",
+      "category": "Data & Analytics",
+      "priority": 1,
+      "why": "Alur pengajuan resmi baru diumumkan 28-29 Agu - seller butuh alur verifikasi 2 tahap yang benar dan tool lama (#23) masih menyesatkan dengan syarat BPJS yang tidak ada di regulasi final."
+    }
+  ]
+}
