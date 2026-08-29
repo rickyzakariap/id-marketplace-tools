@@ -556,3 +556,13 @@
 - Lesson: Pengecualian kategori (pangan olahan siap saji, elektronik industri besar) adalah nilai tool yang tidak terlihat di headline - seller produk kategori ini bakal kaget kalau tidak dicek
 - Lesson: Surat keberatan generator (pola #30) bekerja bagus untuk hak baru seller - mekanisme klarifikasi/keberatan di Permen 3/2026 adalah fitur yang membuat tool actionable, bukan sekadar info
 - Next: Update #23 dengan syarat final Permen 3/2026 (hapus BPJS, tambah pengecualian), pantau konfirmasi tanggal efektif dari masing-masing platform
+
+## 2026-08-29 - Insentif Checker Update + Fee Checker Fix
+- Works: Fresh research via Google News RSS + DuckDuckGo HTML found ANTARA 28-29 Agu (Jumat-Sabtu) dengan alur pengajuan RESMI insentif 50%: pengajuan via SAPA UMKM (nama platform, identitas merchant, data produk), verifikasi 2 tahap (KemenUMKM cek administratif, lalu platform cek skala UMK + produk dalam negeri + bukan high risk user), standar produk (halal, BPOM) punya grace period 6 bulan, platform wajib lapor realisasi insentif bulanan ke SAPA UMKM. Status per 29 Agu: Kepmen BELUM diteken, target tahapan final pekan depan.
+- Works: #34 di-update: POLICY status progres-95 -> tahapan-final, syarat baru bukan_high_risk (hard-fail branch), detail standar_mutu + grace period, alur pengajuan 6 langkah 2 tahap verifikasi, semua 5 branch API verified via curl (layak, high-risk, pengecualian, hampir-layak, invalid)
+- Works: #23 di-fix sesuai Next dari LESSONS #34: hapus syarat BPJS (tidak ada di teks final Permen 3/2026, konfirmasi dari artikel ANTARA 28-29 Agu yang menyebut halal/BPOM tapi tidak menyebut BPJS), tambah 2 pengecualian kategori (pangan siap saji, elektronik industri besar), fix POLICY date bug (sebelumnya klaim "Kepmen diteken" padahal ANTARA 28-29 Agu bilang belum, signedTarget 24 Agu -> 4 Sep, effective 31 Agu -> 30 Sep)
+- Issues: Server #34 lama masih pegang port 8034 dan serve kode lama (2 PID listen sekaligus) - pola yang sama dengan lesson #31/#33. Fix: powershell Stop-Process untuk kedua PID, restart bersih.
+- Issues: #23 server lama (PID 22288, start 23 Agu) masih serve kode lama dengan BPJS - harus Stop-Process dulu sebelum restart.
+- Lesson: Aturan yang sama bisa punya 2 versi tool yang saling kontradiktif (#23 BPJS vs #34 tanpa BPJS). Saat berita final keluar, tool lama WAJIB di-recheck dan di-update, bukan cuma tool baru. User salah informasi kalau buka tool lama.
+- Lesson: Headline "Kepmen segera diteken" (21-22 Agu) vs fakta 28-29 Agu "belum diteken, target tahapan final pekan depan" - status tool harus dari tanggal terbaru, jangan terkunci di headline lama.
+- Next: Update #34 dan #23 saat Kepmen benar-benar diteken + tanggal efektif per platform resmi. Pantau SAPA UMKM untuk detail teknis pengajuan.
