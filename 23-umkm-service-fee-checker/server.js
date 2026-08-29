@@ -19,21 +19,21 @@ const MARKETPLACES = [
   { id: 'tiktok', name: 'TikTok Shop', defaultRate: 2.0 }
 ];
 
-// Policy status derived from the latest timeline (updated 2026-08-23).
-// Kabar 21-22 Agustus 2026 (ANTARA, detikFinance, Tirto): Kepmen diskon 50%
-// biaya layanan untuk UMKM BELUM diteken. Menteri UMKM menargetkan diteken
-// pekan 24-28 Agustus 2026 dan diskon mulai berlaku akhir Agustus 2026.
-// Tanggal ini target resmi, bisa bergeser - status dihitung dari tanggal hari ini.
+// Policy status derived from the latest timeline (updated 2026-08-29).
+// Kabar 28-29 Agustus 2026 (ANTARA): Kepmen diskon 50% biaya layanan untuk
+// UMKM BELUM diteken. Alur pengajuan resmi diumumkan (via SAPA UMKM, verifikasi
+// 2 tahap), target memasuki tahapan final pekan depan. Tanggal target resmi,
+// bisa bergeser - status dihitung dari tanggal hari ini.
 const POLICY = (() => {
   const d = new Date();
   const today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  const signedTarget = '2026-08-24';
-  const effectiveTarget = '2026-08-31';
+  const signedTarget = '2026-09-04';
+  const effectiveTarget = '2026-09-30';
   if (today < signedTarget) {
     return {
       status: 'menunggu',
-      label: 'Kepmen belum diteken',
-      description: 'Kepmen diskon biaya layanan 50% untuk UMKM belum diteken. Menteri UMKM menargetkan diteken pekan 24-28 Agustus 2026 dan berlaku akhir Agustus 2026 (pernyataan 21-22 Agustus 2026). Jadwal target, bisa berubah.',
+      label: 'Kepmen belum diteken, target tahapan final pekan depan',
+      description: 'Kepmen diskon biaya layanan 50% untuk UMKM belum diteken. Alur pengajuan resmi sudah diumumkan (28-29 Agustus 2026): ajukan via SAPA UMKM, verifikasi 2 tahap (KemenUMKM lalu platform), standar produk (halal, BPOM) punya masa tenggang 6 bulan. Menteri UMKM menargetkan tahapan final pekan depan (pernyataan 28-29 Agustus 2026). Jadwal target, bisa berubah.',
       regulation: 'Permen Perlindungan dan Peningkatan Daya Saing UMKM (aturan turunan PP 7/2021)',
       key_date: signedTarget,
       key_desc: 'Target Kepmen diteken'
@@ -43,7 +43,7 @@ const POLICY = (() => {
     return {
       status: 'diteken',
       label: 'Kepmen diteken, diskon mulai berlaku',
-      description: 'Kepmen diskon biaya layanan 50% untuk UMKM diteken dan mulai berlaku akhir Agustus 2026. Cek seller center masing-masing untuk tarif biaya layanan terbaru.',
+      description: 'Kepmen diskon biaya layanan 50% untuk UMKM diteken dan mulai berlaku akhir September 2026. Cek seller center masing-masing untuk tarif biaya layanan terbaru.',
       regulation: 'Permen Perlindungan dan Peningkatan Daya Saing UMKM (aturan turunan PP 7/2021)',
       key_date: effectiveTarget,
       key_desc: 'Diskon mulai berlaku'
@@ -59,13 +59,18 @@ const POLICY = (() => {
   };
 })();
 
-// Eligibility requirements from the regulation
+// Eligibility requirements from the regulation (final text, Permen UMKM 3/2026)
 const REQUIREMENTS = [
   { id: 'scale', label: 'Skala usaha mikro atau kecil', detail: 'Diskon hanya untuk usaha mikro dan kecil, bukan menengah' },
   { id: 'nib', label: 'Punya NIB (Nomor Induk Berusaha)', detail: 'NIB wajib sebagai identitas usaha resmi' },
-  { id: 'bpjs', label: 'Terdaftar BPJS', detail: 'BPJS (kesehatan/ketenagakerjaan) menjadi syarat insentif' },
-  { id: 'sapa', label: 'Terdaftar di SAPA UMKM', detail: 'Profil usaha terverifikasi dan terintegrasi ke sistem SAPA UMKM' },
+  { id: 'sapa', label: 'Terdaftar di SAPA UMKM', detail: 'Profil usaha terverifikasi dan terintegrasi ke sistem SAPA UMKM, pengajuan insentif lewat layanan ini' },
   { id: 'local', label: 'Menjual produk lokal', detail: 'Diskon khusus produk lokal, bukan produk impor' }
+];
+
+// Kategori yang TIDAK dapat insentif (pengecualian eksplisit di Permen UMKM 3/2026)
+const EXCLUSIONS = [
+  { id: 'pangan_siap_saji', label: 'Produk pangan olahan siap saji', detail: 'Insentif tidak berlaku untuk produk pangan olahan siap saji' },
+  { id: 'elektronik_industri_besar', label: 'Produk elektronik dari industri besar dalam negeri', detail: 'Insentif tidak berlaku untuk produk elektronik yang diproduksi industri besar dalam negeri' }
 ];
 
 app.get('/api/status', (req, res) => {
@@ -78,11 +83,12 @@ app.get('/api/marketplaces', (req, res) => {
 
 // POST /api/check
 // body: {
-//   answers: { scale: 'mikro'|'kecil'|'menengah', nib: bool, bpjs: bool, sapa: bool, local: bool },
+//   answers: { scale: 'mikro'|'kecil'|'menengah', nib: bool, sapa: bool, local: bool },
+//   exclusions: { pangan_siap_saji: bool, elektronik_industri_besar: bool },
 //   entries: [ { marketplace: 'shopee', omzet: number, rate: number } ]
 // }
 app.post('/api/check', (req, res) => {
-  const { answers, entries } = req.body || {};
+  const { answers, exclusions, entries } = req.body || {};
 
   // Validate answers
   if (!answers || typeof answers !== 'object') {
@@ -93,15 +99,17 @@ app.post('/api/check', (req, res) => {
     return res.status(400).json({ error: 'skala usaha tidak valid' });
   }
 
+  // Pengecualian kategori menang atas segalanya (eksplisit di Permen UMKM 3/2026)
+  const activeExclusions = (EXCLUSIONS || []).filter(ex => exclusions && exclusions[ex.id]);
+
   // Determine eligibility
   const checks = {
     scale: { ok: scale === 'mikro' || scale === 'kecil', label: REQUIREMENTS[0].label, detail: REQUIREMENTS[0].detail },
     nib: { ok: !!answers.nib, label: REQUIREMENTS[1].label, detail: REQUIREMENTS[1].detail },
-    bpjs: { ok: !!answers.bpjs, label: REQUIREMENTS[2].label, detail: REQUIREMENTS[2].detail },
-    sapa: { ok: !!answers.sapa, label: REQUIREMENTS[3].label, detail: REQUIREMENTS[3].detail },
-    local: { ok: !!answers.local, label: REQUIREMENTS[4].label, detail: REQUIREMENTS[4].detail }
+    sapa: { ok: !!answers.sapa, label: REQUIREMENTS[2].label, detail: REQUIREMENTS[2].detail },
+    local: { ok: !!answers.local, label: REQUIREMENTS[3].label, detail: REQUIREMENTS[3].detail }
   };
-  const eligible = Object.values(checks).every(c => c.ok);
+  const eligible = activeExclusions.length === 0 && Object.values(checks).every(c => c.ok);
 
   // Calculate savings
   const breakdown = [];
@@ -133,6 +141,7 @@ app.post('/api/check', (req, res) => {
   const result = {
     eligible,
     checks,
+    exclusions: activeExclusions,
     summary: {
       feeMonthlyTotal: totalFeeMonthly,
       savingMonthly: totalSavingMonthly,

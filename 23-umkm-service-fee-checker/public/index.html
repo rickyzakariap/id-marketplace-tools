@@ -100,7 +100,7 @@ input:focus{outline:none;border-color:var(--accent)}
 
   <div class="card">
     <h2>Apakah kamu memenuhi syarat?</h2>
-    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:8px">Jawab 5 pertanyaan ini. Diskon 50% biaya layanan hanya untuk usaha mikro dan kecil yang menjual produk lokal.</p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:8px">Jawab 4 pertanyaan ini. Diskon 50% biaya layanan hanya untuk usaha mikro dan kecil yang menjual produk lokal.</p>
 
     <div class="q-item">
       <div>
@@ -127,19 +127,8 @@ input:focus{outline:none;border-color:var(--accent)}
 
     <div class="q-item">
       <div>
-        <div class="q-label">Terdaftar BPJS?</div>
-        <div class="q-detail">BPJS kesehatan atau ketenagakerjaan jadi syarat insentif</div>
-      </div>
-      <div class="chip-group" id="bpjsGroup">
-        <button class="chip" data-val="1" onclick="setAnswer('bpjs', true)">Ya</button>
-        <button class="chip" data-val="0" onclick="setAnswer('bpjs', false)">Belum</button>
-      </div>
-    </div>
-
-    <div class="q-item">
-      <div>
         <div class="q-label">Terdaftar di SAPA UMKM?</div>
-        <div class="q-detail">Sistem Aplikasi Pelayanan UMKM dari Kemenkop UMKM</div>
+        <div class="q-detail">Sistem Aplikasi Pelayanan UMKM dari Kemenkop UMKM, pengajuan insentif lewat layanan ini</div>
       </div>
       <div class="chip-group" id="sapaGroup">
         <button class="chip" data-val="1" onclick="setAnswer('sapa', true)">Ya</button>
@@ -155,6 +144,17 @@ input:focus{outline:none;border-color:var(--accent)}
       <div class="chip-group" id="localGroup">
         <button class="chip" data-val="1" onclick="setAnswer('local', true)">Ya</button>
         <button class="chip" data-val="0" onclick="setAnswer('local', false)">Campur/impor</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div>
+        <div class="q-label">Kategori produk (pengecualian)</div>
+        <div class="q-detail">Dua kategori ini TIDAK dapat insentif meski syarat lain terpenuhi (Permen UMKM 3/2026)</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <label style="font-size:.85rem;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="exclPangan" style="accent-color:var(--accent)"> Pangan olahan siap saji</label>
+        <label style="font-size:.85rem;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="exclElektronik" style="accent-color:var(--accent)"> Elektronik industri besar</label>
       </div>
     </div>
   </div>
@@ -187,9 +187,12 @@ const MARKETPLACES = [
 const answers = {
   scale: 'mikro',
   nib: true,
-  bpjs: true,
   sapa: true,
   local: true
+};
+const exclusions = {
+  pangan_siap_saji: false,
+  elektronik_industri_besar: false
 };
 let rowCount = 0;
 
@@ -315,7 +318,14 @@ async function check() {
     const resp = await fetch('/api/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers, entries })
+      body: JSON.stringify({
+        answers,
+        exclusions: {
+          pangan_siap_saji: document.getElementById('exclPangan').checked,
+          elektronik_industri_besar: document.getElementById('exclElektronik').checked
+        },
+        entries
+      })
     });
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || 'Terjadi kesalahan');
@@ -333,10 +343,16 @@ async function check() {
 function renderResult(data) {
   const checks = Object.values(data.checks);
   const missing = checks.filter(c => !c.ok);
+  const exclusions = data.exclusions || [];
   const html = [];
 
   // Verdict
-  if (data.eligible) {
+  if (exclusions.length > 0) {
+    html.push(`<div class="verdict no">
+      <div class="v-title">Tidak layak untuk kategori produk ini</div>
+      <div class="v-sub">Pengecualian eksplisit di Permen UMKM 3/2026: ${exclusions.map(e => e.label).join(', ')}. Insentif diskon 50% biaya layanan tidak berlaku untuk kategori ini.</div>
+    </div>`);
+  } else if (data.eligible) {
     html.push(`<div class="verdict ok">
       <div class="v-title">Kamu berhak dapat diskon 50% biaya layanan</div>
       <div class="v-sub">Hemat ${rp(data.summary.savingMonthly)} per bulan, atau ${rp(data.summary.savingAnnual)} per tahun dari total biaya layanan ${rp(data.summary.feeMonthlyTotal)}/bulan.</div>
@@ -374,8 +390,8 @@ function renderResult(data) {
   }
   html.push('</div>');
 
-  // Prep checklist if not eligible
-  if (!data.eligible) {
+  // Prep checklist if not eligible (skip when category exclusion applies)
+  if (!data.eligible && missing.length > 0) {
     html.push(`<div class="card"><h2>Yang perlu disiapkan</h2><ul class="prep-list">`);
     missing.forEach(c => {
       html.push(`<li>${c.label}. ${c.detail}.</li>`);
@@ -394,7 +410,6 @@ function renderResult(data) {
 // Init: default scale + first row
 setScale('mikro');
 setAnswer('nib', true);
-setAnswer('bpjs', true);
 setAnswer('sapa', true);
 setAnswer('local', true);
 addRow('shopee', '', 2.0);

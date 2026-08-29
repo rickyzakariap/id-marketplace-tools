@@ -12,10 +12,11 @@ Buka http://localhost:8023
 
 ## What it does
 
-- Kuis kelayakan 5 syarat: skala usaha, NIB, BPJS, SAPA UMKM, produk lokal
+- Kuis kelayakan 4 syarat: skala usaha, NIB, SAPA UMKM, produk lokal
+- 2 pengecualian kategori (pangan olahan siap saji, elektronik industri besar) sesuai Permen UMKM 3/2026
 - Simulasi penghematan per marketplace (omzet bulanan x biaya layanan %)
 - Rincian syarat yang belum terpenuhi + checklist persiapan
-- Status kebijakan real-time (Kepmen diteken 12-13 Agustus 2026)
+- Status kebijakan real-time (per 29 Agustus 2026: Kepmen belum diteken, target tahapan final pekan depan)
 
 ## API
 
@@ -26,4 +27,5 @@ Buka http://localhost:8023
 ## Notes
 
 - Tarif biaya layanan default hanya perkiraan 2026, sesuaikan dengan seller center
-- Sumber: Permen Perlindungan dan Peningkatan Daya Saing UMKM (PP 7/2021), pemberitaan 12-13 Agustus 2026
+- Sumber: Permen UMKM 3/2026 (teks final), ANTARA 28-29 Agustus 2026 (alur pengajuan resmi)
+- Cek tool #34 (insentif-permen-2026) untuk verifikasi 2 tahap, surat keberatan, dan syarat lengkap
