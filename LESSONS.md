@@ -566,3 +566,16 @@
 - Lesson: Aturan yang sama bisa punya 2 versi tool yang saling kontradiktif (#23 BPJS vs #34 tanpa BPJS). Saat berita final keluar, tool lama WAJIB di-recheck dan di-update, bukan cuma tool baru. User salah informasi kalau buka tool lama.
 - Lesson: Headline "Kepmen segera diteken" (21-22 Agu) vs fakta 28-29 Agu "belum diteken, target tahapan final pekan depan" - status tool harus dari tanggal terbaru, jangan terkunci di headline lama.
 - Next: Update #34 dan #23 saat Kepmen benar-benar diteken + tanggal efektif per platform resmi. Pantau SAPA UMKM untuk detail teknis pengajuan.
+
+## 2026-08-30 - Program Diskon Checker
+- Works: Node.js + Express web tool, single dep (express)
+- Works: Research-first via Google News RSS - found UKMINDONESIA.ID article "Seller UMKM Tiba-Tiba Rugi Padahal Pesanan Ramai" (4 Juni 2026, recirculated 30 Agu): program diskon marketplace aktif tanpa disadari seller via soft enrollment. 3 jenis program paling sering tidak disadari: flash sale/kampanye (klik link undangan tanpa baca syarat = produk langsung terdaftar harga terpotong), gratis ongkir (biaya layanan program ditanggung seller), voucher toko auto-aktif dari level akun
+- Works: Kalkulator margin 2 skenario (tanpa program vs dengan program), program bisa stack (flash + voucher multiplicative, gratis ongkir nambah fee rate), verdict aman/tipis/rugi
+- Works: Pricing buffer formula verified against article: HPP 40rb + target margin 20% + diskon 20% + fee 0 = 62.500 (persis angka artikel). Dengan fee 12% = 73.529. Formula: buffer = HPP / ((1 - fee - target) * (1 - totalDiscount))
+- Works: "1 penjualan program = N penjualan normal" saat program rugi (contoh: flash sale 20% di harga 50rb = 1 program sale butuh 2 normal sale nutup rugi)
+- Works: Audit checklist 7 item seller center (tab Promosi/Kampanye/Voucher Toko, email folder Promosi/Spam, keluar kampanye belum mulai, dokumentasi CS), light minimal theme, responsive, auto-fill contoh, 26/26 element ID cocok, JS syntax OK, tanpa em dash
+- Issues: Em dash grep kena node_modules (encoding table) - harus exclude node_modules dari cek
+- Lesson: Soft enrollment adalah mekanisme program diskon yang jarang dibahas - seller dianggap setuju kalau tidak menolak dalam periode tertentu. Tool yang jawab "harga aman berapa kalau kena program" = nilai tinggi karena seller rugi tanpa sadar
+- Lesson: Pricing buffer (harga jual yang dipasang agar margin target tercapai setelah diskon) lebih actionable dari sekadar "jangan ikut program" - seller yang sudah terlanjur terdaftar butuh angka, bukan nasihat
+- Lesson: Discount stacking harus multiplicative (flash 20% + voucher 10% = 28% total), bukan additive (30%) - selisih 2% cukup signifikan di margin tipis
+- Next: Tambah mode multi-produk (CSV upload), tambah simulasi program "harga sudah terlanjur terpotong" (harga setelah diskon vs HPP langsung), link ke halaman keluar program per marketplace

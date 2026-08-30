@@ -40,6 +40,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 32 | [32-fmcg-trend-analyzer](32-fmcg-trend-analyzer/) | Web | Node.js + Express | FMCG e-commerce category trend dashboard (Compas S1 2026): value/volume growth per category, platform dominance, top movers, keep-pace calculator |
 | 33 | [33-kanal-sendiri-vs-marketplace](33-kanal-sendiri-vs-marketplace/) | Web | Go 1.26 | Compare real profit selling on marketplace vs own channel (WhatsApp/IG/website): fees vs gateway cost, break-even units, verdict stay/leave/both lose money |
 | 34 | [34-insentif-permen-2026](34-insentif-permen-2026/) | Web | Python (stdlib) | Check eligibility for 50% marketplace service fee discount (Permen UMKM 3/2026 final text): exclusions, savings per marketplace, SAPA UMKM application steps, objection letter generator |
+| 35 | [35-program-diskon-checker](35-program-diskon-checker/) | Web | Node.js + Express | Check margin after marketplace discount programs (flash sale, voucher, free ongkir): verdict safe/thin/loss, pricing buffer price to stay profitable, seller center audit checklist |
 
 ## Contributing
 
