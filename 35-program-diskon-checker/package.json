@@ -1,0 +1,13 @@
+{
+  "name": "program-diskon-checker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cek margin setelah program diskon marketplace aktif, hitung pricing buffer agar tetap untung",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

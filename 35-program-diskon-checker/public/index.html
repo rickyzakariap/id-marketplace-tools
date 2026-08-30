@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cek Harga Setelah Program Diskon</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #fff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --muted: #666;
+  --faint: #999;
+  --accent: #4a9;
+  --ok: #22c55e;
+  --warn: #d97706;
+  --err: #dc2626;
+  --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  padding: 20px;
+}
+.wrap { max-width: 720px; margin: 0 auto; }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+h1 { font-size: 20px; font-weight: 600; }
+header p { font-size: 13px; color: var(--muted); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card h2 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+input[type=number], select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: var(--mono);
+  background: var(--card);
+  color: var(--text);
+}
+input[type=number]:focus, select:focus { outline: none; border-color: var(--accent); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+button {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+button:hover { border-color: var(--accent); }
+button:disabled { opacity: 0.5; cursor: default; }
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  width: 100%;
+  padding: 11px;
+  font-size: 14px;
+  margin-top: 16px;
+}
+.btn-row { display: flex; gap: 8px; margin-top: 12px; }
+.btn-row button { flex: 1; }
+.err { color: var(--err); font-size: 13px; margin-top: 8px; min-height: 0; }
+.err.show { margin-top: 10px; }
+.result { display: none; }
+.result.show { display: block; }
+.verdict {
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+.verdict .v-label { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.verdict.aman { border-left: 4px solid var(--ok); background: #f0fdf4; }
+.verdict.tipis { border-left: 4px solid var(--warn); background: #fffbeb; }
+.verdict.rugi { border-left: 4px solid var(--err); background: #fef2f2; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-family: var(--mono); }
+td.pos { color: var(--ok); }
+td.neg { color: var(--err); }
+.buffer-box {
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fafafa;
+}
+.buffer-box .big { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--accent); }
+.buffer-box p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.buffer-box .row { margin-top: 10px; }
+.alt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 13px;
+}
+.alt .mono { font-family: var(--mono); }
+.muted { color: var(--muted); font-size: 13px; }
+.checklist-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.checklist-item:last-child { border-bottom: none; }
+.checklist-item .num {
+  width: 22px; height: 22px; flex-shrink: 0;
+  border: 1px solid var(--accent); color: var(--accent);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; margin-top: 2px;
+}
+.checklist-item .c-label { font-size: 13px; font-weight: 500; }
+.checklist-item .c-detail { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.note { font-size: 12px; color: var(--faint); margin-top: 10px; }
+.hint { font-size: 12px; color: var(--faint); margin-top: 4px; }
+@media (max-width: 768px) {
+  body { padding: 12px; }
+  .card { padding: 14px; }
+  .row, .tri { grid-template-columns: 1fr; gap: 0; }
+  header { flex-direction: column; gap: 4px; }
+  h1 { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Cek Harga Setelah Program Diskon</h1>
+    <p>Margin aman walau program diskon berjalan</p>
+  </header>
+
+  <div class="card">
+    <h2>Data produk</h2>
+    <div class="row">
+      <div>
+        <label for="hpp">HPP (modal per unit)</label>
+        <input type="number" id="hpp" min="0" step="500" placeholder="40000">
+      </div>
+      <div>
+        <label for="harga_jual">Harga jual sekarang</label>
+        <input type="number" id="harga_jual" min="0" step="500" placeholder="50000">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="marketplace">Marketplace</label>
+        <select id="marketplace"></select>
+      </div>
+      <div>
+        <label for="fee_rate">Biaya layanan (%)</label>
+        <input type="number" id="fee_rate" min="0" max="50" step="0.5" placeholder="12">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="target_margin">Target margin minimal (%)</label>
+        <input type="number" id="target_margin" min="1" max="90" step="1" placeholder="20">
+      </div>
+      <div></div>
+    </div>
+    <div class="btn-row">
+      <button type="button" id="fill-example">Isi contoh</button>
+      <button type="button" id="clear-form">Bersihkan</button>
+    </div>
+
+    <h2 style="margin-top:18px">Program diskon yang aktif</h2>
+    <div class="tri">
+      <div>
+        <label for="flash_sale">Flash sale / kampanye (%)</label>
+        <input type="number" id="flash_sale" min="0" max="90" step="1" placeholder="0">
+      </div>
+      <div>
+        <label for="voucher_toko">Voucher toko (%)</label>
+        <input type="number" id="voucher_toko" min="0" max="90" step="1" placeholder="0">
+      </div>
+      <div>
+        <label for="gratis_ongkir">Gratis ongkir (biaya layanan %) </label>
+        <input type="number" id="gratis_ongkir" min="0" max="30" step="0.5" placeholder="0">
+      </div>
+    </div>
+    <p class="hint">Diskon flash sale dan voucher dihitung berjenjang. Gratis ongkir menambah biaya layanan, bukan potongan harga.</p>
+    <button class="primary" id="analyze-btn">Hitung margin</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="card result" id="result-card">
+    <h2>Hasil</h2>
+    <div class="verdict" id="verdict"></div>
+
+    <table>
+      <thead>
+        <tr><th>Skenario</th><th class="num">Harga setelah diskon</th><th class="num">Margin per unit</th><th class="num">Margin (%)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tanpa program</td>
+          <td class="num" id="r-n-price"></td>
+          <td class="num" id="r-n-net"></td>
+          <td class="num" id="r-n-pct"></td>
+        </tr>
+        <tr>
+          <td>Dengan program</td>
+          <td class="num" id="r-p-price"></td>
+          <td class="num" id="r-p-net"></td>
+          <td class="num" id="r-p-pct"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="buffer-box" id="buffer-box">
+      <div class="big" id="buffer-price"></div>
+      <p id="buffer-note"></p>
+      <div class="row">
+        <div class="alt"><span>Pembulatan 500-an</span><span class="mono" id="buffer-500"></span></div>
+        <div class="alt"><span>Versi X999</span><span class="mono" id="buffer-999"></span></div>
+      </div>
+    </div>
+    <p class="note" id="cover-note"></p>
+  </div>
+
+  <div class="card">
+    <h2>Audit seller center</h2>
+    <div id="checklist"></div>
+    <p class="note">Program diskon marketplace sering aktif tanpa disadari seller. Cek rutin tiap 2 minggu.</p>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+
+let marketplaces = [];
+
+async function loadMarketplaces() {
+  const res = await fetch('/api/marketplaces');
+  marketplaces = await res.json();
+  const sel = $('marketplace');
+  sel.innerHTML = '';
+  marketplaces.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.feeRate;
+    opt.textContent = m.name + ' (' + m.feeRate + '%)';
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => {
+    $('fee_rate').value = sel.value;
+  });
+}
+
+async function loadChecklist() {
+  const res = await fetch('/api/checklist');
+  const items = await res.json();
+  const box = $('checklist');
+  box.innerHTML = '';
+  items.forEach((it, i) => {
+    const div = document.createElement('div');
+    div.className = 'checklist-item';
+    div.innerHTML = '<div class="num">' + (i + 1) + '</div>' +
+      '<div><div class="c-label">' + it.label + '</div>' +
+      '<div class="c-detail">' + it.detail + '</div></div>';
+    box.appendChild(div);
+  });
+}
+
+function fillExample() {
+  $('hpp').value = 40000;
+  $('harga_jual').value = 50000;
+  $('marketplace').value = '12';
+  $('fee_rate').value = 12;
+  $('target_margin').value = 20;
+  $('flash_sale').value = 20;
+  $('voucher_toko').value = 0;
+  $('gratis_ongkir').value = 0;
+  $('err').classList.remove('show');
+}
+
+function clearForm() {
+  ['hpp', 'harga_jual', 'fee_rate', 'target_margin', 'flash_sale', 'voucher_toko', 'gratis_ongkir'].forEach(id => {
+    $(id).value = '';
+  });
+  $('err').classList.remove('show');
+  $('result-card').classList.remove('show');
+}
+
+async function analyze() {
+  const errBox = $('err');
+  errBox.classList.remove('show');
+  const btn = $('analyze-btn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const payload = {
+      hpp: $('hpp').value,
+      harga_jual: $('harga_jual').value,
+      fee_rate: $('fee_rate').value,
+      target_margin: $('target_margin').value,
+      flash_sale: $('flash_sale').value || 0,
+      voucher_toko: $('voucher_toko').value || 0,
+      gratis_ongkir: $('gratis_ongkir').value || 0
+    };
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errBox.textContent = data.error || 'Terjadi kesalahan';
+      errBox.classList.add('show');
+      return;
+    }
+    render(data);
+  } catch (e) {
+    errBox.textContent = 'Gagal terhubung ke server';
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung margin';
+  }
+}
+
+function render(d) {
+  const v = $('verdict');
+  v.className = 'verdict ' + d.verdict;
+  v.innerHTML = '<div class="v-label">' + d.verdictLabel + '</div>' + d.verdictDetail;
+
+  $('r-n-price').textContent = fmt(d.inputs.harga);
+  $('r-n-net').textContent = fmt(d.normal.net);
+  $('r-n-pct').textContent = d.normal.marginPct + '%';
+  $('r-n-net').className = 'num ' + (d.normal.net >= 0 ? 'pos' : 'neg');
+
+  $('r-p-price').textContent = fmt(d.program.priceAfter);
+  $('r-p-net').textContent = fmt(d.program.net);
+  $('r-p-pct').textContent = d.program.marginPct + '%';
+  $('r-p-net').className = 'num ' + (d.program.net >= 0 ? 'pos' : 'neg');
+
+  if (d.buffer) {
+    $('buffer-price').textContent = fmt(d.buffer.exact);
+    $('buffer-note').textContent = d.buffer.note;
+    $('buffer-500').textContent = fmt(d.buffer.rounded500);
+    $('buffer-999').textContent = fmt(d.buffer.rounded999);
+  } else {
+    $('buffer-price').textContent = '-';
+    $('buffer-note').textContent = d.verdictDetail;
+    $('buffer-500').textContent = '-';
+    $('buffer-999').textContent = '-';
+  }
+
+  if (d.coverSales) {
+    $('cover-note').textContent = '1 penjualan program = ' + d.coverSales + ' penjualan normal harus menutup kerugiannya.';
+  } else {
+    $('cover-note').textContent = '';
+  }
+
+  $('result-card').classList.add('show');
+}
+
+$('analyze-btn').addEventListener('click', analyze);
+$('fill-example').addEventListener('click', fillExample);
+$('clear-form').addEventListener('click', clearForm);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') analyze();
+  if (e.key === 'Escape') clearForm();
+});
+
+loadMarketplaces();
+loadChecklist();
+</script>
+</body>
+</html>

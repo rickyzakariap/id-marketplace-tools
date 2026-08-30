@@ -1,0 +1,45 @@
+{
+  "date": "2026-08-30",
+  "sources": [
+    "Google News RSS: Seller UMKM Tiba-Tiba Rugi Padahal Pesanan Ramai, Cermati Program Diskon Marketplace - UKMINDONESIA.ID (article fetched full, 4 Juni 2026, recirculated 30 Agu 2026)",
+    "Google News RSS: Biaya Marketplace Naik Mei 2026, Seller UMKM Harus Tahu Strategi Bertahan Ini - UKMINDONESIA.ID",
+    "Google News RSS: Mendag Temui Penjual dan Perwakilan Marketplace, Tampung Keluhan Soal Penggunaan E-commerce - Suara Surabaya",
+    "Google News RSS: Shopee Hadirkan Pengelolaan Program Promosi, Kemendag: Layak Direplikasi - Kompas.com"
+  ],
+  "pain_points": [
+    {
+      "category": "Program diskon marketplace yang aktif tanpa disadari seller (soft enrollment)",
+      "description": "UKMINDONESIA.ID: seller tiba-tiba rugi padahal pesanan ramai karena program diskon aktif tanpa sadar. 3 jenis program yang paling sering tidak disadari: (1) flash sale/kampanye - klik tautan undangan tanpa baca syarat, produk langsung terdaftar dengan harga terpotong; (2) gratis ongkir subsidi seller - sebagian biaya subsidi ditanggung seller lewat komponen biaya layanan program; (3) voucher toko auto-aktif dari level akun - aktif default saat buka toko/naik level, seller tidak menonaktifkan manual. Semua beroperasi di level pengaturan toko, bukan per produk. Solusi artikel: pricing buffer - HPP 40rb + target margin 20% + diskon 20% = harga jual harus 62.500 bukan 50.000. Audit seller center tiap 2 minggu (tab Promosi/Kampanye/Voucher Toko), cek email folder Promosi/Spam.",
+      "frequency": "HIGH",
+      "sources": [
+        "UKMINDONESIA.ID (full article fetched)"
+      ]
+    },
+    {
+      "category": "Biaya layanan program gratis ongkir naik (Mei 2026)",
+      "description": "Kenaikan biaya layanan program gratis ongkir jadi keluhan ramai di medsos (Mei 2026). Dampak langsung menggerus margin per transaksi. Terkait dengan pain point #1 - seller ikut program gratis ongkir karena dianggap menaikkan daya tarik produk, tapi biaya layanan program dipotong dari margin.",
+      "frequency": "HIGH",
+      "sources": [
+        "UKMINDONESIA.ID (full article fetched)",
+        "Keluhan seller medsos Mei 2026"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Program Diskon Checker + Pricing Buffer Calculator",
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Cek apakah harga jual masih untung setelah program diskon marketplace aktif (flash sale, gratis ongkir, voucher toko, bisa stack). Hitung pricing buffer: harga jual yang harus dipasang agar margin target tetap tercapai meski kena diskon X%. Verdict aman/tipis/rugi per skenario. Checklist audit seller center (tab Promosi/Kampanye/Voucher Toko, email Promosi/Spam). Solusi langsung dari artikel UKMINDONESIA: HPP 40rb, target margin 20%, diskon 20% -> harga harus 62.500 bukan 50.000.",
+      "why": "Pain point nyata dan baru: seller rugi padahal pesanan ramai karena program diskon soft-enrollment. Belum ada tool yang jawab 'harga aman berapa kalau kena program diskon'. #14 promo calculator hitung biaya promo yang seller rencanakan, bukan program yang aktif tanpa sadar.",
+      "marketplace_fees": {
+        "shopee": 12.0,
+        "tiktok": 10.0,
+        "tokopedia": 8.0,
+        "lazada": 8.0,
+        "blibli": 6.0,
+        "bukalapak": 5.0
+      }
+    }
+  ]
+}
