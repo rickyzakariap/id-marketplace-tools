@@ -579,3 +579,15 @@
 - Lesson: Pricing buffer (harga jual yang dipasang agar margin target tercapai setelah diskon) lebih actionable dari sekadar "jangan ikut program" - seller yang sudah terlanjur terdaftar butuh angka, bukan nasihat
 - Lesson: Discount stacking harus multiplicative (flash 20% + voucher 10% = 28% total), bukan additive (30%) - selisih 2% cukup signifikan di margin tipis
 - Next: Tambah mode multi-produk (CSV upload), tambah simulasi program "harga sudah terlanjur terpotong" (harga setelah diskon vs HPP langsung), link ke halaman keluar program per marketplace
+
+## 2026-10-19 - Biaya Total Marketplace (revival #36)
+- Works: Audit ulang 35 tool lama (REVIVAL_AUDIT.md), lalu pilih bikin tool baru #36 daripada menyentuh tool lama yang lain
+- Works: Node.js + Express, kalkulator all-in cost: komponen persen (komisi, gratis ongkir, iklan, afiliasi) + komponen Rp (proses per transaksi, logistik/kemasan/retur per unit), verdict sehat/tipis/rugi, warning total biaya >= 30%, target harga jual minimum
+- Works: Default rate diground dari laporan 2026 (Katadata, Bisnis, CNN, Validnews, MarketplaceTactics) dan tetap bisa diedit seller; contoh kuitansi nyata ~24% dipakai sebagai preset
+- Works: 13 unit test (node assert) lulus, termasuk uji target price menghasilkan margin target dan biaya proses tidak dikali qty
+- Fix: P0 di #06 dropship calculator (profit belum kurangi ongkir seller) + tambah 9 test, commit terpisah 84e0acf
+- Issues: Go toolchain tidak terpasang di environment, 10 tool Go hanya bisa diaudit statis, tidak bisa build/test
+- Lesson: Bedakan biaya "per transaksi" (biaya proses Rp 1.250, tidak dikali qty) vs "per unit" (logistik, kemasan, retur) - salah klasifikasi bisa bikin perhitungan margin ngawur saat qty > 1
+- Lesson: Semua persen biaya dihitung dari harga jual (bukan HPP), konsisten dengan cara marketplace memotong dan dengan tool #35
+- Lesson: Target price harus dibatasi: kalau total persen biaya + target margin >= 100%, tidak ada harga jual yang bisa memenuhi target - tool harus bilang "tidak tercapai", bukan keluarkan angka negatif/nonsense
+- Next: Tambah mode batch (CSV banyak produk), integrasi tarif aktual per kategori kalau ada, bandingkan hasil dengan kuitansi seller nyata untuk validasi rate default

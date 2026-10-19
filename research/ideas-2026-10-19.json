@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-19",
+  "sources": [
+    "Katadata (13 & 20 Mei 2026): biaya marketplace berlapis bisa tembus 30% dari harga jual",
+    "Katadata / kuitansi seller (Mei 2026): biaya proses pesanan Rp 1.250 per transaksi",
+    "Bisnis (18 Mei 2026): komisi dinamis TikTok Shop, batas maksimum Rp 650.000 per item",
+    "Bisnis & CNN Indonesia (Mei 2026): layanan logistik TikTok Rp 690 - Rp 5.060",
+    "Bisnis (1 Juni 2026): ongkir retur ditanggung seller maksimum 2 x Rp 5.000",
+    "MarketplaceTactics (2026): komisi afiliasi 5% - 20%",
+    "Validnews (26 Mei 2026): pembelian iklan di marketplace kena PPN 11%",
+    "Kuitansi seller Shopee (2026): potongan total platform sekitar 24% dari harga transaksi Rp 499.000"
+  ],
+  "pain_points": [
+    {
+      "category": "Biaya marketplace berlapis sulit dihitung, seller tidak tahu total potongan sebenarnya",
+      "description": "Seller menghitung biaya marketplace sebatas komisi/admin, padahal potongan berlapis: komisi kategori, program gratis ongkir, iklan (plus PPN 11%), komisi afiliasi 5-20%, biaya proses pesanan Rp 1.250/transaksi, layanan logistik Rp 690-5.060, sampai ongkir retur. Katadata menyebut totalnya bisa tembus 30% dari harga jual. Untuk produk harga murah, komponen persen membuat margin habis. Bukti kuitansi nyata: harga transaksi Rp 499.000 terpotong total ~24% oleh platform.",
+      "frequency": "HIGH",
+      "sources": [
+        "Katadata (Mei 2026)",
+        "Bisnis (Mei-Juni 2026)",
+        "Validnews (26 Mei 2026)"
+      ]
+    },
+    {
+      "category": "Seller tidak punya angka harga jual minimum untuk capai target margin setelah semua biaya",
+      "description": "Karena biaya berlapis, seller sering baru sadar rugi setelah rekonsiliasi. Yang dibutuhkan bukan daftar biaya, tapi satu angka: harga jual minimum agar margin target tetap tercapai. Tool #35 hanya menjawab diskon program, bukan total biaya operasional marketplace.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Turunan analisis"
+      ]
+    }
+  ],
+  "top_suggestions": [
+    {
+      "name": "Kalkulator Biaya Total Marketplace",
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Satu kalkulator all-in untuk menumpuk semua biaya seller di marketplace: komisi/admin, program gratis ongkir, iklan, afiliasi, biaya proses pesanan, layanan logistik, kemasan, dan estimasi retur. Output: total biaya (Rp dan % harga jual), laba bersih per transaksi, margin bersih, verdict sehat/tipis/rugi, peringatan bila total biaya >= 30%, breakdown per komponen, dan target harga jual minimum untuk margin target.",
+      "why": "38 tool sebelumnya fokus per jenis biaya (fee, promo, retur, ongkir) atau per kebijakan. Belum ada yang menjawab pertanyaan paling dasar seller: 'dari harga jualku, berapa persen habis untuk marketplace, dan berapa laba bersih sebenarnya?' Angka default diground dari laporan publik 2026 dan bisa diedit seller.",
+      "marketplace_admin_pct_estimasi": {
+        "shopee": 10.0,
+        "tiktok": 8.0,
+        "tokopedia": 6.5,
+        "lazada": 5.0,
+        "blibli": 5.0,
+        "bukalapak": 4.0
+      }
+    }
+  ]
+}

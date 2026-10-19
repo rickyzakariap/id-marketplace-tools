@@ -41,6 +41,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 33 | [33-kanal-sendiri-vs-marketplace](33-kanal-sendiri-vs-marketplace/) | Web | Go 1.26 | Compare real profit selling on marketplace vs own channel (WhatsApp/IG/website): fees vs gateway cost, break-even units, verdict stay/leave/both lose money |
 | 34 | [34-insentif-permen-2026](34-insentif-permen-2026/) | Web | Python (stdlib) | Check eligibility for 50% marketplace service fee discount (Permen UMKM 3/2026 final text): exclusions, savings per marketplace, SAPA UMKM application steps, objection letter generator |
 | 35 | [35-program-diskon-checker](35-program-diskon-checker/) | Web | Node.js + Express | Check margin after marketplace discount programs (flash sale, voucher, free ongkir): verdict safe/thin/loss, pricing buffer price to stay profitable, seller center audit checklist |
+| 36 | [36-biaya-total-marketplace](36-biaya-total-marketplace/) | Web | Node.js + Express | All-in seller cost calculator: stack commission, free shipping, ads, affiliate, order processing, logistics, packaging and returns into one total cost %, verdict and target price |
 
 ## Contributing
 

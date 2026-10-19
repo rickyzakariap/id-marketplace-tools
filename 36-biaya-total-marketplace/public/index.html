@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Biaya Total Marketplace</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #fff;
+  --border: #e5e5e5;
+  --text: #1a1a1a;
+  --muted: #666;
+  --faint: #999;
+  --accent: #4a9;
+  --ok: #22c55e;
+  --warn: #d97706;
+  --err: #dc2626;
+  --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  padding: 20px;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+h1 { font-size: 20px; font-weight: 600; }
+header p { font-size: 13px; color: var(--muted); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card h2 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+input[type=number], select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: var(--mono);
+  background: var(--card);
+  color: var(--text);
+}
+input[type=number]:focus, select:focus { outline: none; border-color: var(--accent); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+button {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+button:hover { border-color: var(--accent); }
+button:disabled { opacity: 0.5; cursor: default; }
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  width: 100%;
+  padding: 11px;
+  font-size: 14px;
+  margin-top: 16px;
+}
+.btn-row { display: flex; gap: 8px; margin-top: 12px; }
+.btn-row button { flex: 1; }
+.err { color: var(--err); font-size: 13px; margin-top: 8px; min-height: 0; }
+.err.show { margin-top: 10px; }
+.result { display: none; }
+.result.show { display: block; }
+.verdict { border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; font-size: 14px; }
+.verdict .v-label { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+.verdict.sehat { border-left: 4px solid var(--ok); background: #f0fdf4; }
+.verdict.tipis { border-left: 4px solid var(--warn); background: #fffbeb; }
+.verdict.rugi { border-left: 4px solid var(--err); background: #fef2f2; }
+.warn30 {
+  display: none;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  border-left: 4px solid var(--err);
+  background: #fef2f2;
+}
+.warn30.show { display: block; }
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.metric { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.metric .m-label { font-size: 12px; color: var(--muted); }
+.metric .m-value { font-family: var(--mono); font-size: 16px; font-weight: 600; margin-top: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-family: var(--mono); }
+td.pos { color: var(--ok); }
+td.neg { color: var(--err); }
+.target-box {
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fafafa;
+}
+.target-box .big { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--accent); }
+.target-box p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.note { font-size: 12px; color: var(--faint); margin-top: 10px; }
+.hint { font-size: 12px; color: var(--faint); margin-top: 4px; }
+.src-item { font-size: 12px; color: var(--muted); padding: 5px 0; border-bottom: 1px dashed var(--border); }
+.src-item:last-child { border-bottom: none; }
+@media (max-width: 768px) {
+  body { padding: 12px; }
+  .card { padding: 14px; }
+  .row, .tri, .metrics { grid-template-columns: 1fr; gap: 0; }
+  .metrics { gap: 8px; }
+  header { flex-direction: column; gap: 4px; }
+  h1 { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kalkulator Biaya Total Marketplace</h1>
+    <p>Berapa persen sih potongan marketplace dari harga jualmu?</p>
+  </header>
+
+  <div class="card">
+    <h2>Data produk</h2>
+    <div class="tri">
+      <div>
+        <label for="hpp">HPP (modal per unit)</label>
+        <input type="number" id="hpp" min="0" step="500" placeholder="50000">
+      </div>
+      <div>
+        <label for="harga_jual">Harga jual per unit</label>
+        <input type="number" id="harga_jual" min="0" step="500" placeholder="100000">
+      </div>
+      <div>
+        <label for="qty">Qty per transaksi</label>
+        <input type="number" id="qty" min="1" step="1" value="1" placeholder="1">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="marketplace">Marketplace</label>
+        <select id="marketplace"></select>
+      </div>
+      <div>
+        <label for="komisi_admin_pct">Komisi / admin (%)</label>
+        <input type="number" id="komisi_admin_pct" min="0" max="60" step="0.5" placeholder="10">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="target_margin_pct">Target margin bersih (%)</label>
+        <input type="number" id="target_margin_pct" min="1" max="90" step="1" placeholder="20">
+      </div>
+      <div></div>
+    </div>
+
+    <h2 style="margin-top:18px">Biaya berlapis (isi yang relevan)</h2>
+    <div class="tri">
+      <div>
+        <label for="gratis_ongkir_pct">Gratis ongkir (%)</label>
+        <input type="number" id="gratis_ongkir_pct" min="0" max="30" step="0.5" placeholder="0">
+      </div>
+      <div>
+        <label for="iklan_pct">Iklan / ads (%)</label>
+        <input type="number" id="iklan_pct" min="0" max="50" step="0.5" placeholder="0">
+      </div>
+      <div>
+        <label for="affiliate_pct">Komisi afiliasi (%)</label>
+        <input type="number" id="affiliate_pct" min="0" max="50" step="0.5" placeholder="0">
+      </div>
+    </div>
+    <div class="tri">
+      <div>
+        <label for="biaya_proses_rp">Biaya proses (Rp/transaksi)</label>
+        <input type="number" id="biaya_proses_rp" min="0" step="250" placeholder="1250">
+      </div>
+      <div>
+        <label for="layanan_logistik_rp">Layanan logistik (Rp/unit)</label>
+        <input type="number" id="layanan_logistik_rp" min="0" step="500" placeholder="0">
+      </div>
+      <div>
+        <label for="kemasan_rp">Kemasan (Rp/unit)</label>
+        <input type="number" id="kemasan_rp" min="0" step="500" placeholder="0">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="retur_pct">Estimasi retur (%)</label>
+        <input type="number" id="retur_pct" min="0" max="100" step="0.5" placeholder="0">
+      </div>
+      <div>
+        <label for="retur_fee_rp">Ongkir retur ditanggung seller (Rp/kejadian)</label>
+        <input type="number" id="retur_fee_rp" min="0" step="500" placeholder="10000">
+      </div>
+    </div>
+    <p class="hint">Semua persen dihitung dari harga jual. Biaya proses dihitung per transaksi, logistik/kemasan/retur per unit.</p>
+
+    <div class="btn-row">
+      <button type="button" id="fill-example">Isi contoh</button>
+      <button type="button" id="clear-form">Bersihkan</button>
+    </div>
+    <button class="primary" id="calc-btn">Hitung biaya total</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="card result" id="result-card">
+    <h2>Hasil</h2>
+    <div class="verdict" id="verdict"></div>
+    <div class="warn30" id="warn30"></div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="m-label">Total biaya marketplace</div>
+        <div class="m-value" id="r-total"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">% dari harga jual</div>
+        <div class="m-value" id="r-pct"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Laba bersih per transaksi</div>
+        <div class="m-value" id="r-profit"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Margin bersih</div>
+        <div class="m-value" id="r-margin"></div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Komponen biaya</th><th class="num">Rupiah</th><th class="num">% harga</th></tr>
+      </thead>
+      <tbody id="breakdown"></tbody>
+      <tfoot>
+        <tr>
+          <td><strong>Total biaya</strong></td>
+          <td class="num" id="r-total-2"></td>
+          <td class="num" id="r-pct-2"></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="target-box">
+      <div class="big" id="target-price"></div>
+      <p id="target-note"></p>
+    </div>
+    <p class="note" id="market-note"></p>
+  </div>
+
+  <div class="card">
+    <h2>Sumber angka default (2026)</h2>
+    <div id="sources"></div>
+    <p class="note">Semua tarif bisa berubah dan berbeda per kategori. Angka default adalah estimasi dari laporan publik, selalu cek seller center untuk tarif aktual.</p>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+
+async function loadMarketplaces() {
+  const res = await fetch('/api/marketplaces');
+  const list = await res.json();
+  const sel = $('marketplace');
+  sel.innerHTML = '';
+  list.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = m.name;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => {
+    const m = list.find(x => x.id === sel.value);
+    if (m) $('komisi_admin_pct').value = m.adminPct;
+  });
+}
+
+async function loadSources() {
+  const res = await fetch('/api/sources');
+  const list = await res.json();
+  const box = $('sources');
+  box.innerHTML = '';
+  list.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'src-item';
+    div.textContent = s.label + ' - ' + s.source;
+    box.appendChild(div);
+  });
+}
+
+async function fillExample() {
+  const res = await fetch('/api/example');
+  const e = await res.json();
+  ['marketplace', 'hpp', 'harga_jual', 'qty', 'komisi_admin_pct', 'gratis_ongkir_pct',
+   'iklan_pct', 'affiliate_pct', 'biaya_proses_rp', 'layanan_logistik_rp', 'kemasan_rp',
+   'retur_pct', 'retur_fee_rp', 'target_margin_pct'].forEach(id => {
+    if (e[id] !== undefined) $(id).value = e[id];
+  });
+  $('err').classList.remove('show');
+}
+
+function clearForm() {
+  ['hpp', 'harga_jual', 'komisi_admin_pct', 'target_margin_pct', 'gratis_ongkir_pct',
+   'iklan_pct', 'affiliate_pct', 'biaya_proses_rp', 'layanan_logistik_rp', 'kemasan_rp',
+   'retur_pct', 'retur_fee_rp'].forEach(id => { $(id).value = ''; });
+  $('qty').value = 1;
+  $('err').classList.remove('show');
+  $('result-card').classList.remove('show');
+}
+
+async function calculate() {
+  const errBox = $('err');
+  errBox.classList.remove('show');
+  const btn = $('calc-btn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const payload = {
+      marketplace: $('marketplace').value,
+      hpp: $('hpp').value,
+      harga_jual: $('harga_jual').value,
+      qty: $('qty').value || 1,
+      komisi_admin_pct: $('komisi_admin_pct').value,
+      target_margin_pct: $('target_margin_pct').value,
+      gratis_ongkir_pct: $('gratis_ongkir_pct').value || 0,
+      iklan_pct: $('iklan_pct').value || 0,
+      affiliate_pct: $('affiliate_pct').value || 0,
+      biaya_proses_rp: $('biaya_proses_rp').value,
+      layanan_logistik_rp: $('layanan_logistik_rp').value || 0,
+      kemasan_rp: $('kemasan_rp').value || 0,
+      retur_pct: $('retur_pct').value || 0,
+      retur_fee_rp: $('retur_fee_rp').value
+    };
+    const res = await fetch('/api/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errBox.textContent = data.error || 'Terjadi kesalahan';
+      errBox.classList.add('show');
+      return;
+    }
+    render(data);
+  } catch (e) {
+    errBox.textContent = 'Gagal terhubung ke server';
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung biaya total';
+  }
+}
+
+function render(d) {
+  const v = $('verdict');
+  v.className = 'verdict ' + d.verdict;
+  v.innerHTML = '<div class="v-label">' + d.verdict_label + '</div>' + d.verdict_detail;
+
+  const warn = $('warn30');
+  if (d.warning_30) {
+    warn.textContent = 'Total biaya marketplace ' + d.total_cost_pct + '% dari harga jual. Untuk produk harga murah ini menggerus margin paling besar.';
+    warn.classList.add('show');
+  } else {
+    warn.classList.remove('show');
+  }
+
+  $('r-total').textContent = fmt(d.total_cost);
+  $('r-pct').textContent = d.total_cost_pct + '%';
+  $('r-profit').textContent = fmt(d.profit);
+  $('r-profit').className = 'm-value ' + (d.profit >= 0 ? 'pos' : 'neg');
+  $('r-margin').textContent = d.margin_pct + '%';
+
+  const tbody = $('breakdown');
+  tbody.innerHTML = '';
+  d.breakdown.forEach(b => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + b.label + '</td>' +
+      '<td class="num">' + fmt(b.amount) + '</td>' +
+      '<td class="num">' + b.pct + '%</td>';
+    tbody.appendChild(tr);
+  });
+  $('r-total-2').textContent = fmt(d.total_cost);
+  $('r-pct-2').textContent = d.total_cost_pct + '%';
+
+  if (d.target_price !== null) {
+    $('target-price').textContent = fmt(d.target_price);
+  } else {
+    $('target-price').textContent = 'Tidak tercapai';
+  }
+  $('target-note').textContent = d.target_price_note;
+  $('market-note').textContent = d.marketplace + ': ' + d.marketplace_note;
+
+  $('result-card').classList.add('show');
+}
+
+$('calc-btn').addEventListener('click', calculate);
+$('fill-example').addEventListener('click', fillExample);
+$('clear-form').addEventListener('click', clearForm);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') calculate();
+  if (e.key === 'Escape') clearForm();
+});
+
+loadMarketplaces();
+loadSources();
+</script>
+</body>
+</html>
