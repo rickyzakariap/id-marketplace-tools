@@ -116,14 +116,16 @@ def calculate_margin(supplier_cost, selling_price, marketplace, category, weight
     payment_fee = selling_price * mp["payment_fee"]
     admin_fee = mp["admin_fee"]
     total_fees = commission + service_fee + payment_fee + admin_fee
-    shipping_cost = estimate_shipping(weight_kg, marketplace)
+    shipping_cost = round(estimate_shipping(weight_kg, marketplace))
     shipping_subsidy = min(shipping_cost, mp["max_shipping_subsidy"]) if free_ongkir else 0
     net_revenue = selling_price - total_fees
-    profit = net_revenue - supplier_cost
+    # Ongkir yang ditanggung seller (subsidi free ongkir) ikut mengurangi profit.
+    profit = net_revenue - supplier_cost - shipping_subsidy
     margin_pct = (profit / selling_price * 100) if selling_price > 0 else 0
     roi_pct = (profit / supplier_cost * 100) if supplier_cost > 0 else 0
     total_fee_rate = comm_rate + mp["service_fee"] + mp["payment_fee"]
-    break_even = supplier_cost / (1 - total_fee_rate) if total_fee_rate < 1 else supplier_cost * 2
+    fixed_cost = supplier_cost + admin_fee + shipping_subsidy
+    break_even = fixed_cost / (1 - total_fee_rate) if total_fee_rate < 1 else fixed_cost * 2
     recommended = int((break_even + 1000) / 1000) * 1000 + 1000
     recommended_x999 = recommended - 1 if recommended > 1000 else 0
     return {

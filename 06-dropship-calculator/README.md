@@ -5,8 +5,9 @@ Web tool to calculate dropship profit margins across Indonesian marketplaces.
 ## Features
 
 - Calculate profit after all marketplace fees (commission, service, payment, admin)
+- Deduct seller-borne shipping (free ongkir subsidy) from profit
 - Compare profit across 6 marketplaces (Tokopedia, Shopee, TikTok Shop, Lazada, Bukalapak, Blibli)
-- Break-even price calculation
+- Break-even price calculation that covers admin fee and shipping subsidy
 - Recommended selling price with X999 pricing
 - Free ongkir subsidy estimation
 - Category-specific commission rates
@@ -19,6 +20,12 @@ python3 server.py
 ```
 
 Zero dependencies. Python stdlib only.
+
+## Tests
+
+```bash
+python3 -m unittest -v test_server
+```
 
 ## Tech
 
