@@ -591,3 +591,14 @@
 - Lesson: Semua persen biaya dihitung dari harga jual (bukan HPP), konsisten dengan cara marketplace memotong dan dengan tool #35
 - Lesson: Target price harus dibatasi: kalau total persen biaya + target margin >= 100%, tidak ada harga jual yang bisa memenuhi target - tool harus bilang "tidak tercapai", bukan keluarkan angka negatif/nonsense
 - Next: Tambah mode batch (CSV banyak produk), integrasi tarif aktual per kategori kalau ada, bandingkan hasil dengan kuitansi seller nyata untuk validasi rate default
+
+## 2026-10-19 - Design Contract (DESIGN.md) + Pilot #36
+- Works: Ekstraksi design DNA dari bencho.dev (CSS bundle 504KB) jadi DESIGN.md di repo root: token light/dark, font Google Sans + Inter, skala tipografi, radius 28/20/12/999, aturan "kedalaman dari alpha bukan border", easing entrance/hover, focus ring, prefers-reduced-motion
+- Works: Prinsip inti bencho = monokrom, semua permukaan alpha hitam (--wash 6%) di atas putih, bukan border #e5e5e5; heading weight 500 bukan 700; motion spring cubic-bezier(.22,1,.36,1) dengan stagger 60ms
+- Works: Skill baru `marketplace-tool-ui` di ~/.config/opencode/skills/ yang mewajibkan baca DESIGN.md; prompt cron 10:00 ditambah baris "ikuti DESIGN.md" supaya tool #37+ konsisten otomatis
+- Works: Pilot di #36: chip row pill marketplace (ganti select), input di atas --wash, verdict slab, tabel borderless, stagger reveal, dark mode auto ikut OS + tombol toggle dengan localStorage dan no-flash inline script
+- Works: Logic kalkulasi tidak disentuh; 13 test tetap lulus, semua endpoint + static page verified via curl, ID JS vs HTML cocok, tanpa em dash
+- Issues: Playwright di mesin ini gagal render (libnspr4.so tidak ada) - verifikasi visual tidak bisa dilakukan sendiri, harus lihat di browser
+- Lesson: Konsistensi visual antar sesi hanya bisa dijamin lewat file aturan (DESIGN.md), bukan memori. Tanpa kontrak, 36 tool punya tema yang mirip tapi tidak seragam
+- Lesson: Design system monokrom (alpha-based) jauh lebih mudah diseragamkan daripada palet warna - tidak ada keputusan "warna apa" per komponen, cuma "alpha berapa"
+- Next: Roll out DESIGN.md ke tool lama secara bertahap, mulai dari yang paling sering dipakai; tampilkan hasil pilot #36 untuk approval sebelum retrofit besar

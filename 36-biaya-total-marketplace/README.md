@@ -19,7 +19,9 @@ Buka http://localhost:8036
 - Peringatan bila total biaya >= 30% dari harga jual
 - Target harga jual minimum agar margin target tercapai (atau "tidak tercapai" bila total biaya persen + target margin >= 100%)
 - Default rate per marketplace dan komponen biaya diground dari laporan publik 2026, semua bisa diedit
-- Light minimal theme, responsive, auto-fill contoh dari kuitansi nyata
+- Marketplace dipilih lewat chip row, tema terang/gelap otomatis ikut OS dengan tombol toggle
+- Visual mengikuti DESIGN.md (monokrom, kartu 28px, pill, entrance stagger, spring hover)
+- Responsive, auto-fill contoh dari kuitansi nyata
 
 ## API
 

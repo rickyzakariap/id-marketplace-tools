@@ -4,135 +4,410 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kalkulator Biaya Total Marketplace</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #fafafa;
-  --card: #fff;
-  --border: #e5e5e5;
-  --text: #1a1a1a;
-  --muted: #666;
-  --faint: #999;
-  --accent: #4a9;
-  --ok: #22c55e;
-  --warn: #d97706;
-  --err: #dc2626;
-  --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
 }
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: Inter, system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
-  padding: 20px;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 760px; margin: 0 auto; }
-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
-h1 { font-size: 20px; font-weight: 600; }
-header p { font-size: 13px; color: var(--muted); }
+
+.wrap { max-width: 820px; margin: 0 auto; }
+
+/* ---------- header ---------- */
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+.lede {
+  color: var(--ink-4);
+  margin-top: 14px;
+  max-width: 46ch;
+  text-wrap: balance;
+}
+.lede b { color: var(--ink); font-weight: 400; }
+
+.theme {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.16s;
+}
+.theme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--wash-hover);
+  opacity: 0;
+  transform: scale(0.86);
+  transition: opacity 0.15s, transform 0.26s var(--ease-pop);
+}
+.theme:hover { color: var(--ink); }
+.theme:hover::before { opacity: 1; transform: scale(1); }
+.theme:focus-visible,
+input:focus-visible,
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.theme svg { position: relative; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+/* ---------- cards ---------- */
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
   margin-bottom: 16px;
 }
-.card h2 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
-label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
-input[type=number], select {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: var(--mono);
-  background: var(--card);
-  color: var(--text);
+.card > h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
 }
-input[type=number]:focus, select:focus { outline: none; border-color: var(--accent); }
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-button {
-  padding: 9px 14px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--card);
-  color: var(--text);
+.fieldset + h2 { margin-top: 24px; }
+
+label {
+  display: block;
   font-size: 13px;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+input[type=number] {
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--elev);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+}
+html[data-theme="dark"] input[type=number] { background: var(--surface-2); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.row:last-child, .tri:last-child { margin-bottom: 0; }
+
+/* ---------- chips ---------- */
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  height: 36px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); color: var(--ink); }
+.chip:active { transform: scale(0.96); }
+.chip[data-on="true"] { background: var(--slab); color: var(--on-slab); }
+.sr-select {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- buttons ---------- */
+.btn-row { display: flex; gap: 8px; margin-top: 20px; }
+.btn {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--elev);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  font-family: inherit;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
 }
-button:hover { border-color: var(--accent); }
-button:disabled { opacity: 0.5; cursor: default; }
-button.primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+html[data-theme="dark"] .btn { background: var(--surface-2); }
+.btn:hover { color: var(--ink); background: var(--wash-hover); }
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.primary {
   width: 100%;
-  padding: 11px;
-  font-size: 14px;
-  margin-top: 16px;
+  height: 44px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slab);
+  color: var(--on-slab);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
 }
-.btn-row { display: flex; gap: 8px; margin-top: 12px; }
-.btn-row button { flex: 1; }
-.err { color: var(--err); font-size: 13px; margin-top: 8px; min-height: 0; }
-.err.show { margin-top: 10px; }
+.primary:hover { opacity: 0.9; }
+.primary:active { transform: scale(0.96); }
+.primary:disabled { opacity: 0.5; cursor: default; }
+
+.err { color: var(--ember); font-size: 13px; min-height: 0; }
+.err.show { margin-top: 12px; }
+
+.hint { font-size: 12.5px; color: var(--ink-5); margin-top: 10px; }
+
+/* ---------- result ---------- */
 .result { display: none; }
 .result.show { display: block; }
-.verdict { border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; font-size: 14px; }
-.verdict .v-label { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
-.verdict.sehat { border-left: 4px solid var(--ok); background: #f0fdf4; }
-.verdict.tipis { border-left: 4px solid var(--warn); background: #fffbeb; }
-.verdict.rugi { border-left: 4px solid var(--err); background: #fef2f2; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+}
+html[data-theme="dark"] .verdict { background: var(--surface-2); }
+.verdict .v-label {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.verdict .v-body { font-size: 14px; color: var(--ink-3); }
+.verdict.sehat { border-left: 3px solid var(--ok); }
+.verdict.tipis { border-left: 3px solid var(--ember); }
+.verdict.rugi { border-left: 3px solid var(--signal); }
+
 .warn30 {
   display: none;
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-  font-size: 13px;
-  border-left: 4px solid var(--err);
-  background: #fef2f2;
+  border-radius: 20px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  border-left: 3px solid var(--signal);
+  color: var(--ink-2);
 }
+html[data-theme="dark"] .warn30 { background: var(--surface-2); }
 .warn30.show { display: block; }
-.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.metric { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
-.metric .m-label { font-size: 12px; color: var(--muted); }
-.metric .m-value { font-family: var(--mono); font-size: 16px; font-weight: 600; margin-top: 2px; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--border); }
-th { color: var(--muted); font-weight: 500; font-size: 12px; }
-td.num, th.num { text-align: right; font-family: var(--mono); }
-td.pos { color: var(--ok); }
-td.neg { color: var(--err); }
-.target-box {
-  margin-top: 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 14px;
-  background: #fafafa;
+
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.metric {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
 }
-.target-box .big { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--accent); }
-.target-box p { font-size: 13px; color: var(--muted); margin-top: 4px; }
-.note { font-size: 12px; color: var(--faint); margin-top: 10px; }
-.hint { font-size: 12px; color: var(--faint); margin-top: 4px; }
-.src-item { font-size: 12px; color: var(--muted); padding: 5px 0; border-bottom: 1px dashed var(--border); }
-.src-item:last-child { border-bottom: none; }
+html[data-theme="dark"] .metric { background: var(--surface-2); }
+.metric .m-label { font-size: 12.5px; color: var(--ink-4); }
+.metric .m-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.m-value.pos { color: var(--ok); }
+.m-value.neg { color: var(--ember); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { padding: 9px 4px; text-align: left; border-bottom: 1px solid var(--line); }
+th { color: var(--ink-4); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tbody tr { transition: background-color 0.16s; }
+tbody tr:hover { background: var(--wash-hover); }
+tfoot td { border-bottom: 0; padding-top: 12px; font-weight: 500; }
+
+.target-box {
+  margin-top: 20px;
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 16px 18px;
+}
+html[data-theme="dark"] .target-box { background: var(--surface-2); }
+.target-box .big {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--signal);
+}
+.target-box p { font-size: 13px; color: var(--ink-3); margin-top: 5px; }
+
+.note { font-size: 12.5px; color: var(--ink-5); margin-top: 12px; }
+
+.src-item {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+.src-item:last-child { border-bottom: 0; }
+
+/* ---------- motion ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.card { animation: rise 0.62s var(--ease-out) both; }
+.card:nth-of-type(1) { animation-delay: 0ms; }
+.card:nth-of-type(2) { animation-delay: 60ms; }
+.card:nth-of-type(3) { animation-delay: 120ms; }
+.card:nth-of-type(4) { animation-delay: 180ms; }
+
+.result.show { animation: rise 0.5s var(--ease-out) both; }
+.result.show #breakdown tr, .result.show .metric { animation: rise 0.42s var(--ease-out) both; }
+.result.show .metric:nth-child(1) { animation-delay: 60ms; }
+.result.show .metric:nth-child(2) { animation-delay: 110ms; }
+.result.show .metric:nth-child(3) { animation-delay: 160ms; }
+.result.show .metric:nth-child(4) { animation-delay: 210ms; }
+
 @media (max-width: 768px) {
-  body { padding: 12px; }
-  .card { padding: 14px; }
-  .row, .tri, .metrics { grid-template-columns: 1fr; gap: 0; }
-  .metrics { gap: 8px; }
-  header { flex-direction: column; gap: 4px; }
-  h1 { font-size: 17px; }
+  body { padding: 20px 14px 48px; }
+  h1 { font-size: 31px; }
+  .card { padding: 18px; border-radius: 28px; }
+  .row, .tri { grid-template-columns: 1fr; gap: 12px; }
+  .metrics { grid-template-columns: 1fr; }
+  header { margin-bottom: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
 }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Kalkulator Biaya Total Marketplace</h1>
-    <p>Berapa persen sih potongan marketplace dari harga jualmu?</p>
+    <div>
+      <h1>Kalkulator Biaya Total Marketplace</h1>
+      <p class="lede">Berapa persen sih potongan marketplace dari harga jualmu? Masukkan produk dan biaya berlapis, lihat <b>total biaya, laba bersih, dan harga jual minimum</b>.</p>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema" title="Ganti tema">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
   </header>
 
   <div class="card">
@@ -151,25 +426,26 @@ td.neg { color: var(--err); }
         <input type="number" id="qty" min="1" step="1" value="1" placeholder="1">
       </div>
     </div>
-    <div class="row">
-      <div>
-        <label for="marketplace">Marketplace</label>
-        <select id="marketplace"></select>
-      </div>
+
+    <h2>Marketplace</h2>
+    <div class="chips" id="market-chips"></div>
+    <select class="sr-select" id="marketplace" tabindex="-1" aria-hidden="true"></select>
+    <p class="hint" id="market-hint"></p>
+
+    <div class="row" style="margin-top:14px">
       <div>
         <label for="komisi_admin_pct">Komisi / admin (%)</label>
         <input type="number" id="komisi_admin_pct" min="0" max="60" step="0.5" placeholder="10">
       </div>
-    </div>
-    <div class="row">
       <div>
         <label for="target_margin_pct">Target margin bersih (%)</label>
         <input type="number" id="target_margin_pct" min="1" max="90" step="1" placeholder="20">
       </div>
-      <div></div>
     </div>
+  </div>
 
-    <h2 style="margin-top:18px">Biaya berlapis (isi yang relevan)</h2>
+  <div class="card">
+    <h2>Biaya berlapis (isi yang relevan)</h2>
     <div class="tri">
       <div>
         <label for="gratis_ongkir_pct">Gratis ongkir (%)</label>
@@ -204,15 +480,15 @@ td.neg { color: var(--err); }
         <input type="number" id="retur_pct" min="0" max="100" step="0.5" placeholder="0">
       </div>
       <div>
-        <label for="retur_fee_rp">Ongkir retur ditanggung seller (Rp/kejadian)</label>
+        <label for="retur_fee_rp">Ongkir retur seller (Rp/kejadian)</label>
         <input type="number" id="retur_fee_rp" min="0" step="500" placeholder="10000">
       </div>
     </div>
-    <p class="hint">Semua persen dihitung dari harga jual. Biaya proses dihitung per transaksi, logistik/kemasan/retur per unit.</p>
+    <p class="hint">Semua persen dihitung dari harga jual. Biaya proses per transaksi, logistik/kemasan/retur per unit.</p>
 
     <div class="btn-row">
-      <button type="button" id="fill-example">Isi contoh</button>
-      <button type="button" id="clear-form">Bersihkan</button>
+      <button class="btn" type="button" id="fill-example">Isi contoh</button>
+      <button class="btn" type="button" id="clear-form">Bersihkan</button>
     </div>
     <button class="primary" id="calc-btn">Hitung biaya total</button>
     <div class="err" id="err"></div>
@@ -249,7 +525,7 @@ td.neg { color: var(--err); }
       <tbody id="breakdown"></tbody>
       <tfoot>
         <tr>
-          <td><strong>Total biaya</strong></td>
+          <td>Total biaya</td>
           <td class="num" id="r-total-2"></td>
           <td class="num" id="r-pct-2"></td>
         </tr>
@@ -274,21 +550,56 @@ td.neg { color: var(--err); }
 const $ = id => document.getElementById(id);
 const fmt = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
+let markets = [];
+
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('theme', t); } catch (e) {}
+}
+
+function initTheme() {
+  $('theme-btn').addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+}
+
 async function loadMarketplaces() {
   const res = await fetch('/api/marketplaces');
-  const list = await res.json();
+  markets = await res.json();
   const sel = $('marketplace');
+  const box = $('market-chips');
   sel.innerHTML = '';
-  list.forEach(m => {
+  box.innerHTML = '';
+  markets.forEach((m, i) => {
     const opt = document.createElement('option');
     opt.value = m.id;
     opt.textContent = m.name;
     sel.appendChild(opt);
+
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.dataset.on = i === 0 ? 'true' : 'false';
+    chip.textContent = m.name;
+    chip.addEventListener('click', () => selectMarket(m.id));
+    box.appendChild(chip);
   });
-  sel.addEventListener('change', () => {
-    const m = list.find(x => x.id === sel.value);
-    if (m) $('komisi_admin_pct').value = m.adminPct;
-  });
+  if (markets.length) selectMarket(markets[0].id);
+}
+
+function selectMarket(id) {
+  const sel = $('marketplace');
+  sel.value = id;
+  const chips = $('market-chips').children;
+  for (let i = 0; i < chips.length; i += 1) {
+    chips[i].dataset.on = markets[i] && markets[i].id === id ? 'true' : 'false';
+  }
+  const m = markets.find(x => x.id === id);
+  if (m) {
+    $('komisi_admin_pct').value = m.adminPct;
+    $('market-hint').textContent = m.note;
+  }
 }
 
 async function loadSources() {
@@ -307,8 +618,9 @@ async function loadSources() {
 async function fillExample() {
   const res = await fetch('/api/example');
   const e = await res.json();
-  ['marketplace', 'hpp', 'harga_jual', 'qty', 'komisi_admin_pct', 'gratis_ongkir_pct',
-   'iklan_pct', 'affiliate_pct', 'biaya_proses_rp', 'layanan_logistik_rp', 'kemasan_rp',
+  if (e.marketplace) selectMarket(e.marketplace);
+  ['hpp', 'harga_jual', 'qty', 'komisi_admin_pct', 'gratis_ongkir_pct', 'iklan_pct',
+   'affiliate_pct', 'biaya_proses_rp', 'layanan_logistik_rp', 'kemasan_rp',
    'retur_pct', 'retur_fee_rp', 'target_margin_pct'].forEach(id => {
     if (e[id] !== undefined) $(id).value = e[id];
   });
@@ -371,7 +683,8 @@ async function calculate() {
 function render(d) {
   const v = $('verdict');
   v.className = 'verdict ' + d.verdict;
-  v.innerHTML = '<div class="v-label">' + d.verdict_label + '</div>' + d.verdict_detail;
+  v.innerHTML = '<div class="v-label">' + d.verdict_label + '</div>' +
+    '<div class="v-body">' + d.verdict_detail + '</div>';
 
   const warn = $('warn30');
   if (d.warning_30) {
@@ -386,11 +699,13 @@ function render(d) {
   $('r-profit').textContent = fmt(d.profit);
   $('r-profit').className = 'm-value ' + (d.profit >= 0 ? 'pos' : 'neg');
   $('r-margin').textContent = d.margin_pct + '%';
+  $('r-margin').className = 'm-value ' + (d.margin_pct >= 0 ? 'pos' : 'neg');
 
   const tbody = $('breakdown');
   tbody.innerHTML = '';
-  d.breakdown.forEach(b => {
+  d.breakdown.forEach((b, i) => {
     const tr = document.createElement('tr');
+    tr.style.animationDelay = (60 + i * 40) + 'ms';
     tr.innerHTML = '<td>' + b.label + '</td>' +
       '<td class="num">' + fmt(b.amount) + '</td>' +
       '<td class="num">' + b.pct + '%</td>';
@@ -399,15 +714,14 @@ function render(d) {
   $('r-total-2').textContent = fmt(d.total_cost);
   $('r-pct-2').textContent = d.total_cost_pct + '%';
 
-  if (d.target_price !== null) {
-    $('target-price').textContent = fmt(d.target_price);
-  } else {
-    $('target-price').textContent = 'Tidak tercapai';
-  }
+  $('target-price').textContent = d.target_price !== null ? fmt(d.target_price) : 'Tidak tercapai';
   $('target-note').textContent = d.target_price_note;
   $('market-note').textContent = d.marketplace + ': ' + d.marketplace_note;
 
+  $('result-card').classList.remove('show');
+  void $('result-card').offsetWidth;
   $('result-card').classList.add('show');
+  $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 $('calc-btn').addEventListener('click', calculate);
@@ -418,6 +732,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') clearForm();
 });
 
+initTheme();
 loadMarketplaces();
 loadSources();
 </script>
