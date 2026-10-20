@@ -616,3 +616,15 @@
 - Lesson: Tool pemulihan akun wajib memperingatkan modus jasa pemulihan palsu dan permintaan OTP (Media Konsumen, 24 Sep 2026). Fitur keamanan ini bukan pelengkap, tapi bagian inti
 - Lesson: Bedakan dari #29 dana tertahan. #29 melacak saldo jangka panjang, tool ini memulihkan akses akun/toko dan membetulkan data identitas
 - Next: Tambah mode tracker kasus dengan tanggal banding dan pengingat follow-up, tombol salin checklist bukti, dan tautan resmi Seller Center per marketplace setelah URL-nya diverifikasi
+
+## 2026-10-20 - Retrofit DESIGN.md ke 23 Tool Lama
+- Works: Retrofit 23 tool (HTML statis + HTML di dalam server.py) dengan pola append `<style id="design-skin">` setelah style lama, jadi token baru menang lewat cascade tanpa menyentuh CSS lama
+- Works: Tiap tool dapat no-flash theme script di `<head>`, Google Fonts (Google Sans + Inter), dan tombol `theme-btn` (atau memakai tombol lama yang sudah ada) sehingga dark mode konsisten
+- Works: 0 em dash di semua file, `python3 -m py_compile` lulus untuk 06/08/09/34/27/31, `node --check` lulus untuk script inline, test #02 tetap lulus
+- Works: Runtime dicek per tool: static 200 + satu endpoint API 200. Spot check ulang: #34, #02, #13, #06 (POST /api/calculate), #27 semua 200
+- Issues: 7 tool Go (07,10,12,14,19,22,25) dan 2 extension popup (05,20) belum diretrofit; Go tidak terpasang di mesin Linux ini sehingga build/runtime tidak bisa diverifikasi lokal
+- Issues: Verifikasi visual tetap tidak bisa dilakukan sendiri (Playwright rusak, tidak ada browser). Yang bisa dijamin hanya struktur CSS, bukan hasil render
+- Lesson: Retrofit lewat override skin jauh lebih aman daripada rewrite: diff didominasi insertion (6435+ / 66-), dan 66 deletion itu hampir semua kode toggle tema lama serta link font lama
+- Lesson: Perhatikan konflik ID toggle lama. Sebagian tool sudah punya `themeBtn`; kalau skin menyembunyikan `#themeBtn` tanpa menambah `theme-btn`, tombol tema bisa hilang. Selalu cek ada satu tombol yang benar-benar terlihat
+- Lesson: File dengan Tailwind CDN (mis. #02) butuh `!important` di skin; file non-Tailwind tetap perlu `!important` karena style lama sering dideklarasikan setelah `:root`
+- Next: Retrofit sisa tool setelah ada keputusan soal Go toolchain dan extension popup; review tampilan di browser untuk #02 (Tailwind) dan #06 (HTML di dalam Python) yang paling berisiko
