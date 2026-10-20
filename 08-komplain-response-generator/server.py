@@ -139,6 +139,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Komplain Response Generator</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -200,12 +210,241 @@ textarea{min-height:80px;resize:vertical}
   .header h1{font-size:1.2rem}
 }
 </style>
+<style id="design-skin">
+:root {
+  color-scheme: light;
+  --ink-rgb: 23, 24, 26;
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+  --card: #ffffff;
+  --card-alt: #f1f1f0;
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+  --text: #17181a;
+  --text-dim: #5c5b56;
+  --text-muted: #85847e;
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+  --border: rgba(23, 24, 26, 0.08);
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --green: #15803d;
+  --red: #2231dd;
+  --yellow: #b8431c;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+  --accent: #17181a;
+  --accent-hover: #3c3b37;
+  --accent-light: rgba(23, 24, 26, 0.06);
+  --input-bg: #ffffff;
+  --input-border: rgba(23, 24, 26, 0.08);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --font-head: "Google Sans", "Inter", system-ui, sans-serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-rgb: 255, 255, 255;
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+  --card: #202020;
+  --card-alt: #181818;
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+  --text: #ffffff;
+  --text-dim: #9a9a9a;
+  --text-muted: #6b6b6b;
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --green: #34d17a;
+  --red: #3aa9ff;
+  --yellow: #ff7a4d;
+  --on-slab: #000000;
+  --slab: var(--ink);
+  --accent: #ffffff;
+  --accent-hover: #b4b4b4;
+  --accent-light: rgba(255, 255, 255, 0.06);
+  --input-bg: #202020;
+  --input-border: rgba(255, 255, 255, 0.08);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 900px; padding: 28px 20px 64px; }
+.header {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+}
+.header h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+.theme {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.16s, background-color 0.16s;
+}
+.theme:hover { color: var(--ink); background: var(--wash-hover); }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+.card,
+.result {
+  background: var(--wash);
+  border: 0;
+  border-radius: 28px;
+  padding: 24px;
+}
+.card h3,
+.result h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+label { color: var(--ink-4); font-size: 13px; }
+input, select, textarea {
+  background: var(--elev);
+  border: 0;
+  border-radius: 12px;
+  color: var(--ink);
+  font-family: var(--font-ui);
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea { background: var(--surface-2); }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border: 0;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.chip {
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink-3);
+  padding: 8px 14px;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); color: var(--ink); }
+.chip.active { background: var(--slab); color: var(--on-slab); border-color: transparent; }
+.chip:active { transform: scale(0.96); }
+.btn {
+  background: var(--slab);
+  color: var(--on-slab);
+  border: 0;
+  border-radius: 999px;
+  min-height: 44px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 500;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
+}
+.btn:hover { background: var(--slab); opacity: 0.9; }
+.btn:active { transform: scale(0.96); }
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.response-item {
+  background: var(--elev);
+  border: 0;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+html[data-theme="dark"] .response-item { background: var(--surface-2); }
+.copy-btn {
+  background: var(--wash);
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink-3);
+}
+.copy-btn:hover { background: var(--wash-hover); color: var(--ink); }
+.copy-btn.copied { background: var(--ok); color: var(--on-slab); }
+.badge {
+  border-radius: 20px;
+  background: var(--wash);
+  border-left: 3px solid var(--ink);
+  color: var(--ink-2);
+}
+.badge-sopan, .badge-tegas, .badge-maaf {
+  background: var(--wash);
+  color: var(--ink-2);
+}
+.detected-type {
+  background: var(--wash);
+  border: 0;
+  border-left: 3px solid var(--signal);
+  border-radius: 20px;
+  color: var(--ink-2);
+}
+.empty-state { color: var(--ink-5); }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.card,
+.result.show { animation: rise 0.62s var(--ease-out) both; }
+.card:nth-of-type(2) { animation-delay: 60ms; }
+.card:nth-of-type(3) { animation-delay: 120ms; }
+@media (max-width: 768px) {
+  .container { padding: 20px 14px 48px; }
+  .header h1 { font-size: 31px; }
+  .card, .result { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
 </head>
 <body>
 <div class="container">
   <div class="header">
     <h1>Komplain Response Generator</h1>
-    <button class="theme-toggle" onclick="toggleTheme()">Dark</button>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema" title="Ganti tema">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
   </div>
 
   <div class="grid">
@@ -290,25 +529,16 @@ let selectedType = 'terlambat';
 let selectedTone = 'sopan';
 
 // Theme toggle
-function toggleTheme() {
-  const body = document.body;
-  const isDark = body.hasAttribute('data-theme');
-  if (isDark) {
-    body.removeAttribute('data-theme');
-    document.querySelector('.theme-toggle').textContent = 'Dark';
-    localStorage.setItem('theme', 'light');
-  } else {
-    body.setAttribute('data-theme', 'dark');
-    document.querySelector('.theme-toggle').textContent = 'Light';
-    localStorage.setItem('theme', 'dark');
-  }
+function initTheme() {
+  const btn = document.getElementById('theme-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
 }
-
-// Load saved theme
-if (localStorage.getItem('theme') === 'dark') {
-  document.body.setAttribute('data-theme', 'dark');
-  document.querySelector('.theme-toggle').textContent = 'Light';
-}
+initTheme();
 
 // Chip selection
 document.getElementById('typeChips').addEventListener('click', function(e) {

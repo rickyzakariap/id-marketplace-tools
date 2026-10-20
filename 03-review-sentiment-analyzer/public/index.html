@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Review Sentiment Analyzer</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #fafafa;
@@ -446,11 +456,271 @@ textarea.error {
   .stats-row { grid-template-columns: 1fr 1fr; }
 }
 </style>
+<style id="design-skin">
+:root {
+  color-scheme: light;
+  --ink-rgb: 23, 24, 26;
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+  --text: #17181a;
+  --text-dim: #5c5b56;
+  --text-muted: #85847e;
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+  --border: rgba(23, 24, 26, 0.08);
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --green: #15803d;
+  --red: #2231dd;
+  --yellow: #b8431c;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+  --accent: #17181a;
+  --accent-hover: #3c3b37;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --font-head: "Google Sans", "Inter", system-ui, sans-serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-rgb: 255, 255, 255;
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+  --text: #ffffff;
+  --text-dim: #9a9a9a;
+  --text-muted: #6b6b6b;
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --green: #34d17a;
+  --red: #3aa9ff;
+  --yellow: #ff7a4d;
+  --on-slab: #000000;
+  --slab: var(--ink);
+  --accent: #ffffff;
+  --accent-hover: #b4b4b4;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  max-width: 900px;
+  -webkit-font-smoothing: antialiased;
+}
+h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+.subtitle { color: var(--ink-4); font-size: 15px; margin-bottom: 28px; }
+.theme {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 0 !important;
+  transition: color 0.16s, background-color 0.16s;
+}
+.theme:hover { color: var(--ink); background: var(--wash-hover) !important; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+.theme-fixed { position: fixed; top: 16px; right: 16px; z-index: 50; }
+.input-section {
+  background: var(--wash);
+  border: 0;
+  border-radius: 28px;
+  padding: 24px;
+}
+.input-section label {
+  color: var(--ink-4);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+}
+textarea {
+  background: var(--elev);
+  border: 0;
+  border-radius: 12px;
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+html[data-theme="dark"] textarea { background: var(--surface-2); }
+textarea:focus {
+  outline: none;
+  border: 0;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+textarea.error { border: 0; box-shadow: 0 0 0 2px var(--signal); }
+.error-msg { color: var(--signal); }
+.btn {
+  background: var(--slab);
+  color: var(--on-slab);
+  border: 0;
+  border-radius: 999px;
+  min-height: 40px;
+  padding: 8px 18px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
+}
+.btn:hover { background: var(--slab); opacity: 0.9; }
+.btn:active { transform: scale(0.96); }
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.btn.secondary {
+  background: var(--wash);
+  border: 0;
+  color: var(--ink-2);
+}
+.btn.secondary:hover { background: var(--wash-hover); color: var(--ink); }
+.btn.secondary.active { background: var(--slab); color: var(--on-slab); }
+.stat-card {
+  background: var(--wash);
+  border: 0;
+  border-radius: 28px;
+  padding: 20px;
+}
+.stat-label {
+  color: var(--ink-5);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.stat-value.green { color: var(--ok); }
+.stat-value.yellow { color: var(--ember); }
+.stat-value.red { color: var(--signal); }
+.section-title {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  color: var(--ink);
+}
+.dist-track,
+.theme-bar-track,
+.keyword-bar { background: var(--wash); border-radius: 999px; }
+.dist-fill,
+.theme-bar-fill,
+.keyword-bar-fill { border-radius: 999px; }
+.dist-fill.green, .keyword-bar-fill.green { background: var(--ok); }
+.dist-fill.yellow { background: var(--ember); }
+.dist-fill.red, .keyword-bar-fill.red { background: var(--signal); }
+.dist-label { font-family: var(--font-mono); color: var(--ink-3); }
+.dist-count, .theme-count, .keyword-count { font-family: var(--font-mono); color: var(--ink-4); }
+.theme-row { border-bottom: 1px solid var(--line); }
+.theme-icon, .theme-name { color: var(--ink-3); }
+.theme-status.positive { color: var(--ok); }
+.theme-status.negative { color: var(--signal); }
+.theme-status.neutral { color: var(--ember); }
+.keyword-word { font-family: var(--font-mono); color: var(--ink-3); }
+.insight-list li {
+  background: var(--wash);
+  border-left: 3px solid var(--ink);
+  border-radius: 20px;
+  color: var(--ink-2);
+  padding: 10px 14px;
+}
+.review-sample { background: var(--wash); border-radius: 20px; padding: 12px 14px; }
+.review-score { font-family: var(--font-mono); }
+.review-score.pos { color: var(--ok); }
+.review-score.neg { color: var(--signal); }
+.review-score.neu { color: var(--ember); }
+.review-meta { color: var(--ink-5); }
+.reviews-table { font-size: 13px; }
+.reviews-table th {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  border-bottom: 1px solid var(--line);
+}
+.reviews-table td { border-bottom: 1px solid var(--line); }
+.reviews-table tr:hover td { background: var(--wash); }
+.badge {
+  border-radius: 20px;
+  background: var(--wash);
+  border-left: 3px solid var(--ink);
+  color: var(--ink-2);
+  padding: 2px 10px;
+}
+.badge.positive { background: var(--wash); color: var(--ok); border-left-color: var(--ok); }
+.badge.negative { background: var(--wash); color: var(--signal); border-left-color: var(--signal); }
+.badge.neutral { background: var(--wash); color: var(--ember); border-left-color: var(--ember); }
+.hint { color: var(--ink-5); }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.input-section,
+.stat-card,
+.insight-list li,
+.review-sample,
+.theme-row { animation: rise 0.62s var(--ease-out) both; }
+.stat-card:nth-child(2) { animation-delay: 60ms; }
+.stat-card:nth-child(3) { animation-delay: 120ms; }
+.stat-card:nth-child(4) { animation-delay: 180ms; }
+@media (max-width: 640px) {
+  body { padding: 20px 14px 48px; }
+  h1 { font-size: 31px; }
+  .input-section, .stat-card { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
 </head>
 <body>
 
 <h1>Review Sentiment Analyzer</h1>
-<button onclick="toggleTheme()" id="themeBtn" style="position:fixed;top:16px;right:16px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.78rem;color:var(--text-dim);z-index:50">Dark</button>
+<button class="theme theme-fixed" id="themeBtn" type="button" aria-label="Ganti tema" title="Ganti tema">
+  <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+</button>
 <p class="subtitle">Analisa sentimen review marketplace Indonesia. Paste review atau upload CSV.</p>
 
 <div class="input-section">
@@ -566,16 +836,16 @@ $('reviewInput').addEventListener('keydown', function(e) {
 });
 
 // Theme toggle
-const savedTheme = localStorage.getItem('theme') || 'light';
-if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+function initTheme() {
+  const btn = document.getElementById('theme-btn') || document.getElementById('themeBtn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
 }
-document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+initTheme();
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {

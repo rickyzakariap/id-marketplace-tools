@@ -152,7 +152,16 @@ HTML_PAGE = r"""<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dropship Margin Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -226,12 +235,250 @@ select{cursor:pointer}
 .recommend strong{color:var(--accent)}
 .empty{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.88rem}
 </style>
+<style id="design-skin">
+:root {
+  color-scheme: light;
+  --ink-rgb: 23, 24, 26;
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+  --card: #ffffff;
+  --card-alt: #f1f1f0;
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+  --text: #17181a;
+  --text-dim: #5c5b56;
+  --text-muted: #85847e;
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+  --border: rgba(23, 24, 26, 0.08);
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --green: #15803d;
+  --red: #2231dd;
+  --yellow: #b8431c;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+  --accent: #17181a;
+  --accent-hover: #3c3b37;
+  --accent-light: rgba(23, 24, 26, 0.06);
+  --input-bg: #ffffff;
+  --input-border: rgba(23, 24, 26, 0.08);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --font-head: "Google Sans", "Inter", system-ui, sans-serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-rgb: 255, 255, 255;
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+  --card: #202020;
+  --card-alt: #181818;
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+  --text: #ffffff;
+  --text-dim: #9a9a9a;
+  --text-muted: #6b6b6b;
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --green: #34d17a;
+  --red: #3aa9ff;
+  --yellow: #ff7a4d;
+  --on-slab: #000000;
+  --slab: var(--ink);
+  --accent: #ffffff;
+  --accent-hover: #b4b4b4;
+  --accent-light: rgba(255, 255, 255, 0.06);
+  --input-bg: #202020;
+  --input-border: rgba(255, 255, 255, 0.08);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 1000px; }
+.header { align-items: flex-start; margin-bottom: 4px; }
+h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.subtitle { color: var(--ink-4); font-size: 15px; margin-bottom: 28px; }
+.theme {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.16s, background-color 0.16s;
+}
+.theme:hover { color: var(--ink); background: var(--wash-hover); }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+.card {
+  background: var(--wash);
+  border: 0;
+  border-radius: 28px;
+  padding: 24px;
+}
+.section-label { color: var(--ink-4); letter-spacing: 0.04em; }
+label { color: var(--ink-4); font-size: 13px; }
+input, select {
+  background: var(--elev);
+  border: 0;
+  border-radius: 12px;
+  color: var(--ink);
+  font-family: var(--font-ui);
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select { background: var(--surface-2); }
+input[type=number] { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+input:focus, select:focus {
+  outline: none;
+  border: 0;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.check-row input[type=checkbox] { accent-color: var(--ink); }
+.example-row span { color: var(--ink-5); }
+.example-btn {
+  background: var(--wash);
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink-2);
+  padding: 4px 12px;
+}
+.example-btn:hover { background: var(--wash-hover); color: var(--ink); }
+.chip {
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink-3);
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); color: var(--ink); }
+.chip.active { background: var(--slab); color: var(--on-slab); border-color: transparent; }
+.chip:active { transform: scale(0.96); }
+.validation {
+  background: var(--wash);
+  border: 0;
+  border-left: 3px solid var(--signal);
+  border-radius: 20px;
+  color: var(--ink-2);
+}
+[data-theme="dark"] .validation { background: var(--wash); border-color: transparent; border-left-color: var(--signal); color: var(--ink-2); }
+.btn {
+  background: var(--slab);
+  color: var(--on-slab);
+  border: 0;
+  border-radius: 999px;
+  min-height: 44px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 500;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
+}
+.btn:hover { background: var(--slab); opacity: 0.9; }
+.btn:active { transform: scale(0.96); }
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.btn-sec {
+  background: var(--wash);
+  color: var(--ink-2);
+  border: 0;
+}
+.btn-sec:hover { background: var(--wash-hover); color: var(--ink); }
+.result-card {
+  background: var(--elev);
+  border: 0;
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+html[data-theme="dark"] .result-card { background: var(--surface-2); }
+.result-card.best { border-left: 3px solid var(--ok); }
+.result-card.loss { border-left: 3px solid var(--signal); }
+.mp-name { font-family: var(--font-head); font-size: 17px; font-weight: 500; letter-spacing: -0.02em; }
+.badge {
+  border-radius: 20px;
+  background: var(--wash);
+  border-left: 3px solid var(--ink);
+  color: var(--ink-2);
+}
+.badge-green, .badge-gray { background: var(--wash); color: var(--ink-2); }
+.badge-red { background: var(--wash); color: var(--ink-2); border-left-color: var(--signal); }
+[data-theme="dark"] .badge-red { background: var(--wash); }
+.fee-label { color: var(--ink-5); }
+.fee-value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+.summary-row { border-top: 1px solid var(--line); }
+.val-green { color: var(--ok); }
+.val-red { color: var(--signal); }
+.recommend { background: var(--wash); border-radius: 20px; color: var(--ink-3); }
+.recommend strong { color: var(--ink); }
+.recommend span { color: var(--ink-5) !important; }
+.empty { color: var(--ink-5); }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.card,
+.result-card { animation: rise 0.62s var(--ease-out) both; }
+.result-card:nth-of-type(2) { animation-delay: 60ms; }
+.result-card:nth-of-type(3) { animation-delay: 120ms; }
+.result-card:nth-of-type(4) { animation-delay: 180ms; }
+@media (max-width: 768px) {
+  body { padding: 20px 14px 48px; }
+  h1 { font-size: 31px; }
+  .card, .result-card { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
 </head>
 <body>
 <div class="container">
   <div class="header">
     <h1>Dropship Margin Calculator</h1>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">Dark</button>
+    <button class="theme" id="themeBtn" type="button" aria-label="Ganti tema" title="Ganti tema">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
   </div>
   <p class="subtitle">Hitung profit dropship lintas marketplace Indonesia</p>
 
@@ -295,16 +542,16 @@ select{cursor:pointer}
 
 <script>
 // Theme toggle
-const savedTheme = localStorage.getItem('theme') || 'light';
-document.documentElement.setAttribute('data-theme', savedTheme);
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  document.getElementById('themeBtn').textContent = next === 'dark' ? 'Light' : 'Dark';
+function initTheme() {
+  const btn = document.getElementById('theme-btn') || document.getElementById('themeBtn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
 }
-document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+initTheme();
 
 const EXAMPLES = {
   fashion: {supplier:35000,selling:79000,weight:0.3},
