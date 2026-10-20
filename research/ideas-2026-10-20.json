@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-20",
+  "research_window": "Berita 14 sampai 20 Oktober 2026, ditambah kasus Agustus dan September 2026 untuk konteks",
+  "sources": [
+    {
+      "title": "Shopee Tiba-Tiba 'Mematikan' Toko Saya, Tidak Bisa Nempel Voucher Apa Pun",
+      "publisher": "Media Konsumen",
+      "date": "16 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/16/surat-pembaca/shopee-tiba-tiba-mematikan-toko-saya-tidak-bisa-nempel-voucher-apa-pun",
+      "facts": [
+        "Toko yang hampir 10 tahun berjalan tiba-tiba tidak bisa memasang voucher kategori Makanan dan Minuman.",
+        "Status Star Seller dicabut pada hari yang sama tanpa peringatan.",
+        "CS menyebut ada kejanggalan transaksi, tetapi tidak menyebut ID pesanan yang dimaksud.",
+        "Seller melaporkan lonjakan pesanan dari sekitar 100 resi per hari menjadi 1.000 resi per hari pada periode event."
+      ]
+    },
+    {
+      "title": "Dana Penjualan Shopee Saya Tertahan karena NIK KTP Terdaftar di Akun yang Sudah Dihapus",
+      "publisher": "Media Konsumen",
+      "date": "19 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/19/surat-pembaca/dana-penjualan-shopee-saya-tertahan-karena-nik-ktp-terdaftar-di-akun-yang-sudah-dihapus",
+      "facts": [
+        "Pencairan dana tertahan karena NIK KTP masih tertaut ke akun yang dibatasi sekitar 7 tahun lalu.",
+        "Akun lama tersebut sudah dihapus pada Agustus 2026.",
+        "Seller sudah beberapa kali live chat dan mengisi formulir, tetapi mendapat jawaban template yang sama.",
+        "Di kolom komentar, kasus dilaporkan selesai setelah ada arahan tambahan dan perhatian publik."
+      ]
+    },
+    {
+      "title": "Akun Shopee Pakai Nama KTP Saya dan Foto AI, Dua Toko Saya Kena Ulasan Bintang 1",
+      "publisher": "Media Konsumen",
+      "date": "14 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/14/surat-pembaca/akun-shopee-pakai-nama-ktp-saya-dan-foto-ai-dua-toko-saya-kena-ulasan-bintang-1",
+      "facts": [
+        "Nama lengkap sesuai KTP dan foto yang diduga dibuat dengan AI dipakai akun lain.",
+        "Akun tersebut membeli di dua toko milik pelapor, lalu memberi ulasan bintang 1 pada kedua pesanan.",
+        "Platform meminta izin pembeli untuk menghapus ulasan, padahal pembeli yang dimaksud justru akun yang dilaporkan memakai identitas pelapor."
+      ]
+    },
+    {
+      "title": "NIK KTP Saya Digunakan Orang Lain, Saya Tak Bisa Daftar Shopee Affiliate karena Data Dikunci di Akun Penipu",
+      "publisher": "Media Konsumen",
+      "date": "22 Agustus 2026",
+      "url": "https://mediakonsumen.com/2026/08/22/surat-pembaca/nik-ktp-saya-digunakan-orang-lain-saya-tak-bisa-daftar-shopee-affiliate-karena-data-dikunci-di-akun-penipu",
+      "facts": [
+        "NIK, NPWP, dan rekening BRI dilaporkan terdaftar di akun asing tanpa izin.",
+        "Akun penipu sudah diblokir, tetapi data korban tetap dikunci di akun tersebut.",
+        "Pelapor merujuk UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi dan meminta pemutusan tautan data."
+      ]
+    },
+    {
+      "title": "Tertipu Modus Pemulihan Akun Shopee, Pelaku Transaksi SPayLater Rp10,951 Juta ke Merchant KITAR",
+      "publisher": "Media Konsumen",
+      "date": "24 September 2026",
+      "url": "https://mediakonsumen.com/2026/09/24/surat-pembaca/tertipu-modus-pemulihan-akun-shopee-pelaku-transaksi-spaylater-rp10951-juta-ke-merchant-kitar",
+      "facts": [
+        "Pelaku mengaku sebagai petugas platform dan mengarahkan korban memasukkan kode OTP dengan alasan pemulihan akun.",
+        "Muncul transaksi SPayLater Rp 10,951 juta ke merchant yang tidak dikenal korban.",
+        "Korban melapor ke kepolisian dan menghubungi OJK 157."
+      ]
+    },
+    {
+      "title": "UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi",
+      "publisher": "JDIH BPK RI",
+      "date": "17 Oktober 2022",
+      "url": "https://peraturan.bpk.go.id/Details/229798/uu-no-27-tahun-2022",
+      "facts": [
+        "Memberikan hak kepada pemilik data untuk memperbarui, memperbaiki, dan meminta penghapusan data pribadi.",
+        "Relevan untuk kasus NIK dan identitas yang tertaut ke akun lain."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Suspensi toko tanpa penjelasan spesifik dan tanpa bukti yang bisa dibantah",
+      "description": "Seller kehilangan voucher, status, dan pesanan mendadak, lalu hanya mendapat jawaban template bahwa sistem menemukan kejanggalan. Seller tidak tahu aturan mana yang dilanggar atau pesanan mana yang dimaksud, sehingga tidak bisa menyusun banding yang efektif. Kasus 16 Oktober 2026 menunjukkan toko berusia hampir 10 tahun bisa terhenti tanpa peringatan.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 16 Oktober 2026"
+      ]
+    },
+    {
+      "category": "NIK, NPWP, atau rekening terkunci di akun lama sehingga dana tidak bisa dicairkan",
+      "description": "Aturan NIK harus sama dengan rekening bank membuat seller terjebak ketika NIK pernah dipakai akun lama yang sudah dibatasi atau dihapus. Seller hanya mendapat jawaban template dan tidak tahu jalur pembetulan data. Kasus 19 Oktober 2026 dan 22 Agustus 2026 menunjukkan pola yang sama.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 19 Oktober 2026",
+        "Media Konsumen, 22 Agustus 2026"
+      ]
+    },
+    {
+      "category": "Identitas seller dipakai akun lain untuk menyerang reputasi toko",
+      "description": "Nama sesuai KTP dan foto mirip AI dipakai akun lain untuk membuat pesanan fiktif lalu memberi ulasan bintang 1. Seller diminta mendapatkan izin pembeli untuk menghapus ulasan, padahal pembeli tersebut adalah akun yang dilaporkan. Seller butuh kronologi, bukti, dan jalur pelaporan data pribadi, bukan hanya tombol lapor ulasan.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 14 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Jasa pemulihan akun palsu menargetkan seller yang panik",
+      "description": "Pelaku mengaku petugas platform, meminta OTP, dan memicu transaksi paylater. Seller yang tokonya terhenti adalah target empuk karena sedang mencari jalan pintas. Tool pemulihan harus memperingatkan hal ini, bukan hanya membuat surat.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 24 September 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#29 dana-tertahan-tracker melacak saldo yang ditahan dan kronologi pencairan, bukan pemulihan akses toko atau pembetulan NIK.",
+    "#30 hak-tolak-seller fokus pada hak menolak perubahan kebijakan, bukan banding suspensi.",
+    "#19 komplain-tracker melacak komplain pembeli dengan SLA, bukan sengketa akun dengan platform.",
+    "#31 biaya-retur-tracker menghitung kerugian retur, bukan kerugian akibat toko terhenti.",
+    "#36 biaya-total-marketplace menghitung biaya operasional, bukan dampak suspend atau masalah identitas."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pemulih Toko Marketplace",
+      "number": 37,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Panduan pemulihan toko untuk empat kasus: toko dibekukan, NIK terkunci, akun dibajak, dan identitas dipakai. Menghitung potensi laba hilang per hari dan total kerugian, menampilkan dugaan penyebab, bukti yang harus disiapkan, langkah 24 jam pertama, larangan, jalur eskalasi, dan generator surat banding dalam Bahasa Indonesia.",
+      "why": "38 tool sebelumnya fokus pada biaya, pajak, retur, harga, atau data pasar. Belum ada tool yang membantu seller saat akses tokonya dicabut, padahal ini momen paling mendesak: setiap hari terhenti berarti omzet dan laba hilang, sementara seller hanya mendapat jawaban template. Kasus 14, 16, dan 19 Oktober 2026 menunjukkan pain point ini aktif dan belum tersentuh.",
+      "grounding": "Tidak ada tarif atau statistik baru yang dikarang. Semua angka kerugian dihitung dari input seller (pesanan per hari, nilai pesanan, margin, hari terhenti, biaya tetap). Sumber kasus dan UU PDP dicantumkan di UI.",
+      "not_repeat": "Berbeda dari #29 yang melacak dana tertahan jangka panjang. Tool ini fokus pada pemulihan akses akun/toko, pembetulan data identitas, dan surat banding."
+    }
+  ]
+}

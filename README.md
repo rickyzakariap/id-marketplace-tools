@@ -42,6 +42,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 34 | [34-insentif-permen-2026](34-insentif-permen-2026/) | Web | Python (stdlib) | Check eligibility for 50% marketplace service fee discount (Permen UMKM 3/2026 final text): exclusions, savings per marketplace, SAPA UMKM application steps, objection letter generator |
 | 35 | [35-program-diskon-checker](35-program-diskon-checker/) | Web | Node.js + Express | Check margin after marketplace discount programs (flash sale, voucher, free ongkir): verdict safe/thin/loss, pricing buffer price to stay profitable, seller center audit checklist |
 | 36 | [36-biaya-total-marketplace](36-biaya-total-marketplace/) | Web | Node.js + Express | All-in seller cost calculator: stack commission, free shipping, ads, affiliate, order processing, logistics, packaging and returns into one total cost %, verdict and target price |
+| 37 | [37-pemulih-toko](37-pemulih-toko/) | Web | Node.js + Express | Store recovery assistant for suspended shops, locked NIK, hijacked accounts and identity abuse: loss estimate, evidence checklist and appeal letter generator |
 
 ## Contributing
 

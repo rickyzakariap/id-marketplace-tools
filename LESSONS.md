@@ -602,3 +602,17 @@
 - Lesson: Konsistensi visual antar sesi hanya bisa dijamin lewat file aturan (DESIGN.md), bukan memori. Tanpa kontrak, 36 tool punya tema yang mirip tapi tidak seragam
 - Lesson: Design system monokrom (alpha-based) jauh lebih mudah diseragamkan daripada palet warna - tidak ada keputusan "warna apa" per komponen, cuma "alpha berapa"
 - Next: Roll out DESIGN.md ke tool lama secara bertahap, mulai dari yang paling sering dipakai; tampilkan hasil pilot #36 untuk approval sebelum retrofit besar
+
+## 2026-10-20 - Pemulih Toko Marketplace
+- Works: Research via Google News RSS `when:7d` menemukan pain point baru yang belum tersentuh: suspensi toko tanpa alasan spesifik (Media Konsumen, 16 Okt 2026), NIK terkunci di akun lama sehingga dana tidak bisa dicairkan (Media Konsumen, 19 Okt 2026), dan identitas dipakai akun lain untuk menyerang reputasi (Media Konsumen, 14 Okt 2026)
+- Works: Node.js + Express, 4 kasus (toko dibekukan, NIK terkunci, akun dibajak, identitas dipakai), kalkulator dampak dari input seller, checklist bukti, langkah 24 jam, larangan, jalur eskalasi, dan generator surat banding
+- Works: Semua angka kerugian dihitung dari input (pesanan/hari, nilai pesanan, margin, hari terhenti, biaya tetap), tidak ada tarif atau statistik baru yang dikarang. Sumber per kasus dan UU PDP 27/2022 ditampilkan di UI
+- Works: 17 unit test lulus (matematika dampak, severity, fallback issue/platform, validasi, 4 varian surat, sumber, larangan em dash). Runtime: static 200, semua endpoint 200, 4 branch analyze 200, invalid 400, API 404, surat NIK 200
+- Works: UI mengikuti DESIGN.md (token monokrom, kartu 28px, pill 999px, Google Sans weight 500, entrance stagger 60ms, dark mode no-flash, reduced motion, tanpa em dash)
+- Issues: `npm` tidak ada di PATH default mesin ini, harus pakai `~/.nvm/versions/node/v22.23.0/bin/npm`. Node sistem v18, tool diuji dengan Node v22
+- Issues: Kasus 19 Okt sempat selesai setelah perhatian publik, tetapi tool tidak boleh menjanjikan jalur media sebagai solusi. Media konsumen hanya opsi eskalasi terakhir, bukan jaminan
+- Lesson: Pain point paling mendesak bukan selalu biaya, tetapi kehilangan akses. Saat toko mati, seller tidak butuh kalkulator fee, mereka butuh kronologi, bukti, dan surat yang memaksa platform memberi alasan tertulis
+- Lesson: Jangan menampilkan "peluang pulih" atau SLA palsu. Yang bisa dihitung hanya kerugian dari input seller dan langkah proses. Selebihnya harus jujur: tidak ada jaminan
+- Lesson: Tool pemulihan akun wajib memperingatkan modus jasa pemulihan palsu dan permintaan OTP (Media Konsumen, 24 Sep 2026). Fitur keamanan ini bukan pelengkap, tapi bagian inti
+- Lesson: Bedakan dari #29 dana tertahan. #29 melacak saldo jangka panjang, tool ini memulihkan akses akun/toko dan membetulkan data identitas
+- Next: Tambah mode tracker kasus dengan tanggal banding dan pengingat follow-up, tombol salin checklist bukti, dan tautan resmi Seller Center per marketplace setelah URL-nya diverifikasi

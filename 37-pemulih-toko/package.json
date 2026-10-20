@@ -1,0 +1,14 @@
+{
+  "name": "pemulih-toko",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Panduan pemulihan toko marketplace yang dibekukan, NIK terkunci, akun dibajak, atau identitas dipakai",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/recovery.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

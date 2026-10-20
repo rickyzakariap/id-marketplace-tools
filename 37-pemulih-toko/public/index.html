@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemulih Toko Marketplace</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 840px; margin: 0 auto; }
+
+/* ---------- header ---------- */
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+.lede {
+  color: var(--ink-4);
+  margin-top: 14px;
+  max-width: 52ch;
+  text-wrap: balance;
+}
+.lede b { color: var(--ink); font-weight: 400; }
+
+.theme {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.16s;
+}
+.theme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--wash-hover);
+  opacity: 0;
+  transform: scale(0.86);
+  transition: opacity 0.15s, transform 0.26s var(--ease-pop);
+}
+.theme:hover { color: var(--ink); }
+.theme:hover::before { opacity: 1; transform: scale(1); }
+.theme:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.theme svg { position: relative; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+/* ---------- cards ---------- */
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card > h2,
+.card h2.sub {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.card h2.sub { margin-top: 22px; }
+
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+input[type=number],
+input[type=text],
+textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--elev);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+}
+input[type=number] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea { background: var(--surface-2); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.row:last-child, .tri:last-child { margin-bottom: 0; }
+
+/* ---------- chips ---------- */
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  height: 36px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); color: var(--ink); }
+.chip:active { transform: scale(0.96); }
+.chip[data-on="true"] { background: var(--slab); color: var(--on-slab); }
+.sr-select {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- buttons ---------- */
+.btn-row { display: flex; gap: 8px; margin-top: 20px; }
+.btn {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--elev);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+html[data-theme="dark"] .btn { background: var(--surface-2); }
+.btn:hover { color: var(--ink); background: var(--wash-hover); }
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.primary {
+  width: 100%;
+  height: 44px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slab);
+  color: var(--on-slab);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
+}
+.primary:hover { opacity: 0.9; }
+.primary:active { transform: scale(0.96); }
+.primary:disabled { opacity: 0.5; cursor: default; }
+
+.err { color: var(--ember); font-size: 13px; min-height: 0; }
+.err.show { margin-top: 12px; }
+
+.hint { font-size: 12.5px; color: var(--ink-5); margin-top: 10px; }
+.note { font-size: 12.5px; color: var(--ink-5); margin-top: 12px; }
+
+/* ---------- result ---------- */
+.result { display: none; }
+.result.show { display: block; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+}
+html[data-theme="dark"] .verdict { background: var(--surface-2); }
+.verdict .v-label {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.verdict .v-body { font-size: 14px; color: var(--ink-3); }
+.verdict.baru { border-left: 3px solid var(--ok); }
+.verdict.waspada { border-left: 3px solid var(--signal); }
+.verdict.tinggi { border-left: 3px solid var(--ember); }
+.verdict.kritis { border-left: 3px solid var(--ember); }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.metric {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
+}
+html[data-theme="dark"] .metric { background: var(--surface-2); }
+.metric .m-label { font-size: 12.5px; color: var(--ink-4); }
+.metric .m-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 19px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.m-value.neg { color: var(--ember); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { padding: 9px 4px; text-align: left; border-bottom: 1px solid var(--line); }
+th { color: var(--ink-4); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tbody tr { transition: background-color 0.16s; }
+tbody tr:hover { background: var(--wash-hover); }
+tfoot td { border-bottom: 0; padding-top: 12px; font-weight: 500; }
+
+.result h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 24px 0 10px;
+}
+.result h2:first-of-type { margin-top: 0; }
+
+ol, ul { padding-left: 20px; }
+li { font-size: 13.5px; color: var(--ink-2); margin-bottom: 8px; }
+li::marker { color: var(--ink-4); }
+.action-title { display: block; font-weight: 500; color: var(--ink); }
+.action-detail { display: block; color: var(--ink-3); margin-top: 2px; }
+
+.source-mini, .src-item {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.source-mini:last-child, .src-item:last-child { border-bottom: 0; }
+.source-mini a, .src-item a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
+.source-meta { display: block; color: var(--ink-5); margin-top: 2px; }
+
+/* ---------- letter ---------- */
+.letter-output { display: none; margin-top: 18px; }
+.letter-output.show { display: block; }
+.letter-subject {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+textarea.letter {
+  min-height: 320px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.65;
+  resize: vertical;
+}
+.copy-row { display: flex; gap: 8px; margin-top: 10px; }
+.copy-row .btn { height: 38px; }
+.status { font-size: 12.5px; color: var(--ok); margin-top: 8px; min-height: 0; }
+.status.show { display: block; }
+
+.notice {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border-left: 3px solid var(--signal);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 16px;
+}
+html[data-theme="dark"] .notice { background: var(--surface-2); }
+
+/* ---------- motion ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.card { animation: rise 0.62s var(--ease-out) both; }
+.card:nth-of-type(1) { animation-delay: 0ms; }
+.card:nth-of-type(2) { animation-delay: 60ms; }
+.card:nth-of-type(3) { animation-delay: 120ms; }
+.card:nth-of-type(4) { animation-delay: 180ms; }
+.card:nth-of-type(5) { animation-delay: 240ms; }
+
+.result.show { animation: rise 0.5s var(--ease-out) both; }
+.result.show #impact-rows tr, .result.show .metric { animation: rise 0.42s var(--ease-out) both; }
+.result.show .metric:nth-child(1) { animation-delay: 60ms; }
+.result.show .metric:nth-child(2) { animation-delay: 110ms; }
+.result.show .metric:nth-child(3) { animation-delay: 160ms; }
+.result.show .metric:nth-child(4) { animation-delay: 210ms; }
+
+@media (max-width: 768px) {
+  body { padding: 20px 14px 48px; }
+  h1 { font-size: 31px; }
+  .card { padding: 18px; border-radius: 28px; }
+  .row, .tri { grid-template-columns: 1fr; gap: 12px; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  header { margin-bottom: 20px; }
+}
+
+@media (max-width: 460px) {
+  .metrics { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Pemulih Toko Marketplace</h1>
+      <p class="lede">Toko dibekukan, NIK terkunci, atau akun dibajak? Hitung potensi kerugian per hari, susun bukti, dan buat <b>surat banding yang spesifik</b>.</p>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema" title="Ganti tema">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <div class="card">
+    <h2>Apa yang terjadi?</h2>
+    <div class="chips" id="issue-chips"></div>
+    <select class="sr-select" id="issue" tabindex="-1" aria-hidden="true"></select>
+    <p class="hint" id="issue-hint"></p>
+
+    <h2 class="sub">Marketplace</h2>
+    <div class="chips" id="platform-chips"></div>
+    <select class="sr-select" id="platform" tabindex="-1" aria-hidden="true"></select>
+    <p class="hint" id="platform-hint"></p>
+  </div>
+
+  <div class="card">
+    <h2>Dampak per hari</h2>
+    <div class="tri">
+      <div>
+        <label for="orders_per_day">Rata-rata pesanan per hari</label>
+        <input type="number" id="orders_per_day" min="1" step="1" placeholder="100">
+      </div>
+      <div>
+        <label for="aov">Nilai rata-rata per pesanan</label>
+        <input type="number" id="aov" min="0" step="1000" placeholder="150000">
+      </div>
+      <div>
+        <label for="margin_pct">Margin kotor per pesanan (%)</label>
+        <input type="number" id="margin_pct" min="0" max="100" step="1" placeholder="20">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="days_down">Sudah berapa hari toko terhenti?</label>
+        <input type="number" id="days_down" min="1" step="1" placeholder="3">
+      </div>
+      <div>
+        <label for="fixed_cost_per_day">Biaya tetap per hari (Rp)</label>
+        <input type="number" id="fixed_cost_per_day" min="0" step="50000" placeholder="250000">
+      </div>
+    </div>
+    <p class="hint">Gunakan rata-rata 7 sampai 14 hari sebelum toko terhenti. Semua angka adalah estimasi dari input Anda, bukan data platform.</p>
+
+    <div class="btn-row">
+      <button class="btn" type="button" id="fill-example">Isi contoh</button>
+      <button class="btn" type="button" id="clear-form">Bersihkan</button>
+    </div>
+    <button class="primary" id="calc-btn">Hitung dampak dan lihat langkah</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="card result" id="result-card">
+    <h2>Estimasi dampak</h2>
+    <div class="verdict" id="verdict"></div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="m-label">Potensi laba hilang per hari</div>
+        <div class="m-value neg" id="r-daily"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Total dampak</div>
+        <div class="m-value neg" id="r-total"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Setara per jam</div>
+        <div class="m-value" id="r-hour"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Hari terhenti</div>
+        <div class="m-value" id="r-days"></div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Komponen</th><th class="num">Total</th></tr>
+      </thead>
+      <tbody id="impact-rows"></tbody>
+      <tfoot>
+        <tr>
+          <td>Total dampak</td>
+          <td class="num" id="r-total-2"></td>
+        </tr>
+      </tfoot>
+    </table>
+    <p class="note" id="result-context"></p>
+
+    <h2>Dugaan yang perlu dicek</h2>
+    <ol id="checks-list"></ol>
+
+    <h2>Bukti yang perlu disiapkan</h2>
+    <ul id="evidence-list"></ul>
+
+    <h2>Langkah 24 jam pertama</h2>
+    <ol id="actions-list"></ol>
+
+    <h2>Jangan lakukan</h2>
+    <ul id="donts-list"></ul>
+
+    <h2>Jalur eskalasi</h2>
+    <ul id="escalation-list"></ul>
+
+    <h2>Sumber untuk kasus ini</h2>
+    <div id="issue-sources"></div>
+  </div>
+
+  <div class="card">
+    <h2>Surat banding siap kirim</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:14px">Lengkapi data toko. Surat ini adalah permintaan klarifikasi dan peninjauan ulang, bukan jaminan pemulihan.</p>
+    <div class="row">
+      <div>
+        <label for="seller_name">Nama penjual</label>
+        <input type="text" id="seller_name" placeholder="Nama sesuai KTP">
+      </div>
+      <div>
+        <label for="store_name">Nama toko</label>
+        <input type="text" id="store_name" placeholder="Nama toko di marketplace">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="store_id">ID toko atau username</label>
+        <input type="text" id="store_id" placeholder="contoh-toko">
+      </div>
+      <div>
+        <label for="contact">Email atau nomor telepon</label>
+        <input type="text" id="contact" placeholder="email@contoh.com">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case_id">Nomor tiket terakhir</label>
+        <input type="text" id="case_id" placeholder="Nomor laporan dari CS">
+      </div>
+    </div>
+    <label for="chronology">Kronologi singkat</label>
+    <textarea id="chronology" rows="4" placeholder="Contoh: 13 Oktober 2026 voucher berhenti bekerja. 15 Oktober 2026 CS menyebut ada kejanggalan transaksi tanpa menyebut ID pesanan."></textarea>
+
+    <button class="primary" id="make-letter">Buat surat banding</button>
+    <div class="letter-output" id="letter-output">
+      <div class="letter-subject" id="letter-subject"></div>
+      <textarea class="letter" id="letter-body" readonly></textarea>
+      <div class="copy-row">
+        <button class="btn" type="button" id="copy-letter">Salin surat</button>
+        <button class="btn" type="button" id="download-letter">Unduh .txt</button>
+      </div>
+      <div class="status" id="letter-status" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Sumber dan catatan</h2>
+    <div id="sources"></div>
+    <div class="notice">
+      Tool ini bukan nasihat hukum dan tidak menjamin toko pulih. Kebijakan platform bisa berubah. Jangan pernah membagikan OTP, password, atau kode verifikasi kepada siapa pun, termasuk pihak yang mengaku petugas pemulihan akun.
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+
+let issues = [];
+let platforms = [];
+
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('theme', t); } catch (e) {}
+}
+
+function initTheme() {
+  $('theme-btn').addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+}
+
+function invalidateResult() {
+  $('result-card').classList.remove('show');
+}
+
+function buildChips(boxId, selectId, items, onPick) {
+  const box = $(boxId);
+  const select = $(selectId);
+  box.innerHTML = '';
+  select.innerHTML = '';
+  items.forEach((item, index) => {
+    const opt = document.createElement('option');
+    opt.value = item.id;
+    opt.textContent = item.name;
+    select.appendChild(opt);
+
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.dataset.on = index === 0 ? 'true' : 'false';
+    chip.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+    chip.textContent = item.name;
+    chip.addEventListener('click', () => onPick(item.id));
+    box.appendChild(chip);
+  });
+}
+
+function syncChips(boxId, selectId, items, id) {
+  $(selectId).value = id;
+  const chips = $(boxId).children;
+  for (let i = 0; i < chips.length; i += 1) {
+    const on = items[i] && items[i].id === id;
+    chips[i].dataset.on = on ? 'true' : 'false';
+    chips[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+}
+
+function selectIssue(id) {
+  syncChips('issue-chips', 'issue', issues, id);
+  const issue = issues.find(x => x.id === id);
+  if (issue) {
+    $('issue-hint').textContent = issue.short;
+  }
+  invalidateResult();
+}
+
+function selectPlatform(id) {
+  syncChips('platform-chips', 'platform', platforms, id);
+  const platform = platforms.find(x => x.id === id);
+  if (platform) {
+    $('platform-hint').textContent = platform.note;
+  }
+  invalidateResult();
+}
+
+async function init() {
+  try {
+    const [issueRes, platformRes, defaultRes, sourceRes] = await Promise.all([
+      fetch('/api/issues'),
+      fetch('/api/platforms'),
+      fetch('/api/defaults'),
+      fetch('/api/sources'),
+    ]);
+    issues = await issueRes.json();
+    platforms = await platformRes.json();
+    const defaults = await defaultRes.json();
+    const sources = await sourceRes.json();
+
+    buildChips('issue-chips', 'issue', issues, selectIssue);
+    buildChips('platform-chips', 'platform', platforms, selectPlatform);
+    selectIssue(defaults.issue || (issues[0] && issues[0].id));
+    selectPlatform(defaults.platform || (platforms[0] && platforms[0].id));
+    renderSources($('sources'), sources);
+  } catch (e) {
+    $('issue-hint').textContent = 'Gagal memuat data dari server. Coba muat ulang halaman.';
+  }
+}
+
+function renderSources(box, sources) {
+  box.innerHTML = '';
+  sources.forEach(source => {
+    const div = document.createElement('div');
+    div.className = 'src-item';
+    const a = document.createElement('a');
+    a.href = source.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = source.label;
+    const meta = document.createElement('span');
+    meta.className = 'source-meta';
+    meta.textContent = source.publisher + ', ' + source.date;
+    div.appendChild(a);
+    div.appendChild(meta);
+    box.appendChild(div);
+  });
+}
+
+async function fillExample() {
+  const res = await fetch('/api/example');
+  const e = await res.json();
+  if (e.issue) selectIssue(e.issue);
+  if (e.platform) selectPlatform(e.platform);
+  ['orders_per_day', 'aov', 'margin_pct', 'days_down', 'fixed_cost_per_day',
+   'seller_name', 'store_name', 'store_id', 'contact', 'case_id', 'chronology'].forEach(id => {
+    if (e[id] !== undefined) $(id).value = e[id];
+  });
+  $('err').classList.remove('show');
+}
+
+function clearForm() {
+  ['orders_per_day', 'aov', 'margin_pct', 'days_down', 'fixed_cost_per_day',
+   'seller_name', 'store_name', 'store_id', 'contact', 'case_id', 'chronology'].forEach(id => {
+    $(id).value = '';
+  });
+  $('err').classList.remove('show');
+  $('letter-output').classList.remove('show');
+  $('letter-status').textContent = '';
+  invalidateResult();
+}
+
+function fillList(id, items, ordered) {
+  const box = $(id);
+  box.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    if (typeof item === 'string') {
+      li.textContent = item;
+    } else {
+      const title = document.createElement('span');
+      title.className = 'action-title';
+      title.textContent = item.title;
+      const detail = document.createElement('span');
+      detail.className = 'action-detail';
+      detail.textContent = item.detail;
+      li.appendChild(title);
+      li.appendChild(detail);
+    }
+    box.appendChild(li);
+  });
+}
+
+async function calculate() {
+  const errBox = $('err');
+  errBox.classList.remove('show');
+
+  const orders = Number($('orders_per_day').value);
+  const aov = Number($('aov').value);
+  if (!Number.isFinite(orders) || orders <= 0 || !Number.isFinite(aov) || aov <= 0) {
+    errBox.textContent = 'Isi rata-rata pesanan per hari dan nilai pesanan lebih dari 0.';
+    errBox.classList.add('show');
+    return;
+  }
+
+  const btn = $('calc-btn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const payload = {
+      issue: $('issue').value,
+      platform: $('platform').value,
+      orders_per_day: $('orders_per_day').value,
+      aov: $('aov').value,
+      margin_pct: $('margin_pct').value || 0,
+      days_down: $('days_down').value || 1,
+      fixed_cost_per_day: $('fixed_cost_per_day').value || 0,
+    };
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errBox.textContent = data.error || 'Terjadi kesalahan';
+      errBox.classList.add('show');
+      return;
+    }
+    renderResult(data);
+  } catch (e) {
+    errBox.textContent = 'Gagal terhubung ke server';
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung dampak dan lihat langkah';
+  }
+}
+
+function renderResult(d) {
+  const v = $('verdict');
+  v.className = 'verdict ' + d.severity;
+  v.innerHTML = '';
+  const label = document.createElement('div');
+  label.className = 'v-label';
+  label.textContent = d.severity_label;
+  const body = document.createElement('div');
+  body.className = 'v-body';
+  body.textContent = d.severity_detail;
+  v.appendChild(label);
+  v.appendChild(body);
+
+  $('r-daily').textContent = fmt(d.metrics.daily_impact);
+  $('r-total').textContent = fmt(d.metrics.total_impact);
+  $('r-hour').textContent = fmt(d.metrics.per_hour);
+  $('r-days').textContent = d.days_down + ' hari';
+
+  const rows = [
+    ['Omzet yang hilang', d.metrics.total_revenue],
+    ['Laba kotor yang hilang', d.metrics.total_profit],
+    ['Biaya tetap selama terhenti', d.metrics.total_fixed],
+  ];
+  const tbody = $('impact-rows');
+  tbody.innerHTML = '';
+  rows.forEach((row, index) => {
+    const tr = document.createElement('tr');
+    tr.style.animationDelay = (60 + index * 50) + 'ms';
+    const td1 = document.createElement('td');
+    td1.textContent = row[0];
+    const td2 = document.createElement('td');
+    td2.className = 'num';
+    td2.textContent = fmt(row[1]);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tbody.appendChild(tr);
+  });
+  $('r-total-2').textContent = fmt(d.metrics.total_impact);
+
+  $('result-context').textContent = 'Kasus: ' + d.issue_label + ' di ' + d.platform + '. Perhitungan memakai margin ' + d.margin_pct + '% dan ' + d.days_down + ' hari terhenti.';
+  $('result-context').textContent += ' ' + d.platform_note;
+
+  fillList('checks-list', d.checks);
+  fillList('evidence-list', d.evidence);
+  fillList('actions-list', d.actions);
+  fillList('donts-list', d.donts);
+  fillList('escalation-list', d.escalation);
+  renderSources($('issue-sources'), d.sources);
+
+  $('result-card').classList.remove('show');
+  void $('result-card').offsetWidth;
+  $('result-card').classList.add('show');
+  $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function makeLetter() {
+  const status = $('letter-status');
+  status.textContent = '';
+  status.classList.remove('show');
+  try {
+    const payload = {
+      issue: $('issue').value,
+      platform: $('platform').value,
+      seller_name: $('seller_name').value,
+      store_name: $('store_name').value,
+      store_id: $('store_id').value,
+      contact: $('contact').value,
+      case_id: $('case_id').value,
+      chronology: $('chronology').value,
+    };
+    const res = await fetch('/api/letter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    $('letter-subject').textContent = data.subject;
+    $('letter-body').value = data.body;
+    $('letter-output').classList.add('show');
+    $('letter-output').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (e) {
+    status.textContent = 'Gagal membuat surat. Coba lagi.';
+    status.style.color = 'var(--ember)';
+    status.classList.add('show');
+  }
+}
+
+async function copyLetter() {
+  const body = $('letter-body').value;
+  if (!body) return;
+  const status = $('letter-status');
+  try {
+    await navigator.clipboard.writeText(body);
+  } catch (e) {
+    $('letter-body').focus();
+    $('letter-body').select();
+    document.execCommand('copy');
+  }
+  status.textContent = 'Surat tersalin.';
+  status.style.color = 'var(--ok)';
+  status.classList.add('show');
+  setTimeout(() => { status.textContent = ''; status.classList.remove('show'); }, 1800);
+}
+
+function downloadLetter() {
+  const body = $('letter-body').value;
+  if (!body) return;
+  const rawName = ($('store_name').value || 'toko').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'banding-' + (rawName || 'toko') + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+$('calc-btn').addEventListener('click', calculate);
+$('fill-example').addEventListener('click', fillExample);
+$('clear-form').addEventListener('click', clearForm);
+$('make-letter').addEventListener('click', makeLetter);
+$('copy-letter').addEventListener('click', copyLetter);
+$('download-letter').addEventListener('click', downloadLetter);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') calculate();
+  if (e.key === 'Escape') clearForm();
+});
+
+initTheme();
+init();
+</script>
+</body>
+</html>
