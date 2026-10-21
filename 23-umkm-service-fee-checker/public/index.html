@@ -399,7 +399,7 @@ html[data-theme="dark"] .stat { background: var(--surface-2); }
 
   <div class="card">
     <h2>Apakah kamu memenuhi syarat?</h2>
-    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:8px">Jawab 4 pertanyaan ini. Diskon 50% biaya layanan hanya untuk usaha mikro dan kecil yang menjual produk lokal.</p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:8px">Jawab 5 pertanyaan ini. Diskon 50% biaya layanan hanya untuk usaha mikro dan kecil yang menjual produk lokal.</p>
 
     <div class="q-item">
       <div>
@@ -448,6 +448,17 @@ html[data-theme="dark"] .stat { background: var(--surface-2); }
 
     <div class="q-item">
       <div>
+        <div class="q-label">Rekam jejak usaha bersih?</div>
+        <div class="q-detail">Tidak memanipulasi transaksi, tidak menyalahgunakan fasilitas platform, dan tidak termasuk pengguna berisiko tinggi</div>
+      </div>
+      <div class="chip-group" id="bukan_high_riskGroup">
+        <button class="chip" data-val="1" onclick="setAnswer('bukan_high_risk', true)">Ya</button>
+        <button class="chip" data-val="0" onclick="setAnswer('bukan_high_risk', false)">Tidak</button>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div>
         <div class="q-label">Kategori produk (pengecualian)</div>
         <div class="q-detail">Dua kategori ini TIDAK dapat insentif meski syarat lain terpenuhi (Permen UMKM 3/2026)</div>
       </div>
@@ -460,7 +471,7 @@ html[data-theme="dark"] .stat { background: var(--surface-2); }
 
   <div class="card">
     <h2>Simulasi penghematan</h2>
-    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:14px">Isi omzet bulanan dan biaya layanan (persen) per marketplace. Angka default dari perkiraan 2026, sesuaikan dengan seller center kamu.</p>
+    <p style="font-size:.85rem;color:var(--text-dim);margin-bottom:14px">Isi omzet bulanan dan biaya layanan (persen) per marketplace. Angka default adalah estimasi total biaya layanan 2026 (admin + komisi + aplikasi, kisaran 10-18%), sesuaikan dengan seller center kamu.</p>
     <div class="toolbar">
       <button class="btn btn-secondary" onclick="addRow()">Tambah marketplace</button>
       <button class="btn btn-secondary" onclick="fillExample()">Isi contoh</button>
@@ -475,19 +486,20 @@ html[data-theme="dark"] .stat { background: var(--surface-2); }
 
 <script>
 const MARKETPLACES = [
-  { id: 'shopee', name: 'Shopee', defaultRate: 2.0 },
-  { id: 'tokopedia', name: 'Tokopedia', defaultRate: 1.5 },
-  { id: 'lazada', name: 'Lazada', defaultRate: 1.0 },
-  { id: 'bukalapak', name: 'Bukalapak', defaultRate: 1.0 },
-  { id: 'blibli', name: 'Blibli', defaultRate: 1.0 },
-  { id: 'tiktok', name: 'TikTok Shop', defaultRate: 2.0 }
+  { id: 'shopee', name: 'Shopee', defaultRate: 12.0 },
+  { id: 'tiktok', name: 'TikTok Shop', defaultRate: 10.0 },
+  { id: 'tokopedia', name: 'Tokopedia', defaultRate: 8.0 },
+  { id: 'lazada', name: 'Lazada', defaultRate: 8.0 },
+  { id: 'blibli', name: 'Blibli', defaultRate: 6.0 },
+  { id: 'bukalapak', name: 'Bukalapak', defaultRate: 5.0 }
 ];
 
 const answers = {
   scale: 'mikro',
   nib: true,
   sapa: true,
-  local: true
+  local: true,
+  bukan_high_risk: true
 };
 const exclusions = {
   pangan_siap_saji: false,
@@ -551,7 +563,7 @@ function addRow(mpId, omzet, rate) {
     </div>
     <div>
       <label>Biaya layanan (%)</label>
-      <input type="number" data-rate step="0.1" placeholder="mis. 2" value="${rate || mp.defaultRate}" />
+      <input type="number" data-rate step="0.1" placeholder="mis. 12" value="${rate || mp.defaultRate}" />
     </div>
   `;
   document.getElementById('rows').appendChild(div);
@@ -575,9 +587,9 @@ function collectRows() {
 function fillExample() {
   document.getElementById('rows').innerHTML = '';
   rowCount = 0;
-  addRow('shopee', 5000000, 2.0);
-  addRow('tokopedia', 3000000, 1.5);
-  addRow('tiktok', 2000000, 2.0);
+  addRow('shopee', 5000000, 12.0);
+  addRow('tokopedia', 3000000, 8.0);
+  addRow('tiktok', 2000000, 10.0);
 }
 
 function clearAll() {
@@ -700,7 +712,7 @@ function renderResult(data) {
     </div>`);
   }
 
-  html.push(`<p class="note">Perhitungan memakai biaya layanan yang kamu isi. Angka default hanya perkiraan 2026 - cek tarif aktual di seller center masing-masing marketplace.</p>`);
+  html.push(`<p class="note">Perhitungan memakai biaya layanan yang kamu isi. Angka default hanya estimasi 2026 (kisaran 10-18% menurut ANTARA) - cek tarif aktual di seller center masing-masing marketplace.</p>`);
 
   document.getElementById('result').innerHTML = html.join('');
   document.getElementById('result').classList.remove('result-hidden');
@@ -711,7 +723,8 @@ setScale('mikro');
 setAnswer('nib', true);
 setAnswer('sapa', true);
 setAnswer('local', true);
-addRow('shopee', '', 2.0);
+setAnswer('bukan_high_risk', true);
+addRow('shopee', '', 12.0);
 
 function initTheme() {
   const btn = document.getElementById('theme-btn');

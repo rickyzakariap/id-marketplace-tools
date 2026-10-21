@@ -628,3 +628,15 @@
 - Lesson: Perhatikan konflik ID toggle lama. Sebagian tool sudah punya `themeBtn`; kalau skin menyembunyikan `#themeBtn` tanpa menambah `theme-btn`, tombol tema bisa hilang. Selalu cek ada satu tombol yang benar-benar terlihat
 - Lesson: File dengan Tailwind CDN (mis. #02) butuh `!important` di skin; file non-Tailwind tetap perlu `!important` karena style lama sering dideklarasikan setelah `:root`
 - Next: Retrofit sisa tool setelah ada keputusan soal Go toolchain dan extension popup; review tampilan di browser untuk #02 (Tailwind) dan #06 (HTML di dalam Python) yang paling berisiko
+
+## 2026-10-21 - Sinkronisasi Status Diskon 50% (#23 dan #34, B7)
+- Works: Research Google News RSS `when:7d` + web search menemukan perkembangan baru: Kementerian UMKM memastikan diskon biaya layanan minimal 50% berlaku efektif 25 Oktober 2026 (ANTARA 16-17 Okt, Bisnis.com 17 Okt, Kompas 7 Okt), dengan dasar Kepmen UMKM 398/2026. Data pengajuan: akun SAPA UMKM, platform, identitas merchant, daftar SKU; verifikasi platform maksimal 10 hari kalender; insentif paling lambat 5 hari setelah dua tahap verifikasi.
+- Works: Memutuskan TIDAK membuat tool #38 karena pain point paling fresh (diskon 50%) sudah punya dua tool (#23, #34). Sesuai aturan fallback, fokus memperbaiki P1 B7 di REVIVAL_AUDIT.md daripada menduplikasi tool.
+- Works: #23 diubah date-aware (`terjadwal` sebelum 25 Okt, `aktif` setelahnya), tarif default diselaraskan ke estimasi 10-18% (sebelumnya 1-2%), tambah syarat rekam jejak usaha bersih, dan SLA verifikasi. #34 diubah dari hardcoded `tahapan-final` (29 Agu) ke date-aware dengan tanggal resmi + Kepmen 398/2026.
+- Works: Test baru: 13 test Node untuk #23 dan 14 test Python untuk #34, semuanya lulus. Runtime: kedua server hidup, `GET /api/status`, `GET /api/marketplaces`, `POST /api/check`, `POST /api/letter` (#34), dan halaman statis 200; input invalid 400.
+- Issues: #23 dan #34 sebelumnya sama-sama benar secara internal tetapi sama-sama usang. Inkonsistensi B7 bukan cuma beda status, tetapi juga beda tarif default (1-2% vs 5-12%) dan beda jumlah syarat.
+- Lesson: Konfirmasi kebijakan bukan ide tool baru. Kalau aturan yang sudah punya tool akhirnya ditetapkan, update tool lama dulu; membuat tool baru dengan topik sama hanya menambah sumber informasi yang bisa saling bertentangan.
+- Lesson: Dua tool untuk satu regulasi wajib berbagi fakta yang sama: tanggal berlaku, tarif default, syarat, dan SLA. Perbedaan angka antar tool membuat seller tidak percaya pada keduanya.
+- Lesson: Bedakan "target" dan "tanggal resmi". Tool harus date-aware dan menyebut dasar hukum terbaru, bukan judul berita lama.
+- Lesson: Tarif default marketplace harus ditandai estimasi dan diberi sumber. Definisi biaya layanan (admin + komisi + aplikasi, 10-18%) harus konsisten di semua tool.
+- Next: Pantau realisasi per platform setelah 25 Oktober 2026; kalau ada platform yang menunda atau menerapkan tarif berbeda, update kedua tool dengan sumber baru. Pertimbangkan audit realisasi potongan dari kuitansi seller.

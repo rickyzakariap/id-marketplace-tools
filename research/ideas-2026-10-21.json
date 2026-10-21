@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-21",
+  "research_window": "Berita 14 sampai 21 Oktober 2026, ditambah konteks 7 Oktober 2026",
+  "sources": [
+    {
+      "title": "UMKM dapat potongan biaya marketplace 50 persen mulai 25 Oktober",
+      "publisher": "ANTARA News (Sumbar)",
+      "date": "16-17 Oktober 2026",
+      "url": "https://sumbar.antaranews.com/berita/783525/umkm-dapat-potongan-biaya-marketplace-50-persen-mulai-25-oktober",
+      "facts": [
+        "Kementerian UMKM memastikan potongan biaya layanan minimal 50 persen berlaku efektif 25 Oktober 2026.",
+        "Potongan mencakup biaya administrasi, komisi, atau biaya aplikasi dasar toko.",
+        "Mekanisme pengajuan dan verifikasi diatur dalam Keputusan Menteri UMKM Nomor 398 Tahun 2026.",
+        "Pengajuan lewat SAPA UMKM: buat akun, cantumkan platform, identitas merchant atau username, daftar SKU beserta nama produk, dan nomor/tanggal sertifikat produk jika ada.",
+        "Platform memverifikasi paling lama 10 hari kalender, lalu insentif diberikan paling lambat 5 hari setelah dua tahap verifikasi lolos.",
+        "Syarat: skala mikro atau kecil, hanya menjual produk dalam negeri, tidak memanipulasi transaksi atau menyalahgunakan fasilitas platform, dan rekam jejak usaha baik.",
+        "Usaha mikro: modal maksimal Rp 1 miliar atau penjualan tahunan maksimal Rp 2 miliar. Usaha kecil: modal lebih dari Rp 1 miliar sampai Rp 5 miliar atau penjualan tahunan lebih dari Rp 2 miliar sampai Rp 15 miliar, tidak termasuk tanah dan bangunan."
+      ]
+    },
+    {
+      "title": "Mulai 25 Oktober, UMKM Dapat Potongan 50% Biaya Admin Shopee-TikTok Shop Cs",
+      "publisher": "Bisnis.com",
+      "date": "17 Oktober 2026",
+      "url": "https://ekonomi.bisnis.com/read/20261017/12/2013449/mulai-25-oktober-umkm-dapat-potongan-50-biaya-admin-shopee-tiktok-shop-cs",
+      "facts": [
+        "Platform wajib memberi potongan minimal 50 persen atas biaya administrasi, komisi, atau biaya aplikasi dasar toko.",
+        "Pemohon yang tidak lolos verifikasi akan menerima penjelasan rinci mengenai alasan penolakan dan syarat yang belum terpenuhi.",
+        "Insentif diberikan paling lambat 5 hari setelah dua tahap verifikasi data UMK melalui SAPA UMKM dan platform PMSE."
+      ]
+    },
+    {
+      "title": "Diskon Biaya Layanan E-commerce 50 Persen untuk UMKM Ditargetkan Berlaku Akhir Oktober",
+      "publisher": "Kompas.com",
+      "date": "7 Oktober 2026",
+      "url": "https://money.kompas.com/read/2026/10/07/194144626/diskon-biaya-layanan-e-commerce-50-persen-untuk-umkm-ditargetkan-berlaku-akhir",
+      "facts": [
+        "Sekitar 42.000 seller e-commerce teridentifikasi menjual produk lokal dan akan diseleksi berdasarkan omzet.",
+        "Insentif hanya untuk usaha mikro dan kecil dengan omzet maksimal Rp 15 miliar per tahun.",
+        "Kepmen UMKM terkait sudah ditandatangani dan sistem sedang diintegrasikan dengan SAPA UMKM."
+      ]
+    },
+    {
+      "title": "Kementerian UMKM siapkan diskon biaya e-commerce 50 persen",
+      "publisher": "ANTARA News",
+      "date": "7 Oktober 2026",
+      "url": "https://www.antaranews.com/berita/5775790/kementerian-umkm-siapkan-diskon-biaya-e-commerce-50-persen",
+      "facts": [
+        "Sekitar 42.000 penjual teridentifikasi menjual produk lokal, masih dalam proses pendaftaran dan verifikasi.",
+        "Insentif untuk pelaku usaha mikro dan kecil dengan omzet maksimal Rp 15 miliar per tahun."
+      ]
+    },
+    {
+      "title": "Diskon biaya layanan marketplace ditargetkan berlaku Agustus 2026",
+      "publisher": "ANTARA News",
+      "date": "8 Juli 2026",
+      "url": "https://www.antaranews.com/berita/5641444/diskon-biaya-layanan-marketplace-ditargetkan-berlaku-agustus-2026?page=all",
+      "facts": [
+        "Biaya layanan marketplace umumnya berkisar 10 sampai 18 persen, di luar biaya promosi atau iklan.",
+        "Permen UMKM 3/2026 memberi platform waktu paling lama 6 bulan untuk menyiapkan implementasi."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Dua tool diskon 50% masih memakai status Agustus 2026 yang sudah usang",
+      "description": "Per 21 Oktober 2026, #23 dan #34 masih menampilkan 'Kepmen belum diteken, target tahapan final pekan depan'. Padahal Kementerian UMKM sudah memastikan tanggal berlaku 25 Oktober 2026 dan Kepmen 398/2026 sudah ditandatangani. Seller yang membuka tool lama mendapat informasi yang salah beberapa hari sebelum kebijakan berlaku.",
+      "frequency": "HIGH",
+      "sources": [
+        "ANTARA 16-17 Oktober 2026",
+        "Bisnis.com 17 Oktober 2026",
+        "Kompas.com 7 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Dua tool memakai tarif default yang saling bertentangan",
+      "description": "#23 memakai 1-2 persen sebagai 'biaya layanan', sedangkan #34 memakai 5-12 persen. Padahal definisi resmi biaya layanan adalah administrasi + komisi + jasa aplikasi, dengan kisaran 10-18 persen. Akibatnya estimasi penghematan untuk omzet yang sama bisa berbeda jauh tergantung tool yang dibuka.",
+      "frequency": "HIGH",
+      "sources": [
+        "ANTARA 8 Juli 2026",
+        "Permen UMKM 3/2026"
+      ]
+    },
+    {
+      "category": "Alur pengajuan dan SLA verifikasi belum tercermin di tool",
+      "description": "Kepmen 398/2026 menetapkan data yang wajib dicantumkan (platform, identitas merchant, daftar SKU), verifikasi platform maksimal 10 hari kalender, dan pemberian insentif paling lambat 5 hari setelah dua tahap verifikasi. Seller butuh angka ini untuk merencanakan arus kas, bukan hanya tahu bahwa mereka layak.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "ANTARA 16-17 Oktober 2026",
+        "Bisnis.com 17 Oktober 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#23 umkm-service-fee-checker: kuis kelayakan ringkas + simulasi penghematan, tetapi status dan tarifnya usang.",
+    "#34 insentif-permen-2026: kuis 7 syarat, alur SAPA UMKM, surat keberatan, tetapi status masih 29 Agustus 2026.",
+    "#22, #25, #26 sudah menangani PPh 22 dari tiga sudut, sehingga berita 'empat marketplace mulai pungut PPh 22' (20 Oktober 2026) tidak dijadikan tool baru.",
+    "#31 biaya-retur-tracker sudah menangani biaya retur dan sengketa retur; kasus COD ditukar barang (7-14 Oktober 2026) tidak cukup berbeda untuk tool baru.",
+    "#03 review-sentiment-analyzer dan #05 review-extension sudah menangani ulasan; ide detektor ulasan palsu akan tumpang tindih dan sulit diveirifikasi tanpa data platform.",
+    "Isu beli akun TikTok affiliate (15-17 Oktober 2026) hanya bersumber dari satu artikel sindikasi dan bukan pain point utama seller marketplace Indonesia."
+  ],
+  "top_suggestions": [],
+  "decision": {
+    "action": "fix",
+    "target": "REVIVAL_AUDIT.md P1 B7: status regulasi #23 vs #34 tidak konsisten",
+    "reason": "Temuan baru adalah realisasi kebijakan yang sudah punya dua tool, bukan ide tool baru. Membuat #38 tentang diskon 50% akan menduplikasi #23/#34. Sesuai aturan workflow, jika tidak ada ide tool yang benar-benar baru, perbaiki item P1 tertinggi di REVIVAL_AUDIT.md.",
+    "scope": [
+      "Samakan status date-aware di #23 dan #34: berlaku 25 Oktober 2026, Kepmen UMKM 398/2026.",
+      "Samakan tarif default estimasi 10-18 persen dan definisi biaya layanan.",
+      "Tambahkan syarat rekam jejak usaha bersih ke #23 agar konsisten dengan #34.",
+      "Tambahkan SLA verifikasi 10 hari kalender dan pemberian insentif 5 hari ke kedua tool.",
+      "Tambah test untuk #23 (node assert) dan #34 (unittest).",
+      "Update README, REVIVAL_AUDIT.md, dan LESSONS.md."
+    ],
+    "not_repeat": "Tidak membuat tool baru. Fokus pada koreksi fakta dan konsistensi dua tool yang sudah ada."
+  }
+}

@@ -2,11 +2,13 @@
 """Cek Insentif Permen UMKM 3/2026 - eligibility checker for 50% biaya layanan discount.
 
 Python 3 stdlib, zero dependencies. Serves static UI from public/ and JSON API.
-Regulation grounding: ANTARA 22 Juni 2026 (full text of Permen UMKM 3/2026) and
-ANTARA 8 Juli 2026 (implementation timeline). Target applies end of August 2026.
+Regulation grounding: Permen UMKM 3/2026, Kepmen UMKM 398/2026, ANTARA 16-17
+Oktober 2026, Bisnis.com 17 Oktober 2026, and Kompas.com 7 Oktober 2026. The
+incentive takes effect on 25 October 2026.
 """
 import json
 import re
+from datetime import date
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
@@ -26,7 +28,7 @@ MARKETPLACES = [
     {"id": "bukalapak", "name": "Bukalapak", "defaultRate": 5.0},
 ]
 
-# Syarat dari teks Permen UMKM 3/2026 (ANTARA 22 Juni 2026, full text).
+# Syarat dari Permen UMKM 3/2026 dan Kepmen UMKM 398/2026.
 REQUIREMENTS = [
     {"id": "skala", "label": "Usaha mikro atau kecil (bukan menengah/besar)", "detail": "Insentif khusus usaha mikro dan kecil (UMK)"},
     {"id": "produk_dalam_negeri", "label": "Hanya menjual produk dalam negeri", "detail": "Wajib 100% produk dalam negeri. Kalau campur produk impor, lokapasar bisa menolak atau menghentikan insentif"},
@@ -34,7 +36,7 @@ REQUIREMENTS = [
     {"id": "info_benar", "label": "Informasi usaha benar dan jelas", "detail": "Data usaha di seller center harus akurat"},
     {"id": "standar_mutu", "label": "Produk memenuhi standar mutu dan keamanan", "detail": "Standar produk (misal sertifikasi halal, ketentuan BPOM). Ada masa tenggang 6 bulan untuk pemenuhannya"},
     {"id": "sapa", "label": "Terdaftar di SAPA UMKM", "detail": "Terdaftar di layanan SAPA UMKM Kementerian UMKM, pengajuan insentif lewat layanan ini"},
-    {"id": "bukan_high_risk", "label": "Bukan high risk user dan tidak dalam proses penegakan hukum", "detail": "Platform memastikan seller bukan kategori pengguna berisiko tinggi dan tidak sedang menjalani proses penegakan hukum"},
+    {"id": "bukan_high_risk", "label": "Tidak memanipulasi transaksi dan rekam jejak usaha baik", "detail": "Seller tidak memanipulasi transaksi, tidak menyalahgunakan fasilitas platform, dan tidak termasuk pengguna berisiko tinggi (Kepmen UMKM 398/2026)"},
 ]
 
 # Kategori yang TIDAK dapat insentif (pengecualian eksplisit di Permen).
@@ -43,33 +45,79 @@ EXCLUSIONS = [
     {"id": "elektronik_industri_besar", "label": "Produk elektronik dari industri besar dalam negeri", "detail": "Insentif tidak berlaku untuk produk elektronik yang diproduksi industri besar dalam negeri"},
 ]
 
-# Status kebijakan. Tanggal efektif = target resmi, bukan tanggal pasti.
-# Permen ditetapkan Juni 2026. Alur pengajuan resmi diumumkan 28-29 Agustus 2026
-# (ANTARA): pengajuan via SAPA UMKM, verifikasi 2 tahap (KemenUMKM lalu platform),
-# grace period 6 bulan untuk standar produk, laporan realisasi bulanan platform.
-# Per 29 Agustus 2026 target memasuki tahapan final pekan depan (ANTARA 28-29 Agu).
-POLICY = {
-    "status": "tahapan-final",
-    "label": "Diskon 50% biaya layanan: alur pengajuan diumumkan, target tahapan final pekan depan",
-    "description": (
-        "Permen UMKM Nomor 3 Tahun 2026 sudah ditetapkan (Juni 2026). Marketplace wajib "
-        "memberikan potongan biaya layanan paling sedikit 50% kepada UMK yang hanya menjual "
-        "produk dalam negeri dan memenuhi syarat. Alur pengajuan resmi diumumkan 28-29 Agustus "
-        "2026: ajukan via SAPA UMKM (nama platform, identitas merchant, data produk), lalu "
-        "verifikasi 2 tahap - KemenUMKM cek syarat administratif, platform cek skala UMK, "
-        "produk dalam negeri, dan bukan high risk user. Standar produk (halal, BPOM) punya "
-        "masa tenggang 6 bulan. Target memasuki tahapan final pekan depan (pernyataan resmi "
-        "28-29 Agustus 2026, bisa berubah). Cek seller center untuk tarif aktual."
-    ),
-    "timeline": [
-        {"date": "Juni 2026", "label": "Permen UMKM 3/2026 ditetapkan", "status": "selesai"},
-        {"date": "27 Agustus 2026", "label": "Implementasi ~95%, tinggal jadwal integrasi SAPA UMKM", "status": "selesai"},
-        {"date": "28-29 Agustus 2026", "label": "Alur pengajuan diumumkan: 2 tahap verifikasi, grace period 6 bulan", "status": "selesai"},
-        {"date": "Pekan depan", "label": "Target tahapan final, diskon mulai berlaku", "status": "progres"},
-        {"date": "Maksimal 6 bulan sejak Permen", "label": "Batas platform implementasi", "status": "target"},
-    ],
-    "source": "ANTARA 22 Juni 2026, ANTARA 8 Juli 2026, ANTARA 27-29 Agustus 2026",
-}
+# Status kebijakan date-aware. Kementerian UMKM memastikan insentif berlaku
+# efektif 25 Oktober 2026 (Kepmen UMKM 398/2026), diumumkan 16-17 Oktober 2026.
+# Verifikasi platform maksimal 10 hari kalender, insentif diberikan paling lambat
+# 5 hari setelah dua tahap verifikasi lolos. Semua angka kebijakan bersumber,
+# bukan estimasi. Tarif default marketplace tetap estimasi dan bisa diedit.
+EFFECTIVE_DATE = date(2026, 10, 25)
+VERIFICATION_DAYS = 10
+GRANT_DAYS = 5
+POLICY_SOURCE = (
+    "ANTARA 16-17 Oktober 2026; Bisnis.com 17 Oktober 2026; "
+    "Kompas.com 7 Oktober 2026; Kepmen UMKM 398/2026; Permen UMKM 3/2026"
+)
+
+
+def build_policy(today=None):
+    today = today or date.today()
+    days_left = (EFFECTIVE_DATE - today).days
+    active = days_left <= 0
+    timeline = [
+        {"date": "17 Juni 2026", "label": "Permen UMKM 3/2026 berlaku", "status": "selesai"},
+        {"date": "7 Oktober 2026", "label": "Kepmen UMKM 398/2026 ditandatangani, sekitar 42.000 seller produk lokal teridentifikasi", "status": "selesai"},
+        {"date": "16-17 Oktober 2026", "label": "Kementerian UMKM memastikan tanggal berlaku 25 Oktober 2026", "status": "selesai"},
+        {"date": "25 Oktober 2026", "label": "Insentif potongan biaya layanan minimal 50% berlaku efektif", "status": "selesai" if active else "progres"},
+        {"date": "Setiap bulan", "label": "Platform wajib lapor realisasi insentif ke SAPA UMKM", "status": "target"},
+        {"date": "Setiap 3 bulan", "label": "Seller penerima insentif lapor perkembangan omzet via SAPA UMKM", "status": "target"},
+    ]
+
+    body = (
+        " Marketplace wajib memberi potongan minimal 50% atas biaya administrasi, komisi, "
+        "atau biaya aplikasi dasar. Ajukan lewat SAPA UMKM dengan nama platform, identitas "
+        "merchant, dan daftar SKU. Platform memverifikasi maksimal 10 hari kalender, lalu "
+        "insentif diberikan paling lambat 5 hari setelah dua tahap verifikasi lolos. "
+        "Insentif tidak berlaku untuk komponen biaya lain."
+    )
+
+    if active:
+        label = "Diskon 50% biaya layanan sudah berlaku sejak 25 Oktober 2026"
+        description = (
+            "Insentif potongan biaya layanan minimal 50% untuk UMK yang hanya menjual produk "
+            "dalam negeri sudah berlaku sejak 25 Oktober 2026 (Kepmen UMKM 398/2026)." + body +
+            " Cek seller center untuk memastikan potongan benar-benar diterapkan pada transaksi "
+            "produk dalam negeri."
+        )
+    else:
+        bulan = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+        ]
+        today_label = str(today.day) + " " + bulan[today.month - 1] + " " + str(today.year)
+        label = "Diskon 50% biaya layanan resmi berlaku 25 Oktober 2026"
+        description = (
+            "Kementerian UMKM memastikan insentif potongan biaya layanan minimal 50% untuk "
+            "UMK yang hanya menjual produk dalam negeri berlaku efektif 25 Oktober 2026 "
+            "(Kepmen UMKM 398/2026). Per " + today_label + ", tinggal " + str(max(0, days_left)) +
+            " hari menuju tanggal berlaku." + body + " Siapkan pengajuan sekarang agar insentif "
+            "masuk sejak hari pertama."
+        )
+
+    return {
+        "status": "aktif" if active else "terjadwal",
+        "label": label,
+        "description": description,
+        "timeline": timeline,
+        "effective_date": EFFECTIVE_DATE.isoformat(),
+        "days_left": max(0, days_left),
+        "verification_days": VERIFICATION_DAYS,
+        "grant_days": GRANT_DAYS,
+        "regulation": "Permen UMKM 3/2026 dan Kepmen UMKM 398/2026",
+        "source": POLICY_SOURCE,
+    }
+
+
+POLICY = build_policy()
 
 
 def read_body(handler):
@@ -128,11 +176,11 @@ def check_eligibility(payload):
         )
     elif not answers.get("bukan_high_risk"):
         verdict = "tidak-layak"
-        verdict_label = "Termasuk high risk user atau dalam proses penegakan hukum"
+        verdict_label = "Rekam jejak usaha belum memenuhi syarat"
         verdict_reason = (
-            "Platform memastikan seller bukan kategori pengguna berisiko tinggi (high risk user) "
-            "dan tidak sedang menjalani proses penegakan hukum. Seller dalam kategori ini tidak "
-            "dapat menerima insentif (ANTARA 28-29 Agustus 2026)."
+            "Platform memastikan seller tidak memanipulasi transaksi, tidak menyalahgunakan "
+            "fasilitas platform, dan memiliki rekam jejak usaha yang baik. Seller dalam kategori "
+            "berisiko tinggi tidak dapat menerima insentif (Kepmen UMKM 398/2026)."
         )
     else:
         missing = [c for c in checks if not c["ok"]]
@@ -143,7 +191,7 @@ def check_eligibility(payload):
         else:
             verdict = "layak"
             verdict_label = "Layak dapat diskon 50% biaya layanan"
-            verdict_reason = "Semua syarat Permen UMKM 3/2026 terpenuhi. Ajukan lewat SAPA UMKM, lalu cek tarif biaya layanan di seller center setelah insentif aktif."
+            verdict_reason = "Semua syarat terpenuhi. Ajukan lewat SAPA UMKM, lalu cek tarif biaya layanan di seller center. Insentif berlaku efektif 25 Oktober 2026 dan diberikan paling lambat 5 hari setelah dua tahap verifikasi lolos."
 
     # Hitung penghematan. Hanya verdict layak yang dihitung sebagai aktif;
     # hampir-layak ditampilkan sebagai potensi setelah syarat terpenuhi.
