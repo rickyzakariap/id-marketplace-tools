@@ -1,0 +1,14 @@
+{
+  "name": "pelacak-poin-penalti",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lacak poin penalti marketplace, batas banding, reset kuartal, dan poin yang muncul kembali",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/penalty.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
