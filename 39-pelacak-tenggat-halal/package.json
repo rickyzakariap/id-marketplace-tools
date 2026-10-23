@@ -1,0 +1,14 @@
+{
+  "name": "pelacak-tenggat-halal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cek tenggat wajib halal per kategori, skala usaha, dan asal produk, plus jalur SEHATI dan kesiapan dokumen",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/halal.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pelacak Tenggat Wajib Halal</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 900px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+.lede {
+  color: var(--ink-4);
+  margin-top: 14px;
+  max-width: 58ch;
+  text-wrap: balance;
+}
+.lede b { color: var(--ink); font-weight: 400; }
+
+.theme {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.16s;
+}
+.theme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--wash-hover);
+  opacity: 0;
+  transform: scale(0.86);
+  transition: opacity 0.15s, transform 0.26s var(--ease-pop);
+}
+.theme:hover { color: var(--ink); }
+.theme:hover::before { opacity: 1; transform: scale(1); }
+.theme:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.theme svg { position: relative; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card > h2,
+.card h2.sub {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.card h2.sub { margin-top: 22px; }
+
+label, .field-label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+input[type=text],
+input[type=date],
+select,
+textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--elev);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+}
+select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-4) 50%), linear-gradient(135deg, var(--ink-4) 50%, transparent 50%);
+  background-position: calc(100% - 17px) calc(50% + 1px), calc(100% - 12px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+select:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea { background: var(--surface-2); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.row:last-child { margin-bottom: 0; }
+.field { margin-top: 16px; }
+
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  height: 36px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); color: var(--ink); }
+.chip:active { transform: scale(0.96); }
+.chip[data-on="true"] { background: var(--slab); color: var(--on-slab); }
+
+.btn-row { display: flex; gap: 8px; margin-top: 20px; }
+.btn {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--elev);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+html[data-theme="dark"] .btn { background: var(--surface-2); }
+.btn:hover { color: var(--ink); background: var(--wash-hover); }
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.primary {
+  width: 100%;
+  height: 44px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slab);
+  color: var(--on-slab);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
+}
+.primary:hover { opacity: 0.9; }
+.primary:active { transform: scale(0.96); }
+.primary:disabled { opacity: 0.5; cursor: default; }
+
+.err { color: var(--ember); font-size: 13px; min-height: 0; }
+.err.show { margin-top: 12px; }
+
+.hint { font-size: 12.5px; color: var(--ink-5); margin-top: 8px; }
+.note { font-size: 12.5px; color: var(--ink-5); margin-top: 12px; }
+
+.result { display: none; }
+.result.show { display: block; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+}
+html[data-theme="dark"] .verdict { background: var(--surface-2); }
+.verdict .v-label {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.verdict .v-body { font-size: 14px; color: var(--ink-3); }
+.verdict.aman { border-left: 3px solid var(--ok); }
+.verdict.waspada { border-left: 3px solid var(--signal); }
+.verdict.kritis { border-left: 3px solid var(--ember); }
+.verdict.netral { border-left: 3px solid var(--ink-4); }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.metric {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
+}
+html[data-theme="dark"] .metric { background: var(--surface-2); }
+.metric .m-label { font-size: 12.5px; color: var(--ink-4); }
+.metric .m-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.metric .m-value.small { font-size: 15px; }
+
+.basis-box {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border-left: 3px solid var(--signal);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+html[data-theme="dark"] .basis-box { background: var(--surface-2); }
+.basis-box b { font-weight: 500; }
+
+.result h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 24px 0 10px;
+}
+.result h2:first-of-type { margin-top: 0; }
+
+.path-box {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin-bottom: 8px;
+}
+html[data-theme="dark"] .path-box { background: var(--surface-2); }
+.path-box .p-title { font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.path-box .p-body { font-size: 13.5px; color: var(--ink-3); }
+.path-box .p-meta { font-size: 12.5px; color: var(--ink-4); margin-top: 8px; }
+.path-box ol { margin-top: 10px; }
+
+.milestone {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 13px 16px;
+  margin-bottom: 8px;
+}
+html[data-theme="dark"] .milestone { background: var(--surface-2); }
+.milestone .ms-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.milestone .ms-label { font-weight: 500; color: var(--ink); }
+.milestone .ms-date {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  color: var(--ink-4);
+}
+.milestone ul { margin-top: 6px; }
+
+.doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.doc-item {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 12px 14px;
+}
+html[data-theme="dark"] .doc-item { background: var(--surface-2); }
+.doc-item .d-label { font-size: 13.5px; font-weight: 500; color: var(--ink-2); }
+.doc-item .d-note { font-size: 12.5px; color: var(--ink-4); margin-top: 3px; }
+
+ol, ul { padding-left: 20px; }
+li { font-size: 13.5px; color: var(--ink-2); margin-bottom: 8px; }
+li::marker { color: var(--ink-4); }
+
+.source-mini, .src-item {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.source-mini:last-child, .src-item:last-child { border-bottom: 0; }
+.source-mini a, .src-item a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
+.source-meta { display: block; color: var(--ink-5); margin-top: 2px; }
+
+.readiness-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 12px 14px;
+  margin: 0;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background-color 0.16s;
+}
+html[data-theme="dark"] .check { background: var(--surface-2); }
+.check:hover { background: var(--wash-hover); }
+.check input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  accent-color: var(--ink);
+}
+.check b { display: block; font-size: 13.5px; font-weight: 500; color: var(--ink-2); }
+.check small { display: block; font-size: 12px; color: var(--ink-4); margin-top: 2px; }
+
+.readiness-result { display: none; margin-top: 18px; }
+.readiness-result.show { display: block; }
+.r-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.r-score {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 34px;
+  font-weight: 500;
+}
+.r-label { font-family: var(--font-head); font-weight: 500; font-size: 17px; }
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--wash-hover);
+  overflow: hidden;
+  margin: 10px 0 12px;
+}
+.progress .bar {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--slab);
+  transition: width 0.5s var(--ease-out);
+}
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { padding: 9px 8px 9px 0; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--ink-4); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tbody tr { transition: background-color 0.16s; }
+tbody tr:hover { background: var(--wash-hover); }
+
+.notice {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border-left: 3px solid var(--signal);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 16px;
+}
+html[data-theme="dark"] .notice { background: var(--surface-2); }
+
+.status { font-size: 12.5px; color: var(--ok); margin-top: 8px; min-height: 0; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.card { animation: rise 0.62s var(--ease-out) both; }
+.card:nth-of-type(1) { animation-delay: 0ms; }
+.card:nth-of-type(2) { animation-delay: 60ms; }
+.card:nth-of-type(3) { animation-delay: 120ms; }
+.card:nth-of-type(4) { animation-delay: 180ms; }
+.card:nth-of-type(5) { animation-delay: 240ms; }
+
+.result.show { animation: rise 0.5s var(--ease-out) both; }
+.result.show .metric { animation: rise 0.42s var(--ease-out) both; }
+.result.show .metric:nth-child(1) { animation-delay: 60ms; }
+.result.show .metric:nth-child(2) { animation-delay: 110ms; }
+.result.show .metric:nth-child(3) { animation-delay: 160ms; }
+.result.show .metric:nth-child(4) { animation-delay: 210ms; }
+
+@media (max-width: 768px) {
+  body { padding: 20px 14px 48px; }
+  h1 { font-size: 31px; }
+  .card { padding: 18px; border-radius: 28px; }
+  .row { grid-template-columns: 1fr; gap: 12px; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .doc-grid, .readiness-list { grid-template-columns: 1fr; }
+  header { margin-bottom: 20px; }
+}
+
+@media (max-width: 460px) {
+  .metrics { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Pelacak Tenggat Wajib Halal</h1>
+      <p class="lede">Wajib halal mundur ke 2028, tetapi tidak untuk semua produk. Cek <b>tenggat sesuai kategori, skala usaha, dan asal produk</b>, lalu lihat jalur SEHATI dan dokumen yang perlu disiapkan.</p>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema" title="Ganti tema">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <div class="card">
+    <h2>Data produk</h2>
+    <label for="category">Kategori produk atau jasa</label>
+    <select id="category"></select>
+    <p class="hint" id="category-hint"></p>
+
+    <div class="field">
+      <p class="field-label">Skala usaha</p>
+      <div class="chips" id="scale-chips"></div>
+    </div>
+
+    <div class="field">
+      <p class="field-label">Asal produk</p>
+      <div class="chips" id="origin-chips"></div>
+    </div>
+
+    <div class="field">
+      <p class="field-label">Status sertifikasi</p>
+      <div class="chips" id="cert-chips"></div>
+    </div>
+
+    <div class="row" style="margin-top:16px">
+      <div>
+        <label for="contains_animal">Mengandung unsur hewan?</label>
+        <select id="contains_animal">
+          <option value="ya">Ya</option>
+          <option value="tidak">Tidak</option>
+        </select>
+        <p class="hint" id="animal-hint">Dipakai untuk barang gunaan dan alat kesehatan.</p>
+      </div>
+      <div>
+        <label for="contains_haram">Mengandung bahan haram?</label>
+        <select id="contains_haram">
+          <option value="tidak">Tidak</option>
+          <option value="ya">Ya, misalnya alkohol atau babi</option>
+        </select>
+        <p class="hint">Produk berbahan haram tidak disertifikasi, tetapi wajib diberi keterangan tidak halal.</p>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" type="button" id="fill-example">Isi contoh</button>
+      <button class="btn" type="button" id="clear-form">Bersihkan</button>
+    </div>
+    <button class="primary" id="calc-btn">Cek tenggat dan jalur sertifikasi</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="card result" id="result-card">
+    <h2>Hasil analisis</h2>
+    <div class="verdict" id="verdict">
+      <div class="v-label" id="v-label"></div>
+      <div class="v-body" id="v-body"></div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="m-label" id="m-deadline-label">Tenggat</div>
+        <div class="m-value small" id="r-deadline"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Sisa waktu</div>
+        <div class="m-value small" id="r-days"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Sertifikasi</div>
+        <div class="m-value small" id="r-required"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Jalur</div>
+        <div class="m-value small" id="r-path"></div>
+      </div>
+    </div>
+
+    <div class="basis-box" id="basis-box"></div>
+
+    <h2>Jalur sertifikasi</h2>
+    <div class="path-box">
+      <div class="p-title" id="path-title"></div>
+      <div class="p-body" id="path-body"></div>
+      <div class="p-meta" id="path-meta"></div>
+      <ol id="path-steps"></ol>
+    </div>
+
+    <h2>Rencana persiapan</h2>
+    <div id="timeline"></div>
+    <p class="hint" id="timeline-empty" hidden></p>
+
+    <h2>Dokumen yang perlu disiapkan</h2>
+    <div class="doc-grid" id="doc-grid"></div>
+    <p class="hint" id="doc-empty" hidden></p>
+
+    <h2>Yang perlu dilakukan</h2>
+    <ol id="action-list"></ol>
+
+    <h2>Peringatan</h2>
+    <ul id="warning-list"></ul>
+
+    <h2>Sumber untuk analisis ini</h2>
+    <div id="result-sources"></div>
+
+    <div class="btn-row">
+      <button class="btn" type="button" id="copy-summary">Salin ringkasan</button>
+    </div>
+    <div class="status" id="copy-status" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="card">
+    <h2>Cek kesiapan</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:14px">Centang yang sudah ada. Skor ini untuk kesiapan dokumen dan proses, bukan penilaian resmi BPJPH.</p>
+    <div class="readiness-list" id="readiness-list"></div>
+    <button class="primary" id="readiness-btn">Hitung kesiapan</button>
+    <div class="readiness-result" id="readiness-result">
+      <div class="r-head">
+        <div class="r-score" id="r-score">0%</div>
+        <div class="r-label" id="r-label">Belum siap</div>
+      </div>
+      <div class="progress"><div class="bar" id="r-bar"></div></div>
+      <p class="hint" id="r-detail"></p>
+      <ul id="r-gaps"></ul>
+      <p class="note" id="r-note"></p>
+    </div>
+    <div class="err" id="readiness-err"></div>
+  </div>
+
+  <div class="card">
+    <h2>Jadwal resmi penahapan</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Kelompok</th>
+            <th>Skala atau asal</th>
+            <th>Tenggat</th>
+            <th>Dasar</th>
+          </tr>
+        </thead>
+        <tbody id="rules-rows"></tbody>
+      </table>
+    </div>
+    <p class="note">Jadwal di atas adalah penahapan kewajiban, bukan jaminan marketplace menunggu sampai tenggat. Produk yang sudah beredar tetap bisa diminta keterangan halal.</p>
+  </div>
+
+  <div class="card">
+    <h2>Sumber dan catatan</h2>
+    <div id="sources"></div>
+    <div class="notice">
+      Tool ini bukan nasihat hukum. PP 40/2026 baru berlaku 14 Oktober 2026 dan pemerintah masih membahas formula baru untuk UMKM. Selalu cek SIHALAL dan konfirmasi ke BPJPH atau Pendamping PPH sebelum mengambil keputusan final. Jangan membagikan OTP, password, atau kode verifikasi kepada siapa pun.
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmtRp = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+
+let meta = null;
+let categories = [];
+let lastResult = null;
+let selected = { scale: 'mikro', origin: 'dalam-negeri', certified: 'belum' };
+
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('theme', t); } catch (e) {}
+}
+
+function initTheme() {
+  $('theme-btn').addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+}
+
+async function api(url, options) {
+  const res = await fetch(url, options);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = new Error(data.error || 'Terjadi kesalahan');
+    err.data = data;
+    throw err;
+  }
+  return data;
+}
+
+function invalidateResult() {
+  $('result-card').classList.remove('show');
+}
+
+function buildChips(boxId, items, activeId, onPick) {
+  const box = $(boxId);
+  box.innerHTML = '';
+  items.forEach((item) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.dataset.id = item.id;
+    chip.dataset.on = item.id === activeId ? 'true' : 'false';
+    chip.setAttribute('aria-pressed', item.id === activeId ? 'true' : 'false');
+    chip.textContent = item.label;
+    chip.addEventListener('click', () => onPick(item.id));
+    box.appendChild(chip);
+  });
+}
+
+function syncChips(boxId, activeId) {
+  const chips = $(boxId).children;
+  for (let i = 0; i < chips.length; i += 1) {
+    const on = chips[i].dataset.id === activeId;
+    chips[i].dataset.on = on ? 'true' : 'false';
+    chips[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+}
+
+function buildCategorySelect() {
+  const select = $('category');
+  select.innerHTML = '';
+  const groups = [];
+  categories.forEach((item) => {
+    if (!groups.includes(item.group)) groups.push(item.group);
+  });
+  groups.forEach((group) => {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = group;
+    categories.filter((item) => item.group === group).forEach((item) => {
+      const opt = document.createElement('option');
+      opt.value = item.id;
+      opt.textContent = item.label;
+      optgroup.appendChild(opt);
+    });
+    select.appendChild(optgroup);
+  });
+}
+
+function getCategory(id) {
+  return categories.find((item) => item.id === id) || categories[0];
+}
+
+function applyCategory() {
+  const category = getCategory($('category').value);
+  $('category-hint').textContent = category.note;
+  const relevant = !!category.animalRelevant;
+  $('contains_animal').disabled = !relevant;
+  $('animal-hint').textContent = relevant
+    ? 'Wajib hanya jika barang berasal dari atau mengandung unsur hewan.'
+    : 'Tidak relevan untuk kategori ini. Pertanyaan ini hanya dipakai untuk barang gunaan dan alat kesehatan.';
+  invalidateResult();
+}
+
+function renderSources(box, sources) {
+  box.innerHTML = '';
+  sources.forEach((source) => {
+    const div = document.createElement('div');
+    div.className = 'src-item';
+    const a = document.createElement('a');
+    a.href = source.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = source.label;
+    const metaLine = document.createElement('span');
+    metaLine.className = 'source-meta';
+    metaLine.textContent = source.publisher + ', ' + source.date;
+    div.appendChild(a);
+    div.appendChild(metaLine);
+    box.appendChild(div);
+  });
+}
+
+function renderRules() {
+  const tbody = $('rules-rows');
+  tbody.innerHTML = '';
+  meta.rules.forEach((rule) => {
+    const tr = document.createElement('tr');
+    [rule.group, rule.scale, rule.deadline, rule.basis].forEach((value, index) => {
+      const td = document.createElement('td');
+      td.textContent = value;
+      if (index === 2) td.style.whiteSpace = 'nowrap';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function renderReadinessItems() {
+  const box = $('readiness-list');
+  box.innerHTML = '';
+  meta.readiness_items.forEach((item) => {
+    const label = document.createElement('label');
+    label.className = 'check';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = 'check-' + item.id;
+    input.dataset.id = item.id;
+    const span = document.createElement('span');
+    const b = document.createElement('b');
+    b.textContent = item.label;
+    const small = document.createElement('small');
+    small.textContent = item.detail;
+    span.appendChild(b);
+    span.appendChild(small);
+    label.appendChild(input);
+    label.appendChild(span);
+    box.appendChild(label);
+  });
+}
+
+async function init() {
+  try {
+    meta = await api('/api/meta');
+    categories = meta.categories;
+    buildCategorySelect();
+    renderReadinessItems();
+    renderRules();
+    renderSources($('sources'), meta.sources);
+
+    $('category').value = meta.defaults.category;
+    buildChips('scale-chips', meta.scales, selected.scale, (id) => {
+      selected.scale = id;
+      syncChips('scale-chips', id);
+      invalidateResult();
+    });
+    buildChips('origin-chips', meta.origins, selected.origin, (id) => {
+      selected.origin = id;
+      syncChips('origin-chips', id);
+      invalidateResult();
+    });
+    buildChips('cert-chips', meta.certification_status, selected.certified, (id) => {
+      selected.certified = id;
+      syncChips('cert-chips', id);
+      invalidateResult();
+    });
+    $('contains_animal').value = meta.defaults.contains_animal;
+    $('contains_haram').value = meta.defaults.contains_haram;
+    $('category').addEventListener('change', applyCategory);
+    applyCategory();
+  } catch (e) {
+    $('category-hint').textContent = 'Gagal memuat data dari server. Coba muat ulang halaman.';
+  }
+}
+
+function collect() {
+  return {
+    category: $('category').value,
+    scale: selected.scale,
+    import_status: selected.origin,
+    certified: selected.certified,
+    contains_animal: $('contains_animal').value,
+    contains_haram: $('contains_haram').value,
+  };
+}
+
+function fillExample() {
+  $('category').value = meta.defaults.category;
+  selected.scale = meta.defaults.scale;
+  selected.origin = meta.defaults.import_status;
+  selected.certified = meta.defaults.certified;
+  $('contains_animal').value = meta.defaults.contains_animal;
+  $('contains_haram').value = meta.defaults.contains_haram;
+  syncChips('scale-chips', selected.scale);
+  syncChips('origin-chips', selected.origin);
+  syncChips('cert-chips', selected.certified);
+  applyCategory();
+}
+
+function clearForm() {
+  fillExample();
+  $('err').classList.remove('show');
+  $('err').textContent = '';
+  invalidateResult();
+  $('copy-status').textContent = '';
+  lastResult = null;
+}
+
+function fillList(id, items) {
+  const box = $(id);
+  box.innerHTML = '';
+  items.forEach((item) => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    box.appendChild(li);
+  });
+}
+
+function renderTimeline(timeline, status) {
+  const box = $('timeline');
+  box.innerHTML = '';
+  const empty = $('timeline-empty');
+  if (!timeline.length) {
+    empty.hidden = false;
+    empty.textContent = status === 'bersertifikat'
+      ? 'Tidak ada rencana persiapan karena produk sudah bersertifikat. Fokus ke pemeliharaan dokumen dan varian baru.'
+      : 'Tidak ada milestone tersisa. Kalau belum bersertifikat, ambil jalur cepat melalui LPH atau BPJPH sekarang.';
+    return;
+  }
+  empty.hidden = true;
+  timeline.forEach((item) => {
+    const div = document.createElement('div');
+    div.className = 'milestone';
+    const top = document.createElement('div');
+    top.className = 'ms-top';
+    const label = document.createElement('span');
+    label.className = 'ms-label';
+    label.textContent = item.label;
+    const date = document.createElement('span');
+    date.className = 'ms-date';
+    date.textContent = item.date_label + ' - ' + item.days_left + ' hari lagi';
+    top.appendChild(label);
+    top.appendChild(date);
+    div.appendChild(top);
+    const ul = document.createElement('ul');
+    item.tasks.forEach((task) => {
+      const li = document.createElement('li');
+      li.textContent = task;
+      ul.appendChild(li);
+    });
+    div.appendChild(ul);
+    box.appendChild(div);
+  });
+}
+
+function renderDocuments(documents) {
+  const grid = $('doc-grid');
+  grid.innerHTML = '';
+  const empty = $('doc-empty');
+  if (!documents.length) {
+    empty.hidden = false;
+    empty.textContent = 'Tidak ada dokumen yang perlu disiapkan untuk status ini.';
+    return;
+  }
+  empty.hidden = true;
+  documents.forEach((doc) => {
+    const div = document.createElement('div');
+    div.className = 'doc-item';
+    const label = document.createElement('div');
+    label.className = 'd-label';
+    label.textContent = doc.label;
+    const note = document.createElement('div');
+    note.className = 'd-note';
+    note.textContent = doc.note;
+    div.appendChild(label);
+    div.appendChild(note);
+    grid.appendChild(div);
+  });
+}
+
+function renderResult(d) {
+  lastResult = d;
+  const verdict = $('verdict');
+  verdict.className = 'verdict ' + d.tone;
+  $('v-label').textContent = d.status_label;
+  $('v-body').textContent = d.status_detail;
+
+  $('m-deadline-label').textContent = d.deadline_kind === 'mulai' ? 'Mulai wajib' : 'Batas penahapan';
+  $('r-deadline').textContent = d.deadline_short;
+  $('r-days').textContent = d.days_left_label;
+  $('r-required').textContent = d.required ? (d.certified ? 'Sudah ada' : 'Wajib') : 'Tidak wajib';
+  $('r-path').textContent = d.self_declare.potential ? 'SEHATI' : (d.origin === 'impor' ? 'Registrasi impor' : 'LPH reguler');
+
+  $('basis-box').innerHTML = '';
+  const basisText = document.createElement('span');
+  basisText.textContent = 'Dasar aturan: ';
+  const basisStrong = document.createElement('b');
+  basisStrong.textContent = d.legal_basis;
+  const basisNote = document.createElement('span');
+  basisNote.textContent = ' ' + (d.deadline_kind === 'mulai' ? 'Tanggal mulai wajib.' : 'Batas akhir masa penahapan.');
+  $('basis-box').appendChild(basisText);
+  $('basis-box').appendChild(basisStrong);
+  $('basis-box').appendChild(basisNote);
+
+  $('path-title').textContent = d.self_declare.label;
+  $('path-body').textContent = d.self_declare.reason;
+  if (d.self_declare.potential) {
+    $('path-meta').textContent = 'Nilai fasilitasi ' + d.self_declare.value_label + ' - kuota ' + d.self_declare.quota + ' - kode ' + d.self_declare.code + '. ' + d.self_declare.caveat;
+  } else if (d.self_declare.caveat) {
+    $('path-meta').textContent = d.self_declare.caveat;
+  } else {
+    $('path-meta').textContent = '';
+  }
+  fillList('path-steps', d.self_declare.steps);
+
+  renderTimeline(d.timeline, d.status);
+  renderDocuments(d.documents);
+  fillList('action-list', d.actions);
+  fillList('warning-list', d.warnings);
+  renderSources($('result-sources'), d.sources);
+
+  $('result-card').classList.add('show');
+  $('copy-status').textContent = '';
+}
+
+async function calculate() {
+  const errBox = $('err');
+  errBox.classList.remove('show');
+  const btn = $('calc-btn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const data = await api('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collect()),
+    });
+    renderResult(data);
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $('result-card').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  } catch (e) {
+    errBox.textContent = e.message;
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Cek tenggat dan jalur sertifikasi';
+  }
+}
+
+function collectReadiness() {
+  const items = {};
+  meta.readiness_items.forEach((item) => {
+    const el = $('check-' + item.id);
+    items[item.id] = !!(el && el.checked);
+  });
+  return { items };
+}
+
+async function calculateReadiness() {
+  const errBox = $('readiness-err');
+  errBox.classList.remove('show');
+  const btn = $('readiness-btn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const data = await api('/api/readiness', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collectReadiness()),
+    });
+    $('r-score').textContent = data.score + '%';
+    $('r-label').textContent = data.status_label;
+    $('r-bar').style.width = data.score + '%';
+    $('r-detail').textContent = data.done + ' dari ' + data.total + ' kriteria sudah siap.';
+    fillList('r-gaps', data.next_steps);
+    $('r-note').textContent = data.note;
+    $('readiness-result').classList.add('show');
+  } catch (e) {
+    errBox.textContent = e.message;
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung kesiapan';
+  }
+}
+
+async function copySummary() {
+  if (!lastResult) return;
+  const d = lastResult;
+  const lines = [
+    'PELACAK TENGGAT WAJIB HALAL',
+    'Kategori: ' + d.category.label,
+    'Skala: ' + d.scale.label + ' - Asal: ' + (d.origin === 'impor' ? 'impor' : 'dalam negeri'),
+    'Status: ' + d.status_label,
+    'Tenggat: ' + d.deadline_label + ' (' + d.deadline_kind_label + ')',
+    'Sisa waktu: ' + d.days_left_label,
+    'Dasar: ' + d.legal_basis,
+    'Jalur: ' + d.self_declare.label,
+    '',
+    'Langkah:',
+  ];
+  d.actions.forEach((item, index) => lines.push((index + 1) + '. ' + item));
+  lines.push('');
+  lines.push('Sumber: ' + d.sources.map((s) => s.publisher + ', ' + s.date).join('; '));
+  lines.push('Bukan nasihat hukum. Cek SIHALAL dan konfirmasi ke BPJPH atau Pendamping PPH.');
+  try {
+    await navigator.clipboard.writeText(lines.join('\n'));
+    $('copy-status').textContent = 'Ringkasan disalin.';
+  } catch (e) {
+    $('copy-status').textContent = 'Gagal menyalin. Blok teks hasil lalu salin manual.';
+  }
+}
+
+initTheme();
+$('calc-btn').addEventListener('click', calculate);
+$('fill-example').addEventListener('click', fillExample);
+$('clear-form').addEventListener('click', clearForm);
+$('readiness-btn').addEventListener('click', calculateReadiness);
+$('copy-summary').addEventListener('click', copySummary);
+$('category').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') calculate();
+});
+init();
+</script>
+</body>
+</html>
