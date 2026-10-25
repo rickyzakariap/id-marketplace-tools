@@ -45,6 +45,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 37 | [37-pemulih-toko](37-pemulih-toko/) | Web | Node.js + Express | Store recovery assistant for suspended shops, locked NIK, hijacked accounts and identity abuse: loss estimate, evidence checklist and appeal letter generator |
 | 38 | [38-pelacak-poin-penalti](38-pelacak-poin-penalti/) | Web | Node.js + Express | Track marketplace penalty points, tier consequences, appeal deadlines, quarterly reset, reappearing points after a successful appeal, and generate follow-up letters |
 | 39 | [39-pelacak-tenggat-halal](39-pelacak-tenggat-halal/) | Web | Node.js + Express | Track mandatory halal certification deadlines by product category, business scale and origin (PP 40/2026), check SEHATI self-declare eligibility, preparation timeline, documents and readiness score |
+| 40 | [40-klaim-paket-hilang](40-klaim-paket-hilang/) | Web | Node.js + Express | Calculate net loss when a package is lost or damaged, compare compensation with item value, score 13 evidence items, track claim age and generate a claim letter |
 
 ## Contributing
 

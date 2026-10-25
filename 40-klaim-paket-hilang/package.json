@@ -1,0 +1,14 @@
+{
+  "name": "klaim-paket-hilang",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hitung kerugian paket hilang atau rusak, siapkan bukti klaim, lacak kasus, dan buat surat klaim",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/claim.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
