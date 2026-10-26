@@ -1,0 +1,14 @@
+{
+  "name": "banding-produk-diblokir",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hitung dampak produk yang dihapus, susun argumen dan bukti, lacak banding, dan buat surat peninjauan manual",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/appeal.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

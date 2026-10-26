@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-26",
+  "research_window": "Berita 19 sampai 26 Oktober 2026, dengan fokus kasus 24 Oktober 2026",
+  "sources": [
+    {
+      "title": "Toko Shopee 7 Tahun Ditutup Permanen karena Kapas Bayi Dianggap Produk Nikotin, Banding Ditolak",
+      "publisher": "Media Konsumen",
+      "date": "24 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/24/surat-pembaca/toko-shopee-7-tahun-ditutup-permanen-karena-kapas-bayi-dianggap-produk-nikotin-banding-ditolak",
+      "facts": [
+        "Pada 16 Oktober 2026 akun toko Bebekidz yang sudah berjualan 7 tahun dibatasi karena satu produk dianggap mengandung tembakau, nikotin, rokok elektronik, dan shisha.",
+        "Produk yang dimaksud adalah kapas bayi Medisoft. Penjual menyatakan judul, deskripsi, foto, dan kategori tidak pernah diubah.",
+        "Produk masuk kategori Dihapus Oleh Shopee dan penjual menekan tombol konfirmasi sehingga produk terhapus.",
+        "Penjual diminta membuat surat pernyataan agar toko tidak ditutup permanen, lalu akun dipulihkan pada 17 Oktober 2026.",
+        "Pada 19 Oktober 2026 toko ditutup kembali secara permanen dengan alasan yang sama, padahal penjual tidak mengubah atau mengunggah produk baru.",
+        "Banding berikutnya ditolak dan laporan ditutup."
+      ]
+    },
+    {
+      "title": "Semua Produk Dihapus Tanpa Alasan Jelas, Padahal Sudah 9 Tahun Berjualan di Shopee",
+      "publisher": "Media Konsumen",
+      "date": "22 Juli 2026",
+      "url": "https://mediakonsumen.com/2026/07/22/surat-pembaca/semua-produk-dihapus-tanpa-alasan-jelas-padahal-sudah-9-tahun-berjualan-di-shopee",
+      "facts": [
+        "Penjual dengan akun alby.outfit yang hampir 9 tahun berjualan mengalami seluruh produk hilang dari pencarian.",
+        "Customer service menyebut ada indikasi aktivitas mencurigakan tanpa menjelaskan indikasi tersebut.",
+        "Penjual meminta pemulihan produk karena tidak pernah melakukan pelanggaran yang dijelaskan."
+      ]
+    },
+    {
+      "title": "Toko Shopee Pernah Ditutup, Banding Disetujui dan Dibuka Kembali, tetapi Penalti Terus Muncul hingga Terancam Ditutup Lagi",
+      "publisher": "Media Konsumen",
+      "date": "21 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/21/surat-pembaca/toko-shopee-pernah-ditutup-banding-disetujui-dan-dibuka-kembali-tetapi-penalti-terus-muncul-hingga-terancam-ditutup-lagi",
+      "facts": [
+        "Banding pernah disetujui dan toko dibuka kembali, tetapi masalah yang sama muncul lagi.",
+        "Kasus ini sudah ditangani tool #38 untuk poin penalti, bukan untuk misklasifikasi produk."
+      ]
+    },
+    {
+      "title": "Toko Shopee Kirim Ulang Barang Rusak yang Sama sebagai Pengganti, Empat Kali Banding ke Shopee Semuanya Ditolak",
+      "publisher": "Media Konsumen",
+      "date": "25 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/25/surat-pembaca/toko-shopee-kirim-ulang-barang-rusak-yang-sama-sebagai-pengganti-empat-kali-banding-ke-shopee-semuanya-ditolak",
+      "facts": [
+        "Banding berulang tanpa hasil menunjukkan pola penyelesaian sengketa yang lambat.",
+        "Kasus ini terkait kualitas barang dan penggantian, bukan penghapusan produk, sehingga tidak dipakai sebagai dasar tool."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Produk dihapus karena salah klasifikasi otomatis",
+      "description": "Sistem marketplace menandai produk sebagai barang terlarang berdasarkan kata kunci atau kategori, lalu menghapus produk dan membekukan toko. Penjual tidak mendapat alasan rinci dan tidak tahu dasar klasifikasinya.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 24 Oktober 2026",
+        "Media Konsumen, 22 Juli 2026"
+      ]
+    },
+    {
+      "category": "Banding ditolak tanpa alasan tertulis",
+      "description": "Banding ditolak dan laporan ditutup tanpa penjelasan kategori atau ketentuan yang dilanggar. Penjual kehilangan kesempatan memperbaiki listing karena tidak tahu kesalahannya.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 24 Oktober 2026",
+        "Media Konsumen, 22 Juli 2026"
+      ]
+    },
+    {
+      "category": "Surat pernyataan yang memberatkan penjual",
+      "description": "Penjual diminta menandatangani surat pernyataan buatan platform yang berisi pengakuan akan ditutup permanen bila terulang, padahal penjual merasa tidak melanggar. Surat itu kemudian dipakai untuk menolak banding berikutnya.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 24 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Modal dan omzet berhenti saat listing hilang",
+      "description": "Listing yang hilang menghentikan penjualan, menahan stok, dan membuang biaya iklan yang sudah berjalan. Penjual tidak punya catatan dampak harian untuk diajukan saat eskalasi.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 24 Oktober 2026",
+        "Media Konsumen, 22 Juli 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#37 pemulih-toko: memulihkan akses toko yang dibekukan, NIK terkunci, akun dibajak, dan identitas dipakai. Tidak menangani produk yang dihapus karena salah klasifikasi.",
+    "#38 pelacak-poin-penalti: melacak poin penalti dan banding poin. Bukan banding produk yang dihapus.",
+    "#40 klaim-paket-hilang: klaim paket hilang atau rusak. Tidak menyentuh penghapusan listing.",
+    "#31 biaya-retur-tracker: kerugian retur barang. Bukan listing yang hilang dari pencarian.",
+    "#35 program-diskon-checker dan #36 biaya-total-marketplace: kalkulator biaya dan diskon. Tidak membahas takedown produk.",
+    "#29 dana-tertahan-tracker: saldo platform yang ditahan. Bukan produk yang dihapus.",
+    "#24 nib-deadline-checker, #23 dan #34 insentif biaya layanan, #22 dan #25 PPh 22, #39 tenggat halal: kepatuhan izin, pajak, dan sertifikasi."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Banding Produk Diblokir",
+      "number": 41,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Alat bantu banding saat produk dihapus atau dianggap salah kategori. Menghitung dampak harian dari listing yang hilang, menilai kekuatan argumen berdasarkan fakta yang diisi penjual, memberi skor kesiapan 13 bukti, melacak kasus per produk, dan membuat surat permohonan peninjauan manual.",
+      "why": "Kasus 24 Oktober 2026 menunjukkan produk yang sah bisa dihapus karena klasifikasi otomatis, lalu toko ditutup permanen setelah penjual menandatangani surat pernyataan. Belum ada tool yang membantu penjual menyusun argumen, bukti, dan kronologi untuk banding produk.",
+      "grounding": "Semua angka rupiah berasal dari input penjual. Tidak ada tarif, persentase, atau tenggat resmi yang dikarang. Skor argumen dan tingkat dampak adalah heuristik tool yang diberi label estimasi, bukan aturan marketplace.",
+      "not_repeat": "Berbeda dari #37 yang memulihkan akses toko dan #38 yang melacak poin penalti. Fokus tool ini adalah produk yang dihapus atau salah kategori, bukti yang membantah klasifikasi, dan surat banding produk."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "41-banding-produk-diblokir",
+    "reason": "Riset menemukan pain point baru yang belum ditangani: produk sah dihapus karena klasifikasi otomatis, banding ditolak tanpa alasan tertulis, dan toko ditutup permanen. Sumbernya cukup rinci untuk membangun kalkulator dampak, penilai argumen, pelacak kasus, dan generator surat tanpa mengarang angka.",
+    "scope": [
+      "Kalkulator dampak listing yang hilang: omzet, laba, modal tertahan, dan biaya iklan.",
+      "Penilai kekuatan argumen berdasarkan fakta yang diisi penjual.",
+      "Skor kesiapan 13 bukti dengan penanda bukti kritis.",
+      "Catatan kasus per produk dengan umur kasus, status, nomor tiket, dan ekspor CSV.",
+      "Generator surat permohonan peninjauan manual dan pemulihan produk.",
+      "Sumber berita ditampilkan di UI dan README.",
+      "Unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "not_repeat": "Tidak menduplikasi #37 pemulih toko, #38 poin penalti, #40 klaim paket, #31 biaya retur, atau kalkulator biaya marketplace."
+  }
+}
