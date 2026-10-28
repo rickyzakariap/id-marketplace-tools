@@ -47,6 +47,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 39 | [39-pelacak-tenggat-halal](39-pelacak-tenggat-halal/) | Web | Node.js + Express | Track mandatory halal certification deadlines by product category, business scale and origin (PP 40/2026), check SEHATI self-declare eligibility, preparation timeline, documents and readiness score |
 | 40 | [40-klaim-paket-hilang](40-klaim-paket-hilang/) | Web | Node.js + Express | Calculate net loss when a package is lost or damaged, compare compensation with item value, score 13 evidence items, track claim age and generate a claim letter |
 | 41 | [41-banding-produk-diblokir](41-banding-produk-diblokir/) | Web | Node.js + Express | Appeal a removed or misclassified product: estimate lost profit and stuck stock, score argument strength and 13 evidence items, track cases and generate a manual review letter |
+| 42 | [42-pelacak-kunci-promosi](42-pelacak-kunci-promosi/) | Web | Node.js + Express | Track locked vouchers and promos without penalty points: estimate lost profit, score the indication and 13 evidence items, track cases and generate an unlock request letter |
 
 ## Contributing
 

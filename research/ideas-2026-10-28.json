@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-28",
+  "research_window": "Berita 21 sampai 28 Oktober 2026, dengan satu kasus pendukung 16 Oktober 2026 karena gejalanya sama",
+  "sources": [
+    {
+      "title": "Toko Shopee Saya Tidak Bisa Pakai Voucher Apa Pun Selama 3 Bulan, Padahal Star Seller dan Tanpa Poin Penalti",
+      "publisher": "Media Konsumen",
+      "date": "27 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/27/surat-pembaca/toko-shopee-saya-tidak-bisa-pakai-voucher-apa-pun-selama-3-bulan-padahal-star-seller-dan-tanpa-poin-penalti",
+      "facts": [
+        "Penjual Shopee Ngalamngolshop berjualan sejak 9 tahun lalu, berstatus Star Seller, dan tidak memiliki poin penalti toko.",
+        "Pada 25 Juli 2026 penjual membuat harga coret, muncul peringatan penalti promosi, lalu voucher tidak bisa menempel.",
+        "Lebih dari 30 hari kemudian voucher masih tidak menempel, termasuk setelah reset poin kuartal pada Senin terakhir September 2026.",
+        "Promo berbayar Promo Extra dan Live Extra menerima pendaftaran, tetapi voucher tetap gagal dipakai saat checkout.",
+        "Penjual sudah 8 kali chat CS dan jawaban tetap menyebut aktivitas mencurigakan tanpa rincian transaksi atau aturan yang dilanggar.",
+        "Penjual menduga fitur promosi dikunci oleh sistem otomatis dan meminta batas waktu hukuman yang jelas."
+      ]
+    },
+    {
+      "title": "Shopee Tiba-Tiba Mematikan Toko Saya, Tidak Bisa Nempel Voucher Apa Pun",
+      "publisher": "Media Konsumen",
+      "date": "16 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/16/surat-pembaca/shopee-tiba-tiba-mematikan-toko-saya-tidak-bisa-nempel-voucher-apa-pun",
+      "facts": [
+        "Toko toserbashakiel di Pasuruan berjualan hampir 10 tahun di kategori Makanan dan Minuman.",
+        "Pada 12 Oktober 2026 voucher kategori masih bisa dipakai. Pada 13 Oktober 2026 akses voucher hilang dan status Star Seller dicabut tanpa peringatan.",
+        "CS menyebut ada kejanggalan transaksi tanpa menunjukkan transaksi mana yang dimaksud.",
+        "Penjual mencatat nomor laporan 2109830730719211531.",
+        "Penjual menduga lonjakan pesanan dari sekitar 100 menjadi 1.000 resi per hari setelah event 1 sampai 6 Oktober 2026 ikut memicu flag otomatis."
+      ]
+    },
+    {
+      "title": "Mohon Investigasi Shopee: Pembeli Bilang Tidak Pernah Kasih Bintang 1, tapi Toko Saya Dapat Bintang 1",
+      "publisher": "Media Konsumen",
+      "date": "28 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/28/surat-pembaca/mohon-investigasi-shopee-pembeli-bilang-tidak-pernah-kasih-bintang-1-tapi-toko-saya-dapat-bintang-1",
+      "facts": [
+        "Toko sablon dengan rating 4.9 menerima bintang 1 dari pesanan yang sudah selesai.",
+        "Pembeli menyatakan belum membuka aplikasi Shopee saat penilaian muncul.",
+        "Kasus ini dicatat sebagai pain point terpisah dan tidak dipakai sebagai dasar tool hari ini."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Voucher dan promosi terkunci tanpa poin penalti",
+      "description": "Voucher instant, voucher kategori, voucher toko, dan promo berbayar gagal menempel atau ditolak saat checkout. Halaman poin penalti menunjukkan nol dan status Star Seller bisa tetap ada, sehingga penjual tidak punya indikator resmi untuk mengetahui penyebabnya.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 27 Oktober 2026",
+        "Media Konsumen, 16 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Kunci promosi bertahan melewati reset kuartal",
+      "description": "Reset poin kuartal tidak membuka fitur promosi. Penjual menunggu lebih dari 30 hari dan tetap tidak bisa memakai voucher, sehingga dugaan mengarah ke kunci terpisah dari poin penalti.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 27 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Alasan tertulis tidak pernah diberikan",
+      "description": "CS menjawab dengan template aktivitas mencurigakan atau kejanggalan transaksi, tetapi tidak menyebut transaksi, kategori, atau aturan yang dilanggar. Penjual tidak bisa memperbaiki atau menyanggah karena tidak tahu kesalahannya.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 27 Oktober 2026",
+        "Media Konsumen, 16 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Kerugian berjalan tanpa catatan",
+      "description": "Penjualan turun saat voucher tidak bisa dipakai, biaya iklan tetap keluar, dan status Star Seller bisa hilang. Penjual tidak punya catatan harian kerugian untuk diajukan saat eskalasi.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 27 Oktober 2026",
+        "Media Konsumen, 16 Oktober 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#38 pelacak-poin-penalti: melacak poin penalti, tingkatan, tenggat banding, dan reset kuartal. Tidak menangani fitur promosi yang terkunci saat poin nol.",
+    "#37 pemulih-toko: memulihkan akses toko yang dibekukan atau NIK terkunci. Bukan kunci voucher dan promo.",
+    "#41 banding-produk-diblokir: produk dihapus atau salah kategori. Bukan fitur promosi yang gagal dipakai.",
+    "#35 program-diskon-checker: menghitung margin setelah diskon dan audit soft enrollment. Tidak melacak kunci promosi atau menyusun eskalasi.",
+    "#36 biaya-total-marketplace: kalkulator biaya all-in. Tidak membahas akses promosi.",
+    "#40 klaim-paket-hilang: klaim logistik. Bukan kunci voucher.",
+    "#31 biaya-retur-tracker, #29 dana-tertahan-tracker, #22 dan #25 PPh 22, #23 dan #34 insentif biaya layanan, #39 tenggat halal: topik retur, saldo, pajak, insentif, dan sertifikasi."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pelacak Kunci Promosi",
+      "number": 42,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Alat bantu saat voucher dan promo terkunci tanpa poin penalti. Menghitung kerugian harian, menilai indikasi kunci promosi dari pemicu dan fakta, memberi skor kesiapan 13 bukti, melacak kasus per toko, dan membuat surat permintaan penjelasan tertulis serta pembukaan kunci.",
+      "why": "Kasus 27 Oktober 2026 menunjukkan voucher bisa gagal dipakai lebih dari 3 bulan meski poin nol dan reset kuartal sudah lewat. Kasus 16 Oktober 2026 menunjukkan hal serupa terjadi mendadak setelah lonjakan pesanan. Belum ada tool yang membantu penjual menyusun kronologi, bukti, dan permintaan tertulis untuk masalah ini.",
+      "grounding": "Semua angka rupiah berasal dari input penjual. Tidak ada tarif, persentase, atau tenggat resmi yang dikarang. Skor indikasi dan tingkat dampak adalah heuristik tool yang diberi label estimasi, bukan aturan marketplace.",
+      "not_repeat": "Berbeda dari #38 yang fokus poin penalti dan banding poin, #37 yang memulihkan akses toko, #41 yang menangani produk dihapus, serta #35 dan #36 yang menghitung biaya dan diskon."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "42-pelacak-kunci-promosi",
+    "reason": "Riset menemukan pain point baru yang belum ditangani: voucher dan promo terkunci tanpa poin penalti, bertahan melewati reset kuartal, dan ditolak tanpa alasan tertulis. Dua kasus memberi cukup detail untuk membangun kalkulator dampak, penilai indikasi, pelacak kasus, dan generator surat tanpa mengarang angka.",
+    "scope": [
+      "Kalkulator dampak: omzet hilang, laba hilang, biaya iklan selama kunci, dan penjualan hilang per hari.",
+      "Penilai indikasi kunci promosi dari pemicu, gejala, poin, peringatan, reset kuartal, chat CS, dan lama kunci.",
+      "Skor kesiapan 13 bukti dengan penanda lima bukti kritis.",
+      "Catatan kasus per toko dengan umur kunci, status, nomor tiket, dan ekspor CSV.",
+      "Generator surat permintaan penjelasan tertulis dan pembukaan kunci.",
+      "Sumber berita ditampilkan di UI dan README.",
+      "Unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "not_repeat": "Tidak menduplikasi #38 poin penalti, #37 pemulih toko, #41 banding produk, #35 program diskon, #36 biaya total, atau #40 klaim paket."
+  }
+}

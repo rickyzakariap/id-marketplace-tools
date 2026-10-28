@@ -1,0 +1,14 @@
+{
+  "name": "pelacak-kunci-promosi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lacak voucher dan promo yang terkunci, hitung kerugian, susun bukti, dan buat surat pembukaan kunci",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/promo.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
