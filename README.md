@@ -48,6 +48,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 40 | [40-klaim-paket-hilang](40-klaim-paket-hilang/) | Web | Node.js + Express | Calculate net loss when a package is lost or damaged, compare compensation with item value, score 13 evidence items, track claim age and generate a claim letter |
 | 41 | [41-banding-produk-diblokir](41-banding-produk-diblokir/) | Web | Node.js + Express | Appeal a removed or misclassified product: estimate lost profit and stuck stock, score argument strength and 13 evidence items, track cases and generate a manual review letter |
 | 42 | [42-pelacak-kunci-promosi](42-pelacak-kunci-promosi/) | Web | Node.js + Express | Track locked vouchers and promos without penalty points: estimate lost profit, score the indication and 13 evidence items, track cases and generate an unlock request letter |
+| 43 | [43-pelacak-ulasan-palsu](43-pelacak-ulasan-palsu/) | Web | Node.js + Express | Track suspected fake 1-star review attacks: rating and profit impact, 120-day edit window, 10 indicators, 13 evidence items, case log, CSV export and review investigation letter |
 
 ## Contributing
 

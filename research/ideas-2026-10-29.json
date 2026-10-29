@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-29",
+  "research_window": "Berita 22 sampai 29 Oktober 2026, dengan satu kasus pendukung 14 Oktober 2026 karena pola serangannya sama",
+  "sources": [
+    {
+      "title": "Mohon Investigasi Shopee: Pembeli Bilang Tidak Pernah Kasih Bintang 1, tapi Toko Saya Dapat Bintang 1",
+      "publisher": "Media Konsumen",
+      "date": "28 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/28/surat-pembaca/mohon-investigasi-shopee-pembeli-bilang-tidak-pernah-kasih-bintang-1-tapi-toko-saya-dapat-bintang-1",
+      "facts": [
+        "Toko sablon Hedos Printing dengan rating sekitar 4,9 menerima bintang 1 dari pesanan yang sudah selesai.",
+        "Pembeli menyatakan tidak pernah membuka aplikasi Shopee dan tidak pernah memberi ulasan bintang 1.",
+        "CS Shopee menyebut penghapusan ulasan memerlukan persetujuan pembeli.",
+        "Penjual meminta investigasi karena ulasan tetap muncul meski pembeli menyangkal."
+      ]
+    },
+    {
+      "title": "Akun Shopee Pakai Nama KTP Saya dan Foto AI, Dua Toko Saya Kena Ulasan Bintang 1",
+      "publisher": "Media Konsumen",
+      "date": "14 Oktober 2026",
+      "url": "https://mediakonsumen.com/2026/10/14/surat-pembaca/akun-shopee-pakai-nama-ktp-saya-dan-foto-ai-dua-toko-saya-kena-ulasan-bintang-1",
+      "facts": [
+        "Akun lain memakai nama sesuai KTP penjual dan foto profil hasil AI.",
+        "Akun tersebut membuat lima pesanan pada dua toko milik penjual: tiga selesai dan dua dibatalkan.",
+        "Alamat penerima yang dipakai adalah tempat umum seperti musala dan kedai kopi.",
+        "Ulasan bintang 1 muncul segera setelah pesanan, lalu laporan penjual ditutup oleh Shopee sementara akun masih aktif."
+      ]
+    },
+    {
+      "title": "Penilaian Produk: Bagaimana cara memberikan penilaian dan ulasan produk?",
+      "publisher": "Pusat Bantuan Shopee",
+      "date": "diakses 29 Oktober 2026",
+      "url": "https://help.shopee.co.id/portal/4/article/73047",
+      "facts": [
+        "Pesanan yang dikembalikan atau dibatalkan tidak memenuhi syarat untuk penilaian dan ulasan produk.",
+        "Peringkat rendah untuk Layanan Pengiriman dan Layanan Penjual tidak dihitung ke peringkat produk secara keseluruhan.",
+        "Peringkat rendah untuk Kualitas Produk dihitung ke peringkat produk.",
+        "Pedoman ulasan menyebut penilaian yang tidak selaras dengan ulasan sebagai pelanggaran, misalnya teks positif dengan bintang 1.",
+        "Setiap ulasan yang tidak mematuhi pedoman akan dihapus oleh Shopee."
+      ]
+    },
+    {
+      "title": "Penilaian Produk: Apakah saya dapat mengubah penilaian atau ulasan produk?",
+      "publisher": "Pusat Bantuan Shopee",
+      "date": "diakses 29 Oktober 2026",
+      "url": "https://help.shopee.co.id/portal/4/article/73045",
+      "facts": [
+        "Pembeli dapat mengubah penilaian atau ulasan satu kali dalam kurun waktu 120 hari setelah pesanan selesai.",
+        "Tidak ada Koin Shopee tambahan untuk ulasan yang diubah."
+      ]
+    },
+    {
+      "title": "Meningkatkan Kepuasan Pembeli",
+      "publisher": "Pusat Edukasi Penjual Shopee",
+      "date": "15 Oktober 2026",
+      "url": "https://seller.shopee.co.id/edu/article/6859",
+      "facts": [
+        "Pembeli diizinkan mengubah penilaian sekali dalam 120 hari setelah pesanan selesai.",
+        "Penjual dapat merespons penilaian satu kali dan tidak dapat mengubahnya setelah dikirim.",
+        "Penjual dapat melaporkan ulasan pembeli jika menilai ulasan tidak pantas."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Ulasan bintang 1 yang penyangkalannya datang dari pembeli sendiri",
+      "description": "Pembeli menyatakan tidak pernah membuka aplikasi atau memberi penilaian, tetapi bintang 1 tetap muncul di toko. Penjual tidak punya cara membuktikan siapa yang mengirim penilaian dan bergantung pada persetujuan pembeli untuk menghapusnya.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 28 Oktober 2026",
+        "Pusat Bantuan Shopee, 73047 dan 73045"
+      ]
+    },
+    {
+      "category": "Penyalahgunaan identitas untuk menyerang reputasi",
+      "description": "Akun memakai nama KTP dan foto penjual, memasang alamat fiktif, membuat pesanan, lalu memberi ulasan bintang 1 di beberapa toko sekaligus. Ini bukan ulasan pelanggan asli dan sulit dibedakan dari transaksi normal tanpa pemeriksaan pola akun.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 14 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Bukti tersebar dan jalur laporan tidak jelas",
+      "description": "Penjual perlu mengumpulkan screenshot ulasan, detail pesanan, chat, profil akun, alamat, riwayat rating, dan nomor tiket. Tanpa daftar bukti, laporan mudah ditolak atau dijawab template. Batas 120 hari untuk pembeli mengubah ulasan juga mudah terlewat.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 28 Oktober 2026",
+        "Media Konsumen, 14 Oktober 2026",
+        "Pusat Bantuan Shopee, 73045"
+      ]
+    },
+    {
+      "category": "Dampak rating dan penjualan tidak terukur",
+      "description": "Penjual tahu rating turun, tetapi tidak tahu berapa ulasan bintang 5 yang dibutuhkan untuk pulih atau berapa laba yang hilang selama kasus berjalan. Perbedaan jenis penilaian juga sering tertukar: rating layanan pengiriman dan layanan penjual tidak dihitung ke peringkat produk.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Pusat Bantuan Shopee, 73047"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#03 review-sentiment-analyzer: menganalisis sentimen dan tema ulasan asli. Tidak menilai keaslian ulasan, tidak menghitung dampak rating, dan tidak menyusun laporan.",
+    "#37 pemulih-toko: memulihkan akun, NIK, atau toko yang dibekukan. Menyinggung identitas dipakai untuk menyerang reputasi, tetapi tidak menghitung rating atau membuat surat pemeriksaan ulasan.",
+    "#42 pelacak-kunci-promosi: voucher dan promo yang gagal dipakai. Bukan ulasan.",
+    "#41 banding-produk-diblokir: produk dihapus atau salah kategori. Bukan ulasan.",
+    "#38 pelacak-poin-penalti: poin penalti dan banding poin. Bukan ulasan.",
+    "#40 klaim-paket-hilang: klaim logistik. Bukan reputasi toko.",
+    "#31 biaya-retur-tracker dan #29 dana-tertahan-tracker: retur dan saldo tertahan. Bukan ulasan palsu.",
+    "#22 pph22-tax-calculator dan #25 pph22-refund-tracker: pajak PPh 22. Tidak relevan dan sudah terliput dua kali."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pelacak Ulasan Palsu",
+      "number": 43,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Alat bantu saat toko menerima ulasan bintang 1 yang diduga tidak sah. Menghitung dampak rating dan laba, menilai indikasi dari fakta dan pola akun, menghitung batas 120 hari, memberi skor kesiapan 13 bukti, melacak kasus per toko, dan membuat surat permintaan pemeriksaan.",
+      "why": "Dua kasus terbaru menunjukkan pola berbeda: pembeli menyangkal pernah menilai, dan akun memakai identitas penjual untuk menyerang dua toko. Belum ada tool yang menggabungkan kalkulator rating, batas waktu, bukti, pelacakan, dan surat untuk masalah ini.",
+      "grounding": "Aturan rating dan batas 120 hari dikutip dari Pusat Bantuan Shopee. Semua angka penjualan dan rating awal berasal dari input penjual. Tidak ada tarif, statistik, atau tingkat keberhasilan penghapusan yang dikarang."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "43-pelacak-ulasan-palsu",
+    "reason": "Riset menemukan pain point baru yang belum ditangani tool lain: ulasan bintang 1 yang diduga tidak dibuat pembeli, termasuk penyalahgunaan identitas untuk menyerang beberapa toko. Dua kasus memberi cukup detail untuk membangun kalkulator rating, penilai indikasi, pelacak bukti, dan generator surat tanpa mengarang angka.",
+    "scope": [
+      "Kalkulator rating: rata-rata baru, penurunan poin, dampak satu bintang 1, dan jumlah bintang 5 untuk pulih.",
+      "Pemisahan jenis penilaian: kualitas produk dihitung, layanan penjual dan pengiriman tidak dihitung menurut aturan Shopee.",
+      "Batas 120 hari pembeli mengubah ulasan dengan peringatan bila lewat atau tinggal 14 hari.",
+      "Kalkulator dampak: omzet hilang, laba hilang, penjualan hilang per hari, dan tingkat dampak.",
+      "Skor indikasi 10 indikator dan skor kesiapan 13 bukti dengan lima bukti kritis.",
+      "Catatan kasus per toko dengan umur kasus, status, nomor tiket, dan ekspor CSV.",
+      "Generator surat permintaan pemeriksaan log dan penghapusan ulasan tanpa janji penghapusan."
+    ],
+    "rejected": [
+      "Tool PPh 22 baru: sudah ada #22 kalkulator PPh 22 dan #25 pelacak refund. Berita pajak 23 dan 27 sampai 28 Oktober 2026 tidak cukup untuk membuat tool ketiga tanpa mengulang.",
+      "Tool retur baru: sudah ada #31 biaya retur dan #40 klaim paket hilang. Kasus retur berulang untuk mencari perhatian hanya dipakai sebagai konteks, bukan dasar tool baru."
+    ]
+  }
+}

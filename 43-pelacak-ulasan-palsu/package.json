@@ -1,0 +1,14 @@
+{
+  "name": "pelacak-ulasan-palsu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lacak ulasan bintang 1 yang diduga palsu, hitung dampak rating dan laba, susun bukti, dan buat surat pemeriksaan",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/reviews.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

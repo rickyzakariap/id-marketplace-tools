@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pelacak Ulasan Palsu</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 920px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+.lede {
+  color: var(--ink-4);
+  margin-top: 14px;
+  max-width: 60ch;
+  text-wrap: balance;
+}
+.lede b { color: var(--ink); font-weight: 400; }
+
+.theme {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.16s;
+}
+.theme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--wash-hover);
+  opacity: 0;
+  transform: scale(0.86);
+  transition: opacity 0.15s, transform 0.26s var(--ease-pop);
+}
+.theme:hover { color: var(--ink); }
+.theme:hover::before { opacity: 1; transform: scale(1); }
+.theme:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.theme svg { position: relative; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card > h2,
+.card h2.sub {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.card h2.sub { margin-top: 22px; }
+
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+input[type=number],
+input[type=text],
+input[type=date],
+select,
+textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--elev);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+}
+input[type=number],
+input[type=date] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-4) 50%), linear-gradient(135deg, var(--ink-4) 50%, transparent 50%);
+  background-position: calc(100% - 17px) calc(50% + 1px), calc(100% - 12px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea { background: var(--surface-2); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.row:last-child, .tri:last-child { margin-bottom: 0; }
+
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  height: 36px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); color: var(--ink); }
+.chip:active { transform: scale(0.96); }
+.chip[data-on="true"] { background: var(--slab); color: var(--on-slab); }
+.sr-select {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.btn-row { display: flex; gap: 8px; margin-top: 20px; }
+.btn {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--elev);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+html[data-theme="dark"] .btn { background: var(--surface-2); }
+.btn:hover { color: var(--ink); background: var(--wash-hover); }
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.primary {
+  width: 100%;
+  height: 44px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slab);
+  color: var(--on-slab);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
+}
+.primary:hover { opacity: 0.9; }
+.primary:active { transform: scale(0.96); }
+.primary:disabled { opacity: 0.5; cursor: default; }
+
+.err { color: var(--ember); font-size: 13px; min-height: 0; }
+.err.show { margin-top: 12px; }
+.hint { font-size: 12.5px; color: var(--ink-5); margin-top: 10px; }
+.note { font-size: 12.5px; color: var(--ink-5); margin-top: 12px; }
+
+.result { display: none; }
+.result.show { display: block; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+}
+html[data-theme="dark"] .verdict { background: var(--surface-2); }
+.verdict .v-label {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.verdict .v-body { font-size: 14px; color: var(--ink-3); }
+.verdict.dibuka { border-left: 3px solid var(--ok); }
+.verdict.ringan { border-left: 3px solid var(--signal); }
+.verdict.signifikan { border-left: 3px solid var(--ember); }
+.verdict.kritis { border-left: 3px solid var(--ember); }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.metric {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
+}
+html[data-theme="dark"] .metric { background: var(--surface-2); }
+.metric .m-label { font-size: 12.5px; color: var(--ink-4); }
+.metric .m-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 19px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.m-value.neg { color: var(--ember); }
+
+.arg-box {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+html[data-theme="dark"] .arg-box { background: var(--surface-2); }
+.arg-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.arg-score { font-family: var(--font-mono); font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.arg-label { font-size: 13px; color: var(--ink-4); }
+.arg-cause { font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
+.arg-box ul { padding-left: 18px; }
+.arg-box li { font-size: 13px; color: var(--ink-2); margin-bottom: 5px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { padding: 9px 4px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--ink-4); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tbody tr { transition: background-color 0.16s; }
+tbody tr:hover { background: var(--wash-hover); }
+
+.result h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 24px 0 10px;
+}
+.result h2:first-of-type { margin-top: 0; }
+
+ol, ul { padding-left: 20px; }
+li { font-size: 13.5px; color: var(--ink-2); margin-bottom: 8px; }
+li::marker { color: var(--ink-4); }
+
+.check-list { display: grid; gap: 8px; }
+.check-list.compact { grid-template-columns: 1fr 1fr; gap: 6px; }
+.check-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--elev);
+  cursor: pointer;
+  transition: background-color 0.16s;
+}
+html[data-theme="dark"] .check-item { background: var(--surface-2); }
+.check-item:hover { background: var(--wash-hover); }
+.check-item input { width: 16px; height: 16px; margin-top: 3px; flex: none; accent-color: var(--ink); }
+.check-item .c-body { font-size: 13.5px; color: var(--ink-2); }
+.check-item .c-note { display: block; font-size: 12px; color: var(--ink-5); margin-top: 2px; }
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ember);
+  margin-left: 6px;
+}
+.readiness-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.score {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.score-label { font-size: 13px; color: var(--ink-4); }
+
+.source-mini, .src-item {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.source-mini:last-child, .src-item:last-child { border-bottom: 0; }
+.source-mini a, .src-item a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
+.source-meta { display: block; color: var(--ink-5); margin-top: 2px; }
+
+.case-item {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+html[data-theme="dark"] .case-item { background: var(--surface-2); }
+.case-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; justify-content: space-between; }
+.case-ref { font-weight: 500; color: var(--ink); }
+.case-meta { font-size: 12.5px; color: var(--ink-4); }
+.case-note { font-size: 13px; color: var(--ink-3); margin-top: 6px; }
+.case-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+.case-actions select { width: auto; min-width: 160px; font-size: 13px; padding: 7px 30px 7px 10px; }
+.case-actions input[type=date] { width: 150px; font-size: 13px; padding: 7px 10px; }
+.case-actions .btn { flex: none; height: 34px; padding: 0 14px; font-size: 13px; }
+.flag {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border-left: 3px solid var(--ember);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 14px 0;
+}
+html[data-theme="dark"] .flag { background: var(--surface-2); }
+.flag b { font-weight: 500; }
+
+.letter-output { display: none; margin-top: 18px; }
+.letter-output.show { display: block; }
+.letter-subject {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+textarea.letter {
+  min-height: 420px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.65;
+  resize: vertical;
+}
+.copy-row { display: flex; gap: 8px; margin-top: 10px; }
+.copy-row .btn { height: 38px; }
+.status { font-size: 12.5px; color: var(--ok); margin-top: 8px; min-height: 0; }
+
+.notice {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border-left: 3px solid var(--signal);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 16px;
+}
+html[data-theme="dark"] .notice { background: var(--surface-2); }
+.notice.warn { border-left-color: var(--ember); }
+.notice.ok { border-left-color: var(--ok); }
+.notice b { color: var(--ink-2); font-weight: 500; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.card { animation: rise 0.62s var(--ease-out) both; }
+.card:nth-of-type(1) { animation-delay: 0ms; }
+.card:nth-of-type(2) { animation-delay: 60ms; }
+.card:nth-of-type(3) { animation-delay: 120ms; }
+.card:nth-of-type(4) { animation-delay: 180ms; }
+.card:nth-of-type(5) { animation-delay: 240ms; }
+.card:nth-of-type(6) { animation-delay: 300ms; }
+
+.result.show { animation: rise 0.5s var(--ease-out) both; }
+.result.show .metric { animation: rise 0.42s var(--ease-out) both; }
+.result.show .metric:nth-child(1) { animation-delay: 60ms; }
+.result.show .metric:nth-child(2) { animation-delay: 110ms; }
+.result.show .metric:nth-child(3) { animation-delay: 160ms; }
+.result.show .metric:nth-child(4) { animation-delay: 210ms; }
+
+@media (max-width: 768px) {
+  body { padding: 20px 14px 48px; }
+  h1 { font-size: 31px; }
+  .card { padding: 18px; border-radius: 28px; }
+  .row, .tri { grid-template-columns: 1fr; gap: 12px; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .check-list.compact { grid-template-columns: 1fr; }
+  header { margin-bottom: 20px; }
+}
+
+@media (max-width: 460px) {
+  .metrics { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Pelacak Ulasan Palsu</h1>
+      <p class="lede">Toko kena bintang 1 padahal pembeli bilang tidak pernah menilai? Ukur <b>dampak rating dan laba</b>, susun bukti, lacak tiket, lalu buat surat permintaan pemeriksaan.</p>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema" title="Ganti tema">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <div class="card">
+    <h2>Diagnosis ulasan</h2>
+    <div class="chips" id="platform-chips"></div>
+    <select class="sr-select" id="platform" tabindex="-1" aria-hidden="true"></select>
+    <p class="hint" id="platform-hint"></p>
+
+    <div class="row" style="margin-top:16px">
+      <div>
+        <label for="status">Status penanganan</label>
+        <select id="status"></select>
+      </div>
+      <div>
+        <label for="ticket">Nomor tiket terakhir</label>
+        <input type="text" id="ticket" placeholder="TIKET-001">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="store_name">Nama toko</label>
+        <input type="text" id="store_name" placeholder="Nama toko">
+      </div>
+      <div>
+        <label for="store_id">ID toko atau username</label>
+        <input type="text" id="store_id" placeholder="toko-contoh">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="order_id">Nomor pesanan yang dinilai</label>
+        <input type="text" id="order_id" placeholder="261014XXXXXXXX">
+      </div>
+      <div>
+        <label for="review_date">Tanggal ulasan muncul</label>
+        <input type="date" id="review_date">
+      </div>
+    </div>
+    <div class="tri">
+      <div>
+        <label for="order_date">Tanggal pesanan selesai</label>
+        <input type="date" id="order_date">
+      </div>
+      <div>
+        <label for="resolved_date">Tanggal ulasan dihapus</label>
+        <input type="date" id="resolved_date">
+      </div>
+      <div>
+        <label for="last_follow_up">Follow-up terakhir</label>
+        <input type="date" id="last_follow_up">
+      </div>
+    </div>
+    <p class="hint" style="margin-top:-4px">Tanggal pesanan dipakai untuk menghitung batas 120 hari pembeli mengubah ulasan. Kosongkan tanggal hapus bila belum selesai.</p>
+
+    <h2 class="sub">Rating dan jenis penilaian</h2>
+    <div class="tri">
+      <div>
+        <label for="current_rating">Rating produk saat ini</label>
+        <input type="number" id="current_rating" min="0.1" max="5" step="0.1" placeholder="4.9">
+      </div>
+      <div>
+        <label for="total_ratings">Jumlah penilaian saat ini</label>
+        <input type="number" id="total_ratings" min="1" step="1" placeholder="320">
+      </div>
+      <div>
+        <label for="bad_reviews">Ulasan bintang 1 yang dipermasalahkan</label>
+        <input type="number" id="bad_reviews" min="1" step="1" placeholder="1">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="target_rating">Target rating yang ingin dipulihkan</label>
+        <input type="number" id="target_rating" min="0.1" max="5" step="0.1" placeholder="4.9">
+      </div>
+      <div>
+        <label for="review_type">Jenis penilaian yang bermasalah</label>
+        <select id="review_type"></select>
+      </div>
+    </div>
+    <p class="hint" id="type-note" style="margin-top:-4px;margin-bottom:14px"></p>
+
+    <h2 class="sub">Angka ekonomi</h2>
+    <div class="row">
+      <div>
+        <label for="price">Harga jual rata-rata per unit</label>
+        <input type="number" id="price" min="0" step="1000" placeholder="45000">
+      </div>
+      <div>
+        <label for="cost">Modal per unit (HPP)</label>
+        <input type="number" id="cost" min="0" step="1000" placeholder="30000">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="units_before">Terjual per hari sebelum ulasan</label>
+        <input type="number" id="units_before" min="0" step="1" placeholder="18">
+      </div>
+      <div>
+        <label for="units_during">Terjual per hari setelah ulasan</label>
+        <input type="number" id="units_during" min="0" step="1" placeholder="12">
+      </div>
+    </div>
+    <p class="hint">Semua angka rupiah berasal dari input Anda. Skor indikasi dan kebutuhan bintang 5 adalah heuristik tool, bukan penilaian resmi marketplace.</p>
+
+    <h2 class="sub">Fakta pendukung</h2>
+    <div class="row">
+      <div>
+        <label for="fact_buyer_denies">Pembeli menyatakan tidak pernah memberi ulasan</label>
+        <select id="fact_buyer_denies"></select>
+      </div>
+      <div>
+        <label for="fact_review_text_match">Kesesuaian bintang dengan isi ulasan</label>
+        <select id="fact_review_text_match"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="fact_order_status">Status pesanan yang dinilai</label>
+        <select id="fact_order_status"></select>
+      </div>
+      <div>
+        <label for="fact_address_valid">Alamat penerima</label>
+        <select id="fact_address_valid"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="fact_burst">Beberapa ulasan negatif dalam 24 sampai 48 jam</label>
+        <select id="fact_burst"></select>
+      </div>
+      <div>
+        <label for="fact_same_account">Akun yang sama menyerang beberapa toko</label>
+        <select id="fact_same_account"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="fact_identity_abuse">Identitas penjual dipakai akun lain</label>
+        <select id="fact_identity_abuse"></select>
+      </div>
+      <div>
+        <label for="fact_chat_reply">Respons pembeli di chat platform</label>
+        <select id="fact_chat_reply"></select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" type="button" id="fill-example">Isi contoh</button>
+      <button class="btn" type="button" id="clear-form">Bersihkan</button>
+    </div>
+    <button class="primary" id="calc-btn">Hitung dampak dan indikasi</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="card result" id="result-card">
+    <h2>Hasil perhitungan</h2>
+    <div class="verdict" id="verdict"></div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="m-label">Rating produk baru</div>
+        <div class="m-value" id="r-new-rating"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Penurunan rating</div>
+        <div class="m-value neg" id="r-drop"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Bintang 5 untuk pulih</div>
+        <div class="m-value" id="r-needed"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Laba hilang</div>
+        <div class="m-value neg" id="r-profit"></div>
+      </div>
+    </div>
+
+    <div class="arg-box" id="diag-box"></div>
+
+    <h2>Batas ubah ulasan</h2>
+    <div class="notice" id="edit-note"></div>
+
+    <h2>Rincian rating</h2>
+    <table>
+      <tbody id="rating-rows"></tbody>
+    </table>
+    <p class="note" id="rating-note"></p>
+
+    <h2>Rincian dampak</h2>
+    <table>
+      <tbody id="impact-rows"></tbody>
+    </table>
+    <p class="note" id="impact-note"></p>
+
+    <h2>Yang perlu dilakukan</h2>
+    <ol id="reco-list"></ol>
+
+    <h2>Sumber untuk analisis ini</h2>
+    <div id="result-sources"></div>
+  </div>
+
+  <div class="card">
+    <h2>Kesiapan bukti</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:14px">Centang bukti yang sudah Anda miliki. Lima bukti kritis paling menentukan saat meminta pemeriksaan manual.</p>
+    <div class="check-list" id="evidence-list"></div>
+    <button class="primary" id="readiness-btn">Hitung kesiapan</button>
+    <div class="result" id="readiness-result">
+      <div class="readiness-top">
+        <div class="score" id="readiness-score"></div>
+        <div class="score-label" id="readiness-count"></div>
+      </div>
+      <div class="verdict" id="readiness-verdict"></div>
+      <p class="note" id="readiness-missing"></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Catatan kasus per toko</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:14px">Fakta dan bukti pada catatan memakai pilihan di bagian diagnosis dan kesiapan bukti di atas. Simpan nomor tiket, umur kasus, dan status.</p>
+    <div class="row">
+      <div>
+        <label for="case-store">Nama toko</label>
+        <input type="text" id="case-store" placeholder="Nama toko">
+      </div>
+      <div>
+        <label for="case-store-id">ID toko atau username</label>
+        <input type="text" id="case-store-id" placeholder="toko-contoh">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case-platform">Marketplace</label>
+        <select id="case-platform"></select>
+      </div>
+      <div>
+        <label for="case-status">Status</label>
+        <select id="case-status"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case-ticket">Nomor tiket</label>
+        <input type="text" id="case-ticket" placeholder="TIKET-001">
+      </div>
+      <div>
+        <label for="case-order-id">Nomor pesanan</label>
+        <input type="text" id="case-order-id" placeholder="261014XXXXXXXX">
+      </div>
+    </div>
+    <div class="tri">
+      <div>
+        <label for="case-order-date">Tanggal pesanan selesai</label>
+        <input type="date" id="case-order-date">
+      </div>
+      <div>
+        <label for="case-review-date">Tanggal ulasan</label>
+        <input type="date" id="case-review-date">
+      </div>
+      <div>
+        <label for="case-resolved">Tanggal ulasan dihapus</label>
+        <input type="date" id="case-resolved">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case-follow">Follow-up terakhir</label>
+        <input type="date" id="case-follow">
+      </div>
+      <div>
+        <label for="case-type">Jenis penilaian</label>
+        <select id="case-type"></select>
+      </div>
+    </div>
+    <div class="tri">
+      <div>
+        <label for="case-current">Rating saat ini</label>
+        <input type="number" id="case-current" min="0.1" max="5" step="0.1" placeholder="4.9">
+      </div>
+      <div>
+        <label for="case-total">Jumlah penilaian</label>
+        <input type="number" id="case-total" min="1" step="1" placeholder="320">
+      </div>
+      <div>
+        <label for="case-bad">Ulasan bintang 1</label>
+        <input type="number" id="case-bad" min="1" step="1" placeholder="1">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case-target">Target rating</label>
+        <input type="number" id="case-target" min="0.1" max="5" step="0.1" placeholder="4.9">
+      </div>
+      <div></div>
+    </div>
+    <div class="tri">
+      <div>
+        <label for="case-price">Harga jual rata-rata</label>
+        <input type="number" id="case-price" min="0" step="1000" placeholder="45000">
+      </div>
+      <div>
+        <label for="case-cost">Modal per unit</label>
+        <input type="number" id="case-cost" min="0" step="1000" placeholder="30000">
+      </div>
+      <div>
+        <label for="case-units-before">Terjual per hari sebelum</label>
+        <input type="number" id="case-units-before" min="0" step="1" placeholder="18">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case-units-during">Terjual per hari sesudah</label>
+        <input type="number" id="case-units-during" min="0" step="1" placeholder="12">
+      </div>
+      <div>
+        <label for="case-note">Catatan</label>
+        <input type="text" id="case-note" placeholder="Contoh: menunggu pemeriksaan tim anti-fraud">
+      </div>
+    </div>
+
+    <h2 class="sub">Fakta pendukung</h2>
+    <div class="row">
+      <div>
+        <label for="cfact_buyer_denies">Pembeli menyatakan tidak pernah memberi ulasan</label>
+        <select id="cfact_buyer_denies"></select>
+      </div>
+      <div>
+        <label for="cfact_review_text_match">Kesesuaian bintang dengan isi ulasan</label>
+        <select id="cfact_review_text_match"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="cfact_order_status">Status pesanan yang dinilai</label>
+        <select id="cfact_order_status"></select>
+      </div>
+      <div>
+        <label for="cfact_address_valid">Alamat penerima</label>
+        <select id="cfact_address_valid"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="cfact_burst">Beberapa ulasan negatif dalam 24 sampai 48 jam</label>
+        <select id="cfact_burst"></select>
+      </div>
+      <div>
+        <label for="cfact_same_account">Akun yang sama menyerang beberapa toko</label>
+        <select id="cfact_same_account"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="cfact_identity_abuse">Identitas penjual dipakai akun lain</label>
+        <select id="cfact_identity_abuse"></select>
+      </div>
+      <div>
+        <label for="cfact_chat_reply">Respons pembeli di chat platform</label>
+        <select id="cfact_chat_reply"></select>
+      </div>
+    </div>
+
+    <h2 class="sub">Bukti yang sudah dimiliki</h2>
+    <div class="check-list compact" id="case-evidence-list"></div>
+
+    <button class="primary" id="add-case-btn">Tambah ke catatan</button>
+    <div class="err" id="case-err"></div>
+
+    <div class="btn-row">
+      <button class="btn" type="button" id="seed-cases">Muat contoh</button>
+      <a class="btn" href="/api/export" id="export-link">Unduh CSV</a>
+    </div>
+
+    <p class="hint" id="case-summary"></p>
+    <div id="case-list"></div>
+  </div>
+
+  <div class="card">
+    <h2>Surat permintaan pemeriksaan</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:14px">Surat memakai angka, fakta, dan bukti yang dicentang di atas. Lengkapi identitas pengirim dan kronologi.</p>
+    <div class="row">
+      <div>
+        <label for="l-seller">Nama penjual</label>
+        <input type="text" id="l-seller" placeholder="Nama sesuai KTP">
+      </div>
+      <div>
+        <label for="l-store">Nama toko</label>
+        <input type="text" id="l-store" placeholder="Nama toko di marketplace">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="l-store-id">ID toko atau username</label>
+        <input type="text" id="l-store-id" placeholder="toko-contoh">
+      </div>
+      <div>
+        <label for="l-contact">Email atau nomor telepon</label>
+        <input type="text" id="l-contact" placeholder="email@contoh.com">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="l-ticket">Nomor tiket</label>
+        <input type="text" id="l-ticket" placeholder="TIKET-001">
+      </div>
+      <div>
+        <label for="l-chronology">Kronologi singkat</label>
+        <textarea id="l-chronology" rows="4" placeholder="Contoh: 14 Oktober 2026 akun memakai nama dan foto toko. Dua pesanan dikirim ke alamat fiktif, lalu dua ulasan bintang 1 muncul dalam 24 jam."></textarea>
+      </div>
+    </div>
+
+    <button class="primary" id="make-letter">Buat surat</button>
+    <div class="letter-output" id="letter-output">
+      <div class="letter-subject" id="letter-subject"></div>
+      <textarea class="letter" id="letter-body" readonly></textarea>
+      <div class="copy-row">
+        <button class="btn" type="button" id="copy-letter">Salin surat</button>
+        <button class="btn" type="button" id="download-letter">Unduh .txt</button>
+      </div>
+      <div class="status" id="letter-status" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Sumber dan catatan</h2>
+    <div id="sources"></div>
+    <div class="notice">
+      Tool ini bukan nasihat hukum dan tidak menjamin ulasan dihapus. Aturan penilaian, jalur laporan, dan batas waktu berbeda per marketplace. Skor indikasi, rating, dan dampak adalah heuristik dari input Anda. Selalu cocokkan dengan pusat bantuan dan Seller Center. Jangan membagikan OTP, password, atau kode verifikasi kepada siapa pun.
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+const num2 = n => Number(n).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+let meta = null;
+let platforms = [];
+let reviewTypes = [];
+let statuses = [];
+let factOptions = {};
+let evidence = [];
+let selectedPlatform = 'shopee';
+let cases = [];
+
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('theme', t); } catch (e) {}
+}
+
+function initTheme() {
+  $('theme-btn').addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+}
+
+function invalidateResult() {
+  $('result-card').classList.remove('show');
+}
+
+function getPlatform(id) {
+  return platforms.find(item => item.id === id) || platforms[0];
+}
+
+function getReviewType(id) {
+  return reviewTypes.find(item => item.id === id) || reviewTypes[0];
+}
+
+async function api(url, options) {
+  const res = await fetch(url, options);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = new Error(data.error || 'Terjadi kesalahan');
+    err.data = data;
+    throw err;
+  }
+  return data;
+}
+
+function fillSelect(selectId, items) {
+  const select = $(selectId);
+  select.innerHTML = '';
+  items.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item.id;
+    opt.textContent = item.label || item.name;
+    select.appendChild(opt);
+  });
+}
+
+function buildChips(boxId, selectId, items, onPick) {
+  const box = $(boxId);
+  const select = $(selectId);
+  box.innerHTML = '';
+  select.innerHTML = '';
+  items.forEach((item, index) => {
+    const opt = document.createElement('option');
+    opt.value = item.id;
+    opt.textContent = item.label;
+    select.appendChild(opt);
+
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.dataset.on = index === 0 ? 'true' : 'false';
+    chip.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+    chip.textContent = item.label;
+    chip.addEventListener('click', () => onPick(item.id));
+    box.appendChild(chip);
+  });
+}
+
+function syncChips(boxId, selectId, items, id) {
+  $(selectId).value = id;
+  const chips = $(boxId).children;
+  for (let i = 0; i < chips.length; i += 1) {
+    const on = items[i] && items[i].id === id;
+    chips[i].dataset.on = on ? 'true' : 'false';
+    chips[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+}
+
+function applyPlatform(id) {
+  selectedPlatform = id;
+  syncChips('platform-chips', 'platform', platforms, id);
+  $('platform-hint').textContent = 'Aturan dan jalur laporan mengikuti pusat bantuan ' + getPlatform(id).label + '.';
+  invalidateResult();
+}
+
+function renderTypeNote() {
+  const item = getReviewType($('review_type').value);
+  $('type-note').textContent = item.note;
+}
+
+function renderSources(box, sources) {
+  box.innerHTML = '';
+  sources.forEach(source => {
+    const div = document.createElement('div');
+    div.className = 'src-item';
+    const a = document.createElement('a');
+    a.href = source.url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = source.title;
+    const metaLine = document.createElement('span');
+    metaLine.className = 'source-meta';
+    metaLine.textContent = source.publisher + ', ' + source.date + '. ' + source.note;
+    div.appendChild(a);
+    div.appendChild(metaLine);
+    box.appendChild(div);
+  });
+}
+
+function fillList(id, items) {
+  const box = $(id);
+  box.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    box.appendChild(li);
+  });
+}
+
+function renderChecks(containerId, items, prefix) {
+  const box = $(containerId);
+  box.innerHTML = '';
+  items.forEach(item => {
+    const label = document.createElement('label');
+    label.className = 'check-item';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = item.id;
+    input.id = prefix + item.id;
+    const body = document.createElement('span');
+    body.className = 'c-body';
+    body.textContent = item.label;
+    if (item.critical) {
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = 'KRITIS';
+      body.appendChild(badge);
+    }
+    label.appendChild(input);
+    label.appendChild(body);
+    box.appendChild(label);
+  });
+}
+
+function selectedValues(containerId) {
+  const inputs = $(containerId).querySelectorAll('input[type=checkbox]');
+  const values = [];
+  inputs.forEach(input => {
+    if (input.checked) values.push(input.value);
+  });
+  return values;
+}
+
+function setChecks(containerId, values) {
+  const set = new Set(values || []);
+  const inputs = $(containerId).querySelectorAll('input[type=checkbox]');
+  inputs.forEach(input => {
+    input.checked = set.has(input.value);
+  });
+}
+
+function collectFacts(prefix) {
+  const facts = {};
+  Object.keys(factOptions).forEach(key => {
+    facts[key] = $(prefix + key).value;
+  });
+  return facts;
+}
+
+function setFacts(prefix, facts) {
+  Object.keys(facts || {}).forEach(key => {
+    const el = $(prefix + key);
+    if (el) el.value = facts[key];
+  });
+}
+
+async function init() {
+  try {
+    meta = await api('/api/meta');
+    platforms = meta.platforms;
+    reviewTypes = meta.review_types;
+    statuses = meta.statuses;
+    factOptions = meta.fact_options;
+    evidence = meta.evidence;
+
+    renderSources($('sources'), meta.sources);
+    buildChips('platform-chips', 'platform', platforms, applyPlatform);
+
+    fillSelect('status', statuses);
+    fillSelect('case-platform', platforms);
+    fillSelect('case-status', statuses);
+    fillSelect('review_type', reviewTypes);
+    fillSelect('case-type', reviewTypes);
+
+    Object.keys(factOptions).forEach(key => {
+      fillSelect('fact_' + key, factOptions[key].options);
+      fillSelect('cfact_' + key, factOptions[key].options);
+    });
+
+    $('review_type').addEventListener('change', renderTypeNote);
+
+    $('status').value = meta.defaults.status;
+    $('case-status').value = meta.defaults.status;
+    $('review_type').value = meta.defaults.review_type;
+    $('case-type').value = meta.defaults.review_type;
+    $('current_rating').value = meta.defaults.current_rating;
+    $('total_ratings').value = meta.defaults.total_ratings;
+    $('bad_reviews').value = meta.defaults.bad_reviews;
+    $('target_rating').value = meta.defaults.target_rating;
+    setFacts('fact_', meta.defaults.facts);
+    setFacts('cfact_', meta.defaults.facts);
+
+    applyPlatform(meta.defaults.platform);
+    renderTypeNote();
+    renderChecks('evidence-list', evidence, 'ev-');
+    renderChecks('case-evidence-list', evidence, 'cev-');
+    await refreshCases();
+  } catch (e) {
+    $('platform-hint').textContent = 'Gagal memuat data dari server. Coba muat ulang halaman.';
+  }
+}
+
+function collectAnalyzePayload() {
+  return {
+    platform: $('platform').value,
+    status: $('status').value,
+    ticket: $('ticket').value,
+    store_name: $('store_name').value,
+    store_id: $('store_id').value,
+    order_id: $('order_id').value,
+    order_date: $('order_date').value,
+    review_date: $('review_date').value,
+    resolved_date: $('resolved_date').value,
+    last_follow_up: $('last_follow_up').value,
+    current_rating: $('current_rating').value,
+    total_ratings: $('total_ratings').value,
+    bad_reviews: $('bad_reviews').value,
+    target_rating: $('target_rating').value,
+    review_type: $('review_type').value,
+    price: $('price').value,
+    cost: $('cost').value,
+    units_before: $('units_before').value,
+    units_during: $('units_during').value,
+    facts: collectFacts('fact_'),
+    evidence: selectedValues('evidence-list'),
+  };
+}
+
+async function calculate() {
+  const errBox = $('err');
+  errBox.classList.remove('show');
+  const btn = $('calc-btn');
+  btn.disabled = true;
+  btn.textContent = 'Menghitung...';
+  try {
+    const data = await api('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collectAnalyzePayload()),
+    });
+    renderResult(data);
+  } catch (e) {
+    errBox.textContent = e.message;
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Hitung dampak dan indikasi';
+  }
+}
+
+function renderResult(d) {
+  const v = $('verdict');
+  v.className = 'verdict ' + (d.diagnosis.verdict === 'kuat' ? 'kritis' : d.diagnosis.verdict === 'cukup' ? 'signifikan' : 'ringan');
+  v.innerHTML = '';
+  const label = document.createElement('div');
+  label.className = 'v-label';
+  label.textContent = d.diagnosis.verdict_label + ': ' + d.diagnosis.pattern_label;
+  const body = document.createElement('div');
+  body.className = 'v-body';
+  const active = d.diagnosis.indicators.filter(item => item.active).length;
+  body.textContent = 'Skor ' + d.diagnosis.score + '/100 dengan ' + active + ' indikator aktif. ' + d.rating.review_type_note;
+  v.appendChild(label);
+  v.appendChild(body);
+
+  $('r-new-rating').textContent = num2(d.rating.new_average);
+  $('r-drop').textContent = num2(d.rating.drop);
+  $('r-needed').textContent = d.rating.five_star_needed === null
+    ? 'Tidak tercapai'
+    : '+' + d.rating.five_star_needed + ' ulasan';
+  $('r-profit').textContent = fmt(d.impact.lost_profit);
+
+  const box = $('diag-box');
+  box.innerHTML = '';
+  const top = document.createElement('div');
+  top.className = 'arg-top';
+  const score = document.createElement('div');
+  score.className = 'arg-score';
+  score.textContent = d.diagnosis.score + '/100';
+  const labelEl = document.createElement('div');
+  labelEl.className = 'arg-label';
+  labelEl.textContent = d.diagnosis.verdict_label + '. Skor ini heuristik dari fakta yang Anda pilih.';
+  top.appendChild(score);
+  top.appendChild(labelEl);
+  box.appendChild(top);
+
+  const cause = document.createElement('div');
+  cause.className = 'arg-cause';
+  cause.textContent = 'Pola yang paling mungkin: ' + d.diagnosis.pattern_label + '.';
+  box.appendChild(cause);
+
+  const activePoints = d.diagnosis.indicators.filter(item => item.active);
+  if (activePoints.length > 0) {
+    const ul = document.createElement('ul');
+    activePoints.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item.label + ' (+' + item.points + ')';
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+  } else {
+    const p = document.createElement('div');
+    p.className = 'arg-cause';
+    p.textContent = 'Belum ada indikator kuat. Periksa status pesanan, isi ulasan, dan riwayat akun pemberi ulasan.';
+    box.appendChild(p);
+  }
+
+  const ratingRows = [
+    ['Rating produk saat ini', num2(d.rating.current)],
+    ['Jumlah penilaian saat ini', d.rating.total + ' penilaian'],
+    ['Ulasan bintang 1 yang dipermasalahkan', d.rating.bad + ' ulasan'],
+    ['Ulasan yang dihitung ke peringkat produk', d.rating.counted_bad + ' ulasan'],
+    ['Perkiraan rating setelah serangan', num2(d.rating.new_average)],
+    ['Penurunan rating', num2(d.rating.drop) + ' poin'],
+    ['Bintang 5 baru untuk kembali ke ' + num2(d.rating.target), d.rating.five_star_needed === null ? 'Tidak tercapai dengan bintang 5 saja' : d.rating.five_star_needed + ' ulasan'],
+    ['Dampak satu ulasan bintang 1', num2(d.rating.one_bad_cost) + ' poin'],
+  ];
+  const ratingBody = $('rating-rows');
+  ratingBody.innerHTML = '';
+  ratingRows.forEach(row => {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td');
+    td1.textContent = row[0];
+    const td2 = document.createElement('td');
+    td2.className = 'num';
+    td2.textContent = row[1];
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    ratingBody.appendChild(tr);
+  });
+  $('rating-note').textContent = d.rating.note;
+
+  const impactRows = [
+    ['Jenis penilaian', d.rating.review_type_label],
+    ['Harga jual per unit', fmt(d.impact.price)],
+    ['Modal per unit', fmt(d.impact.cost)],
+    ['Margin per unit', fmt(d.impact.unit_margin)],
+    ['Terjual per hari sebelum ulasan', d.impact.units_before + ' unit'],
+    ['Terjual per hari setelah ulasan', d.impact.units_during + ' unit'],
+    ['Penjualan yang hilang per hari', d.impact.lost_units_per_day + ' unit'],
+    ['Hari tercatat', d.impact.days + ' hari'],
+    ['Omzet hilang', fmt(d.impact.lost_revenue)],
+    ['Laba hilang', fmt(d.impact.lost_profit)],
+    ['Tingkat dampak', d.impact.severity_label],
+  ];
+  const impactBody = $('impact-rows');
+  impactBody.innerHTML = '';
+  impactRows.forEach(row => {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td');
+    td1.textContent = row[0];
+    const td2 = document.createElement('td');
+    td2.className = 'num';
+    td2.textContent = row[1];
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    impactBody.appendChild(tr);
+  });
+  $('impact-note').textContent = d.impact.note;
+
+  const edit = $('edit-note');
+  edit.className = 'notice' + (d.edit_window.closed ? ' warn' : '');
+  edit.innerHTML = '';
+  const editLabel = document.createElement('b');
+  editLabel.textContent = d.edit_window.deadline
+    ? 'Batas 120 hari: ' + d.edit_window.deadline
+    : 'Batas 120 hari belum dihitung';
+  edit.appendChild(editLabel);
+  const editBody = document.createElement('div');
+  editBody.textContent = d.edit_window.note;
+  edit.appendChild(editBody);
+
+  fillList('reco-list', d.recommendations);
+  renderSources($('result-sources'), d.sources);
+
+  $('result-card').classList.remove('show');
+  void $('result-card').offsetWidth;
+  $('result-card').classList.add('show');
+  $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function checkReadiness() {
+  const items = selectedValues('evidence-list');
+  const btn = $('readiness-btn');
+  btn.disabled = true;
+  try {
+    const data = await api('/api/readiness', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: items }),
+    });
+    $('readiness-score').textContent = data.score + '%';
+    $('readiness-count').textContent = data.available_count + ' dari ' + data.total + ' bukti';
+    const v = $('readiness-verdict');
+    v.className = 'verdict ' + (data.verdict === 'siap' ? 'dibuka' : data.verdict === 'hampir' ? 'ringan' : 'kritis');
+    v.innerHTML = '';
+    const label = document.createElement('div');
+    label.className = 'v-label';
+    label.textContent = data.verdict_label;
+    const body = document.createElement('div');
+    body.className = 'v-body';
+    body.textContent = data.missing_critical.length === 0
+      ? 'Semua bukti kritis sudah tersedia.'
+      : 'Bukti kritis yang belum ada: ' + data.missing_critical.length + ' item.';
+    v.appendChild(label);
+    v.appendChild(body);
+    $('readiness-missing').textContent = data.missing_critical.length === 0
+      ? 'Lengkapi bukti pendukung lain agar permintaan lebih kuat.'
+      : 'Lengkapi dulu: ' + data.missing_critical.join('; ') + '.';
+    $('readiness-result').classList.add('show');
+  } catch (e) {
+    $('readiness-missing').textContent = 'Gagal menghitung kesiapan.';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function collectCasePayload() {
+  return {
+    platform: $('case-platform').value,
+    status: $('case-status').value,
+    store_name: $('case-store').value,
+    store_id: $('case-store-id').value,
+    ticket: $('case-ticket').value,
+    order_id: $('case-order-id').value,
+    order_date: $('case-order-date').value,
+    review_date: $('case-review-date').value,
+    resolved_date: $('case-resolved').value,
+    last_follow_up: $('case-follow').value,
+    current_rating: $('case-current').value,
+    total_ratings: $('case-total').value,
+    bad_reviews: $('case-bad').value,
+    target_rating: $('case-target').value,
+    review_type: $('case-type').value,
+    price: $('case-price').value,
+    cost: $('case-cost').value,
+    units_before: $('case-units-before').value,
+    units_during: $('case-units-during').value,
+    note: $('case-note').value,
+    facts: collectFacts('cfact_'),
+    evidence: selectedValues('case-evidence-list'),
+  };
+}
+
+async function addCase() {
+  const errBox = $('case-err');
+  errBox.classList.remove('show');
+  const btn = $('add-case-btn');
+  btn.disabled = true;
+  try {
+    const data = await api('/api/cases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collectCasePayload()),
+    });
+    renderCases(data);
+  } catch (e) {
+    errBox.textContent = e.message;
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function refreshCases() {
+  const data = await api('/api/cases');
+  renderCases(data);
+}
+
+function renderCases(data) {
+  cases = data.cases || [];
+  $('case-summary').textContent = data.total_cases === 0
+    ? 'Belum ada catatan kasus.'
+    : data.total_cases + ' kasus, ' + data.open_cases + ' masih terbuka, ' + data.removed_cases + ' sudah dihapus. Total ulasan bermasalah ' + data.total_bad_reviews + '. Laba hilang ' + fmt(data.total_lost_profit) + '. Kasus terbuka terlama ' + data.oldest_open_days + ' hari.';
+  const box = $('case-list');
+  box.innerHTML = '';
+  cases.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'case-item';
+
+    const top = document.createElement('div');
+    top.className = 'case-top';
+    const ref = document.createElement('div');
+    ref.className = 'case-ref';
+    ref.textContent = item.store_name + ' - ' + item.platform_name;
+    const status = document.createElement('div');
+    status.className = 'case-meta';
+    status.textContent = item.status_label + ' - ' + item.aging_days + ' hari';
+    top.appendChild(ref);
+    top.appendChild(status);
+    card.appendChild(top);
+
+    const metaLine = document.createElement('div');
+    metaLine.className = 'case-meta';
+    metaLine.textContent = item.rating.review_type_label + ' - rating ' + num2(item.rating.current) + ' ke ' + num2(item.rating.new_average) + ' - indikasi ' + item.diagnosis.score + '/100 - bukti ' + item.readiness.score + '%';
+    card.appendChild(metaLine);
+
+    if (item.note) {
+      const note = document.createElement('div');
+      note.className = 'case-note';
+      note.textContent = item.note;
+      card.appendChild(note);
+    }
+
+    if (item.flags.length > 0) {
+      const flag = document.createElement('div');
+      flag.className = 'flag';
+      item.flags.forEach(text => {
+        const p = document.createElement('div');
+        p.textContent = text;
+        flag.appendChild(p);
+      });
+      card.appendChild(flag);
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'case-actions';
+
+    const statusSelect = document.createElement('select');
+    statuses.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.label;
+      if (s.id === item.status) opt.selected = true;
+      statusSelect.appendChild(opt);
+    });
+    actions.appendChild(statusSelect);
+
+    const followInput = document.createElement('input');
+    followInput.type = 'date';
+    followInput.value = item.last_follow_up || '';
+    actions.appendChild(followInput);
+
+    const saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.className = 'btn';
+    saveBtn.textContent = 'Simpan';
+    saveBtn.addEventListener('click', () => patchCase(item.id, statusSelect.value, followInput.value));
+    actions.appendChild(saveBtn);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'btn';
+    deleteBtn.textContent = 'Hapus';
+    deleteBtn.addEventListener('click', () => deleteCase(item.id));
+    actions.appendChild(deleteBtn);
+
+    card.appendChild(actions);
+    box.appendChild(card);
+  });
+}
+
+async function patchCase(id, status, followUp) {
+  try {
+    const data = await api('/api/cases/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: status, last_follow_up: followUp }),
+    });
+    renderCases(data);
+  } catch (e) {
+    $('case-err').textContent = e.message;
+    $('case-err').classList.add('show');
+  }
+}
+
+async function deleteCase(id) {
+  try {
+    const data = await api('/api/cases/' + encodeURIComponent(id), { method: 'DELETE' });
+    renderCases(data);
+  } catch (e) {
+    $('case-err').textContent = e.message;
+    $('case-err').classList.add('show');
+  }
+}
+
+async function seedCases() {
+  try {
+    const data = await api('/api/seed', { method: 'POST' });
+    renderCases(data);
+  } catch (e) {
+    $('case-err').textContent = e.message;
+    $('case-err').classList.add('show');
+  }
+}
+
+function collectLetterPayload() {
+  const base = collectAnalyzePayload();
+  return Object.assign(base, {
+    seller_name: $('l-seller').value,
+    store_name: $('l-store').value || base.store_name,
+    store_id: $('l-store-id').value || base.store_id,
+    contact: $('l-contact').value,
+    ticket: $('l-ticket').value || base.ticket,
+    chronology: $('l-chronology').value,
+  });
+}
+
+async function makeLetter() {
+  const status = $('letter-status');
+  status.textContent = '';
+  try {
+    const data = await api('/api/letter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collectLetterPayload()),
+    });
+    $('letter-subject').textContent = data.subject;
+    $('letter-body').value = data.body;
+    $('letter-output').classList.add('show');
+    $('letter-output').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (e) {
+    status.textContent = e.message;
+  }
+}
+
+function copyLetter() {
+  const body = $('letter-body');
+  body.select();
+  body.setSelectionRange(0, body.value.length);
+  try {
+    document.execCommand('copy');
+    $('letter-status').textContent = 'Surat disalin.';
+  } catch (e) {
+    $('letter-status').textContent = 'Gagal menyalin. Pilih teks lalu salin manual.';
+  }
+}
+
+function downloadLetter() {
+  const text = $('letter-body').value;
+  if (!text) return;
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'surat-pemeriksaan-ulasan.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function fillExample() {
+  try {
+    const example = await api('/api/example');
+    applyPlatform(example.platform);
+    $('status').value = example.status;
+    $('ticket').value = example.ticket || '';
+    $('store_name').value = example.store_name;
+    $('store_id').value = example.store_id || '';
+    $('order_id').value = example.order_id || '';
+    $('order_date').value = example.order_date;
+    $('review_date').value = example.review_date;
+    $('resolved_date').value = example.resolved_date || '';
+    $('last_follow_up').value = example.last_follow_up || '';
+    $('current_rating').value = example.current_rating;
+    $('total_ratings').value = example.total_ratings;
+    $('bad_reviews').value = example.bad_reviews;
+    $('target_rating').value = example.target_rating;
+    $('review_type').value = example.review_type;
+    $('price').value = example.price;
+    $('cost').value = example.cost;
+    $('units_before').value = example.units_before;
+    $('units_during').value = example.units_during;
+    setFacts('fact_', example.facts);
+    setChecks('evidence-list', example.evidence);
+    renderTypeNote();
+
+    $('case-store').value = example.store_name;
+    $('case-store-id').value = example.store_id || '';
+    $('case-platform').value = example.platform;
+    $('case-status').value = example.status;
+    $('case-ticket').value = example.ticket || '';
+    $('case-order-id').value = example.order_id || '';
+    $('case-order-date').value = example.order_date;
+    $('case-review-date').value = example.review_date;
+    $('case-resolved').value = example.resolved_date || '';
+    $('case-follow').value = example.last_follow_up || '';
+    $('case-current').value = example.current_rating;
+    $('case-total').value = example.total_ratings;
+    $('case-bad').value = example.bad_reviews;
+    $('case-target').value = example.target_rating;
+    $('case-type').value = example.review_type;
+    $('case-price').value = example.price;
+    $('case-cost').value = example.cost;
+    $('case-units-before').value = example.units_before;
+    $('case-units-during').value = example.units_during;
+    $('case-note').value = example.note || '';
+    setFacts('cfact_', example.facts);
+    setChecks('case-evidence-list', example.evidence);
+
+    $('l-seller').value = example.seller_name || '';
+    $('l-store').value = example.store_name;
+    $('l-store-id').value = example.store_id || '';
+    $('l-contact').value = example.contact || '';
+    $('l-ticket').value = example.ticket || '';
+    $('l-chronology').value = example.chronology || '';
+    invalidateResult();
+  } catch (e) {
+    $('err').textContent = 'Gagal memuat contoh.';
+    $('err').classList.add('show');
+  }
+}
+
+function clearForm() {
+  ['ticket', 'store_name', 'store_id', 'order_id', 'order_date', 'review_date', 'resolved_date', 'last_follow_up', 'current_rating', 'total_ratings', 'bad_reviews', 'target_rating', 'price', 'cost', 'units_before', 'units_during', 'case-store', 'case-store-id', 'case-ticket', 'case-order-id', 'case-order-date', 'case-review-date', 'case-resolved', 'case-follow', 'case-current', 'case-total', 'case-bad', 'case-target', 'case-price', 'case-cost', 'case-units-before', 'case-units-during', 'case-note', 'l-seller', 'l-store', 'l-store-id', 'l-contact', 'l-ticket', 'l-chronology'].forEach(id => {
+    $(id).value = '';
+  });
+  setChecks('evidence-list', []);
+  setChecks('case-evidence-list', []);
+  $('letter-output').classList.remove('show');
+  $('readiness-result').classList.remove('show');
+  $('err').classList.remove('show');
+  $('case-err').classList.remove('show');
+  invalidateResult();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  init();
+  $('calc-btn').addEventListener('click', calculate);
+  $('readiness-btn').addEventListener('click', checkReadiness);
+  $('add-case-btn').addEventListener('click', addCase);
+  $('seed-cases').addEventListener('click', seedCases);
+  $('make-letter').addEventListener('click', makeLetter);
+  $('copy-letter').addEventListener('click', copyLetter);
+  $('download-letter').addEventListener('click', downloadLetter);
+  $('fill-example').addEventListener('click', fillExample);
+  $('clear-form').addEventListener('click', clearForm);
+});
+</script>
+</body>
+</html>
