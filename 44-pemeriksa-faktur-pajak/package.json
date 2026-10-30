@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-faktur-pajak",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cek kesiapan data, jadwal, dan nominal faktur pajak marketplace, lacak kasus per periode, dan buat surat permintaan pemeriksaan",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/faktur.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

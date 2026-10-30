@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemeriksa Faktur Pajak Marketplace</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 920px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+h1 {
+  font-family: var(--font-head);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  max-width: 20ch;
+}
+.lede {
+  color: var(--ink-4);
+  margin-top: 14px;
+  max-width: 64ch;
+  text-wrap: balance;
+}
+.lede b { color: var(--ink); font-weight: 400; }
+
+.theme {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.16s;
+}
+.theme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--wash-hover);
+  opacity: 0;
+  transform: scale(0.86);
+  transition: opacity 0.15s, transform 0.26s var(--ease-pop);
+}
+.theme:hover { color: var(--ink); }
+.theme:hover::before { opacity: 1; transform: scale(1); }
+.theme:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.theme svg { position: relative; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.card > h2,
+.card h2.sub {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.card h2.sub { margin-top: 22px; }
+
+label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-4);
+  margin-bottom: 5px;
+}
+input[type=number],
+input[type=text],
+input[type=month],
+input[type=date],
+select,
+textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--elev);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+}
+input[type=number],
+input[type=month],
+input[type=date] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-4) 50%), linear-gradient(135deg, var(--ink-4) 50%, transparent 50%);
+  background-position: calc(100% - 17px) calc(50% + 1px), calc(100% - 12px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea { background: var(--surface-2); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.tri { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.row:last-child, .tri:last-child { margin-bottom: 0; }
+
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  height: 36px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); color: var(--ink); }
+.chip:active { transform: scale(0.96); }
+.chip[data-on="true"] { background: var(--slab); color: var(--on-slab); }
+.sr-select {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.btn-row { display: flex; gap: 8px; margin-top: 20px; }
+.btn {
+  flex: 1;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--elev);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.16s, color 0.16s, transform 0.14s var(--ease-pop);
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+html[data-theme="dark"] .btn { background: var(--surface-2); }
+.btn:hover { color: var(--ink); background: var(--wash-hover); }
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.primary {
+  width: 100%;
+  height: 44px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slab);
+  color: var(--on-slab);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.16s, transform 0.14s var(--ease-pop);
+}
+.primary:hover { opacity: 0.9; }
+.primary:active { transform: scale(0.96); }
+.primary:disabled { opacity: 0.5; cursor: default; }
+
+.err { color: var(--ember); font-size: 13px; min-height: 0; }
+.err.show { margin-top: 12px; }
+.hint { font-size: 12.5px; color: var(--ink-5); margin-top: 10px; }
+.note { font-size: 12.5px; color: var(--ink-5); margin-top: 12px; }
+
+.result { display: none; }
+.result.show { display: block; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+}
+html[data-theme="dark"] .verdict { background: var(--surface-2); }
+.verdict .v-label {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.verdict .v-body { font-size: 14px; color: var(--ink-3); }
+.verdict.ok { border-left: 3px solid var(--ok); }
+.verdict.signal { border-left: 3px solid var(--signal); }
+.verdict.ember { border-left: 3px solid var(--ember); }
+
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.metric {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
+}
+html[data-theme="dark"] .metric { background: var(--surface-2); }
+.metric .m-label { font-size: 12.5px; color: var(--ink-4); }
+.metric .m-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.m-value.neg { color: var(--ember); }
+
+.arg-box {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+html[data-theme="dark"] .arg-box { background: var(--surface-2); }
+.arg-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.arg-score { font-family: var(--font-mono); font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.arg-label { font-size: 13px; color: var(--ink-4); }
+.arg-cause { font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
+.arg-box ul { padding-left: 18px; }
+.arg-box li { font-size: 13px; color: var(--ink-2); margin-bottom: 5px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { padding: 9px 4px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--ink-4); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tbody tr { transition: background-color 0.16s; }
+tbody tr:hover { background: var(--wash-hover); }
+
+.result h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 24px 0 10px;
+}
+.result h2:first-of-type { margin-top: 0; }
+
+ol, ul { padding-left: 20px; }
+li { font-size: 13.5px; color: var(--ink-2); margin-bottom: 8px; }
+li::marker { color: var(--ink-4); }
+
+.check-list { display: grid; gap: 8px; }
+.check-list.compact { grid-template-columns: 1fr 1fr; gap: 6px; }
+.check-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--elev);
+  cursor: pointer;
+  transition: background-color 0.16s;
+}
+html[data-theme="dark"] .check-item { background: var(--surface-2); }
+.check-item:hover { background: var(--wash-hover); }
+.check-item input { width: 16px; height: 16px; margin-top: 3px; flex: none; accent-color: var(--ink); }
+.check-item .c-body { font-size: 13.5px; color: var(--ink-2); }
+.check-item .c-note { display: block; font-size: 12px; color: var(--ink-5); margin-top: 2px; }
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ember);
+  margin-left: 6px;
+}
+.readiness-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.score {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.score-label { font-size: 13px; color: var(--ink-4); }
+
+.source-mini, .src-item {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.source-mini:last-child, .src-item:last-child { border-bottom: 0; }
+.source-mini a, .src-item a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
+.source-meta { display: block; color: var(--ink-5); margin-top: 2px; }
+
+.doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.doc {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
+}
+html[data-theme="dark"] .doc { background: var(--surface-2); }
+.doc h3 { font-family: var(--font-head); font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.doc p { font-size: 12.5px; color: var(--ink-3); margin-bottom: 6px; }
+.doc .doc-use { color: var(--ink-2); }
+.doc .doc-not { color: var(--ember); }
+
+.case-item {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+html[data-theme="dark"] .case-item { background: var(--surface-2); }
+.case-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; justify-content: space-between; }
+.case-ref { font-weight: 500; color: var(--ink); }
+.case-meta { font-size: 12.5px; color: var(--ink-4); }
+.case-note { font-size: 13px; color: var(--ink-3); margin-top: 6px; }
+.case-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center; }
+.case-actions select { width: auto; min-width: 180px; font-size: 13px; padding: 7px 30px 7px 10px; }
+.case-actions input[type=date] { width: 150px; font-size: 13px; padding: 7px 10px; }
+.case-actions .btn { flex: none; height: 34px; padding: 0 14px; font-size: 13px; }
+.flag {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border-left: 3px solid var(--ember);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 14px 0;
+}
+html[data-theme="dark"] .flag { background: var(--surface-2); }
+.flag b { font-weight: 500; }
+
+.letter-output { display: none; margin-top: 18px; }
+.letter-output.show { display: block; }
+.letter-subject {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-bottom: 8px;
+}
+textarea.letter {
+  min-height: 420px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.65;
+  resize: vertical;
+}
+.copy-row { display: flex; gap: 8px; margin-top: 10px; }
+.copy-row .btn { height: 38px; }
+.status { font-size: 12.5px; color: var(--ok); margin-top: 8px; min-height: 0; }
+
+.notice {
+  border-radius: 20px;
+  background: var(--elev);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  border-left: 3px solid var(--signal);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: 16px;
+}
+html[data-theme="dark"] .notice { background: var(--surface-2); }
+.notice.warn { border-left-color: var(--ember); }
+.notice.ok { border-left-color: var(--ok); }
+.notice b { color: var(--ink-2); font-weight: 500; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.card { animation: rise 0.62s var(--ease-out) both; }
+.card:nth-of-type(1) { animation-delay: 0ms; }
+.card:nth-of-type(2) { animation-delay: 60ms; }
+.card:nth-of-type(3) { animation-delay: 120ms; }
+.card:nth-of-type(4) { animation-delay: 180ms; }
+.card:nth-of-type(5) { animation-delay: 240ms; }
+.card:nth-of-type(6) { animation-delay: 300ms; }
+
+.result.show { animation: rise 0.5s var(--ease-out) both; }
+.result.show .metric { animation: rise 0.42s var(--ease-out) both; }
+.result.show .metric:nth-child(1) { animation-delay: 60ms; }
+.result.show .metric:nth-child(2) { animation-delay: 110ms; }
+.result.show .metric:nth-child(3) { animation-delay: 160ms; }
+.result.show .metric:nth-child(4) { animation-delay: 210ms; }
+
+@media (max-width: 768px) {
+  body { padding: 20px 14px 48px; }
+  h1 { font-size: 31px; }
+  .card { padding: 18px; border-radius: 28px; }
+  .row, .tri { grid-template-columns: 1fr; gap: 12px; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .check-list.compact { grid-template-columns: 1fr; }
+  .doc-grid { grid-template-columns: 1fr; }
+  header { margin-bottom: 20px; }
+}
+
+@media (max-width: 460px) {
+  .metrics { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Pemeriksa Faktur Pajak Marketplace</h1>
+      <p class="lede">Shopee mulai menerbitkan faktur pajak biaya layanan bertahap November 2026. Cek <b>kesiapan data</b>, <b>jadwal tanggal 12 dan 15</b>, estimasi PPN, lacak per periode, lalu buat surat bila faktur tidak muncul.</p>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema" title="Ganti tema">
+      <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <div class="card">
+    <h2>Periode dan biaya</h2>
+    <div class="chips" id="platform-chips"></div>
+    <select class="sr-select" id="platform" tabindex="-1" aria-hidden="true"></select>
+    <p class="hint" id="platform-hint"></p>
+
+    <div class="row" style="margin-top:16px">
+      <div>
+        <label for="period">Periode faktur (bulan biaya)</label>
+        <input type="month" id="period">
+      </div>
+      <div>
+        <label for="invoice_received">Faktur sudah diterima?</label>
+        <select id="invoice_received">
+          <option value="belum">Belum dicek</option>
+          <option value="tidak">Tidak, belum tersedia</option>
+          <option value="ya">Ya, sudah diterima</option>
+        </select>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:-4px;margin-bottom:14px">Faktur periode Agustus dicek paling lambat 12 September dan dilaporkan paling lambat 15 September bila belum ada.</p>
+
+    <h2 class="sub">Nominal biaya yang dibebankan</h2>
+    <div class="tri">
+      <div>
+        <label for="fee-layanan">Biaya layanan</label>
+        <input type="number" id="fee-layanan" min="0" step="1000" placeholder="0">
+      </div>
+      <div>
+        <label for="fee-affiliate">Komisi affiliate</label>
+        <input type="number" id="fee-affiliate" min="0" step="1000" placeholder="0">
+      </div>
+      <div>
+        <label for="fee-iklan">Saldo iklan</label>
+        <input type="number" id="fee-iklan" min="0" step="1000" placeholder="0">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="fee-promo">Biaya promo dan kampanye</label>
+        <input type="number" id="fee-promo" min="0" step="1000" placeholder="0">
+      </div>
+      <div>
+        <label for="fee-logistik">Gratis ongkir dan logistik</label>
+        <input type="number" id="fee-logistik" min="0" step="1000" placeholder="0">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="includes_ppn">Nominal di atas sudah termasuk PPN?</label>
+        <select id="includes_ppn">
+          <option value="tidak">Belum termasuk PPN</option>
+          <option value="ya">Sudah termasuk PPN</option>
+        </select>
+      </div>
+      <div>
+        <label for="ppn_rate">Tarif PPN estimasi (%)</label>
+        <input type="number" id="ppn_rate" min="0.1" max="100" step="0.1" value="11">
+      </div>
+    </div>
+    <p class="hint">Default 11% adalah tarif efektif PPN non-mewah menurut PMK 131/2024. Angka ini estimasi, selalu cocokkan dengan faktur pajak.</p>
+
+    <h2 class="sub">Kesiapan data</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:12px">Centang data yang sudah benar. Lima data kritis paling menentukan agar faktur tidak salah identitas.</p>
+    <div class="check-list compact" id="evidence-list"></div>
+
+    <div class="btn-row">
+      <button class="btn" type="button" id="fill-example">Isi contoh</button>
+      <button class="btn" type="button" id="clear-form">Bersihkan</button>
+    </div>
+    <button class="primary" id="calc-btn">Cek faktur dan estimasi PPN</button>
+    <div class="err" id="err"></div>
+  </div>
+
+  <div class="card result" id="result-card">
+    <h2>Hasil pemeriksaan</h2>
+    <div class="verdict" id="verdict"></div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="m-label">Periode</div>
+        <div class="m-value" id="r-period"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Faktur tersedia paling lambat</div>
+        <div class="m-value" id="r-availability"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Batas lapor ke CS</div>
+        <div class="m-value" id="r-complaint"></div>
+      </div>
+      <div class="metric">
+        <div class="m-label">Estimasi PPN</div>
+        <div class="m-value" id="r-ppn"></div>
+      </div>
+    </div>
+
+    <div class="arg-box" id="timeline-box"></div>
+
+    <h2>Rincian PPN</h2>
+    <table>
+      <tbody id="ppn-rows"></tbody>
+    </table>
+    <p class="note" id="ppn-note"></p>
+
+    <h2>Kesiapan data</h2>
+    <div class="readiness-top">
+      <div class="score" id="readiness-score"></div>
+      <div class="score-label" id="readiness-count"></div>
+    </div>
+    <div class="verdict" id="readiness-verdict"></div>
+    <p class="note" id="readiness-missing"></p>
+
+    <h2>Tiga dokumen yang berbeda</h2>
+    <div class="doc-grid" id="doc-grid"></div>
+    <p class="note">Jangan mencampur PPN atas biaya layanan dengan PPh 22 atas penjualan. Keduanya dipakai untuk kredit pajak yang berbeda.</p>
+
+    <h2>Yang perlu dilakukan</h2>
+    <ol id="reco-list"></ol>
+
+    <h2>Sumber untuk pemeriksaan ini</h2>
+    <div id="result-sources"></div>
+  </div>
+
+  <div class="card">
+    <h2>Catatan per periode</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:14px">Simpan satu baris per periode agar tenggat 12 dan 15 tidak terlewat. Nominal biaya dihitung dari input di atas.</p>
+    <div class="row">
+      <div>
+        <label for="case-store">Nama toko</label>
+        <input type="text" id="case-store" placeholder="Nama toko">
+      </div>
+      <div>
+        <label for="case-store-id">ID toko atau username</label>
+        <input type="text" id="case-store-id" placeholder="toko-contoh">
+      </div>
+    </div>
+    <div class="tri">
+      <div>
+        <label for="case-platform">Marketplace</label>
+        <select id="case-platform"></select>
+      </div>
+      <div>
+        <label for="case-period">Periode</label>
+        <input type="month" id="case-period">
+      </div>
+      <div>
+        <label for="case-status">Status</label>
+        <select id="case-status"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case-ticket">Nomor tiket</label>
+        <input type="text" id="case-ticket" placeholder="TIKET-001">
+      </div>
+      <div>
+        <label for="case-received">Tanggal faktur diterima</label>
+        <input type="date" id="case-received">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="case-note">Catatan</label>
+        <input type="text" id="case-note" placeholder="Contoh: faktur tagihan ada, faktur pajak belum muncul">
+      </div>
+      <div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" type="button" id="case-save">Simpan periode ini</button>
+      <button class="btn" type="button" id="seed-btn">Muat contoh</button>
+      <a class="btn" href="/api/export" id="export-btn">Unduh CSV</a>
+    </div>
+    <div class="err" id="case-err"></div>
+
+    <h2 class="sub">Ringkasan</h2>
+    <div class="metrics" id="case-summary"></div>
+    <div class="verdict" id="case-verdict" style="display:none"></div>
+    <div id="case-list"></div>
+  </div>
+
+  <div class="card">
+    <h2>Surat permintaan pemeriksaan</h2>
+    <p class="hint" style="margin-top:0;margin-bottom:14px">Dipakai bila faktur belum terbit atau datanya tidak sesuai. Surat tidak menjanjikan penerbitan ulang untuk periode berjalan.</p>
+    <div class="row">
+      <div>
+        <label for="letter-store">Nama toko</label>
+        <input type="text" id="letter-store" placeholder="Nama toko">
+      </div>
+      <div>
+        <label for="letter-store-id">ID toko atau username</label>
+        <input type="text" id="letter-store-id" placeholder="toko-contoh">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="letter-seller">Nama penjual atau penanggung jawab</label>
+        <input type="text" id="letter-seller" placeholder="Nama penjual">
+      </div>
+      <div>
+        <label for="letter-npwp">NPWP</label>
+        <input type="text" id="letter-npwp" placeholder="00.000.000.0-000.000">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="letter-contact">Kontak</label>
+        <input type="text" id="letter-contact" placeholder="08xxxxxxxxxx atau email">
+      </div>
+      <div>
+        <label for="letter-ticket">Nomor tiket sebelumnya</label>
+        <input type="text" id="letter-ticket" placeholder="TIKET-001">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="letter-problem">Masalah</label>
+        <select id="letter-problem"></select>
+      </div>
+      <div></div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="letter-chronology">Kronologi</label>
+        <textarea id="letter-chronology" rows="3" placeholder="Kapan mengecek, apa yang terlihat, tiket sebelumnya"></textarea>
+      </div>
+      <div></div>
+    </div>
+    <button class="primary" id="letter-btn">Buat surat</button>
+    <div class="err" id="letter-err"></div>
+    <div class="letter-output" id="letter-output">
+      <div class="letter-subject" id="letter-subject"></div>
+      <textarea class="letter" id="letter-body" readonly></textarea>
+      <div class="copy-row">
+        <button class="btn" type="button" id="copy-letter">Salin surat</button>
+      </div>
+      <div class="status" id="copy-status"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Sumber dan batasan</h2>
+    <div id="source-list"></div>
+    <p class="note">Tool ini bukan nasihat pajak. Jadwal dan cakupan faktur mengikuti pengumuman Shopee yang dikutip pada 27 sampai 29 Oktober 2026 dan dapat berubah. Platform lain belum tentu memakai jadwal yang sama. Selalu cek Seller Center dan konsultasikan dengan konsultan pajak untuk kredit Pajak Masukan.</p>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let META = null;
+let CASES = null;
+
+function esc(value) {
+  return String(value === null || value === undefined ? '' : value)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function rupiah(value) {
+  return 'Rp ' + Math.round(Number(value) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function num(id) {
+  const el = $(id);
+  return el ? Number(el.value || 0) : 0;
+}
+
+function val(id) {
+  const el = $(id);
+  return el ? String(el.value || '').trim() : '';
+}
+
+function setText(id, text) {
+  const el = $(id);
+  if (el) el.textContent = text;
+}
+
+function showErr(id, message) {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = message || '';
+  el.classList.toggle('show', Boolean(message));
+}
+
+function formatDate(iso) {
+  if (!iso) return '-';
+  const parts = String(iso).split('-');
+  if (parts.length !== 3) return iso;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  return Number(parts[2]) + ' ' + months[Number(parts[1]) - 1] + ' ' + parts[0];
+}
+
+function currentMonth() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
+function previousMonth() {
+  const d = new Date();
+  d.setMonth(d.getMonth() - 1);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
+function collectFees(prefix) {
+  const p = prefix || 'fee-';
+  return {
+    layanan: num(p + 'layanan'),
+    affiliate: num(p + 'affiliate'),
+    iklan: num(p + 'iklan'),
+    promo: num(p + 'promo'),
+    logistik: num(p + 'logistik'),
+  };
+}
+
+function collectEvidence() {
+  return Array.from(document.querySelectorAll('#evidence-list input:checked')).map((el) => el.value);
+}
+
+function basePayload() {
+  return {
+    platform: val('platform') || 'shopee',
+    period: val('period'),
+    invoice_received: val('invoice_received'),
+    includes_ppn: val('includes_ppn'),
+    ppn_rate: num('ppn_rate'),
+    fees: collectFees('fee-'),
+    store_name: val('letter-store') || val('case-store'),
+    store_id: val('letter-store-id') || val('case-store-id'),
+    evidence: collectEvidence(),
+  };
+}
+
+function setChips(platforms, selected) {
+  const box = $('platform-chips');
+  box.innerHTML = '';
+  platforms.forEach((item) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip';
+    btn.textContent = item.label;
+    btn.dataset.id = item.id;
+    btn.dataset.on = String(item.id === selected);
+    btn.addEventListener('click', () => {
+      $('platform').value = item.id;
+      updateChips(item.id);
+      updatePlatformHint(item.id);
+      syncCasePlatform(item.id);
+    });
+    box.appendChild(btn);
+  });
+}
+
+function updateChips(selected) {
+  document.querySelectorAll('#platform-chips .chip').forEach((btn) => {
+    btn.dataset.on = String(btn.dataset.id === selected);
+  });
+}
+
+function updatePlatformHint(id) {
+  const item = META.platforms.find((p) => p.id === id);
+  setText('platform-hint', item ? item.note : '');
+}
+
+function syncCasePlatform(id) {
+  const el = $('case-platform');
+  if (el) el.value = id;
+}
+
+function fillSelect(id, items, valueKey, labelKey) {
+  const el = $(id);
+  if (!el) return;
+  el.innerHTML = items.map((item) => '<option value="' + esc(item[valueKey]) + '">' + esc(item[labelKey]) + '</option>').join('');
+}
+
+function renderEvidence(items, selected) {
+  const box = $('evidence-list');
+  box.innerHTML = items.map((item) => {
+    const checked = selected.indexOf(item.id) !== -1 ? ' checked' : '';
+    return '<label class="check-item"><input type="checkbox" value="' + esc(item.id) + '"' + checked + '>' +
+      '<span class="c-body">' + esc(item.label) + (item.critical ? '<span class="badge">KRITIS</span>' : '') +
+      '<span class="c-note">' + esc(item.group) + '</span></span></label>';
+  }).join('');
+}
+
+function applyExample(data) {
+  $('platform').value = data.platform || 'shopee';
+  updateChips(data.platform || 'shopee');
+  updatePlatformHint(data.platform || 'shopee');
+  syncCasePlatform(data.platform || 'shopee');
+  $('period').value = data.period || previousMonth();
+  $('invoice_received').value = data.invoice_received || 'belum';
+  $('includes_ppn').value = data.includes_ppn || 'tidak';
+  $('ppn_rate').value = data.ppn_rate || 11;
+  $('fee-layanan').value = (data.fees && data.fees.layanan) || 0;
+  $('fee-affiliate').value = (data.fees && data.fees.affiliate) || 0;
+  $('fee-iklan').value = (data.fees && data.fees.iklan) || 0;
+  $('fee-promo').value = (data.fees && data.fees.promo) || 0;
+  $('fee-logistik').value = (data.fees && data.fees.logistik) || 0;
+  $('letter-store').value = data.store_name || '';
+  $('letter-store-id').value = data.store_id || '';
+  $('letter-seller').value = data.seller_name || '';
+  $('letter-npwp').value = data.npwp || '';
+  $('letter-contact').value = data.contact || '';
+  $('letter-ticket').value = data.ticket || '';
+  $('letter-problem').value = data.problem || 'belum_terbit';
+  $('letter-chronology').value = data.chronology || '';
+  renderEvidence(META.evidence, data.evidence || []);
+  $('case-store').value = data.store_name || '';
+  $('case-store-id').value = data.store_id || '';
+  $('case-period').value = data.period || previousMonth();
+}
+
+async function analyzeNow() {
+  showErr('err', '');
+  const payload = basePayload();
+  if (!payload.period) {
+    showErr('err', 'Periode faktur wajib diisi.');
+    return;
+  }
+  const res = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    showErr('err', data.error || 'Gagal memeriksa.');
+    return;
+  }
+  renderResult(data);
+}
+
+function renderResult(data) {
+  const t = data.timeline;
+  const v = $('verdict');
+  v.className = 'verdict ' + t.tone;
+  v.innerHTML = '<div class="v-label">' + esc(t.phase_label) + '</div><div class="v-body">' + esc(t.action) + '</div>';
+
+  setText('r-period', t.period_label);
+  setText('r-availability', formatDate(t.availability));
+  setText('r-complaint', formatDate(t.complaint));
+  setText('r-ppn', rupiah(data.ppn.ppn));
+
+  const box = $('timeline-box');
+  box.innerHTML = '<div class="arg-top"><span class="arg-score">' + esc(t.days_to_availability === null ? '-' : t.days_to_availability) + '</span>' +
+    '<span class="arg-label">hari lagi ke tanggal 12</span></div>' +
+    '<div class="arg-cause">' + esc(t.note) + '</div>' +
+    '<table><tbody>' +
+    '<tr><td>Batas perbarui data</td><td class="num">' + esc(formatDate(t.end)) + '</td></tr>' +
+    '<tr><td>Perkiraan faktur tersedia</td><td class="num">' + esc(formatDate(t.availability)) + '</td></tr>' +
+    '<tr><td>Batas lapor ke CS</td><td class="num">' + esc(formatDate(t.complaint)) + '</td></tr>' +
+    '<tr><td>Sisa hari ke batas lapor</td><td class="num">' + esc(t.days_to_complaint === null ? '-' : t.days_to_complaint) + '</td></tr>' +
+    '</tbody></table>';
+
+  const ppnRows = [
+    ['Total biaya', rupiah(data.ppn.total)],
+    ['Nominal sudah termasuk PPN', data.ppn.includes_ppn ? 'Ya' : 'Tidak'],
+    ['Tarif estimasi', data.ppn.rate + '%'],
+    ['DPP estimasi', rupiah(data.ppn.dpp)],
+    ['PPN estimasi', rupiah(data.ppn.ppn)],
+    ['Total dengan PPN', rupiah(data.ppn.total_with_ppn)],
+  ];
+  $('ppn-rows').innerHTML = ppnRows.map((row) => '<tr><td>' + esc(row[0]) + '</td><td class="num">' + esc(row[1]) + '</td></tr>').join('');
+  setText('ppn-note', data.ppn.note);
+
+  setText('readiness-score', data.readiness.score + '/100');
+  setText('readiness-count', data.readiness.verdict_label + ' (' + data.readiness.available_count + ' dari ' + data.readiness.total + ' data)');
+  const rv = $('readiness-verdict');
+  rv.className = 'verdict ' + (data.readiness.verdict === 'siap' ? 'ok' : data.readiness.verdict === 'hampir' ? 'signal' : 'ember');
+  rv.innerHTML = '<div class="v-label">' + esc(data.readiness.verdict_label) + '</div><div class="v-body">' +
+    esc(data.readiness.missing_critical.length === 0 ? 'Semua data kritis sudah siap.' : 'Data kritis yang belum siap: ' + data.readiness.missing_critical.join(', ')) + '</div>';
+
+  $('doc-grid').innerHTML = data.documents.map((doc) => '<div class="doc"><h3>' + esc(doc.label) + '</h3>' +
+    '<p>' + esc(doc.content) + '</p>' +
+    '<p class="doc-use"><b>Dipakai untuk:</b> ' + esc(doc.use) + '</p>' +
+    '<p class="doc-not">' + esc(doc.not_same) + '</p></div>').join('');
+
+  $('reco-list').innerHTML = data.recommendations.map((item) => '<li>' + esc(item) + '</li>').join('');
+  $('result-sources').innerHTML = data.sources.map((s) => '<div class="src-item"><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' +
+    '<span class="source-meta">' + esc(s.publisher) + ', ' + esc(s.date) + '. ' + esc(s.note) + '</span></div>').join('');
+
+  $('result-card').classList.add('show');
+  $('result-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function saveCase() {
+  showErr('case-err', '');
+  const payload = {
+    platform: val('case-platform'),
+    period: val('case-period'),
+    store_name: val('case-store'),
+    store_id: val('case-store-id'),
+    case_status: val('case-status'),
+    status: val('case-status'),
+    ticket: val('case-ticket'),
+    received_date: val('case-received'),
+    note: val('case-note'),
+    includes_ppn: val('includes_ppn'),
+    ppn_rate: num('ppn_rate'),
+    fees: collectFees('fee-'),
+  };
+  const res = await fetch('/api/cases', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    showErr('case-err', data.error || 'Gagal menyimpan.');
+    return;
+  }
+  CASES = data;
+  renderCases();
+}
+
+async function loadCases() {
+  const res = await fetch('/api/cases');
+  CASES = await res.json();
+  renderCases();
+}
+
+function renderCases() {
+  if (!CASES) return;
+  const s = CASES;
+  $('case-summary').innerHTML = [
+    ['Periode tercatat', String(s.total_cases)],
+    ['Masih terbuka', String(s.open_cases)],
+    ['Faktur belum ada', String(s.missing_cases)],
+    ['Estimasi PPN', rupiah(s.total_ppn)],
+  ].map((row) => '<div class="metric"><div class="m-label">' + esc(row[0]) + '</div><div class="m-value">' + esc(row[1]) + '</div></div>').join('');
+
+  const cv = $('case-verdict');
+  if (s.total_cases === 0) {
+    cv.style.display = 'none';
+  } else {
+    cv.style.display = 'block';
+    const warn = s.open_cases > 0;
+    cv.className = 'verdict ' + (warn ? 'ember' : 'ok');
+    cv.innerHTML = '<div class="v-label">' + (warn ? s.open_cases + ' periode masih terbuka' : 'Semua periode sudah beres') + '</div>' +
+      '<div class="v-body">' + (s.nearest_complaint_days === null ? 'Tidak ada tenggat lapor yang tersisa.' : 'Tenggat lapor terdekat dalam ' + s.nearest_complaint_days + ' hari.') + '</div>';
+  }
+
+  if (!s.cases || s.cases.length === 0) {
+    $('case-list').innerHTML = '<p class="hint">Belum ada catatan. Simpan periode pertama atau muat contoh.</p>';
+    return;
+  }
+
+  $('case-list').innerHTML = s.cases.map((item) => {
+    if (item.error) {
+      return '<div class="case-item"><div class="case-ref">' + esc(item.store_name || 'Kasus') + '</div><div class="case-note">' + esc(item.error) + '</div></div>';
+    }
+    const flags = item.flags && item.flags.length
+      ? '<div class="flag"><b>' + item.flags_count + ' peringatan.</b> ' + esc(item.flags.join(' ')) + '</div>'
+      : '';
+    const options = META.case_statuses.map((st) => '<option value="' + esc(st.id) + '"' + (st.id === item.case_status ? ' selected' : '') + '>' + esc(st.label) + '</option>').join('');
+    return '<div class="case-item">' +
+      '<div class="case-top"><span class="case-ref">' + esc(item.store_name) + ' - ' + esc(item.timeline.period_label) + '</span>' +
+      '<span class="case-meta">' + esc(item.platform_name) + ' | ' + esc(item.case_status_label) + '</span></div>' +
+      '<div class="case-meta">Faktur tersedia ' + esc(formatDate(item.timeline.availability)) + ' | batas lapor ' + esc(formatDate(item.timeline.complaint)) + ' | PPN ' + esc(rupiah(item.ppn.ppn)) + '</div>' +
+      (item.note ? '<div class="case-note">' + esc(item.note) + '</div>' : '') +
+      flags +
+      '<div class="case-actions"><select data-case-status="' + esc(item.id) + '">' + options + '</select>' +
+      '<input type="date" data-case-received="' + esc(item.id) + '" value="' + esc(item.received_date) + '">' +
+      '<button class="btn" type="button" data-case-patch="' + esc(item.id) + '">Simpan</button>' +
+      '<button class="btn" type="button" data-case-delete="' + esc(item.id) + '">Hapus</button></div>' +
+      '</div>';
+  }).join('');
+
+  document.querySelectorAll('[data-case-patch]').forEach((btn) => {
+    btn.addEventListener('click', () => patchCase(btn.dataset.casePatch));
+  });
+  document.querySelectorAll('[data-case-delete]').forEach((btn) => {
+    btn.addEventListener('click', () => deleteCase(btn.dataset.caseDelete));
+  });
+}
+
+async function patchCase(id) {
+  const statusEl = document.querySelector('[data-case-status="' + id + '"]');
+  const receivedEl = document.querySelector('[data-case-received="' + id + '"]');
+  const res = await fetch('/api/cases/' + encodeURIComponent(id), {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: statusEl.value, case_status: statusEl.value, received_date: receivedEl.value }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    showErr('case-err', data.error || 'Gagal mengubah.');
+    return;
+  }
+  CASES = data;
+  renderCases();
+}
+
+async function deleteCase(id) {
+  const res = await fetch('/api/cases/' + encodeURIComponent(id), { method: 'DELETE' });
+  const data = await res.json();
+  if (!res.ok) {
+    showErr('case-err', data.error || 'Gagal menghapus.');
+    return;
+  }
+  CASES = data;
+  renderCases();
+}
+
+async function seedCases() {
+  const res = await fetch('/api/seed', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+  const data = await res.json();
+  CASES = data;
+  renderCases();
+}
+
+async function makeLetter() {
+  showErr('letter-err', '');
+  const payload = Object.assign(basePayload(), {
+    store_name: val('letter-store'),
+    store_id: val('letter-store-id'),
+    seller_name: val('letter-seller'),
+    npwp: val('letter-npwp'),
+    contact: val('letter-contact'),
+    ticket: val('letter-ticket'),
+    problem: val('letter-problem'),
+    chronology: val('letter-chronology'),
+  });
+  const res = await fetch('/api/letter', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    showErr('letter-err', data.error || 'Gagal membuat surat.');
+    return;
+  }
+  setText('letter-subject', data.subject);
+  $('letter-body').value = data.body;
+  $('letter-output').classList.add('show');
+  $('letter-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function copyLetter() {
+  const text = $('letter-body').value;
+  try {
+    await navigator.clipboard.writeText(text);
+    setText('copy-status', 'Surat disalin.');
+  } catch (e) {
+    $('letter-body').select();
+    document.execCommand('copy');
+    setText('copy-status', 'Surat disalin.');
+  }
+}
+
+async function init() {
+  META = await (await fetch('/api/meta')).json();
+  setChips(META.platforms, 'shopee');
+  fillSelect('platform', META.platforms, 'id', 'label');
+  fillSelect('case-platform', META.platforms, 'id', 'label');
+  fillSelect('case-status', META.case_statuses, 'id', 'label');
+  fillSelect('letter-problem', META.problems, 'id', 'label');
+  updatePlatformHint('shopee');
+
+  $('period').value = previousMonth();
+  $('case-period').value = previousMonth();
+  $('ppn_rate').value = META.ppn_default_rate || 11;
+  renderEvidence(META.evidence, []);
+
+  $('source-list').innerHTML = META.sources.map((s) => '<div class="src-item"><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' +
+    '<span class="source-meta">' + esc(s.publisher) + ', ' + esc(s.date) + '. ' + esc(s.note) + '</span></div>').join('');
+
+  await loadCases();
+}
+
+$('theme-btn').addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('theme', next); } catch (e) {}
+});
+
+$('calc-btn').addEventListener('click', analyzeNow);
+$('fill-example').addEventListener('click', async () => {
+  const res = await fetch('/api/example');
+  const data = await res.json();
+  applyExample(data);
+  analyzeNow();
+});
+$('clear-form').addEventListener('click', () => {
+  $('period').value = previousMonth();
+  $('invoice_received').value = 'belum';
+  ['fee-layanan', 'fee-affiliate', 'fee-iklan', 'fee-promo', 'fee-logistik'].forEach((id) => { $(id).value = 0; });
+  renderEvidence(META.evidence, []);
+  showErr('err', '');
+  $('result-card').classList.remove('show');
+});
+$('case-save').addEventListener('click', saveCase);
+$('seed-btn').addEventListener('click', seedCases);
+$('letter-btn').addEventListener('click', makeLetter);
+$('copy-letter').addEventListener('click', copyLetter);
+$('platform').addEventListener('change', () => {
+  updateChips($('platform').value);
+  updatePlatformHint($('platform').value);
+  syncCasePlatform($('platform').value);
+});
+init();
+</script>
+</body>
+</html>

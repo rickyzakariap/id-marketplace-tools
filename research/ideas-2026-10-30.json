@@ -1,0 +1,180 @@
+{
+  "date": "2026-10-30",
+  "research_window": "Berita 23 sampai 30 Oktober 2026, dengan sumber aturan PPN 2025 dan siaran pers DJP 1 Oktober 2026 sebagai dasar tarif dan pemisahan dokumen",
+  "sources": [
+    {
+      "title": "Shopee Mulai Terbitkan Faktur Pajak pada November 2026, Pedagang Wajib Cek Data",
+      "publisher": "Ikatan Konsultan Pajak Indonesia (IKPI)",
+      "date": "2026-10-27",
+      "url": "https://ikpi.or.id/articles/shopee-mulai-terbitkan-faktur-pajak-pada-november-2026-pedagang-wajib-cek-data",
+      "facts": [
+        "Shopee mulai menerbitkan faktur pajak secara bertahap bagi penjual mulai November 2026.",
+        "Faktur pajak mencakup PPN atas biaya layanan, biaya komisi affiliate, dan biaya pembelian saldo iklan.",
+        "Faktur dibuat berdasarkan data yang terdaftar pada akun toko. Jika Informasi Penagihan kosong, Shopee memakai Data Diri penjual.",
+        "Penjual harus memeriksa nama, NIK, NPWP, dan alamat. Perubahan dilakukan lewat menu Profil Toko di Seller Centre.",
+        "Permohonan faktur pajak manual diajukan paling lambat tanggal 30 atau 31 setiap bulan.",
+        "Jika faktur belum tersedia sampai tanggal 12 bulan berikutnya, penjual menghubungi CS paling lambat tanggal 15 bulan berikutnya.",
+        "Jika tidak ada permintaan atau laporan sampai batas waktu, faktur tagihan dan faktur pajak dianggap telah diterima dengan baik."
+      ]
+    },
+    {
+      "title": "Shopee Bertahap Terbitkan Faktur Pajak Mulai November 2026",
+      "publisher": "DDTCNews",
+      "date": "2026-10-28",
+      "url": "https://news.ddtc.co.id/berita/nasional/1823635/shopee-bertahap-terbitkan-faktur-pajak-mulai-november-2026",
+      "facts": [
+        "Faktur pajak diterbitkan untuk biaya layanan, komisi affiliate, dan pembelian saldo iklan.",
+        "Penjual Shopee Mall terdaftar sebagai penerima faktur pajak dan harus memastikan informasi perusahaan sesuai NPWP.",
+        "Faktur yang sudah terbit tidak diperbarui otomatis bila penjual mengubah identitas setelah periode penerbitan berakhir.",
+        "Perubahan data setelah periode berakhir dipakai untuk penerbitan periode berikutnya."
+      ]
+    },
+    {
+      "title": "Seller Shopee Wajib Tahu! Mulai November 2026, Faktur Pajak Diterbitkan Bertahap, Ini 3 Biaya yang Tercakup!",
+      "publisher": "Bisa Pajak",
+      "date": "2026-10-29",
+      "url": "https://bisapajak.id/faktur-pajak-shopee-november-2026/",
+      "facts": [
+        "Faktur pajak biaya layanan tidak boleh disamakan dengan bukti pemungutan PPh Pasal 22 atas penjualan.",
+        "Bagi penjual PKP, ketepatan data faktur penting untuk menentukan apakah PPN dapat dikreditkan sebagai Pajak Masukan.",
+        "Contoh tenggat: invoice November 2026 dicek ketersediaannya sampai 12 Desember 2026 dan dilaporkan paling lambat 15 Desember 2026."
+      ]
+    },
+    {
+      "title": "Pemungutan PPh Pasal 22 Melalui Marketplace Mulai Dilaksanakan 1 Oktober 2026",
+      "publisher": "Direktorat Jenderal Pajak",
+      "date": "2026-10-01",
+      "url": "https://www.pajak.go.id/id/siaran-pers/pemungutan-pph-pasal-22-melalui-marketplace-mulai-dilaksanakan-1-oktober-2026",
+      "facts": [
+        "Empat marketplace ditunjuk sebagai pemungut PPh 22: PT Shopee International Indonesia, PT Global Digital Niaga Tbk, PT Tokopedia, dan PT Ecart Webportal Indonesia.",
+        "Tarif PPh 22 sebesar 0,5% dari peredaran bruto atau omzet, tidak termasuk PPN dan PPnBM.",
+        "PPh 22 yang dipungut dapat diperhitungkan sebagai kredit pajak dalam tahun berjalan atau menjadi bagian pelunasan PPh Final."
+      ]
+    },
+    {
+      "title": "PMK 131/2024: Tarif PPN Sebelas-Dua Belas",
+      "publisher": "Direktorat Jenderal Pajak",
+      "date": "2025-01-06",
+      "url": "https://www.pajak.go.id/id/artikel/pmk-1312024-tarif-ppn-sebelas-dua-belas",
+      "facts": [
+        "Tarif PPN adalah 12%, tetapi untuk barang dan jasa non-mewah dihitung dengan DPP nilai lain 11/12.",
+        "Tarif efektif PPN untuk selain barang mewah adalah 11%.",
+        "Tarif efektif 12% hanya untuk barang mewah."
+      ]
+    },
+    {
+      "title": "Pajak Lokapasar Butuh Evaluasi",
+      "publisher": "Bisnis.com",
+      "date": "2026-10-11",
+      "url": "https://epaper.bisnis.com/articles/read/20261012/433/2011629/pajak-lokapasar-butuh-evaluasi",
+      "facts": [
+        "Pelaporan perdana pemungutan PPh 22 di lokapasar disiapkan pada 1 November 2026.",
+        "Asosiasi dan penyelenggara marketplace meminta koordinasi untuk menangani kendala implementasi.",
+        "Jadwal dan pelaksanaan per platform masih dalam tahap evaluasi."
+      ]
+    },
+    {
+      "title": "DJP Pantau Pelaksanaan Pajak Marketplace, Evaluasi Awal November 2026",
+      "publisher": "Ikatan Konsultan Pajak Indonesia (IKPI)",
+      "date": "2026-10-29",
+      "url": "https://ikpi.or.id/articles/djp-pantau-pelaksanaan-pajak-marketplace-evaluasi-awal-november-2026",
+      "facts": [
+        "DJP akan mengevaluasi pelaksanaan PPh 22 marketplace pada awal November 2026.",
+        "Evaluasi mencakup pemungutan, pelaporan, dan penyetoran oleh marketplace serta pemahaman penjual.",
+        "DJP menegaskan PPh 22 marketplace bukan jenis pajak baru, melainkan perubahan mekanisme pemungutan."
+      ]
+    },
+    {
+      "title": "FAQ Faktur Saya",
+      "publisher": "Pusat Edukasi Penjual Shopee",
+      "date": "diakses 2026-10-30",
+      "url": "https://seller.shopee.co.id/edu/article/16787",
+      "facts": [
+        "Faktur Pajak bulanan dapat diunduh melalui Seller Centre.",
+        "Faktur Pajak tidak bisa di-update. Data harus sesuai sebelum faktur diterbitkan.",
+        "Faktur Pajak satu bulan memakai data Informasi Penagihan per tanggal 30 atau 31 setiap bulan.",
+        "Jika Informasi Penagihan kosong, data faktur memakai Data Diri Penjual."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Faktur pajak baru tanpa persiapan data",
+      "description": "Mulai November 2026 Shopee menerbitkan faktur pajak biaya layanan, komisi affiliate, dan saldo iklan. Banyak penjual belum memeriksa nama, NIK, NPWP, alamat, dan Informasi Penagihan. Faktur memakai data pada akhir periode, dan perubahan setelah periode berakhir tidak memperbaiki faktur yang sudah terbit.",
+      "frequency": "HIGH",
+      "sources": [
+        "IKPI, 27 Oktober 2026",
+        "DDTCNews, 28 Oktober 2026",
+        "Pusat Edukasi Penjual Shopee, artikel 16787"
+      ]
+    },
+    {
+      "category": "Tenggat 12 dan 15 mudah terlewat",
+      "description": "Faktur tagihan dan faktur pajak seharusnya tersedia paling lambat tanggal 12 bulan berikutnya. Jika belum ada, penjual harus lapor ke CS paling lambat tanggal 15. Setelah tenggat, faktur dianggap diterima dan pengaduan ketersediaan tidak diproses lagi.",
+      "frequency": "HIGH",
+      "sources": [
+        "IKPI, 27 Oktober 2026",
+        "Bisa Pajak, 29 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Faktur pajak PPN dicampur dengan bukti PPh 22",
+      "description": "Penjual menerima dua dokumen berbeda: faktur pajak PPN atas biaya layanan dan bukti pemungutan PPh 22 atas penjualan. Keduanya dipakai untuk kredit pajak yang berbeda. Menjumlahkan atau menyamakan keduanya membuat perhitungan pajak dan Pajak Masukan salah.",
+      "frequency": "HIGH",
+      "sources": [
+        "DJP, 1 Oktober 2026",
+        "Bisa Pajak, 29 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Nominal PPN dan DPP tidak pernah dicek",
+      "description": "Nominal biaya di tagihan bisa sudah termasuk PPN atau belum. Tanpa memisahkan DPP dan PPN, penjual PKP tidak tahu berapa Pajak Masukan yang bisa dikreditkan. Tarif efektif 11% untuk non-mewah juga sering tertukar dengan tarif 12%.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "DJP, 6 Januari 2025 (PMK 131/2024)",
+        "Bisa Pajak, 29 Oktober 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#22 pph22-tax-calculator: menghitung PPh 22 atas penjualan dan status pemungutan. Tidak membahas faktur pajak PPN atas biaya layanan.",
+    "#25 pph22-refund-tracker dan #26 omzet-gabungan-tracker: refund PPh 22 dan omzet gabungan. Bukan faktur pajak marketplace.",
+    "#23 umkm-service-fee-checker dan #34 insentif-permen-2026: diskon 50% biaya layanan dan kelayakan. Bukan dokumen pajak.",
+    "#36 biaya-total-marketplace: kalkulator biaya all-in. Tidak membuat atau memeriksa faktur pajak.",
+    "#40 klaim-paket-hilang, #41 banding-produk-diblokir, #42 pelacak-kunci-promosi, #43 pelacak-ulasan-palsu: klaim logistik, produk, promo, dan ulasan. Tidak relevan.",
+    "#37 pemulih-toko dan #38 pelacak-poin-penalti: akses toko dan poin penalti. Bukan dokumen pajak.",
+    "#39 pelacak-tenggat-halal: sertifikasi halal. Bukan faktur pajak."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pemeriksa Faktur Pajak Marketplace",
+      "number": 44,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Alat bantu saat marketplace mulai menerbitkan faktur pajak biaya layanan. Mengecek kesiapan 12 data, menghitung estimasi PPN dan DPP, memantau tenggat tanggal 12 dan 15, memisahkan faktur pajak dari bukti PPh 22, melacak kasus per periode, dan membuat surat permintaan pemeriksaan.",
+      "why": "Pengumuman Shopee 27 sampai 29 Oktober 2026 adalah pain point baru yang belum disentuh tool mana pun: faktur pajak PPN atas biaya marketplace, bukan PPh 22 atas penjualan. Tenggatnya bisa dihitung, kesalahan data bisa dicek, dan dokumennya sering tertukar dengan bukti PPh 22.",
+      "grounding": "Cakupan biaya dan tenggat 12/15 dari IKPI 27 Oktober 2026, DDTCNews 28 Oktober 2026, dan Bisa Pajak 29 Oktober 2026. Tarif PPh 22 dan empat marketplace dari siaran pers DJP 1 Oktober 2026. Tarif PPN efektif 11% dari PMK 131/2024 yang dijelaskan DJP. Semua nominal biaya berasal dari input penjual dan ditandai estimasi.",
+      "not_repeat": "Berbeda dari #22 dan #25 yang menghitung PPh 22 penjualan, #23 dan #34 yang membahas diskon biaya layanan, serta #36 yang menghitung total biaya. Tool ini khusus dokumen faktur pajak PPN atas biaya marketplace."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "44-pemeriksa-faktur-pajak",
+    "reason": "Riset menemukan aturan baru yang berdampak langsung pada penjual: Shopee mulai menerbitkan faktur pajak biaya layanan pada November 2026 dengan tenggat data tanggal 30 atau 31, ketersediaan tanggal 12, dan lapor tanggal 15. Belum ada tool yang membantu penjual mengecek data, menghitung PPN, membedakan dokumen, dan melacak tenggat per periode.",
+    "scope": [
+      "Pemeriksa jadwal lima fase: siapkan, menunggu, cek, lewat, dan sudah diterima.",
+      "Estimasi PPN dan DPP untuk lima jenis biaya, dengan opsi termasuk atau belum termasuk PPN dan tarif yang bisa diubah.",
+      "Skor kesiapan 12 data dengan lima data kritis.",
+      "Pemisahan Faktur Pajak, Faktur Tagihan, dan Bukti Pemungutan PPh 22.",
+      "Catatan per periode dengan status, tiket, tanggal terima, peringatan, ringkasan, dan ekspor CSV.",
+      "Generator surat permintaan pemeriksaan untuk faktur belum terbit, data salah, atau nominal tidak sesuai.",
+      "Sumber berita dan aturan ditampilkan di UI dan README.",
+      "37 unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "rejected": [
+      "Tool PPh 22 baru: sudah ada #22, #25, dan #26. Evaluasi DJP awal November 2026 belum mengubah tarif atau mekanisme, jadi tidak cukup untuk tool keempat.",
+      "Tool retur atau ulasan baru: sudah ada #31, #40, dan #43. Berita 29 Oktober 2026 tentang barang palsu dan refund pembeli tidak memberi aturan baru yang bisa dihitung untuk penjual.",
+      "Tool biaya tersembunyi promosi: sudah ada #35 dan #36. Artikel 28 Oktober 2026 mengulang tema yang sama tanpa angka baru yang bisa diground."
+    ]
+  }
+}

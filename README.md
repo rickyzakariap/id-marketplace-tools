@@ -49,6 +49,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 41 | [41-banding-produk-diblokir](41-banding-produk-diblokir/) | Web | Node.js + Express | Appeal a removed or misclassified product: estimate lost profit and stuck stock, score argument strength and 13 evidence items, track cases and generate a manual review letter |
 | 42 | [42-pelacak-kunci-promosi](42-pelacak-kunci-promosi/) | Web | Node.js + Express | Track locked vouchers and promos without penalty points: estimate lost profit, score the indication and 13 evidence items, track cases and generate an unlock request letter |
 | 43 | [43-pelacak-ulasan-palsu](43-pelacak-ulasan-palsu/) | Web | Node.js + Express | Track suspected fake 1-star review attacks: rating and profit impact, 120-day edit window, 10 indicators, 13 evidence items, case log, CSV export and review investigation letter |
+| 44 | [44-pemeriksa-faktur-pajak](44-pemeriksa-faktur-pajak/) | Web | Node.js + Express | Check marketplace tax invoice readiness (Shopee from Nov 2026): data checklist, estimated PPN/DPP, day 12/15 deadlines, document separation, monthly case log, CSV export and inquiry letter |
 
 ## Contributing
 
