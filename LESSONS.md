@@ -743,3 +743,18 @@
 - Lesson: Status "sudah diterima" tidak boleh dihitung sebagai selesai tanpa mencocokkan identitas dan nominal. Faktur yang salah data tidak diperbaiki otomatis untuk periode berjalan, jadi pemeriksaan tetap diperlukan
 - Lesson: Jangan memakai tarif 12% untuk semua biaya. Tarif efektif PPN non-mewah adalah 11% lewat DPP nilai lain 11/12; tarif 12% hanya untuk barang mewah. Ini kesalahan yang mudah terjadi kalau hanya membaca headline kenaikan PPN
 - Next: Update #44 saat Tokopedia, Lazada, Blibli, atau TikTok Shop mengumumkan jadwal dan cakupan faktur pajaknya. Tambah impor CSV tagihan marketplace, pengingat tanggal 12 dan 15, dan pemisahan otomatis biaya yang sudah termasuk PPN dari ekspor Seller Center
+
+## 2026-10-31 - #45 Pemeriksa Kampanye Sepihak
+
+- Masalah: Media Konsumen 29 Oktober 2026 melaporkan produk toko COZYON masuk Voucher Boost Campaign dengan harga Rp22.410 dari harga normal Rp35.900 tanpa catatan pendaftaran yang diketahui penjual. Platform menyebut pop-up dan menganggapnya sebagai konfirmasi. Estimasi dampak Rp92.676.021 adalah klaim penjual, bukan angka resmi
+- Riset: Selain berita, dicek dokumentasi Seller Center TikTok Shop by Tokopedia tentang Campaign Produk, CFV Auto Registration, konfirmasi lewat WhatsApp resmi, dan Pendaftaran Sekali Klik. Semua mekanisme ini menjelaskan bagaimana produk bisa terdaftar tanpa penjual mengingat tindakan pendaftaran
+- Dasar aturan: Permendag 19/2026 mewajibkan PPMSE menginformasikan biaya secara transparan, membuat biaya yang disepakati dalam perjanjian tertulis atau kontrak elektronik, dan menyediakan pengaduan dengan SLA
+- Keputusan: Bangun tool #45, bukan mengulang #35 (margin program diskon pilihan penjual), #42 (akses voucher hilang), #36 (biaya total), atau #44 (faktur pajak). Fokusnya audit pendaftaran kampanye dan bukti persetujuan
+- Fitur: Dampak per unit dan total dari harga normal, harga kampanye, harga yang diterima penjual, HPP, biaya layanan, dan unit terjual. Sepuluh indikasi berbobot, tujuh metode pendaftaran, 13 bukti dengan lima bukti kritis, jadwal kampanye, catatan kasus, ekspor CSV, dan surat permintaan audit
+- Angka contoh: Diskon 37,6 persen, laba normal Rp14.310, laba kampanye Rp2.169, dampak Rp83.408.670 dari 6.870 unit, indikasi 60/100, kesiapan bukti 67/100
+- Keputusan angka: Biaya layanan default 0 karena potongan berbeda per toko dan per program. Tool menjelaskan bahwa angka harus dicocokkan dengan settlement, bukan mengarang tarif
+- Verifikasi: 44 unit test lulus. Runtime semua endpoint diuji: meta, example, analyze, readiness, letter, cases GET/POST/PATCH/DELETE, seed, export CSV, 404 API, JSON rusak 400, payload 70 KB 413, halaman statis 200. Server dihentikan dan data runtime dihapus
+- Lesson: Klaim "sudah setuju lewat pop-up" tidak bisa dibantah hanya dengan ingatan. Tool harus meminta log pendaftaran, waktu, kanal, akun yang menyetujui, dan salinan bukti persetujuan, lalu menyimpan semuanya sebelum penjual mengubah harga atau keluar dari kampanye
+- Lesson: Skor indikasi dan estimasi kerugian harus diberi label heuristik dan "perkiraan dari input penjual". Tanpa label ini, alat audit mudah disalahartikan sebagai bukti atau putusan resmi
+- Lesson: Tanggal follow-up adalah tanggal terakhir dihubungi, bukan janji follow-up berikutnya. Validasi yang menolak tanggal masa depan benar untuk konteks ini, tetapi label UI harus eksplisit agar tidak membingungkan
+- Next: Update #45 saat TikTok Shop mengubah mekanisme auto-registration atau batas keluar kampanye, menambah impor CSV ekspor kampanye dan settlement, serta membuat perbandingan otomatis antara harga kampanye dan harga yang diterima penjual per pesanan

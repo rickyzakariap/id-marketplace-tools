@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-31",
+  "research_window": "Berita 24 sampai 31 Oktober 2026, dengan dokumentasi Seller Center TikTok Shop by Tokopedia dan Permendag 19/2026 sebagai dasar mekanisme pendaftaran dan kewajiban transparansi",
+  "sources": [
+    {
+      "title": "Pendaftaran Voucher Boost Campaign TikTok Shop Tanpa Konfirmasi Seller, Estimasi Kerugian Rp92 Juta",
+      "publisher": "Media Konsumen",
+      "date": "2026-10-29",
+      "url": "https://mediakonsumen.com/2026/10/29/surat-pembaca/pendaftaran-voucher-boost-campaign-tiktok-shop-tanpa-konfirmasi-seller-estimasi-kerugian-rp92-juta",
+      "facts": [
+        "Toko COZYON menemukan sejumlah produk tercatat mengikuti Voucher Boost Campaign dengan harga berbeda dari harga yang ditetapkan penjual.",
+        "Contoh produk: harga yang ditetapkan Rp35.900, harga kampanye Rp22.410, selisih Rp13.490 per unit.",
+        "Platform awalnya menyebut kampanye dijalankan tim campaign, lalu menyebut pendaftaran dilakukan melalui pop-up di Seller Center dan dianggap dikonfirmasi penjual.",
+        "Penjual meminta waktu pendaftaran, pihak yang menyetujui, bukti persetujuan, dan dasar penetapan harga.",
+        "Estimasi dampak Rp92.676.021 adalah perhitungan internal penjual dari selisih harga dikali unit terjual, bukan angka resmi platform."
+      ]
+    },
+    {
+      "title": "Campaign Produk",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "2025-12-30",
+      "url": "https://seller-id.tokopedia.com/university/essay?knowledge_id=7753809473062657&lang=id-ID",
+      "facts": [
+        "Harga campaign diisi otomatis sebagai rekomendasi saat pendaftaran dan penjual bisa mengubahnya.",
+        "Stok campaign langsung dikunci platform setelah campaign ditinjau dan disetujui.",
+        "Tim operasional TikTok Shop by Tokopedia dapat mendaftarkan produk ke campaign produk atas nama penjual.",
+        "Sebagian pendaftaran produk baru berlaku setelah penjual menyetujui."
+      ]
+    },
+    {
+      "title": "Co-Funded Voucher Campaign Auto Registration",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "diakses 2026-10-31",
+      "url": "https://seller-id.tokopedia.com/university/essay?knowledge_id=3677374135617281&lang=en",
+      "facts": [
+        "CFV Auto-Registration mendaftarkan produk terpilih secara otomatis ke kampanye CFV berikutnya.",
+        "Harga registrasi diisi otomatis dari harga kampanye sebelumnya dan belum bisa diubah pada versi saat artikel diakses.",
+        "Penjual dapat memilih produk yang masuk auto-registration dan dapat keluar di tingkat toko."
+      ]
+    },
+    {
+      "title": "Guide to Campaign Confirmation via Official WhatsApp",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "diakses 2026-10-31",
+      "url": "https://seller-id.tokopedia.com/university/essay?knowledge_id=2663739192674064&lang=en",
+      "facts": [
+        "Penjual dapat mendaftarkan produk ke campaign dengan membalas YES ke pesan dari akun WhatsApp resmi.",
+        "Setelah balasan YES, sistem menyesuaikan harga produk menurut aturan campaign.",
+        "Produk yang tidak memenuhi syarat tidak didaftarkan."
+      ]
+    },
+    {
+      "title": "Pendaftaran Sekali Klik Campaign",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "2025-10-20",
+      "url": "https://seller-id.tokopedia.com/university/essay?knowledge_id=6170577439000336&lang=id-ID",
+      "facts": [
+        "Pendaftaran sekali klik dapat mendaftarkan semua produk yang memenuhi syarat ke sub-campaign yang sesuai.",
+        "Semua sub-campaign terpilih otomatis, dan sebagian campaign bersifat wajib serta otomatis disertakan.",
+        "Penjual dapat memilih strategi mendaftarkan semua produk, hanya produk rekomendasi, atau manual lewat CSV."
+      ]
+    },
+    {
+      "title": "Peraturan Menteri Perdagangan Nomor 19 Tahun 2026 tentang Penyelenggaraan Usaha Perdagangan Melalui Sistem Elektronik",
+      "publisher": "JDIH Kementerian Perdagangan",
+      "date": "2026-06-08",
+      "url": "https://jdih.kemendag.go.id/peraturan/download/5d4ff6c5-ae21-4591-81ed-4949d6e6ac1d/file_abstract",
+      "facts": [
+        "PPMSE dengan model bisnis lokapasar wajib menginformasikan setiap biaya yang dikenakan kepada pedagang secara transparan dengan bahasa yang mudah dipahami.",
+        "Biaya yang disepakati pedagang dan PPMSE harus dibuat dalam bentuk perjanjian tertulis atau kontrak elektronik.",
+        "PPMSE wajib menyediakan layanan pengaduan dan mekanisme penyelesaian sengketa, menetapkan serta mengumumkan waktu tanggap atau SLA."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Produk masuk kampanye tanpa persetujuan yang jelas",
+      "description": "Penjual menemukan produknya tercatat di kampanye dengan harga lebih rendah, sementara tidak ada catatan pendaftaran yang diketahui. Platform dapat menyebut pop-up, tim operasional, atau auto-registration sebagai dasar pendaftaran.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 29 Oktober 2026",
+        "TikTok Shop Seller Center, Campaign Produk, 30 Desember 2025",
+        "TikTok Shop Seller Center, CFV Auto Registration, diakses 31 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Harga kampanye berbeda dari harga yang ditetapkan",
+      "description": "Harga kampanye bisa diisi otomatis dari harga kampanye sebelumnya atau disesuaikan aturan campaign. Tanpa pemeriksaan, penjual baru menyadari selisih setelah banyak unit terjual.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 29 Oktober 2026",
+        "TikTok Shop Seller Center, CFV Auto Registration, diakses 31 Oktober 2026",
+        "TikTok Shop Seller Center, Campaign Produk, 30 Desember 2025"
+      ]
+    },
+    {
+      "category": "Bukti persetujuan tidak bisa diverifikasi",
+      "description": "Penjual tidak menerima salinan persetujuan, tidak tahu waktu pendaftaran, dan tidak tahu akun yang menyetujui. Permintaan audit log menjadi langkah pertama sebelum membahas kompensasi.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 29 Oktober 2026",
+        "Permendag 19/2026, 8 Juni 2026"
+      ]
+    },
+    {
+      "category": "Dampak finansial sulit dihitung",
+      "description": "Selisih harga per unit perlu dikalikan unit terjual, lalu dibandingkan dengan laba normal setelah HPP dan biaya layanan. Tanpa pemisahan ini, angka kerugian bisa terlalu besar atau terlalu kecil.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 29 Oktober 2026"
+      ]
+    },
+    {
+      "category": "Kampanye berjalan saat temuan",
+      "description": "Ketika temuan muncul di tengah kampanye, penjual harus memilih antara menghentikan produk, membiarkan harga berjalan, atau keluar. Setiap tindakan bisa mengubah bukti yang tersedia.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 29 Oktober 2026",
+        "TikTok Shop Seller Center, Campaign Produk, 30 Desember 2025"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#35 program-diskon-checker: menghitung margin setelah flash sale, voucher, atau gratis ongkir yang penjual pilih. Tidak mengaudit pendaftaran kampanye tanpa persetujuan atau bukti persetujuan.",
+    "#42 pelacak-kunci-promosi: membahas akses voucher dan fitur promosi yang hilang. Bukan pendaftaran produk ke kampanye dengan harga lebih rendah.",
+    "#14 promo-cost-calculator dan #36 biaya-total-marketplace: menghitung biaya promosi dan biaya total. Tidak memeriksa consent atau catatan pendaftaran.",
+    "#38 pelacak-poin-penalti dan #41 banding-produk-diblokir: poin penalti dan produk diblokir. Bukan kampanye otomatis.",
+    "#44 pemeriksa-faktur-pajak: dokumen pajak marketplace. Tidak relevan.",
+    "#23 umkm-service-fee-checker dan #34 insentif-permen-2026: diskon biaya layanan 50 persen. Bukan harga kampanye.",
+    "#31 biaya-retur-tracker dan #40 klaim-paket-hilang: retur dan klaim logistik. Tidak relevan."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pemeriksa Kampanye Sepihak",
+      "number": 45,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Alat bantu audit saat produk diduga masuk kampanye tanpa persetujuan. Menghitung dampak harga per unit dan total, menilai 10 indikasi, menyusun 13 bukti dengan 5 bukti kritis, melacak kasus per produk dan kampanye, serta membuat surat permintaan audit log dan bukti persetujuan.",
+      "why": "Kasus 29 Oktober 2026 menunjukkan masalah yang belum disentuh tool mana pun: produk terdaftar di kampanye dengan harga lebih rendah tanpa catatan persetujuan yang jelas. Ini berbeda dari menghitung margin program diskon yang dipilih sendiri.",
+      "grounding": "Kronologi dan angka contoh dari Media Konsumen 29 Oktober 2026. Mekanisme pop-up, tim operasional, auto-registration, pendaftaran sekali klik, dan WhatsApp dari dokumentasi Seller Center TikTok Shop by Tokopedia. Kewajiban transparansi biaya, perjanjian tertulis, dan SLA pengaduan dari Permendag 19/2026.",
+      "not_repeat": "Berbeda dari #35 yang menghitung margin program diskon pilihan penjual, #42 yang membahas akses voucher yang hilang, dan #36 yang menghitung total biaya. Tool ini berfokus pada audit pendaftaran kampanye dan bukti persetujuan."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "45-pemeriksa-kampanye-sepihak",
+    "reason": "Riset menemukan pain point baru yang spesifik dan dapat dihitung: produk masuk kampanye dengan harga lebih rendah tanpa persetujuan yang bisa diverifikasi. Belum ada tool yang menggabungkan perhitungan dampak harga, penilaian indikasi, checklist bukti persetujuan, catatan kasus, dan surat audit.",
+    "scope": [
+      "Kalkulator dampak per unit dan total dari harga normal, harga kampanye, harga yang diterima penjual, HPP, biaya layanan, dan unit terjual.",
+      "Penilaian 10 indikasi dengan bobot dan label heuristik.",
+      "Tujuh metode pendaftaran dengan catatan risiko.",
+      "Skor kesiapan 13 bukti dengan lima bukti kritis.",
+      "Jadwal kampanye dan peringatan umur temuan serta follow-up.",
+      "Catatan kasus per produk dan kampanye dengan status, tiket, follow-up, ringkasan, dan ekspor CSV.",
+      "Generator surat permintaan audit pendaftaran, bukti persetujuan, dasar harga, penghentian produk, dan SLA.",
+      "Sumber berita dan dokumentasi ditampilkan di UI dan README.",
+      "44 unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "rejected": [
+      "Tool PPh 22 atau faktur pajak baru: sudah ada #22, #25, #26, dan #44. Evaluasi DJP awal November 2026 belum mengubah aturan yang bisa dihitung menjadi tool baru.",
+      "Tool klaim paket atau retur baru: sudah ada #31 dan #40. Kasus COD 30 Oktober 2026 mengulang tema retur dan paket hilang tanpa aturan baru yang bisa diground.",
+      "Tool ulasan atau produk diblokir baru: sudah ada #41 dan #43. Kasus 30 Oktober 2026 tentang size chart adalah sengketa pembeli, bukan aturan baru untuk penjual.",
+      "Tool diskon biaya layanan 50 persen: sudah ada #23 dan #34. Berita 27 Oktober 2026 hanya membahas transisi implementasi, bukan fakta baru."
+    ]
+  }
+}

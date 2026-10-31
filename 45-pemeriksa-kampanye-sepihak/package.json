@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-kampanye-sepihak",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Audit kampanye marketplace yang diduga mendaftarkan produk tanpa persetujuan, hitung dampak harga, lacak kasus, dan buat surat permintaan audit",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/kampanye.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
