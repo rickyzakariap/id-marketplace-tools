@@ -758,3 +758,19 @@
 - Lesson: Skor indikasi dan estimasi kerugian harus diberi label heuristik dan "perkiraan dari input penjual". Tanpa label ini, alat audit mudah disalahartikan sebagai bukti atau putusan resmi
 - Lesson: Tanggal follow-up adalah tanggal terakhir dihubungi, bukan janji follow-up berikutnya. Validasi yang menolak tanggal masa depan benar untuk konteks ini, tetapi label UI harus eksplisit agar tidak membingungkan
 - Next: Update #45 saat TikTok Shop mengubah mekanisme auto-registration atau batas keluar kampanye, menambah impor CSV ekspor kampanye dan settlement, serta membuat perbandingan otomatis antara harga kampanye dan harga yang diterima penjual per pesanan
+
+## 2026-11-02 - #46 Pemeriksa Pesanan COD Berisiko
+
+- Masalah: Media Konsumen 31 Oktober 2026 melaporkan toko Golto Accessories mendapat pesanan COD dari akun yang tidak merespons chat. Pembeli sempat mengajukan pembatalan lalu menariknya. Penjual khawatir dipaksa mengirim atau kena penalti ganda saat menunggu keputusan CS. Ini pengaduan penjual, bukan putusan platform
+- Riset: Batas COD, aturan pembatalan, dan patokan klaim diground dari Pusat Edukasi Penjual Shopee. Batas pembayaran Rp 500.000 untuk Instant, Rp 5.000.000 untuk Reguler dan Hemat Kargo, dan Rp 1.000.000 untuk Pos Reguler. Pembatalan non-instan perlu respons 1x24 jam. Retur perlu konfirmasi 7 hari kalender. Pembeli yang membatalkan 2 kali dalam 60 hari dapat dinonaktifkan dari COD 60 hari
+- Keputusan: Bangun tool #46, bukan mengulang #31 (biaya retur setelah terjadi), #38 (poin penalti), #40 (paket hilang), #41 (produk diblokir), #42 (voucher terkunci), #43 (ulasan palsu), atau #45 (kampanye sepihak). Fokusnya keputusan sebelum paket dikirim dan permintaan keputusan tertulis
+- Fitur: Laba bersih, kerugian retur utuh, kerugian retur rusak sebelum klaim, estimasi klaim, sisa kerugian setelah klaim, 12 indikator risiko, 13 bukti dengan 5 bukti kritis, timeline kirim dan pembatalan, catatan kasus, ekspor CSV, dan tiga surat
+- Angka contoh: Risiko 47/100, laba bersih Rp 67.000, kerugian retur rusak setelah klaim Rp 18.000, estimasi klaim maksimal Rp 100.000, kesiapan bukti 61/100
+- Keputusan angka: Biaya layanan default 0 karena potongan berbeda per toko dan per program. Batas klaim Reguler memakai nominal terendah dari 10 kali ongkir, harga barang, dan Rp 1.000.000. Instant memakai harga barang maksimal Rp 10.000.000. Platform lain diberi peringatan agar tidak memakai batas Shopee
+- Verifikasi: 54 unit test lulus. Runtime semua endpoint diuji: halaman statis 200, meta, example, analyze, readiness, letter, cases GET/POST/PATCH/DELETE, seed, export CSV, 404 API, JSON rusak 400, payload 70 KB 413. Server dihentikan dan data runtime dihapus
+- Works: UI mengikuti DESIGN.md (token monokrom, kartu 28px, pill, Google Sans weight 500, entrance stagger, reduced motion, dark mode no-flash). 80 ID unik, 61 ID yang dipakai JS semuanya ada, tidak ada ID duplikat, JS inline syntax OK, tanpa em dash
+- Lesson: Menahan paket dan mengirim paket sama-sama punya biaya. Tool harus menampilkan kerugian terburuk dari kedua arah, bukan hanya menyuruh penjual menunggu CS
+- Lesson: Status pembeli adalah sinyal, bukan bukti. Skor risiko harus diberi label heuristik dan tidak boleh dipakai untuk menuduh pembeli fiktif
+- Lesson: Tanggal follow-up adalah tanggal terakhir dihubungi, bukan janji follow-up berikutnya. Validasi yang menolak tanggal masa depan benar untuk konteks ini, dan label UI harus eksplisit
+- Lesson: Patokan klaim COD berbeda per metode dan berasal dari Shopee. Menampilkan satu angka untuk semua platform membuat tool terlihat lebih pasti daripada sumbernya
+- Next: Update #46 saat Shopee mengubah batas COD atau alur klaim, menambah impor CSV pesanan, pengingat follow-up otomatis, dan aturan spesifik untuk Tokopedia, TikTok Shop, Lazada, serta Blibli

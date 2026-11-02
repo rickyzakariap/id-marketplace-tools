@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-02",
+  "research_window": "Berita 26 Oktober sampai 2 November 2026, dengan dokumentasi Pusat Edukasi Penjual Shopee sebagai dasar batas COD, pembatalan, retur, dan klaim",
+  "sources": [
+    {
+      "title": "CS Shopee Seperti \"Menyandera\" Penjual: Dipaksa Kirim ke Pembeli COD Fiktif atau Kena Double Penalty",
+      "publisher": "Media Konsumen",
+      "date": "2026-10-31",
+      "url": "https://mediakonsumen.com/2026/10/31/surat-pembaca/cs-shopee-seperti-menyandera-penjual-dipaksa-kirim-ke-pembeli-cod-fiktif-atau-kena-double-penalty",
+      "facts": [
+        "Toko Golto Accessories menerima pesanan COD pada 26 Oktober 2026 dari akun yang tidak dikenal.",
+        "Pembeli sempat mengajukan pembatalan dengan alasan ingin mengganti alamat, lalu menarik kembali pengajuan tersebut.",
+        "Chat konfirmasi alamat tidak dibalas pembeli.",
+        "Penjual menghubungi CS dan diminta menunggu, sementara batas waktu pengiriman semakin dekat.",
+        "Penjual khawatir dipaksa mengirim paket atau terkena penalti ganda. Ini pengaduan penjual, bukan putusan platform."
+      ]
+    },
+    {
+      "title": "FAQ COD (Bayar di Tempat)",
+      "publisher": "Pusat Edukasi Penjual Shopee",
+      "date": "2026-09-03",
+      "url": "https://seller.shopee.co.id/edu/article/15310",
+      "facts": [
+        "Batas total pembayaran COD adalah Rp 500.000 untuk layanan Instant, Rp 5.000.000 untuk Reguler dan Hemat Kargo, dan Rp 1.000.000 untuk Pos Reguler.",
+        "Pembeli yang tidak dapat dihubungi, menolak, atau tidak membayar dan membatalkan 2 kali dalam 60 hari kalender dapat dinonaktifkan dari COD selama 60 hari.",
+        "Penjual diberi 7 hari kalender untuk mengonfirmasi keadaan barang retur."
+      ]
+    },
+    {
+      "title": "Perlindungan Penjual terhadap Pembeli COD (Bayar di Tempat)",
+      "publisher": "Pusat Edukasi Penjual Shopee",
+      "date": "2026-07-24",
+      "url": "https://seller.shopee.co.id/edu/article/15308",
+      "facts": [
+        "Halaman ini menjelaskan mekanisme klaim perlindungan penjual untuk pesanan COD.",
+        "Penanganan pembeli COD bermasalah mengikuti syarat dan alur yang tercantum di halaman bantuan.",
+        "Syarat terbaru perlu dicocokkan sebelum mengajukan klaim."
+      ]
+    },
+    {
+      "title": "Mengelola Pengiriman yang Gagal",
+      "publisher": "Pusat Edukasi Penjual Shopee",
+      "date": "2026-10-29",
+      "url": "https://seller.shopee.co.id/edu/article/14716/Mengelola-Pengiriman-yang-Gagal",
+      "facts": [
+        "Pengiriman gagal terjadi bila pembeli menolak paket COD, alamat salah, atau ada kendala pengiriman.",
+        "Paket yang gagal dikirim akan dikembalikan kepada penjual."
+      ]
+    },
+    {
+      "title": "Tentang Pembatalan Pesanan",
+      "publisher": "Pusat Edukasi Penjual Shopee",
+      "date": "2026-07-27",
+      "url": "https://seller.shopee.co.id/edu/article/12622/Tentang-Pembatalan-Pesanan",
+      "facts": [
+        "Pembeli dapat mengajukan pembatalan setelah pembayaran terverifikasi dengan alasan ingin mengubah alamat, penjual tidak membalas chat, ingin mengubah rincian, atau berubah pikiran.",
+        "Pembatalan non-instan memerlukan respons penjual dalam 1x24 jam.",
+        "Jika penjual tidak merespons dalam batas waktu, pesanan dibatalkan otomatis."
+      ]
+    },
+    {
+      "title": "Tentang COD Cek Dulu",
+      "publisher": "Pusat Edukasi Penjual Shopee",
+      "date": "diakses 2026-11-02",
+      "url": "https://seller.shopee.co.id/edu/article/16175",
+      "facts": [
+        "Pembeli yang tidak dapat dihubungi, tidak membayar, atau menolak paket sampai 3 kali dalam 30 hari kalender dapat diblokir dari COD Cek Dulu dan COD selama 60 hari.",
+        "Klaim barang hilang atau rusak memakai 10 kali ongkos kirim atau harga barang, maksimal Rp 1.000.000, mengikuti nominal terendah."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Pesanan COD berisiko sebelum paket dikirim",
+      "description": "Penjual harus memilih antara mengirim paket kepada pembeli yang tidak merespons dan berisiko retur, atau menahan paket dan berisiko dianggap terlambat. Keputusan ini punya biaya di kedua arah dan harus diambil sebelum tenggat kirim.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 31 Oktober 2026",
+        "Pusat Edukasi Penjual Shopee, FAQ COD, 3 September 2026",
+        "Pusat Edukasi Penjual Shopee, Tentang Pembatalan Pesanan, 27 Juli 2026"
+      ]
+    },
+    {
+      "category": "Pembatalan ditarik kembali dan batas 1x24 jam terlewat",
+      "description": "Pembeli dapat mengajukan pembatalan lalu menariknya. Penjual yang menunggu keputusan CS bisa melewati batas respons 1x24 jam dan kehilangan kendali atas status pesanan.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 31 Oktober 2026",
+        "Pusat Edukasi Penjual Shopee, Tentang Pembatalan Pesanan, 27 Juli 2026"
+      ]
+    },
+    {
+      "category": "Kerugian retur rusak tidak dihitung sebelum mengirim",
+      "description": "Nilai pesanan, HPP, kemasan, penanganan, dan ongkos kirim menentukan kerugian bila paket retur rusak. Tanpa perhitungan ini, penjual tidak tahu apakah laba pesanan sebanding dengan risiko yang diambil.",
+      "frequency": "HIGH",
+      "sources": [
+        "Pusat Edukasi Penjual Shopee, FAQ COD, 3 September 2026",
+        "Pusat Edukasi Penjual Shopee, Tentang COD Cek Dulu, diakses 2 November 2026"
+      ]
+    },
+    {
+      "category": "Batas klaim berbeda per metode COD",
+      "description": "Klaim Reguler, Hemat Kargo, dan Pos Reguler memakai nominal terendah dari 10 kali ongkir, harga barang, dan Rp 1.000.000. Instant memakai harga barang maksimal Rp 10.000.000. Satu angka untuk semua metode membuat estimasi kerugian salah.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Pusat Edukasi Penjual Shopee, FAQ COD, 3 September 2026",
+        "Pusat Edukasi Penjual Shopee, Tentang COD Cek Dulu, diakses 2 November 2026"
+      ]
+    },
+    {
+      "category": "Bukti tersebar dan tidak tersimpan sebelum status berubah",
+      "description": "Chat, pengajuan pembatalan, tiket CS, dan video pengemasan harus disimpan sebelum penjual mengubah status pesanan. Perubahan status dapat menutup akses ke riwayat yang dibutuhkan saat mengajukan klaim.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 31 Oktober 2026",
+        "Pusat Edukasi Penjual Shopee, Perlindungan Penjual terhadap Pembeli COD, 24 Juli 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#31 biaya-retur-tracker: menghitung kerugian setelah retur terjadi. Tidak membantu keputusan sebelum paket dikirim atau menilai risiko pembeli COD.",
+    "#38 pelacak-poin-penalti: melacak poin penalti dan banding. Tidak menghitung kerugian COD atau menyusun bukti pesanan berisiko.",
+    "#40 klaim-paket-hilang: klaim paket hilang atau rusak. Tidak membahas pembeli COD yang tidak merespons atau pembatalan yang ditarik.",
+    "#41 banding-produk-diblokir, #42 pelacak-kunci-promosi, #43 pelacak-ulasan-palsu: produk, promo, dan ulasan. Tidak relevan.",
+    "#45 pemeriksa-kampanye-sepihak: audit pendaftaran kampanye. Tidak membahas pesanan COD atau keputusan kirim.",
+    "#36 biaya-total-marketplace: kalkulator biaya all-in. Tidak menilai risiko pesanan atau menyusun surat ke CS.",
+    "#19 komplain-tracker: melacak komplain dengan SLA. Tidak menghitung risiko COD atau membuat surat permintaan pembatalan."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pemeriksa Pesanan COD Berisiko",
+      "number": 46,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Alat bantu keputusan sebelum mengirim pesanan COD. Menghitung laba dan kerugian terburuk, menilai 12 indikator risiko, menyusun 13 bukti dengan 5 bukti kritis, memantau batas kirim, pembatalan 1x24 jam, dan retur 7 hari, mencatat kasus, serta membuat tiga surat.",
+      "why": "Kasus 31 Oktober 2026 menunjukkan masalah yang belum disentuh tool mana pun: penjual terjepit antara mengirim ke pembeli yang tidak merespons atau menahan paket dan berisiko penalti. Ini berbeda dari menghitung retur setelah terjadi atau melacak poin penalti.",
+      "grounding": "Kronologi dari Media Konsumen 31 Oktober 2026. Batas COD, pembatalan 1x24 jam, retur 7 hari, dan patokan klaim dari Pusat Edukasi Penjual Shopee. Semua nominal kerugian berasal dari input penjual dan ditandai perkiraan.",
+      "not_repeat": "Berbeda dari #31 yang menghitung biaya retur setelah terjadi, #38 yang melacak poin penalti, #40 yang mengklaim paket hilang, dan #45 yang mengaudit kampanye. Tool ini fokus pada keputusan sebelum paket dikirim dan permintaan keputusan tertulis."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "46-pemeriksa-pesanan-cod",
+    "reason": "Riset menemukan pain point baru yang spesifik dan dapat dihitung: pesanan COD berisiko dengan pembeli tidak responsif, pembatalan yang ditarik, dan tenggat kirim yang mendesak. Belum ada tool yang menggabungkan perhitungan laba dan kerugian, penilaian risiko, checklist bukti, catatan kasus, dan surat permintaan pembatalan.",
+    "scope": [
+      "Kalkulator laba bersih, kerugian retur utuh, kerugian retur rusak sebelum klaim, estimasi klaim, dan sisa kerugian setelah klaim.",
+      "Batas pembayaran COD per metode dan peringatan bila nilai pesanan melebihi batas.",
+      "Penilaian 12 indikator risiko dan status pembeli dengan label heuristik.",
+      "Skor kesiapan 13 bukti dengan lima bukti kritis.",
+      "Timeline batas kirim, respons pembatalan 1x24 jam, dan konfirmasi retur 7 hari.",
+      "Catatan kasus per pesanan dengan status, tiket, follow-up terakhir, peringatan, ringkasan, dan ekspor CSV.",
+      "Tiga generator surat: pembatalan tanpa penalti, peninjauan pembeli, dan klaim retur rusak.",
+      "Sumber berita dan dokumentasi ditampilkan di UI dan README.",
+      "54 unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "rejected": [
+      "Tool biaya retur baru: sudah ada #31. Fokus #31 adalah kerugian setelah retur, bukan keputusan sebelum kirim.",
+      "Tool poin penalti baru: sudah ada #38. Poin dan banding adalah masalah terpisah dari risiko pesanan COD.",
+      "Tool klaim paket hilang baru: sudah ada #40. Paket hilang terjadi setelah pengiriman, bukan sebelum keputusan kirim.",
+      "Tool kampanye baru: sudah ada #45. Pendaftaran kampanye tidak membahas pembeli COD atau pembatalan pesanan.",
+      "Tool pengaduan umum: sudah ada #19. Komplain tracker tidak menghitung eksposur COD atau menyusun bukti pesanan."
+    ]
+  }
+}
