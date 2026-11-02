@@ -52,6 +52,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 44 | [44-pemeriksa-faktur-pajak](44-pemeriksa-faktur-pajak/) | Web | Node.js + Express | Check marketplace tax invoice readiness (Shopee from Nov 2026): data checklist, estimated PPN/DPP, day 12/15 deadlines, document separation, monthly case log, CSV export and inquiry letter |
 | 45 | [45-pemeriksa-kampanye-sepihak](45-pemeriksa-kampanye-sepihak/) | Web | Node.js + Express | Audit suspected unauthorized campaign enrollment (TikTok Shop Voucher Boost case, Oct 2026): price impact, 10 indicators, 13 evidence items, case log, CSV export and registration audit letter |
 | 46 | [46-pemeriksa-pesanan-cod](46-pemeriksa-pesanan-cod/) | Web | Node.js + Express | Check risky COD orders before shipping (Shopee fake COD case, Oct 2026): profit and worst-case loss, COD caps, claim estimate, 12 risk signals, 13 evidence items, 1x24h and 7-day deadlines, case log, CSV export and three letters |
+| 47 | [47-pemeriksa-potongan-pesanan](47-pemeriksa-potongan-pesanan/) | Web | Node.js + Express | Audit canceled and returned order deductions (TikTok Shop case, Oct 2026): actual vs policy commission, processing fee, shipping and refund, overcharge and monthly leak, 19 indicators, 13 evidence items, case log, CSV export and three letters |
 
 ## Contributing
 

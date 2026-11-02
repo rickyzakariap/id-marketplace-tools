@@ -1,0 +1,167 @@
+{
+  "date": "2026-11-02",
+  "research_window": "Riset tambahan setelah tool #46 pada hari yang sama. Berita 26 Oktober sampai 2 November 2026 tidak menemukan topik baru, lalu dicek keluhan berulang Oktober 2026 dan dokumentasi biaya TikTok Shop by Tokopedia",
+  "sources": [
+    {
+      "title": "Pesanan di TikTok Shop Dibatalkan Pembeli tapi Penjual Tetap Ditagih Komisi dan Ongkir 2 Kali",
+      "publisher": "Media Konsumen",
+      "date": "2026-10-12",
+      "url": "https://mediakonsumen.com/2026/10/12/surat-pembaca/pesanan-di-tiktok-shop-dibatalkan-pembeli-tapi-penjual-tetap-ditagih-komisi-dan-ongkir-2-kali",
+      "facts": [
+        "Pesanan dibatalkan pembeli, tetapi komisi dan biaya pemrosesan tetap dipotong.",
+        "Ongkir yang sudah dibayar pembeli disebut ditagih lagi ke penjual.",
+        "Ini pengaduan penjual, bukan putusan platform."
+      ]
+    },
+    {
+      "title": "TikTok Shop Tokopedia Membebankan Biaya kepada Penjual Padahal Pembeli yang Mau Retur, Barang Retur yang Rusak Tidak Diganti (II)",
+      "publisher": "Media Konsumen",
+      "date": "2026-10-06",
+      "url": "https://mediakonsumen.com/2026/10/06/surat-pembaca/tiktok-shop-tokopedia-membebankan-biaya-kepada-penjual-padahal-pembeli-yang-mau-retur-barang-retur-yang-rusak-tidak-diganti-ii",
+      "facts": [
+        "Penjual mengeluhkan biaya yang tetap dibebankan saat pembeli mengajukan retur.",
+        "Barang retur rusak tidak diganti.",
+        "Kasus menunjukkan perlunya memisahkan potongan yang sesuai kebijakan dari yang perlu dipertanyakan."
+      ]
+    },
+    {
+      "title": "Jual Barang Rp6 Juta di Tokopedia, Malah Rugi Rp463 Ribu karena Potongan Mencapai Rp963 Ribu",
+      "publisher": "Media Konsumen",
+      "date": "2026-06-05",
+      "url": "https://mediakonsumen.com/2026/06/05/surat-pembaca/jual-barang-rp6-juta-di-tokopedia-malah-rugi-rp463-ribu-karena-potongan-mencapai-rp963-ribu",
+      "facts": [
+        "Potongan bisa melebihi perkiraan penjual.",
+        "Nominal berasal dari pengaduan penjual, bukan tarif resmi."
+      ]
+    },
+    {
+      "title": "Shop Operation: Platform Commission Fee, Dynamic Commission, Order Processing Fee",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "diakses 2026-11-02",
+      "url": "https://seller-id.tokopedia.com/university/course?content_id=7392850066884369&lang=en&learning_id=4759438594787088",
+      "facts": [
+        "Komisi platform 2,50 sampai 12,20 persen sesuai kategori.",
+        "Komisi dinamis 3 sampai 8 persen dengan batas Rp 650.000 per item atau SKU mulai 18 Mei 2026.",
+        "Biaya pemrosesan order Rp 1.250 per pesanan yang berhasil dikirim."
+      ]
+    },
+    {
+      "title": "Kebijakan Pembatalan Pesanan, Pengembalian Barang, dan Pengembalian Dana Pelanggan TikTok Shop",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "diakses 2026-11-02",
+      "url": "https://seller-id.tokopedia.com/university/essay?knowledge_id=6837727601690370&lang=id-ID",
+      "facts": [
+        "Retur karena kesalahan logistik dapat mengembalikan komisi platform terkait produk retur.",
+        "Mulai 1 Juni 2026 retur karena kesalahan pembeli dikenakan kontribusi hingga Rp 5.000 per arah.",
+        "Masa tenggang kontribusi berlaku sampai pemberitahuan lebih lanjut."
+      ]
+    },
+    {
+      "title": "Tokopedia-TikTok Mulai Berlakukan Biaya Seller Rp1.250 per Transaksi Hari Ini",
+      "publisher": "Bisnis.com",
+      "date": "2025-08-11",
+      "url": "https://teknologi.bisnis.com/read/20250811/266/1901232/tokopedia-tiktok-mulai-berlakukan-biaya-seller-rp1250-per-transaksi-hari-ini",
+      "facts": [
+        "Biaya pemrosesan Rp 1.250 per pesanan yang berhasil dikirim.",
+        "Biaya dikembalikan penuh bila seluruh pesanan dibatalkan sebelum dikirim.",
+        "Bila sudah terkirim lalu retur atau refund, biaya tidak dikembalikan."
+      ]
+    },
+    {
+      "title": "Menteri UMKM Larang Biaya Seller Naik, TikTok Shop vs Shopee Siapa Paling Sering?",
+      "publisher": "teknologi.bisnis.com",
+      "date": "2026-05-16",
+      "url": "https://teknologi.bisnis.com/read/20260516/84/1974124/menteri-umkm-larang-biaya-seller-naik-tiktok-shop-vs-shopee-siapa-paling-sering",
+      "facts": [
+        "Komisi dinamis berlaku untuk pesanan yang berhasil dikirim.",
+        "Komisi dinamis tidak dikembalikan bila pesanan sudah dikirim lalu diretur atau direfund.",
+        "Batas lama Rp 40.000 per item naik menjadi Rp 650.000 mulai 18 Mei 2026."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Komisi dan biaya pemrosesan tetap dipotong setelah pesanan batal",
+      "description": "Pesanan yang dibatalkan sebelum dikirim seharusnya tidak menghasilkan komisi atau biaya pemrosesan. Penjual perlu membandingkan settlement dengan status pesanan dan meminta koreksi tertulis.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 12 Oktober 2026",
+        "Bisnis.com, 11 Agustus 2025",
+        "TikTok Shop by Tokopedia Seller Center, Shop Operation, diakses 2 November 2026"
+      ]
+    },
+    {
+      "category": "Ongkir dibebankan dua kali meskipun pembeli sudah membayar",
+      "description": "Pembeli membayar ongkir saat checkout, tetapi penjual masih melihat ongkir yang sama dipotong di settlement. Tanpa rincian per arah, penjual tidak bisa membedakan ongkir sah dari pembebanan ganda.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 12 Oktober 2026",
+        "TikTok Shop by Tokopedia Seller Center, Kebijakan Pembatalan dan Pengembalian Dana, diakses 2 November 2026"
+      ]
+    },
+    {
+      "category": "Retur kesalahan pembeli dibebankan melebihi kontribusi",
+      "description": "Kebijakan menyebut kontribusi hingga Rp 5.000 per arah dengan masa tenggang, tetapi settlement bisa menagih ongkir penuh. Penjual perlu memisahkan retur kesalahan pembeli, penjual, dan logistik karena masing-masing punya dasar biaya berbeda.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 6 Oktober 2026",
+        "TikTok Shop by Tokopedia Seller Center, Kebijakan Pembatalan dan Pengembalian Dana, diakses 2 November 2026"
+      ]
+    },
+    {
+      "category": "Bukti settlement tidak dipisahkan per komponen",
+      "description": "Tanpa rincian komisi, biaya pemrosesan, ongkir, dan biaya lain, penjual hanya melihat total potongan. Surat keberatan yang kuat harus menyebut komponen, nominal, dan dasar kebijakan yang diminta.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 12 Oktober 2026",
+        "Media Konsumen, 5 Juni 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#31 biaya-retur-tracker: menghitung kerugian setelah retur terjadi. Tidak mengaudit komponen potongan di settlement atau membandingkannya dengan kebijakan biaya.",
+    "#46 pemeriksa-pesanan-cod: menilai risiko sebelum paket dikirim. Tidak membahas potongan setelah pembatalan atau retur.",
+    "#38 pelacak-poin-penalti: poin dan banding. Tidak menghitung komisi, biaya pemrosesan, atau ongkir.",
+    "#36 biaya-total-marketplace: kalkulator biaya all-in untuk perencanaan harga. Tidak memeriksa selisih potongan aktual per pesanan.",
+    "#27 tiktok-komisi-calculator: membandingkan komisi dinamis lama dan baru. Tidak mengaudit settlement pesanan batal atau retur.",
+    "#35 program-diskon-checker: margin setelah program diskon. Tidak membahas biaya setelah pembatalan.",
+    "#40 klaim-paket-hilang: klaim paket hilang atau rusak. Tidak membahas potongan pesanan batal.",
+    "#19 komplain-tracker: melacak komplain dengan SLA. Tidak menghitung selisih potongan atau membuat surat keberatan biaya."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pemeriksa Potongan Pesanan Batal",
+      "number": 47,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Audit potongan pesanan batal atau retur. Membandingkan komisi, biaya pemrosesan, ongkir, dan biaya lain di settlement dengan perkiraan kebijakan, menilai 19 indikator, menyusun 13 bukti dengan 5 bukti kritis, mencatat kasus, serta membuat tiga surat.",
+      "why": "Keluhan potongan setelah pembatalan atau retur berulang dan belum disentuh tool mana pun. Tool yang ada menghitung retur setelah terjadi atau menilai risiko sebelum kirim, bukan mengaudit komponen potongan aktual terhadap kebijakan biaya.",
+      "grounding": "Kronologi dari Media Konsumen 12 Oktober 2026. Tarif komisi, batas komisi dinamis, biaya pemrosesan, dan kontribusi ongkir retur dari dokumentasi TikTok Shop by Tokopedia serta pemberitaan Bisnis.com. Semua nominal aktual berasal dari input penjual dan ditandai perkiraan.",
+      "not_repeat": "Berbeda dari #31 yang menghitung kerugian retur, #46 yang menilai risiko sebelum kirim, #38 yang melacak poin, #36 yang merencanakan biaya all-in, dan #27 yang membandingkan tarif komisi. Tool ini fokus pada selisih antara settlement aktual dan kebijakan biaya per pesanan."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "47-pemeriksa-potongan-pesanan",
+    "reason": "Riset 7 hari terakhir tidak menemukan topik baru yang belum tercakup, tetapi keluhan Oktober 2026 tentang potongan pesanan batal dan retur berulang serta dapat dihitung. Belum ada tool yang menggabungkan perbandingan komponen potongan, penilaian indikasi, checklist bukti, catatan kasus, dan surat keberatan biaya.",
+    "scope": [
+      "Perbandingan komisi platform, komisi dinamis, biaya pemrosesan, ongkir, dan biaya lain antara aktual dan perkiraan kebijakan.",
+      "Batas komisi dinamis Rp 650.000 per item dan biaya pemrosesan Rp 1.250 hanya untuk pesanan yang dikirim.",
+      "Ongkir perkiraan per status pesanan dan penyebab retur, termasuk masa tenggang dan kontribusi Rp 5.000 per arah.",
+      "Selisih, persentase, perkiraan dana bersih, dan potensi kebocoran bulanan.",
+      "Penilaian 13 indikator otomatis dan 6 indikator manual dengan label heuristik.",
+      "Skor kesiapan 13 bukti dengan lima bukti kritis.",
+      "Catatan kasus per pesanan dengan status, tiket, follow-up terakhir, peringatan, ringkasan, dan ekspor CSV.",
+      "Tiga generator surat: rincian, keberatan, dan eskalasi.",
+      "Sumber berita dan dokumentasi ditampilkan di UI dan README.",
+      "65 unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "rejected": [
+      "Tool biaya retur baru: sudah ada #31. Fokus #31 adalah kerugian setelah retur, bukan audit komponen potongan.",
+      "Tool risiko COD baru: sudah ada #46. Fokus #46 adalah keputusan sebelum paket dikirim.",
+      "Tool poin penalti baru: sudah ada #38. Poin dan banding tidak menghitung komisi atau ongkir.",
+      "Tool komisi dinamis baru: sudah ada #27. #27 membandingkan tarif, bukan mengaudit settlement pesanan batal.",
+      "Tool biaya total baru: sudah ada #36. #36 untuk perencanaan harga, bukan pemeriksaan potongan aktual."
+    ]
+  }
+}

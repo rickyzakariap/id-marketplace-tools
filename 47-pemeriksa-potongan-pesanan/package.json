@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-potongan-pesanan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Audit potongan pesanan batal atau retur: bandingkan komisi, biaya pemrosesan, dan ongkir aktual dengan perkiraan kebijakan, susun bukti, lacak kasus, dan buat surat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/audit.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
