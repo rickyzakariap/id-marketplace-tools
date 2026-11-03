@@ -53,6 +53,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 45 | [45-pemeriksa-kampanye-sepihak](45-pemeriksa-kampanye-sepihak/) | Web | Node.js + Express | Audit suspected unauthorized campaign enrollment (TikTok Shop Voucher Boost case, Oct 2026): price impact, 10 indicators, 13 evidence items, case log, CSV export and registration audit letter |
 | 46 | [46-pemeriksa-pesanan-cod](46-pemeriksa-pesanan-cod/) | Web | Node.js + Express | Check risky COD orders before shipping (Shopee fake COD case, Oct 2026): profit and worst-case loss, COD caps, claim estimate, 12 risk signals, 13 evidence items, 1x24h and 7-day deadlines, case log, CSV export and three letters |
 | 47 | [47-pemeriksa-potongan-pesanan](47-pemeriksa-potongan-pesanan/) | Web | Node.js + Express | Audit canceled and returned order deductions (TikTok Shop case, Oct 2026): actual vs policy commission, processing fee, shipping and refund, overcharge and monthly leak, 19 indicators, 13 evidence items, case log, CSV export and three letters |
+| 48 | [48-pemeriksa-realisasi-diskon](48-pemeriksa-realisasi-diskon/) | Web | Node.js + Express | Audit whether the 50% UMK service fee discount is actually reflected in settlements (effective 25 Oct 2026, Kepmen UMKM 398/2026): expected vs charged fee, annual leak, SAPA UMKM verification phases, 20 indicators, 13 evidence items, case log, CSV export and three letters |
 
 ## Contributing
 

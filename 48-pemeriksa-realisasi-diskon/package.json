@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-realisasi-diskon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Audit realisasi diskon biaya layanan 50 persen untuk UMK: bandingkan biaya yang seharusnya dan yang ditagih, cek tahap verifikasi SAPA UMKM, susun bukti, lacak kasus, dan buat surat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/audit.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

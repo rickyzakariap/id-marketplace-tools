@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-11-03 - Pemeriksa Realisasi Diskon 50% (#48)
+- Works: Bedakan kelayakan insentif (#23/#34) dari realisasi potongan di settlement. Tool baru menjawab "apakah diskon benar-benar muncul", bukan "apakah saya berhak".
+- Works: Dasar biaya diskon wajib dari invoice. Bila dihitung dari omzet x tarif, tandai `estimated` dan minta pencocokan invoice. Cakupan komponen beda per platform, jadi jangan asumsikan total biaya layanan = dasar diskon.
+- Works: Fase verifikasi 5 hari kerja tarik data + 10 hari kerja verifikasi, dengan tanggal efektif 25 Oktober 2026 dan larangan berlaku surut.
+- Works: 14 sinyal otomatis + 6 manual, 13 bukti dengan 5 kritis, 7 status kasus, 3 surat, CSV, dan data kasus di-ignore dari git.
+- Issues: `validateBase` tidak diekspor sehingga 43 test gagal dengan pesan menyesatkan "is not a function".
+- Issues: Ambang level indikasi 35 membuat contoh utama (diskon sebagian + selisih besar = 29) jatuh ke "rendah" padahal verdict "kurang" dan bocor Rp 5,4 juta per tahun. Turunkan ambang "sedang" ke 25.
+- Issues: Ekspektasi test readiness satu bukti kritis (skor 11) sebagai "hampir" tidak konsisten dengan aturan maksimal satu bukti kritis hilang. Perbaiki ekspektasi test, bukan logika.
+- Lesson: Setelah menulis lib + test, ekspor semua fungsi yang dipakai test. Jalankan test sebelum menulis README agar jumlah dan angka contoh tidak salah.
+- Lesson: Uji endpoint tulis (POST/PATCH/DELETE), bukan hanya GET. Seed dan kasus contoh membuat `data/cases.json`; hapus dan masukkan folder data ke `.gitignore` sebelum commit.
+- Lesson: Verifikasi runtime halaman statis butuh cek id: setiap `getElementById` di script harus ada di HTML. Test ini menangkap typo yang tidak terlihat di backend.
+
+---
+
 ## 2026-07-15 - Review Sentiment Extension (Chrome MV3)
 - Works: Chrome MV3 extension + Express backend + Supabase
 - Works: `chrome.scripting.executeScript({ func })` untuk inject scraping langsung
