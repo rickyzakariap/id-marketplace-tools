@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-pajak-digital",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pisahkan PPN SPP-TDLN pada transaksi digital luar negeri dari PPh 22 marketplace: hitung perkiraan PPN, cek potensi pungutan ganda, susun bukti, catat kasus, dan buat surat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/pajak.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-11-04 - Pemeriksa Pajak Digital (#49)
+- Works: Pisahkan tiga jalur yang sering tercampur: PPN SPP-TDLN atas pembelian digital luar negeri, PPN PMSE yang sudah dipungut penyedia, dan PPh 22 final 0,5% dari penjualan marketplace.
+- Works: Tanggal 9 November 2026 diberi label sebagai klaim pemberitaan, bukan tanggal mulai resmi baru. DJP menyatakan mekanisme sudah berjalan sejak 25 September 2026.
+- Works: PPN yang sudah atau akan dipungut dipisahkan dari PPN potensial yang belum jelas. Transfer dan remitansi tidak otomatis dihitung sebagai objek PPN.
+- Works: Tarif awal 11 persen dari PMK 131/2024 dapat diubah, dengan opsi nominal sudah termasuk PPN. Status PKP menentukan kredit pajak atau biaya.
+- Works: 10 bukti dengan 4 bukti kritis, 3 surat, catatan kasus, CSV, dan verifikasi runtime 10 endpoint.
+- Issues: `validateCase` awalnya hanya menyalin hasil `validateBase`, sehingga `evidence` dan `chronology` hilang saat kasus disimpan. Tambahkan eksplisit dan uji round-trip.
+- Issues: Dua test gagal karena teks kebijakan tidak memuat frasa "bukan konfirmasi". Perbaiki teks sumber agar lebih tepat, bukan melonggarkan test.
+- Issues: `Number(value) || 11` membuat input tarif 0 berubah diam-diam menjadi 11. Ganti dengan parser eksplisit yang mempertahankan nol agar validasi server bekerja.
+- Lesson: Saat membentuk objek kasus dari hasil normalisasi, salin metadata yang tidak dihitung ulang (bukti, kronologi, tiket) secara eksplisit.
+- Lesson: Uji klaim teks yang membawa nuansa hukum, bukan hanya angka dan status.
+- Lesson: Jangan pakai `||` untuk input numerik yang nol adalah nilai valid. Ini aturan yang sama dengan data finansial.
+- Lesson: Setelah test lulus, tetap jalankan server dan curl semua endpoint tulis, baca, ekspor, dan hapus.
+
+---
+
 ## 2026-11-03 - Pemeriksa Realisasi Diskon 50% (#48)
 - Works: Bedakan kelayakan insentif (#23/#34) dari realisasi potongan di settlement. Tool baru menjawab "apakah diskon benar-benar muncul", bukan "apakah saya berhak".
 - Works: Dasar biaya diskon wajib dari invoice. Bila dihitung dari omzet x tarif, tandai `estimated` dan minta pencocokan invoice. Cakupan komponen beda per platform, jadi jangan asumsikan total biaya layanan = dasar diskon.

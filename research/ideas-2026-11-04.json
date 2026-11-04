@@ -1,0 +1,150 @@
+{
+  "date": "2026-11-04",
+  "research_window": "Riset 3 sampai 4 November 2026 tentang kebingungan pajak digital 9 November, penjelasan DJP soal SPP-TDLN, dan dampaknya bagi penjual marketplace",
+  "sources": [
+    {
+      "title": "Ramai isu PPN atas semua transaksi digital, begini penjelasan DJP",
+      "publisher": "Ortax",
+      "date": "2026-11-03",
+      "url": "https://ortax.org/ramai-isu-ppn-atas-semua-transaksi-digital-begini-penjelasan-djp",
+      "facts": [
+        "DJP menyatakan SPP-TDLN bukan pajak baru.",
+        "Mekanisme pemungutan PPN atas pemanfaatan produk digital luar negeri sudah berjalan sejak 25 September 2026.",
+        "PPN tidak berlaku untuk semua transaksi digital.",
+        "Transfer atau remitansi pribadi tidak otomatis menjadi objek PPN."
+      ]
+    },
+    {
+      "title": "Pajak digital 9 November 2026: apa artinya bagi UMKM dan penjual online",
+      "publisher": "UKMINDONESIA.ID",
+      "date": "2026-11-03",
+      "url": "https://ukmindonesia.id/baca-deskripsi-posts/pajak-digital-9-november-2026-apa-artinya-bagi-umkm-dan-penjual-online",
+      "facts": [
+        "Pemberitaan memakai contoh PPN 11/111.",
+        "Non-PKP tidak dapat mengkreditkan PPN, sehingga pungutan menjadi biaya.",
+        "Marketplace dalam negeri dan PPh 22 final 0,5 persen adalah jalur yang berbeda.",
+        "Tanggal 9 November disebut dalam pemberitaan, bukan konfirmasi tanggal mulai resmi baru dari DJP."
+      ]
+    },
+    {
+      "title": "9 November pajak digital akan berlaku?",
+      "publisher": "Suluh Sumatera",
+      "date": "2026-11-02",
+      "url": "https://www.suluhsumatera.co.id/2026/11/9-november-pajak-digital-akan-berlaku.html",
+      "facts": [
+        "Pemberitaan awal memicu kebingungan tentang tanggal 9 November.",
+        "Klaim tanggal perlu dibaca bersama penjelasan DJP bahwa mekanisme sudah berjalan sejak 25 September 2026."
+      ]
+    },
+    {
+      "title": "PMK 131/2024: tarif PPN sebelas-dua belas",
+      "publisher": "Direktorat Jenderal Pajak",
+      "date": "2025-01-06",
+      "url": "https://pajak.go.id/id/artikel/pmk-1312024-tarif-ppn-sebelas-dua-belas",
+      "facts": [
+        "Tarif PPN tetap 12 persen.",
+        "Tarif efektif untuk barang dan jasa non-mewah adalah 11 persen melalui DPP nilai lain 11/12.",
+        "Tarif yang dipakai tool harus dapat diubah dan hasilnya tetap perkiraan."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Menganggap 9 November sebagai pajak baru untuk semua transaksi digital",
+      "description": "Penjual melihat pemberitaan tanggal 9 November dan mengira semua transaksi digital, termasuk penjualan marketplace, akan dikenai pajak baru. Penjelasan DJP bahwa mekanisme sudah berjalan dan cakupannya terbatas belum mudah dipahami.",
+      "frequency": "HIGH",
+      "sources": [
+        "Ortax, 3 November 2026",
+        "Suluh Sumatera, 2 November 2026",
+        "UKMINDONESIA.ID, 3 November 2026"
+      ]
+    },
+    {
+      "category": "Takut transfer atau remitansi pribadi kena PPN",
+      "description": "Penjual yang mengirim uang ke pemasok atau keluarga di luar negeri khawatir setiap transfer akan dipungut PPN. Padahal transfer dana tidak otomatis menjadi objek PPN.",
+      "frequency": "HIGH",
+      "sources": [
+        "Ortax, 3 November 2026"
+      ]
+    },
+    {
+      "category": "Tidak bisa memisahkan PPN SPP-TDLN, PPN PMSE, dan PPh 22 marketplace",
+      "description": "Tiga pungutan berbeda sering dianggap satu pajak digital. Penjual tidak tahu mana yang sudah dipungut penyedia, mana yang mungkin dipungut kanal pembayaran, dan mana yang merupakan PPh 22 final dari penjualan marketplace.",
+      "frequency": "HIGH",
+      "sources": [
+        "UKMINDONESIA.ID, 3 November 2026",
+        "Ortax, 3 November 2026"
+      ]
+    },
+    {
+      "category": "Berisiko membayar PPN dua kali",
+      "description": "Penyedia PMSE dan kanal pembayaran yang ditunjuk dapat sama-sama memungut PPN bila penjual tidak mencocokkan invoice dengan mutasi. Tanpa pemeriksaan, kelebihan pungutan sulit diklaim kembali.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "UKMINDONESIA.ID, 3 November 2026",
+        "Ortax, 3 November 2026"
+      ]
+    },
+    {
+      "category": "Mengira PPN selalu bisa dikreditkan",
+      "description": "Penjual non-PKP tidak dapat mengkreditkan PPN. Pungutan atas langganan atau iklan digital menjadi biaya dan perlu masuk ke perhitungan harga jual.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "UKMINDONESIA.ID, 3 November 2026"
+      ]
+    },
+    {
+      "category": "Bukti tersebar dan surat masih berupa keluhan umum",
+      "description": "Invoice, mutasi, bukti PMSE, dan konfirmasi kanal tidak dikumpulkan dalam satu tempat. Saat ingin bertanya, penjual tidak punya rincian DPP, tarif, dan nominal PPN per transaksi.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Ortax, 3 November 2026",
+        "UKMINDONESIA.ID, 3 November 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#22-pph22-tax-calculator: menghitung PPh 22 e-commerce dan status kebijakan. Tidak membahas PPN SPP-TDLN atau PMSE.",
+    "#25-pph22-refund-tracker: melacak pengembalian PPh 22 dari marketplace. Bukan PPN atas transaksi digital luar negeri.",
+    "#26-omzet-gabungan-tracker: memantau omzet gabungan terhadap ambang PPh 22. Tidak memeriksa invoice PPN atau pemungutan ganda.",
+    "#44-pemeriksa-faktur-pajak: memeriksa kelengkapan faktur pajak. Tidak mengklasifikasikan transaksi digital luar negeri atau transfer.",
+    "#23-umkm-service-fee-checker dan #34-insentif-permen-2026: fokus pada insentif biaya layanan marketplace, bukan PPN digital.",
+    "#41-pemeriksa-produk-diblokir: menangani produk diblokir atau salah klasifikasi. Tidak membahas pajak digital.",
+    "#45-voucher-boost-tracker: melacak program voucher. Tidak terkait PPN SPP-TDLN."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pemeriksa Pajak Digital",
+      "number": 49,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Pisahkan PPN SPP-TDLN pada transaksi digital luar negeri dari PPh 22 marketplace. Hitung perkiraan PPN dengan tarif yang dapat diubah, bedakan PMSE, SPP-TDLN, transfer, dan transaksi belum jelas, hitung dampak setahun serta kredit pajak bila PKP, susun 10 bukti, buat tiga surat, catat kasus, dan ekspor CSV.",
+      "why": "Kebingungan 9 November 2026 adalah pemicu yang jelas, tetapi belum ada tool yang membantu penjual mencocokkan invoice, status PMSE, dan kanal pembayaran. Tool pajak yang ada fokus pada PPh 22 atau kelengkapan faktur, bukan pada klasifikasi dan potensi pungutan ganda PPN digital.",
+      "grounding": "Tanggal mekanisme 25 September 2026, batas cakupan pada barang dan jasa digital luar negeri, penegasan transfer tidak otomatis kena PPN, dan label 9 November sebagai klaim pemberitaan berasal dari penjelasan DJP melalui Ortax serta UKMINDONESIA.ID. Tarif awal 11 persen mengacu pada tarif efektif non-mewah PMK 131/2024 dan dapat diubah.",
+      "not_repeat": "Berbeda dari #22, #25, dan #26 yang menghitung atau melacak PPh 22, #44 yang memeriksa kelengkapan faktur, #23 dan #34 yang membahas insentif biaya layanan, serta #45 yang melacak voucher. Fokus tool ini adalah PPN atas transaksi digital luar negeri, pemisahan dari PPh 22, dan deteksi potensi pungutan ganda antara PMSE dan kanal SPP-TDLN."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "49-pemeriksa-pajak-digital",
+    "reason": "Riset 3 sampai 4 November 2026 menemukan topik yang belum tercakup: penjual bingung membedakan PPN SPP-TDLN, PPN PMSE, transfer, dan PPh 22 setelah pemberitaan tanggal 9 November. Belum ada tool yang menggabungkan klasifikasi transaksi, perkiraan PPN, pemeriksaan bukti, surat, dan catatan kasus.",
+    "scope": [
+      "Klasifikasi transaksi digital luar negeri, transfer atau remitansi, dan transaksi yang belum jelas.",
+      "Perkiraan PPN dengan tarif awal 11 persen yang dapat diubah dan opsi nominal sudah termasuk PPN.",
+      "Pemisahan PPN yang sudah atau akan dipungut dari PPN potensial yang belum jelas.",
+      "Perhitungan PPN setahun, kredit pajak bila PKP, dan biaya bila belum PKP.",
+      "Penilaian 10 bukti dengan empat bukti kritis.",
+      "Tiga surat: permintaan rincian, konfirmasi transfer bukan objek, dan koreksi pungutan ganda.",
+      "Catatan kasus per toko dan periode, peringatan umur kasus, muat ulang, dan ekspor CSV.",
+      "Sumber DJP, PMK 131/2024, dan pemberitaan ditampilkan di UI dan README.",
+      "50 unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "rejected": [
+      "Tool penegakan PPh 22 marketplace: sudah ada #22, #25, dan #26. Fokusnya PPh 22, bukan PPN digital.",
+      "Tool faktur pajak baru: sudah ada #44. #44 memeriksa kelengkapan dokumen, bukan klasifikasi transaksi luar negeri.",
+      "Tool kelayakan insentif biaya layanan: sudah ada #23 dan #34.",
+      "Tool produk diblokir Tokopedia 3 November 2026: sudah ada #41 dan kasusnya bertumpang tindih.",
+      "Tool voucher boost: sudah ada #45. Kasus ShopeeVIP 31 Oktober 2026 tidak dipakai karena tautan sumber mengembalikan 404."
+    ]
+  }
+}
