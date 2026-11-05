@@ -57,6 +57,16 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 49 | [49-pemeriksa-pajak-digital](49-pemeriksa-pajak-digital/) | Web | Node.js + Express | Separate SPP-TDLN PPN on foreign digital purchases from 0.5% marketplace PPh 22 (DJP clarification, 9 Nov 2026 confusion): classify PMSE, SPP-TDLN, transfer and unresolved items, editable 11% estimate, annual cost and PKP credit, 10 evidence items, case log, CSV export and three letters |
 | 50 | [50-pemeriksa-refund-tanpa-retur](50-pemeriksa-refund-tanpa-retur/) | Web | Node.js + Express | Audit refunds paid while goods are not returned, come back empty, or arrive damaged (Shopee return-damage complaint, 5 Nov 2026): normal vs actual cash, loss ratio, goods condition, 12 process signals, 13 evidence items, case log, CSV export and three letters |
 
+## Checks
+
+Run these before opening a pull request:
+
+```bash
+scripts/check-readme-sync.sh
+scripts/check-tool-conventions.sh 50-pemeriksa-refund-tanpa-retur
+scripts/check-all.sh            # audit every tool; add --strict to fail on violations
+```
+
 ## Contributing
 
 Feel free to open issues, submit PRs, or suggest new tools. Any contribution is welcome.
