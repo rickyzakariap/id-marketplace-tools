@@ -30,23 +30,23 @@ func CalcFee(p float64) float64 {
 - Concurrency: Goroutines + channels, avoid shared state
 - Testing: Table-driven tests, coverage > 80%
 
-### JavaScript/TypeScript (Web Apps)
+### JavaScript (Web Tools)
 
-```typescript
+```javascript
 // ✅ Good
-const calculateTotalFee = (price: number, marketplace: string): number => {
+function calculateTotalFee(price, marketplace) {
   return price * getFeeRate(marketplace);
-};
+}
 
 // ❌ Bad
-const calc = (p: number, m: string) => p * getFeeRate(m);
+const calc = (p, m) => p * getFeeRate(m);
 ```
 
 **Rules:**
-- TypeScript strict mode
-- Functional components only (React)
-- No `any` type - use proper types atau `unknown`
+- Node.js 22 + Express 4, vanilla HTML/CSS/JS in `public/`
+- No React, Vite, Next.js, Tailwind, or bundler for new tools
 - Async/await over `.then()` chains
+- Validate every request body and return 400/413 for bad input
 
 ### CSS
 
@@ -165,24 +165,33 @@ func TestCalculateFee(t *testing.T) {
 ```
 
 **Rules:**
-- Test file: `*_test.go` (Go), `*.test.ts` (TS)
+- Test file: `*_test.go` (Go), `*.test.js` (Node), `test_*.py` (Python)
 - Arrange-Act-Assert pattern
 - Test edge cases: zero, negative, max values
 - Mock external dependencies
 
 ### Integration Tests
 
-```typescript
-// TypeScript example
-describe('Fee Calculator API', () => {
-  it('should calculate fees for all marketplaces', async () => {
-    const response = await request(app)
-      .post('/api/calculate')
-      .send({ products: [{ name: 'Test', price: 100000 }] });
+```javascript
+// Node example with node:test
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const app = require('../server');
 
-    expect(response.status).toBe(200);
-    expect(response.body.results).toHaveLength(6);
+test('calculate API returns results', async () => {
+  const server = app.listen(0);
+  const { port } = server.address();
+
+  const response = await fetch(`http://127.0.0.1:${port}/api/calculate`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ products: [{ name: 'Test', price: 100000 }] }),
   });
+  const body = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(body.results.length, 6);
+  server.close();
 });
 ```
 
@@ -211,14 +220,14 @@ const apiKey = "sk-1234567890";
 
 ### Input Validation
 
-```typescript
+```javascript
 // ✅ Good - Validate everything
-const validatePrice = (price: unknown): number => {
-  if (typeof price !== 'number' || price <= 0) {
+function validatePrice(price) {
+  if (typeof price !== 'number' || !Number.isFinite(price) || price <= 0) {
     throw new Error('Invalid price');
   }
   return price;
-};
+}
 
 // ❌ Bad - Trust user input
 const price = req.body.price; // could be anything
@@ -308,25 +317,30 @@ for _, product := range products {
 
 ### Web Apps
 
-```typescript
-// ✅ Good - Memoization
-const MemoizedFeeCalculator = React.memo(({ products }) => {
-  const fees = useMemo(() => calculateFees(products), [products]);
-  return <FeeTable fees={fees} />;
-});
+```javascript
+// ✅ Good - Cache expensive work and batch DOM writes
+let cachedInput = '';
+let cachedResult = null;
 
-// ❌ Bad - Re-calculate on every render
-const FeeCalculator = ({ products }) => {
-  const fees = calculateFees(products); // slow!
-  return <FeeTable fees={fees} />;
-};
+function calculateOnce(input) {
+  if (input !== cachedInput) {
+    cachedInput = input;
+    cachedResult = calculateFees(input);
+  }
+  return cachedResult;
+}
+
+// ❌ Bad - Recalculate on every input event
+document.querySelector('#price').addEventListener('input', (event) => {
+  render(calculateFees(event.target.value)); // slow!
+});
 ```
 
 **Rules:**
-- Lazy load routes
-- Memoize expensive calculations
+- Debounce expensive input handlers
+- Cache DOM references instead of re-querying
+- Batch DOM writes and avoid layout thrashing
 - Optimize images (WebP, lazy load)
-- Minimize bundle size
 
 ## Error Handling
 
@@ -353,7 +367,7 @@ if err != nil {
 
 ### Web Apps
 
-```typescript
+```javascript
 // ✅ Good - Specific error handling
 try {
   const result = await calculateFees(products);
@@ -398,17 +412,17 @@ gh release create v1.0.0 bin/*
 ### Web Apps
 
 ```bash
-# Build
-npm run build
+# Run locally
+npm start
 
-# Deploy ke Vercel
-vercel --prod
+# Deploy the Node process (Railway/Fly/VPS)
+node server.js
 ```
 
 **Rules:**
-- Environment variables di Vercel dashboard
-- Preview deployments untuk PRs
-- Monitor errors (Sentry)
+- Environment variables di dashboard host
+- Health check endpoint for the process
+- Monitor errors and restart on failure
 
 ## Monitoring
 
@@ -430,7 +444,7 @@ vercel --prod
 
 - Write tests before merging
 - Document public APIs
-- Use TypeScript strict mode
+- Keep dependencies minimal
 - Validate all inputs
 - Handle errors gracefully
 - Keep commits small & focused
@@ -439,7 +453,7 @@ vercel --prod
 ### ❌ Don't
 
 - Commit `.env` files
-- Use `any` type di TypeScript
+- Commit `node_modules`
 - Ignore error messages
 - Hardcode secrets
 - Skip code review

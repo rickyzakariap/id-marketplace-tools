@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Reject new tool folders that violate the stack policy in Architecture.md.
+# Install with: ln -sf ../../scripts/pre-commit .git/hooks/pre-commit
+
+set -uo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+DIRS="$(git diff --cached --name-only --diff-filter=A | cut -d/ -f1 | grep -E '^[0-9]+-' | sort -u || true)"
+
+for DIR in $DIRS; do
+  if git cat-file -e "HEAD:$DIR" 2>/dev/null; then
+    continue
+  fi
+
+  if ! "$ROOT/scripts/check-tool-conventions.sh" "$DIR"; then
+    echo "pre-commit: fix the violations above or the commit is blocked." >&2
+    exit 1
+  fi
+done
