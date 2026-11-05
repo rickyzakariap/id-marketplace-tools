@@ -8,6 +8,25 @@ no assets, logos or markup are copied).
 The rule that matters most: **depth comes from alpha, not from borders or shadows.**
 Surfaces are black at low opacity over white. A card is a wash, not a box with an outline.
 
+## 0. Product principles
+
+**Simple. Fast. Practical.**
+
+Tools are built for non-technical Indonesian marketplace sellers:
+
+- No complicated install. Open the page and use it.
+- Results appear immediately; target under 2 seconds.
+- User-facing copy is Bahasa Indonesia.
+- Mobile-first: most sellers use a phone.
+
+UI/UX rules:
+
+1. **Zero learning curve** - the tool explains itself.
+2. **Instant feedback** - every action produces a visible result.
+3. **Visual hierarchy** - the most important number is the largest.
+4. **Error prevention** - validate input before submit.
+5. **Export everything** - results can be downloaded.
+
 ---
 
 ## 1. Tokens
@@ -199,7 +218,16 @@ The toggle button (36px, pill, top right) switches the attribute and writes `loc
 - No em dash (U+2014) anywhere in user-facing text; use a hyphen or rewrite.
 - Numbers: `Rp 1.250` and `24%` (Indonesian formatting).
 
-## 9. Checklist before shipping a tool
+## 9. Accessibility
+
+- Text contrast at least 4.5:1 against its background.
+- Every interactive element has a visible focus ring (section 4).
+- Full keyboard navigation, with no keyboard traps.
+- Use semantic HTML and ARIA labels where the control is not obvious.
+- Body text never below 14px; 12.5px captions are only for secondary metadata.
+- Honor `prefers-reduced-motion` (section 5).
+
+## 10. Checklist before shipping a tool
 
 - [ ] Token block copied verbatim, no custom colors
 - [ ] Card radius 28, pill radius 999, no stray small radii
