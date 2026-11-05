@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-11-05 - Pemeriksa Refund Tanpa Retur (#50)
+- Masalah: Media Konsumen 5 November 2026 melaporkan penjual Shopee menanggung klaim kerugian Rp3.000.000 setelah barang retur rusak karena dikirim tanpa pengemasan layak, sementara banding dengan bukti ditolak. Keluhan serupa sejak 2025 mencakup refund tanpa barang kembali, retur kosong, dan resi retur tidak valid
+- Riset: Google News RSS 7 hari terakhir memuat kasus baru 5 November 2026 dan beberapa keluhan retur. Topik yang sudah tercakup (#31 biaya retur, #40 paket hilang, #47 potongan pesanan, #29 dana tertahan, #46 COD) tidak dipakai ulang. Dipilih pain point refund tanpa barang kembali yang belum punya tool audit
+- Dasar aturan: Tidak ada tarif atau SLA resmi yang dipakai. Semua nominal dari input penjual dan fakta kasus. Ambang Rp1.000.000 adalah penanda internal, bukan aturan platform. Sumber adalah keluhan publik, bukan putusan resmi
+- Keputusan: Bangun tool #50, bukan mengulang #31 (biaya retur), #40 (klaim paket hilang), #47 (audit potongan biaya), atau #29 (dana tertahan). Fokusnya selisih kas saat barang tidak kembali atau kembali tidak layak, ditambah bukti dan surat
+- Fitur: Profit normal, kas setelah refund, kerugian profit dan kas, persentase kerugian, jumlah penjualan normal untuk menutup kerugian. Enam kondisi barang, 12 sinyal proses, 13 bukti dengan lima kritis, tiga surat, catatan kasus, peringatan umur kasus, CSV, dan data contoh
+- Angka contoh: Nilai pesanan Rp3.497.000, HPP Rp2.600.000, refund penuh Rp3.497.000, nilai selamat Rp500.000. Profit normal Rp824.000, kas setelah refund minus Rp2.293.000, kerugian kas Rp2.293.000 (65,57 persen), kerugian profit Rp3.117.000 (89,13 persen), indikasi 38 dari 100 (Sedang), kesiapan bukti 83 (Hampir siap)
+- Keputusan angka: Rumus kerugian kas memisahkan HPP, ongkir keluar, kemasan, dan ongkir retur, lalu mengurangi nilai barang yang bisa diselamatkan. Refund dihitung terpisah dari biaya. Jumlah penjualan normal memakai pembulatan ke atas dan hanya muncul bila profit normal positif
+- Verifikasi: 28 unit test lulus. Runtime semua endpoint diuji: halaman statis 200, meta, example, analyze, readiness, letter, cases GET/POST 201/PATCH/DELETE, seed 201, export CSV 200, 404 API, JSON rusak 400, payload 70 KB 413. Server dihentikan dan data runtime dihapus. Convention check OK
+- Works: UI mengikuti DESIGN.md (token monokrom, kartu 28px, pill, Google Sans weight 500, entrance stagger, reduced motion, dark mode no-flash). Data contoh ditandai sebagai contoh, bukan kasus nyata
+- Issues: Run harian terputus sebelum tahap README, riset, entri LESSONS, dan commit. Tool, test, dan server sudah selesai, lalu dokumentasi dilengkapi dan seluruh verifikasi diulang sebelum commit
+- Issues: Folder tool baru tidak otomatis masuk .gitignore, sehingga data/cases.json berisiko ikut commit. Tambahkan pola khusus 50-pemeriksa-refund-tanpa-retur/data/
+- Lesson: Kerugian refund tidak sama dengan nilai refund. Barang yang tidak kembali menghilangkan HPP, ongkir, dan kemasan sekaligus, jadi tuntutan harus memakai kerugian kas, bukan hanya nominal refund
+- Lesson: Status barang dan status resi adalah dua bukti berbeda. Barang bisa kembali tetapi resi tidak valid, atau resi valid tetapi isi paket kosong. Tool harus memisahkan keduanya
+- Lesson: Jangan memakai tenggat atau tarif platform tanpa sumber. Untuk kasus retur, gunakan umur kasus sebagai pengingat follow-up, bukan sebagai aturan resmi
+- Next: Update #50 saat marketplace mengubah alur banding retur. Tambah impor CSV pesanan, pencocokan otomatis beberapa klaim, pengingat follow-up, dan aturan spesifik untuk Shopee, Tokopedia, TikTok Shop, Lazada, serta Blibli
+
+---
+
 ## 2026-11-04 - Pemeriksa Pajak Digital (#49)
 - Works: Pisahkan tiga jalur yang sering tercampur: PPN SPP-TDLN atas pembelian digital luar negeri, PPN PMSE yang sudah dipungut penyedia, dan PPh 22 final 0,5% dari penjualan marketplace.
 - Works: Tanggal 9 November 2026 diberi label sebagai klaim pemberitaan, bukan tanggal mulai resmi baru. DJP menyatakan mekanisme sudah berjalan sejak 25 September 2026.

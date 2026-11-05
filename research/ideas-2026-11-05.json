@@ -1,0 +1,181 @@
+{
+  "date": "2026-11-05",
+  "research_window": "Riset 29 Oktober sampai 5 November 2026 tentang refund yang dicairkan tanpa barang kembali, retur kosong atau rusak, resi retur tidak valid, dan banding penjual yang ditolak",
+  "sources": [
+    {
+      "title": "Shopee Menolak Banding Penjual atas Kerusakan Produk Saat Pengembalian, Bukti yang Diajukan Tidak Dipertimbangkan?",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-05",
+      "url": "https://mediakonsumen.com/2026/11/05/surat-pembaca/shopee-menolak-banding-penjual-atas-kerusakan-produk-saat-pengembalian-bukti-yang-diajukan-tidak-dipertimbangkan",
+      "facts": [
+        "Pesanan 260909JJAK2VUV dikirim dengan SPX Express.",
+        "Harga produk Rp3.497.000 dan klaim kerugian Rp3.000.000.",
+        "Barang retur dikirim tanpa pengemasan layak sehingga pipa penyok dan tas robek.",
+        "Banding penjual ditolak meski bukti kondisi barang saat diterima dilampirkan."
+      ]
+    },
+    {
+      "title": "Toko Star Seller Shopee Saya Diblokir, Pembeli Bisa Klaim Dana Tanpa Kembalikan Barang",
+      "publisher": "Media Konsumen",
+      "date": "2026-07-23",
+      "url": "https://mediakonsumen.com/2026/07/23/surat-pembaca/toko-star-seller-shopee-saya-diblokir-pembeli-bisa-klaim-dana-tanpa-kembalikan-barang",
+      "facts": [
+        "Penjual Star Seller melaporkan lebih dari 100 transaksi aktif terdampak.",
+        "Setelah toko dibatasi, dana pembeli diteruskan tanpa pengembalian barang.",
+        "Sebagian nomor resi retur invalid."
+      ]
+    },
+    {
+      "title": "Shopee Menolak Banding Penjual atas Barang Retur Kosong Tanpa Ada Pertanggungjawaban Secara Adil",
+      "publisher": "Media Konsumen",
+      "date": "2026-07-07",
+      "url": "https://mediakonsumen.com/2026/07/07/surat-pembaca/shopee-menolak-banding-penjual-atas-barang-retur-kosong-tanpa-ada-pertanggungjawaban-secara-adil",
+      "facts": [
+        "Retur disetujui tanpa bukti video atau foto.",
+        "Barang yang kembali berupa kotak kosong.",
+        "Banding penjual tetap ditolak."
+      ]
+    },
+    {
+      "title": "Kurir Tidak Menjemput Paket Retur Salah Kirim, Shopee Batalkan Retur secara Sepihak Tanpa Pengembalian Dana",
+      "publisher": "Media Konsumen",
+      "date": "2026-07-30",
+      "url": "https://mediakonsumen.com/2026/07/30/surat-pembaca/kurir-tidak-menjemput-paket-retur-salah-kirim-shopee-batalkan-retur-secara-sepihak-tanpa-pengembalian-dana",
+      "facts": [
+        "Kurir tidak menjemput paket retur selama berhari-hari.",
+        "Sistem membatalkan pengembalian secara sepihak.",
+        "Pembeli tidak mendapat dana kembali dan status retur tidak jelas."
+      ]
+    },
+    {
+      "title": "Bug Tokopedia Rugikan Seller: Refund Otomatis Tanpa Retur Barang, Kerugian Capai Rp1 Juta",
+      "publisher": "Media Konsumen",
+      "date": "2025-12-06",
+      "url": "https://mediakonsumen.com/2025/12/06/surat-pembaca/bug-tokopedia-rugikan-seller-refund-otomatis-tanpa-retur-barang-kerugian-capai-rp1-juta",
+      "facts": [
+        "Penjual menyetujui pengembalian barang, tetapi sistem mengembalikan dana tanpa meminta barang kembali.",
+        "Nilai barang Rp1.000.000 dan kompensasi asuransi hanya Rp23.000."
+      ]
+    },
+    {
+      "title": "Dana Refund Dicairkan Tanpa Retur Barang, Penjual Tokopedia Dirugikan",
+      "publisher": "Media Konsumen",
+      "date": "2025-11-28",
+      "url": "https://mediakonsumen.com/2025/11/28/surat-pembaca/dana-refund-dicairkan-tanpa-retur-barang-penjual-tokopedia-dirugikan",
+      "facts": [
+        "Penjual mengikuti arahan agen untuk menyetujui pengembalian.",
+        "Dana langsung dicairkan ke pembeli tanpa barang kembali."
+      ]
+    },
+    {
+      "title": "TikTok Shop by Tokopedia Merugikan Seller, Pembeli Bisa Klaim Refund Tanpa Bukti Jelas dan Otomatis Menang",
+      "publisher": "Media Konsumen",
+      "date": "2025-11-04",
+      "url": "https://mediakonsumen.com/2025/11/04/surat-pembaca/tiktok-shop-by-tokopedia-merugikan-seller-pembeli-bisa-klaim-refund-tanpa-bukti-jelas-dan-otomatis-menang",
+      "facts": [
+        "Pembeli menang dispute meski bukti tidak jelas.",
+        "Banding penjual kemudian diterima, tetapi kompensasi belum cair."
+      ]
+    }
+  ],
+  "pain_points": [
+    {
+      "category": "Dana refund dicairkan padahal barang tidak kembali",
+      "description": "Penjual menyetujui pengembalian, tetapi sistem meneruskan dana ke pembeli tanpa meminta barang dikirim balik. Penjual kehilangan uang dan barang sekaligus.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 6 Desember 2025",
+        "Media Konsumen, 28 November 2025",
+        "Media Konsumen, 23 Juli 2026"
+      ]
+    },
+    {
+      "category": "Barang retur kosong atau isinya tidak sesuai",
+      "description": "Paket kembali dalam kondisi kosong atau berisi barang lain. Penjual sering baru menyadari setelah refund diproses dan banding ditolak.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 7 Juli 2026"
+      ]
+    },
+    {
+      "category": "Resi retur tidak ada atau tidak valid",
+      "description": "Tidak ada bukti pengiriman balik dari pembeli, atau nomor resi tidak ditemukan dan tidak bergerak. Tanpa resi, penjual sulit membuktikan barang tidak pernah dikembalikan.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 23 Juli 2026",
+        "Media Konsumen, 30 Juli 2026"
+      ]
+    },
+    {
+      "category": "Barang retur rusak karena pengemasan tidak layak",
+      "description": "Barang kembali rusak saat perjalanan karena pembeli tidak mengemas dengan layak. Penjual menanggung penurunan nilai jual dan biaya kirim retur.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 5 November 2026"
+      ]
+    },
+    {
+      "category": "Banding penjual ditolak meski bukti dilampirkan",
+      "description": "Bukti foto, video, dan kronologi sudah dikirim, tetapi banding ditolak tanpa penjelasan rinci. Penjual tidak tahu bukti mana yang dinilai.",
+      "frequency": "HIGH",
+      "sources": [
+        "Media Konsumen, 5 November 2026",
+        "Media Konsumen, 7 Juli 2026",
+        "Media Konsumen, 4 November 2025"
+      ]
+    },
+    {
+      "category": "Toko dibatasi atau diblokir saat refund berjalan",
+      "description": "Saat toko dibatasi, penjual kehilangan akses untuk menahan dana atau memeriksa status retur, sementara pembeli tetap bisa mengajukan klaim.",
+      "frequency": "MEDIUM",
+      "sources": [
+        "Media Konsumen, 23 Juli 2026"
+      ]
+    }
+  ],
+  "existing_tools_checked": [
+    "#31-biaya-retur-tracker: menghitung biaya dan kerugian retur. Tidak memeriksa refund yang dicairkan tanpa barang kembali atau kesiapan bukti banding.",
+    "#40-klaim-paket-hilang: menangani paket hilang atau rusak dalam pengiriman dan kompensasi kurir. Tidak membahas refund tanpa retur.",
+    "#41-banding-produk-diblokir: menangani produk diblokir atau salah klasifikasi. Tidak terkait refund dan retur.",
+    "#29-dana-tertahan-tracker: melacak dana tertahan di marketplace. Tidak memisahkan kerugian refund tanpa barang kembali.",
+    "#46-pemeriksa-pesanan-cod: menilai risiko pesanan COD sebelum dikirim. Tidak membahas refund setelah pengiriman.",
+    "#47-pemeriksa-potongan-pesanan: mengaudit potongan biaya pada pesanan batal atau retur. Tidak memeriksa status barang dan bukti banding.",
+    "#25-pph22-refund-tracker: melacak pengembalian PPh 22. Bukan refund nilai pesanan.",
+    "#48-pemeriksa-realisasi-diskon: mengaudit realisasi diskon biaya layanan UMK. Tidak terkait retur."
+  ],
+  "top_suggestions": [
+    {
+      "name": "Pemeriksa Refund Tanpa Retur",
+      "number": 50,
+      "type": "Web",
+      "tech": "Node.js + Express",
+      "description": "Hitung kerugian refund yang dicairkan tanpa barang kembali, ukur indikasi masalah proses, susun bukti, catat kasus, dan buat surat untuk penjual marketplace.",
+      "why": "Ada kasus baru 5 November 2026 dan keluhan berulang sejak 2025 tentang refund tanpa retur, retur kosong, resi tidak valid, dan banding yang ditolak. Belum ada tool yang menyatukan perhitungan kerugian kas, klasifikasi kondisi barang, kesiapan bukti, dan surat banding.",
+      "grounding": "Semua nominal berasal dari input penjual dan fakta kasus yang dikutip. Tidak ada tarif atau tenggat resmi yang dipakai. Status barang, resi, dan hasil banding berasal dari pilihan pengguna. Sumber adalah keluhan publik, bukan putusan resmi.",
+      "not_repeat": "Berbeda dari #31 yang menghitung biaya retur, #40 yang menangani paket hilang, #47 yang mengaudit potongan biaya, dan #29 yang melacak dana tertahan. Fokus tool ini adalah selisih kas ketika barang tidak kembali atau kembali tidak layak, ditambah bukti dan surat untuk meminta peninjauan."
+    }
+  ],
+  "decision": {
+    "action": "build",
+    "target": "50-pemeriksa-refund-tanpa-retur",
+    "reason": "Riset menemukan anchor baru 5 November 2026 tentang banding penjual yang ditolak setelah barang retur rusak, serta pola refund tanpa retur yang berulang. Topik ini belum tercakup tool yang ada.",
+    "scope": [
+      "Perhitungan profit normal, kas setelah refund, kerugian profit dan kas, persentase kerugian, serta jumlah penjualan normal untuk menutup kerugian.",
+      "Klasifikasi kondisi barang: tidak kembali, kosong atau tidak sesuai, barang berbeda, sudah dipakai, rusak, atau kembali utuh.",
+      "Sinyal proses: resi retur, refund sebelum barang kembali, kemasan retur, toko dibatasi, banding ditolak, akun pembeli, refund berulang, keluhan tersembunyi, refund penuh, dan nilai tinggi.",
+      "Penilaian 13 bukti dengan lima bukti kritis.",
+      "Tiga surat: permintaan rincian, permintaan barang kembali atau pembatalan refund, dan eskalasi ke lembaga perlindungan konsumen.",
+      "Catatan kasus per toko, peringatan umur kasus, muat ulang, ekspor CSV, dan data contoh.",
+      "Sumber keluhan publik ditampilkan di UI dan README, dengan penanda bahwa itu bukan putusan resmi.",
+      "28 unit test dan verifikasi runtime semua endpoint serta halaman statis."
+    ],
+    "rejected": [
+      "Tool retur dan biaya retur baru: sudah ada #31. Fokus #31 adalah biaya, bukan refund tanpa barang kembali.",
+      "Tool paket hilang atau rusak baru: sudah ada #40. Fokus #40 adalah klaim kompensasi kurir.",
+      "Tool banding produk diblokir baru: sudah ada #41 dan kasusnya berbeda.",
+      "Tool dana tertahan baru: sudah ada #29. Fokus #29 adalah pencairan dana, bukan status barang.",
+      "Tool COD baru: sudah ada #46. Fokus #46 adalah risiko sebelum pengiriman.",
+      "Tool audit potongan pesanan: sudah ada #47. Fokus #47 adalah biaya komisi dan ongkir, bukan kepemilikan barang."
+    ]
+  }
+}

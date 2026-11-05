@@ -55,6 +55,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 47 | [47-pemeriksa-potongan-pesanan](47-pemeriksa-potongan-pesanan/) | Web | Node.js + Express | Audit canceled and returned order deductions (TikTok Shop case, Oct 2026): actual vs policy commission, processing fee, shipping and refund, overcharge and monthly leak, 19 indicators, 13 evidence items, case log, CSV export and three letters |
 | 48 | [48-pemeriksa-realisasi-diskon](48-pemeriksa-realisasi-diskon/) | Web | Node.js + Express | Audit whether the 50% UMK service fee discount is actually reflected in settlements (effective 25 Oct 2026, Kepmen UMKM 398/2026): expected vs charged fee, annual leak, SAPA UMKM verification phases, 20 indicators, 13 evidence items, case log, CSV export and three letters |
 | 49 | [49-pemeriksa-pajak-digital](49-pemeriksa-pajak-digital/) | Web | Node.js + Express | Separate SPP-TDLN PPN on foreign digital purchases from 0.5% marketplace PPh 22 (DJP clarification, 9 Nov 2026 confusion): classify PMSE, SPP-TDLN, transfer and unresolved items, editable 11% estimate, annual cost and PKP credit, 10 evidence items, case log, CSV export and three letters |
+| 50 | [50-pemeriksa-refund-tanpa-retur](50-pemeriksa-refund-tanpa-retur/) | Web | Node.js + Express | Audit refunds paid while goods are not returned, come back empty, or arrive damaged (Shopee return-damage complaint, 5 Nov 2026): normal vs actual cash, loss ratio, goods condition, 12 process signals, 13 evidence items, case log, CSV export and three letters |
 
 ## Contributing
 

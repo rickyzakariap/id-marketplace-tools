@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-refund-tanpa-retur",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hitung kerugian refund tanpa pengembalian barang, ukur indikasi masalah proses, susun bukti, catat kasus, dan buat surat untuk penjual marketplace",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/refund.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
