@@ -28,6 +28,41 @@ Legacy tools (#01-#35) use a mix of Node, Go, Python, and React. They stay as th
 5. Every UI follows `DESIGN.md`. Every tool has `README.md`, tests, and a source-grounded default.
 6. Code and comments in English, user-facing text in Bahasa Indonesia.
 
+## Legacy Tools (Exempt)
+
+These tools predate the convention checker. They are exempt from retrofitting and should not
+be changed just to satisfy the checker. The list matches the current failures from
+`scripts/check-all.sh` (31 tools pass, 19 are exempt).
+
+| Tool | Exemption reason |
+|------|------------------|
+| `01-marketplace-fee-calculator` | No supported stack detected (no `package.json`, Go, or Python entry point). |
+| `02-listing-seo-analyzer` | Missing `test/`; `PORT` is not `8002`. |
+| `03-review-sentiment-analyzer` | Mixed stacks; missing `test/`; no `start` script; `PORT` is not `8003`. |
+| `04-fee-breakdown-calculator` | Python web tool has no `index.html` or `public/index.html`. |
+| `05-review-extension` | No supported stack detected (no `package.json`, Go, or Python entry point). |
+| `06-dropship-calculator` | Python web tool has no `index.html` or `public/index.html`. |
+| `08-komplain-response-generator` | Python web tool has no `index.html` or `public/index.html`. |
+| `09-profit-tracker` | Python web tool has no `index.html` or `public/index.html`. |
+| `11-shipping-cost-estimator` | Missing `test/`; no `start` script; `PORT` is not `8011`. |
+| `12-supplier-scorer` | Go web tool has no `public/index.html` and is not a CLI with `main.go`. |
+| `13-competitor-price-monitor` | Missing `test/`; no `test` script; `PORT` is not `8013`. |
+| `14-promo-cost-calculator` | Go web tool has no `public/index.html` and is not a CLI with `main.go`. |
+| `16-listing-consistency-checker` | Missing `test/`; no `test` script; `PORT` is not `8016`. |
+| `20-stock-sync-checker` | No supported stack detected (no `package.json`, Go, or Python entry point). |
+| `26-omzet-gabungan-tracker` | Missing `test/`; no `start` script. |
+| `28-toco-migration-calculator` | Missing `test/`; no `test` script. |
+| `29-dana-tertahan-tracker` | Missing `test/`; no `test` script. |
+| `32-fmcg-trend-analyzer` | Missing `test/`; no `test` script. |
+| `35-program-diskon-checker` | Missing `test/`; no `test` script. |
+
+Rules:
+
+- New tools must pass `scripts/check-tool-conventions.sh`.
+- CI checks only the `NN-*` folders changed in a PR or push, so this list does not block
+  unrelated work.
+- Fixing a legacy tool is welcome in a dedicated PR; remove it from this list once it passes.
+
 ## Project Structure
 
 ```
