@@ -1,0 +1,84 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: README sync
+        run: scripts/check-readme-sync.sh
+
+      - name: Changed tool checks
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -uo pipefail
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="$BASE_SHA"
+          else
+            base="$BEFORE_SHA"
+          fi
+
+          if [ -z "${base:-}" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "No usable base commit; skipping changed-tool checks."
+            exit 0
+          fi
+
+          if ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            echo "Base commit $base is not available; skipping changed-tool checks."
+            exit 0
+          fi
+
+          mapfile -t tools < <(
+            git diff --name-only "$base" "$GITHUB_SHA" \
+              | awk -F/ '$1 ~ /^[0-9][0-9]-/ {print $1}' \
+              | sort -u
+          )
+
+          if [ "${#tools[@]}" -eq 0 ]; then
+            echo "No tool folders changed."
+            exit 0
+          fi
+
+          failed=0
+          for tool in "${tools[@]}"; do
+            [ -d "$tool" ] || continue
+
+            echo "::group::$tool conventions"
+            scripts/check-tool-conventions.sh "$tool" || failed=1
+            echo "::endgroup::"
+
+            if [ -f "$tool/package.json" ] \
+              && node -e "const p=require('./$tool/package.json'); process.exit(p.scripts && p.scripts.test ? 0 : 1)"; then
+              if [ -f "$tool/package-lock.json" ]; then
+                install="npm ci --no-audit --no-fund"
+              else
+                install="npm install --no-audit --no-fund"
+              fi
+
+              echo "::group::$tool install"
+              (cd "$tool" && $install) || failed=1
+              echo "::endgroup::"
+
+              echo "::group::$tool tests"
+              (cd "$tool" && npm test) || failed=1
+              echo "::endgroup::"
+            fi
+          done
+
+          exit "$failed"

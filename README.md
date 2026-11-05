@@ -67,6 +67,9 @@ scripts/check-tool-conventions.sh 50-pemeriksa-refund-tanpa-retur
 scripts/check-all.sh            # audit every tool; add --strict to fail on violations
 ```
 
+CI runs the README sync check on every pull request and push to `main`, then runs the
+convention check and tests for changed tool folders.
+
 ## Contributing
 
 Feel free to open issues, submit PRs, or suggest new tools. Any contribution is welcome.
