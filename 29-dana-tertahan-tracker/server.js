@@ -43,9 +43,9 @@ function todayStr() {
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 
-function daysBetween(fromIso) {
+function daysBetween(fromIso, today = todayStr()) {
   const from = new Date(fromIso + 'T00:00:00');
-  const now = new Date(todayStr() + 'T00:00:00');
+  const now = new Date(today + 'T00:00:00');
   return Math.max(0, Math.round((now - from) / 86400000));
 }
 
@@ -96,8 +96,7 @@ const STATUSES = [
 ];
 
 // Status kasus: date-aware, dihitung dari tanggal hari ini.
-function sagaStatus() {
-  const today = todayStr();
+function sagaStatus(today = todayStr()) {
   if (today < '2026-07-02') {
     return { status: 'sebelum', label: 'Belum ada kasus massal', description: 'Belum ada pemberitaan saldo tertahan massal pada tanggal ini.' };
   }
@@ -129,7 +128,7 @@ function withAge(c) {
   return { ...c, age_days: daysBetween(c.since) };
 }
 
-function summary(cases) {
+function summary(cases, today = todayStr()) {
   const total = cases.reduce((s, c) => s + c.amount, 0);
   const open = cases.filter((c) => c.status !== 'cair');
   const byPlatform = {};
@@ -149,7 +148,7 @@ function summary(cases) {
     open_cases: open.length,
     open_amount: open.reduce((s, c) => s + c.amount, 0),
     oldest_since: oldest ? oldest.since : null,
-    oldest_days: oldest ? daysBetween(oldest.since) : 0,
+    oldest_days: oldest ? daysBetween(oldest.since, today) : 0,
     by_platform: Object.values(byPlatform).filter((p) => p.count > 0),
   };
 }
@@ -228,6 +227,10 @@ app.get('/api/export', (req, res) => {
   res.send(csv);
 });
 
-app.listen(PORT, () => {
-  console.log('Dana Tertahan Tracker running on http://localhost:' + PORT);
-});
+module.exports = { todayStr, daysBetween, sagaStatus, summary, withAge, readCases, writeCases };
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log('Dana Tertahan Tracker running on http://localhost:' + PORT);
+  });
+}
