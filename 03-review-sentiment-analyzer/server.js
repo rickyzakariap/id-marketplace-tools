@@ -38,32 +38,114 @@ const THEMES = {
 const NEGATORS = new Set(['tidak','tdk','ga','gak','gk','nggak','engga','bukan','belum','not','no','never','dont','tak']);
 
 function normalize(text) {
-  return text.toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  let out = text.toLowerCase().trim();
+  out = out.replace(/[^\w\s]/g, ' | ');
+  out = out.replace(/(\s*\|\s*)+/g, ' | ');
+  out = out.replace(/\s+/g, ' ').trim();
+  return out.replace(/^\|\s*|\s*\|$/g, '');
+}
+
+function tokenize(text) {
+  const norm = normalize(text);
+  return norm ? norm.split(' ') : [];
+}
+
+function matchSentimentKeywords(tokens) {
+  const candidates = [];
+  for (const keyword of POSITIVE_WORDS) candidates.push({ keyword, polarity: 'positive' });
+  for (const keyword of NEGATIVE_WORDS) candidates.push({ keyword, polarity: 'negative' });
+  candidates.sort((a, b) => {
+    const sizeDiff = b.keyword.split(' ').length - a.keyword.split(' ').length;
+    return sizeDiff !== 0 ? sizeDiff : b.keyword.length - a.keyword.length;
+  });
+
+  const used = new Array(tokens.length).fill(false);
+  const matches = [];
+
+  for (const candidate of candidates) {
+    const parts = candidate.keyword.split(' ');
+    const size = parts.length;
+    for (let start = 0; start + size <= tokens.length; start++) {
+      let blocked = false;
+      for (let i = start; i < start + size; i++) {
+        if (used[i]) { blocked = true; break; }
+      }
+      if (blocked) continue;
+
+      let isMatch = true;
+      for (let i = 0; i < size; i++) {
+        if (tokens[start + i] !== parts[i]) { isMatch = false; break; }
+      }
+      if (!isMatch) continue;
+
+      matches.push({ keyword: candidate.keyword, start, size, polarity: candidate.polarity });
+      for (let i = start; i < start + size; i++) used[i] = true;
+    }
+  }
+
+  return matches;
+}
+
+function hasNegatorBefore(tokens, start) {
+  for (let i = Math.max(0, start - 2); i < start; i++) {
+    if (NEGATORS.has(tokens[i])) return true;
+  }
+  return false;
+}
+
+function phraseContainsNegator(keyword) {
+  return keyword.split(' ').some(part => NEGATORS.has(part));
+}
+
+function containsKeyword(tokens, keyword) {
+  const parts = keyword.split(' ');
+  const size = parts.length;
+  for (let start = 0; start + size <= tokens.length; start++) {
+    let isMatch = true;
+    for (let i = 0; i < size; i++) {
+      if (tokens[start + i] !== parts[i]) { isMatch = false; break; }
+    }
+    if (isMatch) return true;
+  }
+  return false;
 }
 
 function analyzeReview(text, rating) {
-  const norm = normalize(text);
-  const words = new Set(norm.split(' '));
+  const tokens = tokenize(text);
 
   const foundPos = [];
   const foundNeg = [];
-
-  for (const w of POSITIVE_WORDS) {
-    if (norm.includes(w)) foundPos.push(w);
-  }
-  for (const w of NEGATIVE_WORDS) {
-    if (norm.includes(w)) foundNeg.push(w);
-  }
-
+  const negatedWords = [];
   let hasNegation = false;
-  for (const neg of NEGATORS) {
-    if (words.has(neg)) { hasNegation = true; break; }
+  let posCount = 0;
+  let negCount = 0;
+
+  for (const match of matchSentimentKeywords(tokens)) {
+    let negated = false;
+
+    if (match.size > 1) {
+      if (phraseContainsNegator(match.keyword)) hasNegation = true;
+    } else if (hasNegatorBefore(tokens, match.start)) {
+      negated = true;
+      hasNegation = true;
+    }
+
+    const effective = negated
+      ? (match.polarity === 'positive' ? 'negative' : 'positive')
+      : match.polarity;
+
+    if (effective === 'positive') {
+      posCount++;
+      if (negated) negatedWords.push(match.keyword);
+      else foundPos.push(match.keyword);
+    } else {
+      negCount++;
+      if (negated) negatedWords.push(match.keyword);
+      else foundNeg.push(match.keyword);
+    }
   }
 
-  const posCount = foundPos.length;
-  const negCount = foundNeg.length;
   let score;
-
   if (posCount + negCount === 0) {
     score = 0;
   } else {
@@ -75,10 +157,6 @@ function analyzeReview(text, rating) {
     score = score * 0.6 + ratingScore * 0.4;
   }
 
-  if (hasNegation && score > 0) {
-    score = -score * 0.7;
-  }
-
   let sentiment;
   if (score > 0.15) sentiment = 'positive';
   else if (score < -0.15) sentiment = 'negative';
@@ -87,11 +165,19 @@ function analyzeReview(text, rating) {
   const themes = [];
   for (const [name, data] of Object.entries(THEMES)) {
     for (const kw of data.keywords) {
-      if (norm.includes(kw)) { themes.push(name); break; }
+      if (containsKeyword(tokens, kw)) { themes.push(name); break; }
     }
   }
 
-  return { sentiment, score: Math.round(score * 1000) / 1000, positiveWords: foundPos, negativeWords: foundNeg, themes, hasNegation };
+  return {
+    sentiment,
+    score: Math.round(score * 1000) / 1000,
+    positiveWords: foundPos,
+    negativeWords: foundNeg,
+    negatedWords,
+    themes,
+    hasNegation,
+  };
 }
 
 function generateInsights(themeSentiment, pos, neg, neu) {
@@ -213,7 +299,18 @@ app.post('/api/analyze', (req, res) => {
   });
 });
 
-const PORT = 3457;
-app.listen(PORT, () => {
-  console.log(`Sentiment Analyzer running at http://localhost:${PORT}`);
-});
+const PORT = 8003;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Sentiment Analyzer running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = {
+  analyzeReview,
+  containsKeyword,
+  matchSentimentKeywords,
+  normalize,
+  tokenize,
+};

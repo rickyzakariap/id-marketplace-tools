@@ -9,9 +9,9 @@ Supports Indonesian and English reviews.
 Zero dependencies - Python stdlib only.
 
 Usage:
-    python3 analyze.py reviews.csv
-    python3 analyze.py --sample
-    python3 analyze.py --interactive
+    python3 cli/analyze.py reviews.csv
+    python3 cli/analyze.py --sample
+    python3 cli/analyze.py --interactive
 """
 
 import csv
@@ -150,59 +150,127 @@ class AnalysisResult:
     score: float  # -1.0 to 1.0
     positive_words: list = field(default_factory=list)
     negative_words: list = field(default_factory=list)
+    negated_words: list = field(default_factory=list)
     themes: list = field(default_factory=list)
     has_negation: bool = False
 
 
 def normalize(text: str) -> str:
-    """Lowercase and clean text."""
+    """Lowercase text and mark punctuation as clause boundaries."""
     text = text.lower().strip()
-    text = re.sub(r'[^\w\s]', ' ', text)
-    text = re.sub(r'\s+', ' ', text)
-    return text
+    text = re.sub(r'[^\w\s]', ' | ', text)
+    text = re.sub(r'(\s*\|\s*)+', ' | ', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text.strip(' |')
+
+
+def tokenize(text: str) -> list:
+    """Split normalized text into whole-word tokens."""
+    return normalize(text).split()
+
+
+def match_sentiment_keywords(tokens: list) -> list:
+    """Match sentiment keywords as whole words or phrases.
+
+    Longer phrases win and consume their tokens, so "tidak sesuai" is not
+    also counted as the positive word "sesuai". This avoids substring
+    false positives such as "ok" inside "toko".
+    """
+    candidates = [(word, "positive") for word in POSITIVE_WORDS]
+    candidates.extend((word, "negative") for word in NEGATIVE_WORDS)
+    candidates.sort(key=lambda item: (len(item[0].split()), len(item[0])), reverse=True)
+
+    used = [False] * len(tokens)
+    matches = []
+
+    for keyword, polarity in candidates:
+        parts = keyword.split()
+        size = len(parts)
+        for start in range(0, len(tokens) - size + 1):
+            if any(used[start:start + size]):
+                continue
+            if tokens[start:start + size] == parts:
+                matches.append({
+                    "keyword": keyword,
+                    "start": start,
+                    "size": size,
+                    "polarity": polarity,
+                })
+                for index in range(start, start + size):
+                    used[index] = True
+
+    return matches
+
+
+def has_negator_before(tokens: list, start: int) -> bool:
+    """Return True when a negator appears up to two tokens before a keyword."""
+    for index in range(max(0, start - 2), start):
+        if tokens[index] in NEGATORS:
+            return True
+    return False
+
+
+def phrase_contains_negator(keyword: str) -> bool:
+    """Return True for phrases such as "tidak sesuai" that already carry a negator."""
+    return any(part in NEGATORS for part in keyword.split())
+
+
+def contains_keyword(tokens: list, keyword: str) -> bool:
+    """Match a theme keyword as whole words or as a phrase."""
+    parts = keyword.split()
+    size = len(parts)
+    for start in range(0, len(tokens) - size + 1):
+        if tokens[start:start + size] == parts:
+            return True
+    return False
 
 
 def analyze_review(review: Review) -> AnalysisResult:
     """Analyze a single review for sentiment and themes."""
-    text = normalize(review.text)
-    words = set(text.split())
+    tokens = tokenize(review.text)
 
-    # Find positive and negative words
     found_pos = []
     found_neg = []
-
-    for word in POSITIVE_WORDS:
-        if word in text:
-            found_pos.append(word)
-
-    for word in NEGATIVE_WORDS:
-        if word in text:
-            found_neg.append(word)
-
-    # Check for negation (simple: if negation word appears near sentiment word)
+    negated_words = []
     has_negation = False
-    for neg in NEGATORS:
-        if neg in words:
+    pos_count = 0
+    neg_count = 0
+
+    for match in match_sentiment_keywords(tokens):
+        keyword = match["keyword"]
+        negated = False
+
+        if match["size"] > 1:
+            if phrase_contains_negator(keyword):
+                has_negation = True
+        elif has_negator_before(tokens, match["start"]):
+            negated = True
             has_negation = True
-            break
 
-    # Calculate base score
-    pos_count = len(found_pos)
-    neg_count = len(found_neg)
+        effective = match["polarity"]
+        if negated:
+            effective = "negative" if effective == "positive" else "positive"
 
-    if pos_count + neg_count == 0:
-        score = 0.0
-    else:
-        score = (pos_count - neg_count) / (pos_count + neg_count)
+        if effective == "positive":
+            pos_count += 1
+            if negated:
+                negated_words.append(keyword)
+            else:
+                found_pos.append(keyword)
+        else:
+            neg_count += 1
+            if negated:
+                negated_words.append(keyword)
+            else:
+                found_neg.append(keyword)
+
+    base = pos_count + neg_count
+    score = (pos_count - neg_count) / base if base else 0.0
 
     # Apply rating if available
     if review.rating is not None:
         rating_score = (review.rating - 3) / 2  # Normalize 1-5 to -1 to 1
         score = score * 0.6 + rating_score * 0.4
-
-    # Negation flip (simple heuristic)
-    if has_negation and score > 0:
-        score = -score * 0.7
 
     # Determine sentiment
     if score > 0.15:
@@ -216,7 +284,7 @@ def analyze_review(review: Review) -> AnalysisResult:
     themes = []
     for theme_name, theme_data in THEMES.items():
         for kw in theme_data["keywords"]:
-            if kw in text:
+            if contains_keyword(tokens, kw):
                 themes.append(theme_name)
                 break
 
@@ -225,6 +293,7 @@ def analyze_review(review: Review) -> AnalysisResult:
         score=round(score, 3),
         positive_words=found_pos,
         negative_words=found_neg,
+        negated_words=negated_words,
         themes=themes,
         has_negation=has_negation,
     )
@@ -534,6 +603,7 @@ def export_json(reviews: list[Review], results: list[AnalysisResult], filepath: 
             "themes": result.themes,
             "positive_words": result.positive_words,
             "negative_words": result.negative_words,
+            "negated_words": result.negated_words,
         })
 
     with open(filepath, "w", encoding="utf-8") as f:

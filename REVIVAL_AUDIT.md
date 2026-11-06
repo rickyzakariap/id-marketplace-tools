@@ -44,7 +44,7 @@ Catatan: `git config user.name` kosong di repo; commit akan memakai env git iden
 | # | Tool | Bug | Bukti | Severity | Status |
 |---|------|-----|-------|----------|--------|
 | B1 | **06-dropship** | `profit` tidak mengurangi ongkir yang ditanggung seller; nilai profit identik untuk berat 0.3kg vs 5kg dan free-ongkir on/off. `break_even` juga tidak menutup `admin_fee` → harga rekomendasi masih rugi. | Sebelum fix: profit `61625` untuk semua berat & toggle; pada `break_even=106383` profit `-1000`. `server.py:118-126` | **P0** | ✅ FIXED + test |
-| B2 | **03-sentiment** | Pencocokan kata kunci memakai substring: `"ok"` cocok pada `"toko"`. Negation flip salah. | `"Stok barang di toko kosong"` → **positive +1.0**; `"Pelayanan bagus, tidak ada keluhan"` → **negative -0.7**. `analyze.py:175,179,204` | P1 | Belum |
+| B2 | **03-sentiment** | Pencocokan kata kunci memakai substring: `"ok"` cocok pada `"toko"`. Negation flip salah. | `"Stok barang di toko kosong"` → **positive +1.0**; `"Pelayanan bagus, tidak ada keluhan"` → **negative -0.7**. `analyze.py:175,179,204` | P1 | ✅ FIXED + test |
 | B3 | **09-profit-tracker** | `platform_fee`, `shipping_cost`, `other_fees` dikali `qty`, padahal label UI "Biaya platform **per transaksi**" → fee bisa overstate. | `server.py:343` (`(t.platform_fee * t.qty)` dst). Perlu klarifikasi semantik transaksi vs item. | P1 | Belum |
 | B4 | **27-tiktok-komisi** | Shopee Group A `rate_min: null`; frontend cek `!== undefined` → tampil `"null-null%"`. | `index.html:396` vs `:299`. | P1 | Belum |
 | B5 | **01-fee-calculator** | `profitMargin` dihitung `grossProfit / cost` (identik dengan `roi`), bukan `profit / price`. Field tidak ditampilkan saat ini, jadi latent. | `index.js:210-211`. | P2 | Belum |
@@ -62,7 +62,7 @@ Keterangan: ✅ terverifikasi jalan · ⚠️ jalan tapi ada cacat · 🔒 butuh
 |---|------|-------|-------|--------|
 | 01 | marketplace-fee-calculator | Node CLI | CLI compare/ single jalan | ⚠️ B5, tanpa test |
 | 02 | listing-seo-analyzer | Node+Express | HTTP 200; `test.js` lulus (grade A/B/D) | ✅🧪 |
-| 03 | review-sentiment-analyzer | Node+Express | HTTP 200; bug B2 | ⚠️ tanpa test (`npm test` exit 1) |
+| 03 | review-sentiment-analyzer | Node+Express | HTTP 200; B2 fixed; 7 test Node + 7 test Python lulus | ✅🧪 |
 | 04 | fee-breakdown-calculator | Python CLI | `--help` & kalkulasi jalan | ✅ tanpa test |
 | 05 | review-extension | Chrome MV3 + Express + Supabase | Backend error `supabaseUrl is required` tanpa env | 🔒 |
 | 06 | dropship-calculator | Python stdlib | HTTP 200; **fix + 9 test lulus** | ✅🧪 |
@@ -106,7 +106,7 @@ Ringkasan: 22 server Node/Python terverifikasi hidup, 1 CLI Node + 2 CLI Python 
 - **B1 — 06-dropship** profit mengabaikan ongkir seller & break-even tidak menutup admin fee. → **sudah diperbaiki**.
 
 ### P1 (cacat kebenaran yang terlihat pengguna)
-- B2 — 03 sentiment salah klasifikasi (substring + negation).
+- B2 — 03 sentiment salah klasifikasi (substring + negation). → **sudah diperbaiki 2026-11-06**, lihat §9.
 - B3 — 09 profit-tracker fee ×qty (perlu konfirmasi semantik).
 - B4 — 27 tampilan `null-null%`.
 - B7 — 23 vs 34 status regulasi biaya layanan tidak konsisten (data regulasi perlu diselaraskan & diberi sumber; jangan mengarang tarif). → **sudah diperbaiki 2026-10-21**, lihat §8.
@@ -163,3 +163,27 @@ Yang diperbaiki:
 6. **README** kedua tool diperbarui dengan status, sumber, dan cara test.
 
 Verifikasi runtime: kedua server dijalankan lalu `GET /api/status`, `GET /api/marketplaces`, `POST /api/check`, `POST /api/letter` (#34), dan halaman statis di-curl. Semua 200; input tidak valid 400.
+
+---
+
+## 9. Perbaikan 2026-11-06 (B2)
+
+Riset harian 6 November 2026 tidak menemukan pain point seller baru di luar tool yang sudah ada
+(#22/#25/#26 PPh 22, #24 NIB, #44 faktur pajak, #49 pajak digital, #50 refund tanpa retur).
+Sesuai aturan fallback, item P1 tertinggi di audit ini diperbaiki.
+
+Yang diperbaiki di **03-review-sentiment-analyzer**:
+
+1. Pencocokan kata kunci memakai token utuh dan frasa, bukan substring. `"ok"` tidak lagi cocok
+   dengan `"toko"`, dan `"pas"` tidak lagi cocok dengan `"pasti"`.
+2. Frasa panjang diproses lebih dulu dan token-nya dipakai sekali, sehingga `"tidak sesuai"`
+   tidak dihitung juga sebagai kata positif `"sesuai"`.
+3. Negasi hanya membalik kata sentimen yang berdekatan, dan tanda baca menjadi batas klausa.
+   `"Pelayanan bagus, tidak ada keluhan"` tetap positif, sedangkan `"Barang tidak bagus, kecewa"`
+   menjadi negatif.
+4. Logika yang sama diterapkan di web API (`server.js`) dan CLI Python (`cli/analyze.py`).
+5. Test baru: 7 test Node (`test/sentiment.test.js`) dan 7 test Python (`test/test_analyze.py`).
+
+Tool juga dirapikan agar lolos convention checker: `PORT = 8003`, script `start` dan `test`,
+serta CLI dipindah ke `cli/analyze.py`. Karena sudah lolos, 03 dihapus dari daftar exempt di
+`Architecture.md`.

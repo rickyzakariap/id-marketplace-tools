@@ -15,9 +15,13 @@ Analisa sentimen review marketplace Indonesia. Support upload CSV, paste langsun
 
 ```bash
 npm install
-node server.js
-# Buka http://localhost:3457
+npm start
+# Buka http://localhost:8003
 ```
+
+Analisa memakai pencocokan kata utuh, bukan substring. Kata negasi hanya membalik
+kata sentimen yang letaknya berdekatan, sehingga "tidak ada keluhan" tidak lagi
+membalik pujian lain di review yang sama.
 
 ## Input Format
 
@@ -38,6 +42,14 @@ Atau upload CSV dengan kolom: text/review/ulasan, rating/bintang.
 ## CLI (tanpa web)
 
 ```bash
-python analyze.py --sample
-python analyze.py reviews.csv
+python3 cli/analyze.py --sample
+python3 cli/analyze.py reviews.csv
 ```
+
+## Test
+
+```bash
+npm test
+```
+
+Test menjalankan suite Node untuk web API dan suite Python untuk CLI.

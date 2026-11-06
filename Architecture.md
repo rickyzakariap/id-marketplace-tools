@@ -32,13 +32,12 @@ Legacy tools (#01-#35) use a mix of Node, Go, Python, and React. They stay as th
 
 These tools predate the convention checker. They are exempt from retrofitting and should not
 be changed just to satisfy the checker. The list matches the current failures from
-`scripts/check-all.sh` (31 tools pass, 19 are exempt).
+`scripts/check-all.sh` (32 tools pass, 18 are exempt).
 
 | Tool | Exemption reason |
 |------|------------------|
 | `01-marketplace-fee-calculator` | No supported stack detected (no `package.json`, Go, or Python entry point). |
 | `02-listing-seo-analyzer` | Missing `test/`; `PORT` is not `8002`. |
-| `03-review-sentiment-analyzer` | Mixed stacks; missing `test/`; no `start` script; `PORT` is not `8003`. |
 | `04-fee-breakdown-calculator` | Python web tool has no `index.html` or `public/index.html`. |
 | `05-review-extension` | No supported stack detected (no `package.json`, Go, or Python entry point). |
 | `06-dropship-calculator` | Python web tool has no `index.html` or `public/index.html`. |

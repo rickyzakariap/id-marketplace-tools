@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-11-06 - Perbaikan B2 Review Sentiment Analyzer (#03)
+- Masalah: `03-review-sentiment-analyzer` mencocokkan kata kunci dengan substring, sehingga `"ok"` cocok pada `"toko"`. Negasi juga membalik seluruh review, bukan hanya kata yang dinegasikan. `"Stok barang di toko kosong"` menjadi positif +1.0 dan `"Pelayanan bagus, tidak ada keluhan"` menjadi negatif -0.7
+- Riset: Google News RSS, Media Konsumen, Databoks, dan websearch 31 Oktober sampai 6 November 2026 hanya memuat topik yang sudah tercakup (#22/#25/#26 PPh 22, #24 NIB, #44 faktur pajak, #49 pajak digital, #50 refund tanpa retur) atau berita peluang tanpa data yang bisa diground. Tidak ada pain point seller baru
+- Keputusan: Sesuai aturan fallback, perbaiki item P1 tertinggi di REVIVAL_AUDIT.md yaitu B2, bukan memaksakan tool #51 yang menduplikasi topik. B3 dan B4 tidak dipilih karena B2 lebih tinggi dan B3 masih butuh klarifikasi semantik
+- Perbaikan: Pencocokan token utuh dan frasa, frasa panjang diproses lebih dulu dan token dipakai sekali, negasi hanya untuk kata berdekatan, tanda baca menjadi batas klausa. Logika sama diterapkan di `server.js` dan `cli/analyze.py`. `negatedWords` ditambahkan ke hasil
+- Perbaikan konvensi: `PORT` menjadi 8003, `app.listen` dijaga `require.main === module`, `module.exports` ditambahkan, script `start` dan `test` dibuat, CLI dipindah ke `cli/analyze.py`, dan `test/` diisi 7 test Node + 7 test Python. Tool kini lolos `check-tool-conventions.sh` dan dihapus dari daftar exempt `Architecture.md`
+- Verifikasi: `npm test` lulus 7 Node + 7 Python. Runtime: halaman statis 200, `/api/analyze` dengan dua review mengembalikan klasifikasi benar, payload tanpa `reviews` 400. Server dihentikan dan port 8003 kosong kembali
+- Lesson: Pencocokan substring pada kata pendek seperti `ok`, `pas`, dan `bagus` menghasilkan false positive yang sulit terlihat di data contoh. Selalu cocokkan token atau frasa utuh untuk analisis sentimen
+- Lesson: Negasi bersifat lokal, bukan global. Satu kata `tidak` tidak boleh membalik semua kata sentimen di review. Batas klausa (koma, titik, tanda baca) harus dipertahankan saat normalisasi
+- Lesson: Frasa negatif harus diproses lebih dulu dan mengonsumsi token, supaya `"tidak sesuai"` tidak dihitung juga sebagai `"sesuai"` yang positif
+- Next: Update kamus sentimen dan tema saat muncul istilah marketplace baru. Pertimbangkan stemming ringan untuk bahasa Indonesia dan impor CSV ulasan, tetapi jangan menambah dependensi tanpa kebutuhan yang jelas
+
+---
+
 ## 2026-11-05 - Pemeriksa Refund Tanpa Retur (#50)
 - Masalah: Media Konsumen 5 November 2026 melaporkan penjual Shopee menanggung klaim kerugian Rp3.000.000 setelah barang retur rusak karena dikirim tanpa pengemasan layak, sementara banding dengan bukti ditolak. Keluhan serupa sejak 2025 mencakup refund tanpa barang kembali, retur kosong, dan resi retur tidak valid
 - Riset: Google News RSS 7 hari terakhir memuat kasus baru 5 November 2026 dan beberapa keluhan retur. Topik yang sudah tercakup (#31 biaya retur, #40 paket hilang, #47 potongan pesanan, #29 dana tertahan, #46 COD) tidak dipakai ulang. Dipilih pain point refund tanpa barang kembali yang belum punya tool audit
