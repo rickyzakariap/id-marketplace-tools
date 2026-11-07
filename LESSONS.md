@@ -4,6 +4,21 @@
 
 ---
 
+## 2026-11-07 - Perbaikan B3 Profit Tracker (#09)
+- Masalah: `09-profit-tracker` mengalikan `platform_fee`, `shipping_cost`, dan `other_fees` dengan `qty`, padahal label UI menyebut "Biaya platform per transaksi". Pada qty 2, contoh Rp 75.000 x 2 dengan biaya layanan Rp 1.000, ongkir Rp 5.000, dan biaya lain Rp 2.000 menghasilkan fees Rp 22.750, seharusnya Rp 14.750. Profit jadi terlalu kecil Rp 8.000
+- Riset: Google News RSS `when:7d`, feed Media Konsumen, dan web search 31 Oktober sampai 7 November 2026 hanya memuat topik yang sudah tercakup (#22/#25/#26 PPh 22, #24 NIB, #29 saldo tertahan, #41 banding produk, #44 faktur pajak, #46 COD, #49 pajak digital, #50 refund tanpa retur), keluhan pembeli, atau berita peluang tanpa data yang bisa diground. Tidak ada pain point seller baru
+- Keputusan: Sesuai aturan fallback, perbaiki item P1 tertinggi yang masih terbuka di REVIVAL_AUDIT.md yaitu B3, bukan memaksakan tool #51 yang menduplikasi topik. B4 tidak dipilih karena B3 berada lebih tinggi di daftar P1
+- Perbaikan: Hanya harga jual, modal, dan komisi persen yang dikalikan `qty`. Tiga biaya tetap dihitung per transaksi. Model fee dipusatkan di `calculate_totals()` dan dipakai `/api/summary`, `/api/breakdown`, serta tiga jalur frontend (ringkasan, riwayat, ekspor CSV). Label ongkir dan biaya lain diberi keterangan "Per transaksi, bukan per item"
+- Perbaikan konvensi: HTML dipindah dari string `HTML_TEMPLATE` ke `public/index.html` dan dirender lewat `render_index()`. `PORT` dan `PROFIT_DB` dapat dioverride lewat environment agar test API memakai port bebas dan database sementara. 09 dihapus dari daftar legacy exempt `Architecture.md`
+- Verifikasi: 9 test Python lulus (6 unit model fee, 3 API). Runtime: halaman statis 200, summary 200, transactions GET/POST/DELETE 200, breakdown 200, API tidak dikenal 404. Server dihentikan dan database sementara dihapus. `check-tool-conventions.sh` OK dan `check-readme-sync.sh` OK
+- Lesson: Biaya per transaksi dan biaya per item harus dibedakan di model, bukan hanya di label. Kalau label bilang "per transaksi" tetapi rumus mengalikan `qty`, error-nya tersembunyi sampai penjual membandingkan dengan settlement
+- Lesson: Satu fungsi model fee harus dipakai semua jalur (summary, breakdown, frontend, ekspor). Menyalin rumus ke banyak tempat membuat perbaikan mudah tertinggal di salah satu jalur
+- Lesson: Tool legacy yang masih memakai HTML di dalam server bisa direvivalkan tanpa menulis ulang UI. Cukup ekstrak string ke `public/index.html`, render placeholder saat request, dan tambah test API
+- Lesson: Test integrasi server lokal butuh port bebas dan database sementara. Override lewat environment lebih aman daripada menimpa database produksi atau berebut port tetap
+- Next: Perbaiki B4 (`27-tiktok-komisi-calculator` menampilkan `null-null%`) sebagai item P1 berikutnya. Setelah itu B5, B6, dan B8 untuk item P2, serta tambah test untuk tool tanpa test
+
+---
+
 ## 2026-11-06 - Perbaikan B2 Review Sentiment Analyzer (#03)
 - Masalah: `03-review-sentiment-analyzer` mencocokkan kata kunci dengan substring, sehingga `"ok"` cocok pada `"toko"`. Negasi juga membalik seluruh review, bukan hanya kata yang dinegasikan. `"Stok barang di toko kosong"` menjadi positif +1.0 dan `"Pelayanan bagus, tidak ada keluhan"` menjadi negatif -0.7
 - Riset: Google News RSS, Media Konsumen, Databoks, dan websearch 31 Oktober sampai 6 November 2026 hanya memuat topik yang sudah tercakup (#22/#25/#26 PPh 22, #24 NIB, #44 faktur pajak, #49 pajak digital, #50 refund tanpa retur) atau berita peluang tanpa data yang bisa diground. Tidak ada pain point seller baru

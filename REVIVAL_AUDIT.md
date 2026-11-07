@@ -45,7 +45,7 @@ Catatan: `git config user.name` kosong di repo; commit akan memakai env git iden
 |---|------|-----|-------|----------|--------|
 | B1 | **06-dropship** | `profit` tidak mengurangi ongkir yang ditanggung seller; nilai profit identik untuk berat 0.3kg vs 5kg dan free-ongkir on/off. `break_even` juga tidak menutup `admin_fee` → harga rekomendasi masih rugi. | Sebelum fix: profit `61625` untuk semua berat & toggle; pada `break_even=106383` profit `-1000`. `server.py:118-126` | **P0** | ✅ FIXED + test |
 | B2 | **03-sentiment** | Pencocokan kata kunci memakai substring: `"ok"` cocok pada `"toko"`. Negation flip salah. | `"Stok barang di toko kosong"` → **positive +1.0**; `"Pelayanan bagus, tidak ada keluhan"` → **negative -0.7**. `analyze.py:175,179,204` | P1 | ✅ FIXED + test |
-| B3 | **09-profit-tracker** | `platform_fee`, `shipping_cost`, `other_fees` dikali `qty`, padahal label UI "Biaya platform **per transaksi**" → fee bisa overstate. | `server.py:343` (`(t.platform_fee * t.qty)` dst). Perlu klarifikasi semantik transaksi vs item. | P1 | Belum |
+| B3 | **09-profit-tracker** | `platform_fee`, `shipping_cost`, `other_fees` dikali `qty`, padahal label UI "Biaya platform **per transaksi**" → fee bisa overstate. | `server.py:343` (`(t.platform_fee * t.qty)` dst). Perlu klarifikasi semantik transaksi vs item. | P1 | ✅ FIXED + test |
 | B4 | **27-tiktok-komisi** | Shopee Group A `rate_min: null`; frontend cek `!== undefined` → tampil `"null-null%"`. | `index.html:396` vs `:299`. | P1 | Belum |
 | B5 | **01-fee-calculator** | `profitMargin` dihitung `grossProfit / cost` (identik dengan `roi`), bukan `profit / price`. Field tidak ditampilkan saat ini, jadi latent. | `index.js:210-211`. | P2 | Belum |
 | B6 | **11-shipping** | Faktor zona diterapkan **dua kali** (zoneMultiplier courier × zoneFactor) untuk rute antar-zona → biaya bisa overestimate. | `server.js:152-157`. | P2 | Belum |
@@ -68,7 +68,7 @@ Keterangan: ✅ terverifikasi jalan · ⚠️ jalan tapi ada cacat · 🔒 butuh
 | 06 | dropship-calculator | Python stdlib | HTTP 200; **fix + 9 test lulus** | ✅🧪 |
 | 07 | listing-description-generator | Go | Go tidak tersedia | ❔ |
 | 08 | komplain-response-generator | Python stdlib | HTTP 200 | ✅ tanpa test |
-| 09 | profit-tracker | Python stdlib | HTTP 200; bug B3 | ⚠️ tanpa test |
+| 09 | profit-tracker | Python stdlib | HTTP 200; B3 fixed; 9 test lulus | ✅🧪 |
 | 10 | stock-alert-dashboard | Go | Go tidak tersedia | ❔ |
 | 11 | shipping-cost-estimator | Node+Express | HTTP 200; bug B6 | ⚠️ tanpa test |
 | 12 | supplier-scorer | Go | Go tidak tersedia | ❔ |
@@ -107,7 +107,7 @@ Ringkasan: 22 server Node/Python terverifikasi hidup, 1 CLI Node + 2 CLI Python 
 
 ### P1 (cacat kebenaran yang terlihat pengguna)
 - B2 — 03 sentiment salah klasifikasi (substring + negation). → **sudah diperbaiki 2026-11-06**, lihat §9.
-- B3 — 09 profit-tracker fee ×qty (perlu konfirmasi semantik).
+- B3 — 09 profit-tracker fee ×qty (perlu konfirmasi semantik). → **sudah diperbaiki 2026-11-07**, lihat §10.
 - B4 — 27 tampilan `null-null%`.
 - B7 — 23 vs 34 status regulasi biaya layanan tidak konsisten (data regulasi perlu diselaraskan & diberi sumber; jangan mengarang tarif). → **sudah diperbaiki 2026-10-21**, lihat §8.
 - Tambah test untuk semua tool tanpa test (prioritas yang menghasilkan uang: 01, 04, 09, 11, 26, 27, 28, 35).
@@ -187,3 +187,29 @@ Yang diperbaiki di **03-review-sentiment-analyzer**:
 Tool juga dirapikan agar lolos convention checker: `PORT = 8003`, script `start` dan `test`,
 serta CLI dipindah ke `cli/analyze.py`. Karena sudah lolos, 03 dihapus dari daftar exempt di
 `Architecture.md`.
+
+---
+
+## 10. Perbaikan 2026-11-07 (B3)
+
+Riset harian 7 November 2026 tidak menemukan pain point seller baru di luar tool yang sudah ada
+(#22/#25/#26 PPh 22, #24 NIB, #41 banding produk, #44 faktur pajak, #46 COD, #49 pajak digital,
+#50 refund tanpa retur). Sesuai aturan fallback, item P1 tertinggi yang masih terbuka diperbaiki.
+
+Yang diperbaiki di **09-profit-tracker**:
+
+1. `platform_fee`, `shipping_cost`, dan `other_fees` sekarang dihitung **per transaksi**, tidak
+   lagi dikali `qty`. Hanya harga jual, modal, dan komisi persen yang diskalakan dengan `qty`.
+2. Perhitungan dipusatkan di `calculate_totals()` dan dipakai oleh `/api/summary`,
+   `/api/breakdown`, serta tiga jalur di frontend (ringkasan, riwayat, ekspor CSV).
+3. Label UI diberi keterangan "Per transaksi, bukan per item" untuk ongkir dan biaya lainnya.
+4. Test baru `test_server.py`: 6 unit test model fee dan 3 test API (halaman statis, summary +
+   breakdown, hapus transaksi). Total 9 test lulus.
+5. HTML dipindah dari string `HTML_TEMPLATE` ke `public/index.html` agar tool lolos
+   `scripts/check-tool-conventions.sh`. 09 dihapus dari daftar legacy exempt di `Architecture.md`.
+
+Bukti runtime: halaman statis 200, `GET /api/summary` 200, `GET /api/transactions` 200,
+`GET /api/breakdown` 200, `POST /api/transactions` 200, `DELETE /api/transactions/:id` 200,
+API tidak dikenal 404. Contoh qty 2 dengan harga jual Rp 75.000, modal Rp 35.000, komisi 4,5%,
+biaya layanan Rp 1.000, ongkir Rp 5.000, biaya lain Rp 2.000 menghasilkan revenue Rp 150.000,
+biaya Rp 70.000, fees Rp 14.750 (bukan Rp 22.750), dan profit Rp 65.250.

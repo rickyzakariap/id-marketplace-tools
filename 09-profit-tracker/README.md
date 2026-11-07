@@ -23,8 +23,20 @@ python server.py
 ## Fee Calculation
 
 Profit = Revenue - Modal - Fees
-Fees = (Komisi% x Harga Jual) + Biaya Layanan + Ongkir + Biaya Lain
+
+- Revenue = Harga Jual x Qty
+- Modal = Harga Modal x Qty
+- Fees = (Komisi% x Harga Jual x Qty) + Biaya Layanan + Ongkir + Biaya Lain
+
+Biaya Layanan, Ongkir, dan Biaya Lain adalah biaya **per transaksi**, bukan per item.
+Hanya harga jual, modal, dan komisi persen yang dikalikan dengan Qty.
+
+## Test
+
+```bash
+python3 -m unittest -v test_server
+```
 
 ## Tech
 
-Python stdlib (http.server, sqlite3, json). Zero dependencies.
+Python stdlib (http.server, sqlite3, json, unittest). Zero dependencies.

@@ -32,7 +32,7 @@ Legacy tools (#01-#35) use a mix of Node, Go, Python, and React. They stay as th
 
 These tools predate the convention checker. They are exempt from retrofitting and should not
 be changed just to satisfy the checker. The list matches the current failures from
-`scripts/check-all.sh` (32 tools pass, 18 are exempt).
+`scripts/check-all.sh` (34 tools pass, 16 are exempt).
 
 | Tool | Exemption reason |
 |------|------------------|
@@ -42,7 +42,6 @@ be changed just to satisfy the checker. The list matches the current failures fr
 | `05-review-extension` | No supported stack detected (no `package.json`, Go, or Python entry point). |
 | `06-dropship-calculator` | Python web tool has no `index.html` or `public/index.html`. |
 | `08-komplain-response-generator` | Python web tool has no `index.html` or `public/index.html`. |
-| `09-profit-tracker` | Python web tool has no `index.html` or `public/index.html`. |
 | `11-shipping-cost-estimator` | Missing `test/`; no `start` script; `PORT` is not `8011`. |
 | `12-supplier-scorer` | Go web tool has no `public/index.html` and is not a CLI with `main.go`. |
 | `13-competitor-price-monitor` | Missing `test/`; no `test` script; `PORT` is not `8013`. |
@@ -51,7 +50,6 @@ be changed just to satisfy the checker. The list matches the current failures fr
 | `20-stock-sync-checker` | No supported stack detected (no `package.json`, Go, or Python entry point). |
 | `26-omzet-gabungan-tracker` | Missing `test/`; no `start` script. |
 | `28-toco-migration-calculator` | Missing `test/`; no `test` script. |
-| `29-dana-tertahan-tracker` | Missing `test/`; no `test` script. |
 | `32-fmcg-trend-analyzer` | Missing `test/`; no `test` script. |
 | `35-program-diskon-checker` | Missing `test/`; no `test` script. |
 
