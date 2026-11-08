@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemeriksa Tenggat Banding Retur</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1080px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 740px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card.raised {
+  background:
+    radial-gradient(58% 52% at 18% 24%, rgba(var(--ink-rgb), 0.085), transparent 62%),
+    radial-gradient(66% 50% at 54% 88%, rgba(var(--ink-rgb), 0.075), transparent 64%),
+    var(--wash);
+}
+
+.policy {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.policy-main p { color: var(--ink-2); font-size: 14px; margin-top: 10px; }
+.policy-main strong { color: var(--ink); font-weight: 500; }
+.policy-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.policy-note { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(260px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.chip, .pill, .mini {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop), color 140ms var(--ease-pop);
+}
+.chip, .mini {
+  background: var(--wash);
+  color: var(--ink-2);
+  padding: 7px 11px;
+}
+.chip:hover, .mini:hover { background: var(--wash-hover); }
+.chip:active, .mini:active, .pill:active, .primary:active, .btn:active { transform: scale(0.96); }
+.pill {
+  background: var(--wash);
+  color: var(--ink-2);
+  padding: 9px 14px;
+}
+.pill:hover { background: var(--wash-hover); }
+.pill.solid { background: var(--slab); color: var(--on-slab); }
+.mini { padding: 6px 10px; font-size: 12px; }
+a { color: var(--signal); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.field { display: block; min-width: 0; }
+.field > span {
+  display: block;
+  color: var(--ink-4);
+  font-size: 12.5px;
+  margin-bottom: 6px;
+}
+input, select, textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--wash);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 10px 12px;
+  transition: box-shadow 140ms var(--ease-out), background 140ms var(--ease-out);
+}
+textarea { resize: vertical; min-height: 92px; line-height: 1.55; }
+input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+input::placeholder, textarea::placeholder { color: var(--ink-5); }
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea { background: var(--surface-2); }
+
+.form-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.span2 { grid-column: span 2; }
+.span4 { grid-column: span 4; }
+
+.form-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.form-section:first-of-type { margin-top: 0; padding-top: 0; border-top: 0; }
+.form-section h3 { margin-bottom: 10px; }
+
+.primary {
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slab);
+  color: var(--on-slab);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 13px 16px;
+  margin-top: 18px;
+  cursor: pointer;
+  transition: transform 140ms var(--ease-pop), opacity 140ms var(--ease-out);
+}
+.primary:hover { opacity: 0.92; }
+.primary:disabled { opacity: 0.55; cursor: wait; }
+
+.note {
+  color: var(--ink-3);
+  font-size: 12.5px;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+.mini-card {
+  background: var(--elev);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.mini-card + .mini-card { margin-top: 10px; }
+.mini-card h3 { margin-bottom: 6px; }
+.mini-card p { color: var(--ink-3); font-size: 13px; }
+.mini-card strong { color: var(--ink); font-weight: 500; }
+
+.result { margin-top: 18px; }
+.hidden { display: none !important; }
+
+.verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--wash);
+  border-radius: 20px;
+  padding: 18px;
+  border-left: 3px solid var(--signal);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--signal);
+  margin-top: 6px;
+  flex: none;
+}
+.verdict.ok .dot { background: var(--ok); }
+.verdict.ember .dot { background: var(--ember); }
+.verdict-title {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-detail { color: var(--ink-3); font-size: 13.5px; margin-top: 4px; }
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.metric {
+  background: var(--elev);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.metric span { display: block; color: var(--ink-4); font-size: 12px; }
+.metric strong {
+  display: block;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+.metric small { display: block; color: var(--ink-4); font-size: 11.5px; margin-top: 4px; line-height: 1.45; }
+
+.table-wrap { overflow-x: auto; margin-top: 18px; }
+table { width: 100%; border-collapse: collapse; min-width: 690px; }
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 10px 8px;
+}
+td { padding: 11px 10px; border-top: 1px solid var(--line); vertical-align: top; font-size: 13px; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.item-name { font-weight: 500; }
+.item-note { color: var(--ink-4); font-size: 12px; margin-top: 4px; line-height: 1.5; }
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  color: var(--ink-2);
+  background: var(--wash);
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 12px;
+}
+.status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--signal);
+}
+.status.ok::before { background: var(--ok); }
+.status.ember::before { background: var(--ember); }
+.status.muted::before { background: var(--ink-5); }
+
+ul.clean { list-style: none; display: grid; gap: 8px; margin-top: 12px; }
+ul.clean li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+ul.clean li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink-4);
+}
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; align-items: start; }
+.requirement-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.evidence-list { display: grid; gap: 8px; margin-top: 12px; }
+.check {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  background: var(--elev);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.check input { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--ink); flex: none; }
+.check span { font-size: 13px; color: var(--ink-2); }
+.check small { display: block; color: var(--ink-4); font-size: 11.5px; margin-top: 2px; }
+
+.readiness {
+  margin-top: 12px;
+  background: var(--wash);
+  border-radius: 16px;
+  padding: 14px;
+}
+.readiness-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.readiness-score { font-family: var(--font-mono); font-size: 26px; font-weight: 500; }
+.readiness.ok .readiness-score { color: var(--ok); }
+.readiness.ember .readiness-score { color: var(--ember); }
+.readiness.signal .readiness-score { color: var(--signal); }
+.readiness p { color: var(--ink-3); font-size: 12.5px; margin-top: 4px; }
+
+.letter-preview { margin-top: 14px; }
+.letter-subject { font-weight: 500; font-size: 13px; margin-bottom: 8px; }
+#letter-body { min-height: 320px; font-family: var(--font-mono); font-size: 12px; line-height: 1.7; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+.cases-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cases-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 16px 0;
+}
+.case-list { display: grid; gap: 8px; }
+.case-item {
+  background: var(--elev);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  animation: rise 0.42s var(--ease-out) both;
+}
+.case-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.case-title { font-weight: 500; font-size: 14px; }
+.case-meta { color: var(--ink-4); font-size: 12px; margin-top: 2px; }
+.case-money { font-family: var(--font-mono); font-size: 13px; text-align: right; white-space: nowrap; }
+.case-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.case-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
+.case-actions select { width: auto; min-width: 150px; padding: 7px 10px; font-size: 12px; }
+.case-actions button { font-size: 12px; }
+.warnings {
+  margin-top: 12px;
+  border-left: 3px solid var(--ember);
+  background: var(--wash);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.warnings p { color: var(--ink-2); font-size: 12.5px; margin-top: 4px; }
+.empty { color: var(--ink-4); font-size: 13px; padding: 14px 0; }
+
+footer {
+  color: var(--ink-4);
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+footer a { overflow-wrap: anywhere; }
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 12px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out);
+  max-width: min(90vw, 460px);
+  text-align: center;
+  z-index: 20;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 860px) {
+  .layout, .policy, .two-col { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .span4 { grid-column: span 2; }
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cases-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  body { padding: 20px 14px 48px; }
+  .card { padding: 18px; border-radius: 22px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .span2, .span4 { grid-column: span 1; }
+  .brand { gap: 12px; }
+  .mark { width: 38px; height: 38px; }
+  .case-top { flex-direction: column; gap: 6px; }
+  .case-money { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">51</div>
+      <div>
+        <div class="eyebrow">Alat bantu penjual</div>
+        <h1>Pemeriksa Tenggat Banding Retur</h1>
+        <p class="lede">Hitung sisa jendela banding retur 7 hari, cek syarat video unboxing dan pengemasan, ukur kesiapan bukti, catat kasus, dan susun surat banding untuk TikTok Shop by Tokopedia.</p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>
+    </button>
+  </header>
+
+  <section class="card raised policy">
+    <div class="policy-main">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span class="chip" style="background:var(--slab);color:var(--on-slab);">Aturan 27 Oktober 2026</span>
+        <span class="muted" style="font-size:12.5px;">Tenggat 7 hari, video wajib, satu kali banding</span>
+      </div>
+      <p><strong>Banding retur sekarang dimenangkan di gudang dan di kalender, bukan di formulir.</strong> Sejak 27 Oktober 2026, TikTok Shop by Tokopedia memberi 7 hari kalender untuk banding. Video unboxing wajib untuk sengketa kondisi barang, dan video pengemasan wajib bila alasan banding sama dengan alasan retur pembeli. Sejak 5 November 2026, instruksi CS untuk mengirim barang retur ke pembeli juga wajib dipatuhi.</p>
+      <div class="policy-links">
+        <a class="chip" href="https://seller-id.tokopedia.com/university/essay?knowledge_id=4293090979071761&lang=id-ID" target="_blank" rel="noreferrer">Kebijakan resmi Seller Center</a>
+        <a class="chip" href="https://supersellerid.com/banding-retur-tiktok-shop/" target="_blank" rel="noreferrer">Ringkasan 4 November 2026</a>
+        <a class="chip" href="#sumber">Sumber lain</a>
+      </div>
+    </div>
+    <div class="policy-note" id="policy-note">Tool ini memakai aturan yang dipublikasikan 27 Oktober sampai 5 November 2026. Tanggal cutoff bisa mengikuti zona waktu platform. Selalu cocokkan dengan Seller Center sebelum mengirim banding.</div>
+  </section>
+
+  <main class="layout">
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>1. Data kasus</h2>
+          <p class="sub">Isi tanggal dari Seller Center, bukan perkiraan. Semua hitungan memakai hari kalender.</p>
+        </div>
+        <button class="pill" id="example-btn" type="button">Muat contoh</button>
+      </div>
+
+      <div class="form-section">
+        <h3>Toko dan pesanan</h3>
+        <div class="form-grid">
+          <label class="field span2"><span>Nama toko</span><input id="store-name" type="text" maxlength="160" placeholder="Contoh: Toko Contoh"></label>
+          <label class="field"><span>Nama penjual</span><input id="seller-name" type="text" maxlength="160" placeholder="Nama Anda"></label>
+          <label class="field"><span>Kontak</span><input id="contact" type="text" maxlength="160" placeholder="Email atau nomor HP"></label>
+          <label class="field"><span>Platform</span><select id="platform"></select></label>
+          <label class="field"><span>Tipe pesanan</span><select id="order-type"></select></label>
+          <label class="field"><span>Nomor pesanan</span><input id="order-ref" type="text" maxlength="160" placeholder="Contoh: ORD-2026-1104"></label>
+          <label class="field"><span>Nama produk</span><input id="product-name" type="text" maxlength="160" placeholder="Contoh: sepatu lari ukuran 42"></label>
+          <label class="field"><span>Tanggal pesanan diterima pembeli</span><input id="delivered-date" type="date"></label>
+        </div>
+        <p class="note" id="order-type-note">Tipe pesanan menentukan jendela retur pembeli: Mall 15 hari, Non-Mall 6 hari sejak pesanan diterima.</p>
+      </div>
+
+      <div class="form-section">
+        <h3>Jendela banding</h3>
+        <div class="form-grid">
+          <label class="field span2"><span>Jenis kasus</span><select id="case-type"></select></label>
+          <label class="field span2"><span id="trigger-label">Tanggal mulai jendela banding</span><input id="trigger-date" type="date"></label>
+          <label class="field"><span>Sudah pernah banding?</span><select id="already-appealed"></select></label>
+          <label class="field span2"><span>Instruksi CS kirim barang ke pembeli</span><select id="cs-return-request"></select></label>
+          <label class="field span2"><span>Waktu platform minta info tambahan</span><input id="info-requested-at" type="datetime-local"></label>
+        </div>
+        <p class="note" id="case-type-note">Jendela banding 7 hari kalender. Tanggal mulai dihitung sebagai hari 0.</p>
+      </div>
+
+      <div class="form-section">
+        <h3>Alasan dan syarat bukti</h3>
+        <div class="form-grid">
+          <label class="field span2"><span>Alasan banding</span><select id="appeal-reason"></select></label>
+          <label class="field"><span>Alasan banding sama dengan alasan retur pembeli?</span><select id="buyer-reason-matches"></select></label>
+          <label class="field"><span>Membantah kondisi barang retur?</span><select id="dispute-condition"></select></label>
+          <label class="field"><span>Barang bermasalah fungsi?</span><select id="functional-issue"></select></label>
+        </div>
+        <p class="note" id="reason-note">Pilih alasan banding untuk melihat syarat video yang berlaku.</p>
+      </div>
+
+      <div class="form-section">
+        <h3>Bukti yang sudah ada</h3>
+        <div class="evidence-list" id="evidence-list"></div>
+        <p class="note">Bukti wajib berubah sesuai jenis kasus dan alasan banding. Centang hanya yang benar-benar sudah Anda miliki.</p>
+      </div>
+
+      <div class="form-section">
+        <h3>Catatan</h3>
+        <div class="form-grid">
+          <label class="field"><span>Nomor tiket</span><input id="ticket" type="text" maxlength="160" placeholder="Opsional"></label>
+          <label class="field"><span>Status kasus</span><select id="status"></select></label>
+          <label class="field span4"><span>Kronologi singkat</span><textarea id="chronology" maxlength="1600" placeholder="Contoh: Pesanan dikirim 25 Oktober dengan video pengemasan. Pembeli mengajukan retur 3 November. Refund diproses 4 November. Barang retur diterima 6 November dan isinya berbeda."></textarea></label>
+          <label class="field span4"><span>Catatan singkat</span><input id="note" type="text" maxlength="400" placeholder="Contoh: menunggu video unboxing dari gudang"></label>
+        </div>
+      </div>
+
+      <button class="primary" id="calc-btn" type="button">Hitung tenggat dan kesiapan</button>
+    </section>
+
+    <aside>
+      <div class="mini-card">
+        <h3>Tiga angka penting</h3>
+        <p><strong>7 hari kalender</strong> untuk banding. <strong>1 kali</strong> banding per kasus. <strong>24 jam</strong> untuk mengirim info tambahan bila diminta platform. Ketiganya berlaku sejak kebijakan diperbarui 3 November 2026.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Video tidak bisa menyusul</h3>
+        <p>Video unboxing wajib untuk barang berbeda, kurang, sudah dipakai, atau rusak. Video pengemasan wajib bila alasan banding sama dengan alasan retur pembeli. Rekam sebelum paket keluar, bukan setelah masalah muncul.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Batas 5 November 2026</h3>
+        <p>Bila agen CS meminta Anda mengirim barang retur kembali ke pembeli, lakukan hari itu juga. Jika tidak, banding tidak lagi memenuhi syarat dan tidak akan disetujui.</p>
+      </div>
+    </aside>
+  </main>
+
+  <section class="card result hidden" id="result">
+    <div class="verdict signal" id="verdict">
+      <span class="dot" aria-hidden="true"></span>
+      <div>
+        <div class="verdict-title" id="verdict-label">Belum ada data</div>
+        <div class="verdict-detail" id="verdict-detail">Isi data kasus untuk mulai menghitung.</div>
+      </div>
+    </div>
+
+    <div class="metrics" id="metrics"></div>
+    <p class="note" id="calc-note"></p>
+
+    <h3 style="margin-top:20px;">Syarat bukti untuk alasan ini</h3>
+    <div class="requirement-row" id="requirement-row"></div>
+    <p class="note" id="requirement-note"></p>
+
+    <h3 style="margin-top:20px;">Cek bukti</h3>
+    <div class="readiness signal" id="readiness-result">
+      <div class="readiness-head">
+        <div>
+          <div class="readiness-score" id="readiness-score">0%</div>
+          <div class="muted" id="readiness-label">Belum siap</div>
+        </div>
+        <div class="muted" id="readiness-count">0 dari 0</div>
+      </div>
+      <p id="readiness-note"></p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Bukti</th>
+            <th>Kelompok</th>
+            <th>Status</th>
+            <th>Sudah ada</th>
+          </tr>
+        </thead>
+        <tbody id="evidence-body"></tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:20px;">Sinyal penting</h3>
+    <ul class="clean" id="signal-list"></ul>
+
+    <h3 style="margin-top:20px;">Langkah berikutnya</h3>
+    <ul class="clean" id="reco-list"></ul>
+    <p class="note" id="result-disclaimer"></p>
+  </section>
+
+  <div class="two-col">
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>2. Surat banding</h2>
+          <p class="sub">Surat ini panduan. Sesuaikan dengan gaya komunikasi dan kanal resmi platform.</p>
+        </div>
+      </div>
+      <label class="field"><span>Jenis surat</span><select id="letter-type"></select></label>
+      <button class="primary" id="letter-btn" type="button">Buat surat</button>
+      <div class="letter-preview hidden" id="letter-preview">
+        <div class="letter-subject" id="letter-subject"></div>
+        <textarea id="letter-body" readonly></textarea>
+        <div class="toolbar">
+          <button class="pill solid" id="copy-letter-btn" type="button">Salin surat</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>3. Catatan kasus</h2>
+          <p class="sub">Simpan kasus agar tenggat dan bukti tidak hilang di tengah kesibukan.</p>
+        </div>
+        <a class="pill" id="export-link" href="/api/export">Ekspor CSV</a>
+      </div>
+      <button class="primary" id="save-case-btn" type="button" style="margin-top:0;">Simpan sebagai kasus</button>
+      <button class="primary" id="seed-btn" type="button">Simpan contoh ke catatan</button>
+      <div class="cases-summary" id="cases-summary"></div>
+      <div class="warnings hidden" id="warning-list"></div>
+      <div class="case-list" id="cases-list"></div>
+    </section>
+  </div>
+
+  <footer id="sumber">
+    <strong>Sumber:</strong>
+    <a href="https://seller-id.tokopedia.com/university/essay?knowledge_id=4293090979071761&lang=id-ID" target="_blank" rel="noreferrer">Seller Center, Pembaruan Kebijakan Terkini, 29 Oktober 2026</a>.
+    <a href="https://seller-id.tokopedia.com/university/essay?knowledge_id=1683292773779217&lang=en" target="_blank" rel="noreferrer">Seller Center, Returns and Refunds, 29 Oktober 2026</a>.
+    <a href="https://supersellerid.com/banding-retur-tiktok-shop/" target="_blank" rel="noreferrer">Superseller.id, Banding Retur TikTok Shop Berubah, 4 November 2026</a>.
+    <a href="https://www.tktk.com/id/news/4061.html" target="_blank" rel="noreferrer">Tuke Marketing, 21 Oktober 2026</a>.
+    <a href="https://www.ksher.cn/news/post/kjzx26110504/" target="_blank" rel="noreferrer">Ksher, 5 November 2026</a>.
+    <br>
+    Tool ini bukan layanan resmi platform. Hasil hitung adalah panduan internal, bukan jaminan banding diterima.
+  </footer>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+var meta = null;
+var lastAnalysis = null;
+var lastLetter = null;
+
+function $(id) { return document.getElementById(id); }
+
+function toast(message) {
+  var el = $('toast');
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(function () { el.classList.remove('show'); }, 2600);
+}
+
+function fetchJson(url, options) {
+  return fetch(url, options).then(function (response) {
+    return response.json().then(function (data) {
+      if (!response.ok) throw new Error(data && data.error ? data.error : 'Permintaan gagal.');
+      return data;
+    });
+  });
+}
+
+function fillSelect(id, items, selected) {
+  var select = $(id);
+  select.innerHTML = '';
+  items.forEach(function (item) {
+    var option = document.createElement('option');
+    option.value = item.id;
+    option.textContent = item.label;
+    if (item.id === selected) option.selected = true;
+    select.appendChild(option);
+  });
+}
+
+function setSelect(id, value) {
+  var select = $(id);
+  if (value != null) select.value = value;
+}
+
+function fillForm(data) {
+  $('store-name').value = data.store_name || '';
+  $('seller-name').value = data.seller_name || '';
+  $('contact').value = data.contact || '';
+  setSelect('platform', data.platform);
+  setSelect('order-type', data.order_type);
+  $('order-ref').value = data.order_ref || '';
+  $('product-name').value = data.product_name || '';
+  $('delivered-date').value = data.delivered_date || '';
+  setSelect('case-type', data.case_type);
+  $('trigger-date').value = data.trigger_date || '';
+  setSelect('already-appealed', data.already_appealed);
+  setSelect('cs-return-request', data.cs_return_request);
+  $('info-requested-at').value = data.info_requested_at || '';
+  setSelect('appeal-reason', data.appeal_reason);
+  setSelect('buyer-reason-matches', data.buyer_reason_matches);
+  setSelect('dispute-condition', data.dispute_condition);
+  setSelect('functional-issue', data.functional_issue);
+  $('ticket').value = data.ticket || '';
+  setSelect('status', data.status);
+  $('chronology').value = data.chronology || '';
+  $('note').value = data.note || '';
+  var chosen = Array.isArray(data.evidence) ? data.evidence : [];
+  document.querySelectorAll('#evidence-list input[type="checkbox"]').forEach(function (input) {
+    input.checked = chosen.indexOf(input.value) !== -1;
+  });
+  updateCaseTypeNote();
+  updateReasonNote();
+  updateOrderTypeNote();
+}
+
+function readForm() {
+  var evidence = [];
+  document.querySelectorAll('#evidence-list input[type="checkbox"]').forEach(function (input) {
+    if (input.checked) evidence.push(input.value);
+  });
+  return {
+    store_name: $('store-name').value,
+    seller_name: $('seller-name').value,
+    contact: $('contact').value,
+    platform: $('platform').value,
+    order_type: $('order-type').value,
+    order_ref: $('order-ref').value,
+    product_name: $('product-name').value,
+    delivered_date: $('delivered-date').value,
+    case_type: $('case-type').value,
+    trigger_date: $('trigger-date').value,
+    appeal_reason: $('appeal-reason').value,
+    buyer_reason_matches: $('buyer-reason-matches').value,
+    dispute_condition: $('dispute-condition').value,
+    functional_issue: $('functional-issue').value,
+    already_appealed: $('already-appealed').value,
+    cs_return_request: $('cs-return-request').value,
+    info_requested_at: $('info-requested-at').value,
+    evidence: evidence,
+    chronology: $('chronology').value,
+    ticket: $('ticket').value,
+    note: $('note').value,
+    status: $('status').value
+  };
+}
+
+function buildEvidenceList(items) {
+  var wrap = $('evidence-list');
+  wrap.innerHTML = '';
+  items.forEach(function (item) {
+    var label = document.createElement('label');
+    label.className = 'check';
+    var input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = item.id;
+    var text = document.createElement('span');
+    text.textContent = item.label;
+    var small = document.createElement('small');
+    small.textContent = item.group + (item.critical ? ' - bukti kritis' : '');
+    text.appendChild(small);
+    label.appendChild(input);
+    label.appendChild(text);
+    wrap.appendChild(label);
+  });
+}
+
+function requirementLabel(value) {
+  if (value === 'wajib') return 'Wajib';
+  if (value === 'opsional') return 'Opsional';
+  if (value === 'disarankan') return 'Disarankan';
+  return 'Tidak perlu';
+}
+
+function requirementClass(value) {
+  if (value === 'wajib') return 'ember';
+  if (value === 'opsional' || value === 'disarankan') return 'signal';
+  return 'muted';
+}
+
+function updateCaseTypeNote() {
+  if (!meta) return;
+  var item = meta.case_types.find(function (entry) { return entry.id === $('case-type').value; });
+  if (!item) return;
+  $('trigger-label').textContent = item.start_label;
+  $('case-type-note').textContent = item.note + ' Tanggal mulai dihitung sebagai hari 0.';
+}
+
+function updateReasonNote() {
+  if (!meta) return;
+  var item = meta.appeal_reasons.find(function (entry) { return entry.id === $('appeal-reason').value; });
+  if (!item) return;
+  $('reason-note').textContent = item.note;
+}
+
+function updateOrderTypeNote() {
+  if (!meta) return;
+  var item = meta.order_types.find(function (entry) { return entry.id === $('order-type').value; });
+  if (!item) return;
+  $('order-type-note').textContent = item.note;
+}
+
+function renderMetrics(result) {
+  var metrics = [
+    {
+      label: 'Batas banding',
+      value: result.deadline.deadline_label,
+      note: result.deadline.label + '. Batas aman ' + result.deadline.safe_label + ' bila tanggal mulai dihitung hari ke-1.'
+    },
+    {
+      label: 'Sisa hari',
+      value: result.deadline.days_left < 0 ? 'Lewat' : result.deadline.days_left + ' hari',
+      note: 'Dihitung dari ' + result.deadline.start_label
+    },
+    {
+      label: 'Saran ajukan',
+      value: result.deadline.recommended_label,
+      note: 'Rekomendasi paling lambat hari ke-3, bukan aturan platform'
+    },
+    {
+      label: 'Skor bukti',
+      value: result.evidence.score + '%',
+      note: result.evidence.label + ' - ' + result.evidence.required_checked + ' dari ' + result.evidence.required_total + ' bukti wajib'
+    }
+  ];
+  if (result.buyer_window) {
+    metrics.push({
+      label: 'Jendela retur pembeli',
+      value: result.buyer_window.days_left < 0 ? 'Tutup' : result.buyer_window.days_left + ' hari',
+      note: result.buyer_window.label
+    });
+  }
+  if (result.info_window) {
+    metrics.push({
+      label: 'Batas info tambahan',
+      value: result.info_window.expired ? 'Lewat' : result.info_window.hours_left + ' jam',
+      note: result.info_window.deadline_label
+    });
+  }
+  $('metrics').innerHTML = metrics.map(function (item) {
+    return '<div class="metric"><span>' + escapeHtml(item.label) + '</span><strong>' + escapeHtml(item.value) + '</strong><small>' + escapeHtml(item.note) + '</small></div>';
+  }).join('');
+}
+
+function renderRequirements(result) {
+  var rows = [
+    { label: 'Video unboxing', value: result.requirements.unboxing },
+    { label: 'Video pengemasan', value: result.requirements.packing },
+    { label: 'Video uji fungsi', value: result.requirements.functional }
+  ];
+  $('requirement-row').innerHTML = rows.map(function (item) {
+    return '<span class="status ' + requirementClass(item.value) + '">' + escapeHtml(item.label) + ': ' + escapeHtml(requirementLabel(item.value)) + '</span>';
+  }).join('');
+  $('requirement-note').textContent = result.requirements.note;
+}
+
+function renderEvidence(result) {
+  var readiness = $('readiness-result');
+  readiness.className = 'readiness ' + (result.evidence.label === 'Siap' ? 'ok' : result.evidence.score >= 60 ? 'signal' : 'ember');
+  $('readiness-score').textContent = result.evidence.score + '%';
+  $('readiness-label').textContent = result.evidence.label;
+  $('readiness-count').textContent = result.evidence.required_checked + ' dari ' + result.evidence.required_total + ' bukti wajib';
+  $('readiness-note').textContent = result.evidence.missing_required.length
+    ? 'Masih kurang: ' + result.evidence.missing_required.map(function (item) { return item.label; }).join(', ') + '.'
+    : 'Semua bukti wajib sudah tersedia.';
+
+  $('evidence-body').innerHTML = result.evidence.items.filter(function (item) {
+    return item.requirement !== 'not_needed';
+  }).map(function (item) {
+    var status = item.requirement === 'required' ? 'Wajib' : 'Disarankan';
+    return '<tr><td><div class="item-name">' + escapeHtml(item.label) + '</div><div class="item-note">' + (item.critical ? 'Bukti kritis' : 'Bukti pendukung') + '</div></td><td>' + escapeHtml(item.group) + '</td><td><span class="status ' + (item.requirement === 'required' ? 'ember' : 'signal') + '">' + status + '</span></td><td>' + (item.checked ? 'Sudah' : 'Belum') + '</td></tr>';
+  }).join('');
+}
+
+function renderSignals(result) {
+  if (!result.signals.length) {
+    $('signal-list').innerHTML = '<li>Tidak ada sinyal kritis. Tetap cocokkan tanggal dan bukti di Seller Center.</li>';
+    return;
+  }
+  $('signal-list').innerHTML = result.signals.map(function (item) {
+    return '<li><strong>' + escapeHtml(item.label) + '.</strong> ' + escapeHtml(item.note) + '</li>';
+  }).join('');
+}
+
+function renderResult(result) {
+  lastAnalysis = result;
+  var verdict = $('verdict');
+  verdict.className = 'verdict ' + result.verdict.level;
+  $('verdict-label').textContent = result.verdict.label;
+  $('verdict-detail').textContent = result.verdict.detail;
+  renderMetrics(result);
+  renderRequirements(result);
+  renderEvidence(result);
+  renderSignals(result);
+  $('reco-list').innerHTML = result.recommendations.map(function (item) {
+    return '<li>' + escapeHtml(item) + '</li>';
+  }).join('');
+  $('calc-note').textContent = 'Kasus: ' + result.case_type.label + '. Alasan: ' + result.appeal_reason.label + '.';
+  $('result-disclaimer').textContent = 'Hasil ini panduan internal. Bukan jaminan banding diterima dan bukan pengganti kebijakan resmi platform.';
+  $('result').classList.remove('hidden');
+  $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function calculate() {
+  $('calc-btn').disabled = true;
+  fetchJson('/api/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(readForm())
+  }).then(function (result) {
+    renderResult(result);
+  }).catch(function (error) {
+    toast(error.message);
+  }).finally(function () {
+    $('calc-btn').disabled = false;
+  });
+}
+
+function makeLetter() {
+  var payload = readForm();
+  payload.letter_type = $('letter-type').value;
+  $('letter-btn').disabled = true;
+  fetchJson('/api/letter', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function (result) {
+    lastLetter = result;
+    $('letter-subject').textContent = result.subject;
+    $('letter-body').value = result.body;
+    $('letter-preview').classList.remove('hidden');
+  }).catch(function (error) {
+    toast(error.message);
+  }).finally(function () {
+    $('letter-btn').disabled = false;
+  });
+}
+
+function saveCase() {
+  var payload = readForm();
+  $('save-case-btn').disabled = true;
+  fetchJson('/api/cases', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function () {
+    toast('Kasus disimpan.');
+    loadCases();
+  }).catch(function (error) {
+    toast(error.message);
+  }).finally(function () {
+    $('save-case-btn').disabled = false;
+  });
+}
+
+function seedCase() {
+  $('seed-btn').disabled = true;
+  fetchJson('/api/seed', { method: 'POST' }).then(function () {
+    toast('Contoh kasus disimpan.');
+    loadCases();
+  }).catch(function (error) {
+    toast(error.message);
+  }).finally(function () {
+    $('seed-btn').disabled = false;
+  });
+}
+
+function renderCases(data) {
+  $('cases-summary').innerHTML = [
+    { label: 'Total kasus', value: data.total },
+    { label: 'Masih terbuka', value: data.open_cases },
+    { label: 'Jatuh tempo', value: data.due_soon },
+    { label: 'Jendela lewat', value: data.expired }
+  ].map(function (item) {
+    return '<div class="metric"><span>' + escapeHtml(item.label) + '</span><strong>' + escapeHtml(item.value) + '</strong></div>';
+  }).join('');
+
+  var warning = $('warning-list');
+  if (data.missing_evidence > 0) {
+    warning.classList.remove('hidden');
+    warning.innerHTML = '<p><strong>' + data.missing_evidence + ' kasus terbuka masih kurang bukti wajib.</strong> Lengkapi sebelum jendela banding habis.</p>';
+  } else {
+    warning.classList.add('hidden');
+    warning.innerHTML = '';
+  }
+
+  if (!data.cases.length) {
+    $('cases-list').innerHTML = '<div class="empty">Belum ada kasus tersimpan. Hitung lalu simpan, atau muat contoh ke catatan.</div>';
+    return;
+  }
+
+  $('cases-list').innerHTML = data.cases.map(function (item) {
+    var statusClass = item.deadline_status === 'lewat' ? 'ember' : item.days_left <= 3 ? 'ember' : 'ok';
+    var deadlineText = item.days_left < 0 ? 'Lewat ' + Math.abs(item.days_left) + ' hari' : item.days_left + ' hari lagi';
+    var note = item.missing_required.length
+      ? 'Kurang: ' + item.missing_required.join(', ')
+      : 'Bukti wajib lengkap';
+    return '<div class="case-item">' +
+      '<div class="case-top"><div><div class="case-title">' + escapeHtml(item.order_ref || '(tanpa nomor)') + ' - ' + escapeHtml(item.store_name || 'Toko') + '</div>' +
+      '<div class="case-meta">' + escapeHtml(item.case_type_label) + ' - ' + escapeHtml(item.appeal_reason_label) + '</div></div>' +
+      '<div class="case-money">' + escapeHtml(item.deadline_label) + '<br>' + escapeHtml(deadlineText) + '</div></div>' +
+      '<div class="case-tags"><span class="status ' + statusClass + '">' + escapeHtml(item.status_label) + '</span>' +
+      '<span class="status muted">Skor bukti ' + item.readiness_score + '%</span>' +
+      '<span class="status muted">' + escapeHtml(item.order_type_label) + '</span></div>' +
+      '<div class="item-note">' + escapeHtml(note) + '</div>' +
+      '<div class="case-actions"><select data-case-status="' + escapeHtml(item.id) + '">' +
+      meta.case_statuses.map(function (status) {
+        return '<option value="' + escapeHtml(status.id) + '"' + (status.id === item.status ? ' selected' : '') + '>' + escapeHtml(status.label) + '</option>';
+      }).join('') +
+      '</select><button class="mini" data-case-delete="' + escapeHtml(item.id) + '" type="button">Hapus</button></div>' +
+      '</div>';
+  }).join('');
+
+  document.querySelectorAll('[data-case-status]').forEach(function (select) {
+    select.addEventListener('change', function () {
+      fetchJson('/api/cases/' + encodeURIComponent(select.getAttribute('data-case-status')), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: select.value })
+      }).then(function () {
+        toast('Status kasus diperbarui.');
+        loadCases();
+      }).catch(function (error) {
+        toast(error.message);
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-case-delete]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      if (!confirm('Hapus kasus ini dari catatan?')) return;
+      fetchJson('/api/cases/' + encodeURIComponent(button.getAttribute('data-case-delete')), { method: 'DELETE' })
+        .then(function () {
+          toast('Kasus dihapus.');
+          loadCases();
+        })
+        .catch(function (error) { toast(error.message); });
+    });
+  });
+}
+
+function loadCases() {
+  fetchJson('/api/cases').then(renderCases).catch(function (error) {
+    toast(error.message);
+  });
+}
+
+function init() {
+  fetchJson('/api/meta').then(function (data) {
+    meta = data;
+    fillSelect('platform', data.platforms, 'tiktok');
+    fillSelect('order-type', data.order_types, 'mall');
+    fillSelect('case-type', data.case_types, 'refund_only');
+    fillSelect('already-appealed', data.yes_no, 'tidak');
+    fillSelect('cs-return-request', data.cs_return_options, 'belum_diminta');
+    fillSelect('appeal-reason', data.appeal_reasons, 'wrong_product');
+    fillSelect('buyer-reason-matches', data.yes_no, 'tidak_tahu');
+    fillSelect('dispute-condition', data.yes_no, 'tidak');
+    fillSelect('functional-issue', data.yes_no, 'tidak');
+    fillSelect('status', data.case_statuses, 'baru');
+    fillSelect('letter-type', data.letter_types, 'banding');
+    buildEvidenceList(data.evidence);
+    document.querySelectorAll('#evidence-list input[type="checkbox"]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        if (lastAnalysis) calculate();
+      });
+    });
+    updateCaseTypeNote();
+    updateReasonNote();
+    updateOrderTypeNote();
+    loadCases();
+  }).catch(function (error) {
+    toast(error.message);
+  });
+
+  $('theme-btn').addEventListener('click', function () {
+    var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+
+  $('example-btn').addEventListener('click', function () {
+    fetchJson('/api/example').then(function (data) {
+      fillForm(data);
+      toast('Contoh dimuat. Sesuaikan tanggal dan bukti.');
+    }).catch(function (error) { toast(error.message); });
+  });
+
+  $('case-type').addEventListener('change', updateCaseTypeNote);
+  $('order-type').addEventListener('change', updateOrderTypeNote);
+  $('appeal-reason').addEventListener('change', function () {
+    updateReasonNote();
+    if (lastAnalysis) calculate();
+  });
+  $('dispute-condition').addEventListener('change', function () { if (lastAnalysis) calculate(); });
+  $('buyer-reason-matches').addEventListener('change', function () { if (lastAnalysis) calculate(); });
+  $('functional-issue').addEventListener('change', function () { if (lastAnalysis) calculate(); });
+
+  $('calc-btn').addEventListener('click', calculate);
+  $('letter-btn').addEventListener('click', makeLetter);
+  $('save-case-btn').addEventListener('click', saveCase);
+  $('seed-btn').addEventListener('click', seedCase);
+
+  $('copy-letter-btn').addEventListener('click', function () {
+    if (!lastLetter) return;
+    var text = lastLetter.subject + '\n\n' + lastLetter.body;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        toast('Surat disalin.');
+      }).catch(function () {
+        $('letter-body').select();
+        document.execCommand('copy');
+        toast('Surat disalin.');
+      });
+    } else {
+      $('letter-body').select();
+      document.execCommand('copy');
+      toast('Surat disalin.');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

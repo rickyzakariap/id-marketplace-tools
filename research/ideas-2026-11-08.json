@@ -1,0 +1,163 @@
+{
+  "date": "2026-11-08",
+  "research_window": "Riset 1 sampai 8 November 2026 tentang perubahan kebijakan purnajual, keluhan penjual marketplace, biaya, retur, pajak, dan topik seller lain yang belum tercakup tool yang ada",
+  "sources": [
+    {
+      "title": "Pembaruan Kebijakan Terkini - TikTok Shop by Tokopedia Seller Center",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "2026-10-29",
+      "url": "https://seller-id.tokopedia.com/university/essay?knowledge_id=4293090979071761&lang=id-ID",
+      "facts": [
+        "Jendela banding 7 hari kalender sejak refund diproses atau status retur Delivered.",
+        "Mulai 2 November 2026 pesanan Tokopedia Mall punya 15 hari kalender untuk mengajukan retur, sedangkan Non-Mall tetap 6 hari.",
+        "Mulai 4 November 2026 sebagian kategori Tokopedia pindah dari Return & Refund ke Refund Only.",
+        "Mulai 5 November 2026 barang retur wajib dikirim kembali ke pembeli bila diminta agen CS agar banding tetap sah.",
+        "Video unboxing wajib untuk barang berbeda, komponen hilang, barang sudah dipakai, atau rusak. Video pengemasan wajib bila alasan banding sama dengan alasan retur pembeli."
+      ]
+    },
+    {
+      "title": "Returns And Refunds - TikTok Shop by Tokopedia Seller Center",
+      "publisher": "TikTok Shop by Tokopedia Seller Center",
+      "date": "2026-10-29",
+      "url": "https://seller-id.tokopedia.com/university/essay?knowledge_id=1683292773779217&lang=en",
+      "facts": [
+        "Permintaan retur harus ditinjau dalam 2 hari kalender. Produk retur harus ditinjau dalam 2 hari kerja.",
+        "Bila barang retur belum diterima, banding dapat diajukan mulai hari ke-6 untuk Speedy Refund atau hari ke-15 untuk retur yang diatur pembeli.",
+        "Jendela banding untuk kasus tersebut terbuka selama 7 hari kalender."
+      ]
+    },
+    {
+      "title": "Banding Retur TikTok Shop Berubah: 7 Hari dan Video Wajib",
+      "publisher": "Superseller.id",
+      "date": "2026-11-04",
+      "url": "https://supersellerid.com/banding-retur-tiktok-shop/",
+      "facts": [
+        "Merangkum empat perubahan purnajual 27 Oktober sampai 5 November 2026: tenggat banding 7 hari kalender, video unboxing dan pengemasan wajib pada kondisi tertentu, satu kali banding per kasus, dan batas 24 jam untuk info tambahan.",
+        "Menyebut jendela retur Tokopedia Mall 15 hari sejak 2 November 2026 dan Refund Only kategori tertentu sejak 4 November 2026.",
+        "Rekomendasi mengajukan banding paling lambat hari ke-3 adalah saran operasional, bukan aturan platform."
+      ]
+    },
+    {
+      "title": "TikTok Shop Tetapkan Jendela Banding 7 Hari Mulai 27 Oktober 2026",
+      "publisher": "Tuke Marketing",
+      "date": "2026-10-21",
+      "url": "https://www.tktk.com/id/news/4061.html",
+      "facts": [
+        "Menyebut jendela banding 7 hari kalender untuk permintaan refund tahap pertama yang disetujui platform.",
+        "Menyebut standar video pengemasan dan unboxing harus utuh, jelas, dan tanpa penyuntingan."
+      ]
+    },
+    {
+      "title": "Tokopedia Ubah Aturan Purnajual: Mall 15 Hari dan Sebagian Kategori Refund Only",
+      "publisher": "Ksher",
+      "date": "2026-11-05",
+      "url": "https://www.ksher.cn/news/post/kjzx26110504/",
+      "facts": [
+        "Mengonfirmasi jendela retur Tokopedia Mall menjadi 15 hari kalender sejak 2 November 2026.",
+        "Mengonfirmasi sebagian kategori beralih ke Refund Only sejak 4 November 2026."
+      ]
+    },
+    {
+      "title": "Pedagang UMKM rentan dirugikan platform digital, ini sorotan Totok Hedi Santosa",
+      "publisher": "ANTARA News Yogyakarta",
+      "date": "2026-11-07",
+      "url": "https://jogja.antaranews.com/berita/866223/pedagang-umkm-rentan-dirugikan-platform-digital-ini-sorotan-totok-hedi-santosa",
+      "facts": [
+        "Anggota Komisi VI DPR menyoroti pedagang yang belum menerima pembayaran dari platform media sosial.",
+        "Tidak disebut nama platform, tanggal kasus, atau mekanisme banding yang bisa dibuat menjadi tool dengan angka yang terverifikasi."
+      ]
+    },
+    {
+      "title": "Miris Nasib Seller TikTok: Saldo Ditahan Kemudian Lenyap",
+      "publisher": "detikFinance",
+      "date": "2026-10-01",
+      "url": "https://finance.detik.com/berita-ekonomi-bisnis/d-8686816/miris-nasib-seller-tiktok-saldo-ditahan-kemudian-lenyap",
+      "facts": [
+        "Penjual TikTok Shop melaporkan saldo Rp549 juta dan Rp566 juta tidak dapat dicairkan, lalu tercatat menjadi Rp0.",
+        "Topik saldo tertahan sudah tercakup tool #29."
+      ]
+    }
+  ],
+  "pain_points_checked": [
+    {
+      "category": "Tenggat dan bukti banding retur",
+      "description": "Penjual hanya punya 7 hari kalender untuk banding, wajib video unboxing atau pengemasan pada kondisi tertentu, dan hanya satu kali banding per kasus.",
+      "frequency": "HIGH",
+      "reason_not_built": "Belum ada tool yang menghitung tenggat, memetakan syarat video per alasan, dan menilai kesiapan bukti. Dibangun sebagai tool #51."
+    },
+    {
+      "category": "Jendela retur Tokopedia Mall 15 hari",
+      "description": "Sejak 2 November 2026 pembeli pesanan Mall punya 15 hari kalender untuk mengajukan retur, bukan 6 hari.",
+      "frequency": "HIGH",
+      "reason_not_built": "Menjadi fitur jendela retur pembeli di tool #51, bukan tool terpisah."
+    },
+    {
+      "category": "Refund Only untuk kategori tertentu",
+      "description": "Sejak 4 November 2026 sebagian kategori Tokopedia tidak meminta barang kembali dan langsung refund.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Menjadi salah satu jenis kasus di tool #51. Daftar kategori tidak diumumkan terbuka sehingga tidak bisa dibuat tool khusus."
+    },
+    {
+      "category": "Instruksi CS mengirim barang retur ke pembeli",
+      "description": "Sejak 5 November 2026 banding tidak sah bila penjual tidak mengirim barang retur ke pembeli saat diminta agen CS.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Menjadi sinyal dan verdict di tool #51."
+    },
+    {
+      "category": "Pedagang media sosial belum dibayar",
+      "description": "Pedagang yang berjualan lewat platform media sosial mengeluh belum menerima pembayaran, dengan potensi transaksi ratusan juta rupiah.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Berita 7 November 2026 tidak menyebut nama platform, tanggal kasus, atau mekanisme banding. Tumpang tindih dengan #29 dana tertahan dan tidak cukup data untuk tool baru."
+    },
+    {
+      "category": "Saldo TikTok Shop ditahan lalu hilang",
+      "description": "Saldo puluhan hingga ratusan juta rupiah tidak bisa ditarik dan kemudian menjadi nol.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup tool #29 dana tertahan tracker."
+    },
+    {
+      "category": "PPh 22 marketplace",
+      "description": "Pemungutan 0,5 persen dan penundaan implementasi.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup tool #22, #25, dan #26."
+    },
+    {
+      "category": "PPN transaksi digital",
+      "description": "Pemungutan PPN transaksi digital luar negeri mulai 9 November 2026.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup tool #49."
+    }
+  ],
+  "existing_tools_checked": [
+    "#27-tiktok-komisi-calculator: komisi TikTok dan perbandingan Shopee.",
+    "#29-dana-tertahan-tracker: saldo marketplace yang dibekukan atau tertahan.",
+    "#31-biaya-retur-tracker: biaya dan kerugian retur.",
+    "#40-klaim-paket-hilang: klaim paket hilang atau rusak.",
+    "#46-pemeriksa-pesanan-cod: risiko pesanan COD.",
+    "#47-pemeriksa-potongan-pesanan: potongan pesanan batal dan retur.",
+    "#50-pemeriksa-refund-tanpa-retur: refund tanpa barang kembali.",
+    "#22, #25, #26: PPh 22 dan omzet gabungan.",
+    "#49: pajak digital dan SPP-TDLN."
+  ],
+  "decision": {
+    "action": "build-new-tool",
+    "target": "51-pemeriksa-tenggat-banding-retur",
+    "reason": "Riset 7 hari terakhir menemukan perubahan kebijakan purnajual yang konkret dan baru berlaku: tenggat banding 7 hari, syarat video unboxing dan pengemasan, satu kali banding, batas info tambahan 24 jam, jendela retur Mall 15 hari, dan kewajiban kirim barang ke pembeli sejak 5 November 2026. Belum ada tool yang menghitung tenggat dan memetakan syarat bukti ini.",
+    "scope": [
+      "Hitung batas banding 7 hari kalender, sisa hari, dan batas aman satu hari lebih awal.",
+      "Hitung jendela retur pembeli Mall 15 hari dan Non-Mall 6 hari.",
+      "Petakan syarat video unboxing, pengemasan, dan uji fungsi per alasan banding.",
+      "Nilai 16 bukti dengan 9 bukti kritis.",
+      "Hitung batas 24 jam untuk info tambahan.",
+      "Buat tiga surat: banding, klarifikasi, dan eskalasi.",
+      "Catat kasus, ubah status, hapus, dan ekspor CSV."
+    ],
+    "rejected": [
+      "Tool pedagang media sosial belum dibayar: berita 7 November 2026 tidak menyebut platform, tanggal, atau mekanisme yang bisa diverifikasi.",
+      "Tool saldo tertahan baru: sudah ada #29.",
+      "Tool refund tanpa retur baru: sudah ada #50.",
+      "Tool biaya retur baru: sudah ada #31.",
+      "Mengulang #22, #25, #26, #27, #40, #46, #47, #49, atau #50."
+    ]
+  }
+}
