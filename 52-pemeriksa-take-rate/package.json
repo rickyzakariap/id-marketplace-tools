@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-take-rate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bandingkan take rate aktual penjual marketplace dengan benchmark Cube kuartal II 2026 per kategori dan platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/take-rate.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

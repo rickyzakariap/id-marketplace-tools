@@ -57,6 +57,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 49 | [49-pemeriksa-pajak-digital](49-pemeriksa-pajak-digital/) | Web | Node.js + Express | Separate SPP-TDLN PPN on foreign digital purchases from 0.5% marketplace PPh 22 (DJP clarification, 9 Nov 2026 confusion): classify PMSE, SPP-TDLN, transfer and unresolved items, editable 11% estimate, annual cost and PKP credit, 10 evidence items, case log, CSV export and three letters |
 | 50 | [50-pemeriksa-refund-tanpa-retur](50-pemeriksa-refund-tanpa-retur/) | Web | Node.js + Express | Audit refunds paid while goods are not returned, come back empty, or arrive damaged (Shopee return-damage complaint, 5 Nov 2026): normal vs actual cash, loss ratio, goods condition, 12 process signals, 13 evidence items, case log, CSV export and three letters |
 | 51 | [51-pemeriksa-tenggat-banding-retur](51-pemeriksa-tenggat-banding-retur/) | Web | Node.js + Express | Check the 7-day return appeal window for TikTok Shop by Tokopedia (policy updates 27 Oct to 5 Nov 2026): deadline and days left, Mall 15-day return window, required unboxing and packing videos per reason, 16 evidence items, 24-hour additional info limit, case log, CSV export and three letters |
+| 52 | [52-pemeriksa-take-rate](52-pemeriksa-take-rate/) | Web | Node.js + Express | Compare actual marketplace take rate with Cube Q2 2026 benchmarks by platform and category (Databoks, 6 Nov 2026): gap in points and rupiah, all-in deduction context, 14 signals, 11 evidence items, case log, CSV export and three letters |
 
 ## Checks
 

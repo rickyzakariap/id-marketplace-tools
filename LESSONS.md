@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-11-09 - Pemeriksa Take Rate (#52)
+- Masalah: Databoks Katadata 6 November 2026 memuat benchmark take rate penjual non-Mall Indonesia kuartal II 2026 dari Cube, tetapi penjual tidak punya cara cepat membandingkan komisi dan biaya transaksi aktual dengan angka per kategori dan platform. Selisih take rate sulit diterjemahkan menjadi rupiah per bulan atau per tahun, dan biaya program, iklan, logistik, pajak, serta biaya tetap sering tercampur
+- Riset: Databoks Katadata 6 November 2026 untuk fashion, FMCG, dan elektronik, memakai data Cube, Shopee Take-Rate Tracker edisi Agustus 2026. Kompas.id 18 April 2026 dipakai sebagai konteks beban marketplace, bukan sumber angka. Berita lain yang sudah tercakup #22/#25/#26 PPh 22, #24 NIB, #44 faktur pajak, #49 pajak digital, #50 refund tanpa retur, dan #51 tenggat banding tidak dipakai ulang
+- Dasar angka: Shopee, TikTok Shop, dan Lazada non-Mall kuartal II 2026. Fashion 17,43, 14,43, dan 9,13 persen. FMCG 18,55, 14,68, dan 8,25 persen. Elektronik 17,93, 13,3, dan 7,63 persen. Benchmark mencakup komisi platform dan biaya transaksi, tanpa program gratis ongkir atau cashback, iklan, logistik, pajak, dan biaya tetap. Tidak ada tarif atau statistik yang dikarang
+- Keputusan: Bangun tool #52, bukan mengulang #27 kalkulator komisi, #36 perencana biaya all-in, #47 audit potongan per pesanan, atau #48 realisasi diskon. Fokusnya perbandingan take rate periode dengan benchmark pasar per kategori dan platform, ditambah pemisahan biaya di luar benchmark
+- Fitur: Take rate aktual, benchmark per platform dan kategori, selisih poin dan rupiah bulanan/tahunan, total all-in sebagai konteks, 14 sinyal, 11 bukti dengan 4 bukti kritis, verdict yang menahan kesimpulan bila cakupan biaya belum dikonfirmasi atau toko Mall, tiga surat, catatan kasus, CSV, dan data contoh
+- Angka contoh: Omzet kotor Rp150.000.000, komisi Rp22.500.000, biaya transaksi Rp6.000.000, take rate 19 persen, benchmark Shopee fashion 17,43 persen, selisih 1,57 poin atau Rp2.355.000 per bulan dan Rp28.260.000 per tahun, all-in 31,5 persen, skor sinyal 28 (Sedang), kesiapan bukti 67 persen (Hampir siap)
+- Verifikasi: 23 unit test lulus. Runtime semua endpoint diuji: halaman statis 200, meta, benchmarks, example, analyze, readiness, letter, cases GET/POST 201/PATCH/DELETE, seed 201, export CSV 200, 404 API, JSON rusak 400. Server dihentikan, port 8052 kosong, dan data runtime dihapus. Convention check dan README sync OK
+- Works: UI mengikuti DESIGN.md (token monokrom, kartu 28px, pill, Google Sans weight 500, entrance stagger, reduced motion, dark mode no-flash). Semua id yang dipakai script dicek oleh test
+- Lesson: Kesalahan paling umum pada perbandingan take rate adalah cakupan biaya yang tidak sama. Benchmark hanya memuat komisi dan biaya transaksi, jadi biaya program, iklan, logistik, pajak, dan biaya tetap harus dipisahkan sebelum dibandingkan
+- Lesson: Benchmark pasar bukan batas resmi. Tool harus menahan kesimpulan "kelebihan biaya" atau "pelanggaran" dan meminta rincian settlement serta pengumuman tarif lebih dulu
+- Lesson: Toko Mall tidak bisa dibandingkan langsung dengan benchmark non-Mall. Tampilkan peringatan segmen sebelum verdict, bukan setelahnya
+- Lesson: Take rate di bawah benchmark juga perlu dicurigai. Bisa berarti komponen biaya belum diisi, bukan tarif lebih rendah
+- Next: Pantau pembaruan Cube Take-Rate Tracker dan tambah benchmark Mall bila dipublikasikan. Pertimbangkan impor CSV settlement, tren beberapa periode, dan pengingat follow-up surat
+
+
 ## 2026-11-08 - Pemeriksa Tenggat Banding Retur (#51)
 - Masalah: TikTok Shop by Tokopedia mengubah kebijakan purnajual 27 Oktober sampai 5 November 2026. Penjual hanya punya 7 hari kalender untuk banding, video unboxing wajib untuk sengketa kondisi barang, video pengemasan wajib bila alasan banding sama dengan alasan retur pembeli, banding hanya satu kali per kasus, dan info tambahan harus dikirim dalam 24 jam. Sejak 5 November 2026 barang retur juga wajib dikirim ke pembeli bila diminta agen CS. Belum ada tool yang menghitung tenggat dan memetakan syarat bukti ini
 - Riset: Seller Center TikTok Shop by Tokopedia 29 Oktober 2026 (pembaruan kebijakan dan halaman Returns and Refunds), Superseller.id 4 November 2026, Tuke Marketing 21 Oktober 2026, Ksher 5 November 2026. Berita ANTARA 7 November 2026 tentang pedagang media sosial yang belum dibayar tidak dipakai karena tidak menyebut platform, tanggal kasus, atau mekanisme yang bisa diverifikasi

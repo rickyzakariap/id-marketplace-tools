@@ -1,0 +1,123 @@
+{
+  "date": "2026-11-09",
+  "research_window": "Riset 2 sampai 9 November 2026 tentang biaya penjual marketplace, take rate, pajak, retur, dan topik seller lain yang belum tercakup tool yang ada",
+  "sources": [
+    {
+      "title": "Perbandingan Biaya Penjual Fashion di Shopee, TikTok Shop, dan Lazada Kuartal II 2026",
+      "publisher": "Databoks Katadata",
+      "date": "2026-11-06",
+      "url": "https://databoks.katadata.co.id/teknologi-telekomunikasi/statistik/6aed6dccea4cf/perbandingan-biaya-penjual-fashion-di-shopee-tiktok-shop-dan-lazada-kuartal-ii-2026",
+      "facts": [
+        "Data Cube, Shopee Take-Rate Tracker edisi Agustus 2026, penjual fashion non-Mall Indonesia kuartal II 2026.",
+        "Rata-rata take rate Shopee 17,43 persen, TikTok Shop 14,43 persen, dan Lazada 9,13 persen.",
+        "Take rate mencakup biaya komisi dan biaya transaksi yang dikenakan kepada penjual."
+      ]
+    },
+    {
+      "title": "Perbandingan Biaya Penjual FMCG di Shopee, TikTok Shop, dan Lazada Kuartal II 2026",
+      "publisher": "Databoks Katadata",
+      "date": "2026-11-06",
+      "url": "https://databoks.katadata.co.id/teknologi-telekomunikasi/statistik/6aed674a94db7/perbandingan-biaya-penjual-fmcg-di-shopee-tiktok-shop-dan-lazada-kuartal-ii-2026",
+      "facts": [
+        "Rata-rata take rate penjual FMCG non-Mall Indonesia kuartal II 2026: Shopee 18,55 persen, TikTok Shop 14,68 persen, Lazada 8,25 persen.",
+        "Angka berasal dari Cube dan diterbitkan Databoks pada 6 November 2026."
+      ]
+    },
+    {
+      "title": "Perbandingan Biaya Penjual Elektronik di Shopee, TikTok Shop, dan Lazada Kuartal II 2026",
+      "publisher": "Databoks Katadata",
+      "date": "2026-11-06",
+      "url": "https://databoks.katadata.co.id/teknologi-telekomunikasi/statistik/6aed717b759d9/perbandingan-biaya-penjual-elektronik-di-shopee-tiktok-shop-dan-lazada-kuartal-ii-2026",
+      "facts": [
+        "Rata-rata take rate penjual elektronik non-Mall Indonesia kuartal II 2026: Shopee 17,93 persen, TikTok Shop 13,3 persen, Lazada 7,63 persen.",
+        "Angka berasal dari Cube dan diterbitkan Databoks pada 6 November 2026."
+      ]
+    },
+    {
+      "title": "Beban Marketplace Tinggi, Mungkinkah Transaksi Beralih ke Luar Platform?",
+      "publisher": "Kompas.id",
+      "date": "2026-04-18",
+      "url": "https://www.kompas.id/artikel/komisi-dan-biaya-marketplace-makin-tinggi-mungkinkah-transaksi-beralih-ke-luar-platform",
+      "facts": [
+        "Laporan Momentum Works 2026 menyebut take rate marketplace di Asia Tenggara terus meningkat.",
+        "Beberapa penjual melaporkan beban take rate di atas 30 persen, bahkan mendekati 50 persen setelah semua komponen dihitung.",
+        "Artikel ini dipakai sebagai konteks lebih tua, bukan sumber angka utama tool."
+      ]
+    }
+  ],
+  "pain_points_checked": [
+    {
+      "category": "Take rate efektif per kategori",
+      "description": "Penjual tidak tahu apakah persentase komisi dan biaya transaksi yang dipotong platform masih wajar dibanding rata-rata pasar per kategori. Data Cube kuartal II 2026 yang baru terbit memberi benchmark per kategori dan platform.",
+      "frequency": "HIGH",
+      "reason_not_built": "Belum ada tool yang membandingkan take rate aktual dari settlement dengan benchmark rata-rata per kategori, memisahkan biaya di luar cakupan benchmark, dan menyiapkan surat permintaan rincian. Dibangun sebagai tool #52."
+    },
+    {
+      "category": "Invoice marketplace sebagai bukti pungut PPh 22",
+      "description": "DDTCNews 6 November 2026 menyebut invoice marketplace dipersamakan dengan bukti pungut PPh 22 dan harus memuat enam informasi.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup tool #44 yang membahas dokumen PPN, faktur tagihan, dan bukti pemungutan PPh 22. Menambah tool baru akan menduplikasi pemeriksaan dokumen pajak."
+    },
+    {
+      "category": "Harbolnas 2026 etalase khusus UMKM",
+      "description": "Menko PM meminta platform membuka etalase UMKM binaan pada Harbolnas 10 sampai 16 Desember 2026 dengan target transaksi Rp40 triliun.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Belum ada mekanisme pendaftaran, syarat, atau tarif yang dipublikasikan. Tool tidak bisa dibuat tanpa angka yang bisa diverifikasi. Kalender Harbolnas sudah ada di #21."
+    },
+    {
+      "category": "Banding penjual atas barang retur rusak",
+      "description": "Media Konsumen melaporkan banding penjual Shopee ditolak meski bukti kerusakan diajukan.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #50 refund tanpa retur dan #51 tenggat banding retur."
+    },
+    {
+      "category": "Pajak digital 9 November 2026",
+      "description": "Pemungutan PPN transaksi digital luar negeri dan kebingungan pedagang marketplace.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #49 pajak digital dan #22, #25, #26 untuk PPh 22."
+    },
+    {
+      "category": "Diskon biaya admin marketplace 50 persen",
+      "description": "Berita pengingat syarat dan realisasi diskon UMK.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #23, #34, dan #48."
+    },
+    {
+      "category": "NIB untuk pedagang marketplace",
+      "description": "Kewajiban NIB bagi pedagang Shopee dan marketplace lain.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Sudah tercakup #24 NIB deadline checker."
+    }
+  ],
+  "existing_tools_checked": [
+    "#27-tiktok-komisi-calculator: tarif komisi TikTok dan perbandingan Shopee.",
+    "#36-biaya-total-marketplace: kalkulator biaya all-in untuk perencanaan harga.",
+    "#44-pemeriksa-faktur-pajak: faktur PPN biaya layanan dan pemisahan bukti PPh 22.",
+    "#47-pemeriksa-potongan-pesanan: audit potongan per pesanan setelah batal atau retur.",
+    "#48-pemeriksa-realisasi-diskon: audit realisasi diskon 50 persen di settlement.",
+    "#22, #25, #26: PPh 22 dan omzet gabungan.",
+    "#49: pajak digital dan SPP-TDLN.",
+    "#50: refund tanpa retur.",
+    "#51: tenggat dan bukti banding retur."
+  ],
+  "decision": {
+    "action": "build-new-tool",
+    "target": "52-pemeriksa-take-rate",
+    "reason": "Data Cube kuartal II 2026 yang diterbitkan Databoks pada 6 November 2026 memberi benchmark take rate per kategori dan platform yang konkret. Belum ada tool yang membandingkan take rate aktual bulanan dari settlement dengan benchmark ini, memisahkan biaya di luar cakupan benchmark, dan menyiapkan surat permintaan rincian.",
+    "scope": [
+      "Benchmark take rate non-Mall kuartal II 2026 untuk fashion, FMCG, dan elektronik di Shopee, TikTok Shop, dan Lazada.",
+      "Hitung take rate aktual dari komisi platform ditambah biaya transaksi dibagi omzet kotor.",
+      "Pisahkan biaya program gratis ongkir, iklan, logistik, pajak, dan biaya tetap yang tidak termasuk benchmark.",
+      "Hitung selisih poin persentase dan rupiah per bulan serta per tahun.",
+      "Skor indikasi heuristik dan rekomendasi pemeriksaan, bukan tuduhan pelanggaran.",
+      "Skor kesiapan 11 bukti dengan empat bukti kritis.",
+      "Catatan kasus, ekspor CSV, dan tiga surat: permintaan rincian, keberatan, eskalasi."
+    ],
+    "rejected": [
+      "Tool invoice PPh 22 baru: sudah tercakup #44.",
+      "Tool Harbolnas 2026 etalase UMKM: belum ada syarat atau mekanisme yang dipublikasikan.",
+      "Mengulang #27, #36, #47, #48, #50, atau #51.",
+      "Memakai angka take rate tanpa menyebut cakupan dan sumbernya."
+    ]
+  }
+}

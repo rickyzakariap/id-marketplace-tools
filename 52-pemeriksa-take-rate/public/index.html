@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemeriksa Take Rate</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1120px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.card.raised {
+  background:
+    radial-gradient(58% 52% at 18% 24%, rgba(var(--ink-rgb), 0.085), transparent 62%),
+    radial-gradient(66% 50% at 54% 88%, rgba(var(--ink-rgb), 0.075), transparent 64%),
+    var(--wash);
+}
+
+.policy {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.policy-main p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.policy-main strong { color: var(--ink); font-weight: 500; }
+.policy-note { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+.scope-chip.out { color: var(--ember); }
+.policy-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.source-link {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  text-decoration: none;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.source-link:hover { background: var(--wash-hover); color: var(--ink); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.span-2 { grid-column: span 2; }
+.field.span-3 { grid-column: span 3; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select, textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+textarea { resize: vertical; min-height: 72px; }
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tr.selected td { background: var(--surface-2); }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.on { background: var(--ember); }
+.dot.ok { background: var(--ok); }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.evidence-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+.check {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+.check input { width: auto; margin-top: 3px; accent-color: var(--ink); }
+.check .crit { color: var(--ember); font-size: 11px; margin-left: 4px; }
+
+.letter-out {
+  white-space: pre-wrap;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.cases-summary { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.summary-pill {
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.summary-pill strong { color: var(--ink); font-weight: 500; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.empty { color: var(--ink-4); font-size: 13.5px; padding: 10px 0; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 860px) {
+  .policy, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .field.span-3 { grid-column: span 2; }
+}
+
+@media (max-width: 560px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .field.span-2, .field.span-3 { grid-column: span 1; }
+  .stats { grid-template-columns: 1fr; }
+  header { align-items: flex-start; }
+  .brand { gap: 12px; }
+  .mark { width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">TR</div>
+      <div>
+        <div class="eyebrow">Tool 52</div>
+        <h1>Pemeriksa Take Rate</h1>
+        <p class="lede">Bandingkan komisi dan biaya transaksi yang dipotong platform dengan benchmark rata-rata kategori kuartal II 2026. Pisahkan biaya program, iklan, dan logistik agar perbandingannya adil.</p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg>
+    </button>
+  </header>
+
+  <section class="card policy">
+    <div class="policy-main">
+      <h2>Benchmark take rate kuartal II 2026</h2>
+      <p>Data Cube lewat Databoks 6 November 2026. Angka adalah rata-rata penjual <strong>non-Mall</strong> di Indonesia. Take rate mencakup komisi platform dan biaya transaksi.</p>
+      <div class="scope-grid">
+        <span class="scope-chip in">Masuk benchmark: komisi platform</span>
+        <span class="scope-chip in">Masuk benchmark: biaya transaksi</span>
+        <span class="scope-chip out">Di luar benchmark: program gratis ongkir atau cashback</span>
+        <span class="scope-chip out">Di luar benchmark: iklan</span>
+        <span class="scope-chip out">Di luar benchmark: logistik, pajak, biaya tetap</span>
+      </div>
+      <div class="policy-links" id="source-links"></div>
+    </div>
+    <div class="policy-note">
+      Benchmark adalah rata-rata pasar, bukan batas resmi. Selisih tidak otomatis berarti platform melanggar aturan. Selalu cocokkan dengan settlement, invoice, dan pengumuman tarif di Seller Center.
+    </div>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Data toko dan periode</h2>
+            <p class="sub">Isi satu periode. Angka harus dari laporan settlement yang sama.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="store_name">Nama toko</label>
+            <input id="store_name" type="text" maxlength="160" placeholder="Contoh: Toko Contoh Fashion">
+          </div>
+          <div class="field">
+            <label for="seller_name">Nama penjual</label>
+            <input id="seller_name" type="text" maxlength="160" placeholder="Nama untuk surat">
+          </div>
+          <div class="field">
+            <label for="contact">Kontak</label>
+            <input id="contact" type="text" maxlength="160" placeholder="Email atau nomor">
+          </div>
+          <div class="field">
+            <label for="ticket">Nomor tiket</label>
+            <input id="ticket" type="text" maxlength="160" placeholder="Opsional">
+          </div>
+          <div class="field">
+            <label for="platform">Platform</label>
+            <select id="platform"></select>
+          </div>
+          <div class="field">
+            <label for="category">Kategori produk</label>
+            <select id="category"></select>
+          </div>
+          <div class="field">
+            <label for="store_type">Tipe toko</label>
+            <select id="store_type"></select>
+          </div>
+          <div class="field">
+            <label for="category_confidence">Kategori sudah pasti?</label>
+            <select id="category_confidence"></select>
+          </div>
+          <div class="field">
+            <label for="period">Periode</label>
+            <input id="period" type="month">
+          </div>
+          <div class="field">
+            <label for="gross_sales">Omzet kotor periode</label>
+            <input id="gross_sales" type="number" min="0" step="1" placeholder="150000000">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Biaya dalam benchmark</h2>
+            <p class="sub">Hanya komisi platform dan biaya transaksi. Jangan masukkan biaya program, iklan, atau logistik di sini.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="commission_fee">Komisi platform (Rp)</label>
+            <input id="commission_fee" type="number" min="0" step="1" placeholder="22500000">
+          </div>
+          <div class="field">
+            <label for="transaction_fee">Biaya transaksi (Rp)</label>
+            <input id="transaction_fee" type="number" min="0" step="1" placeholder="6000000">
+          </div>
+          <div class="field span-2">
+            <label for="scope_confirmed">Cakupan biaya sudah dipisahkan?</label>
+            <select id="scope_confirmed"></select>
+            <div class="hint">Pilih Ya bila angka di atas tidak termasuk program gratis ongkir, iklan, logistik, pajak, dan biaya tetap.</div>
+          </div>
+          <div class="field">
+            <label for="benchmark_rate">Benchmark manual (%)</label>
+            <input id="benchmark_rate" type="number" min="0" max="100" step="0.01" placeholder="Kosongkan untuk memakai sumber">
+          </div>
+          <div class="field">
+            <label for="periods_per_year">Periode per tahun</label>
+            <input id="periods_per_year" type="number" min="1" max="12" step="1" value="12">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Biaya di luar benchmark</h2>
+            <p class="sub">Biaya ini tidak dipakai untuk menghitung take rate, tetapi ditampilkan agar total potongan terlihat.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label for="program_fee">Program gratis ongkir atau cashback</label>
+            <input id="program_fee" type="number" min="0" step="1" placeholder="6000000">
+          </div>
+          <div class="field">
+            <label for="ads_fee">Iklan</label>
+            <input id="ads_fee" type="number" min="0" step="1" placeholder="9000000">
+          </div>
+          <div class="field">
+            <label for="logistics_fee">Logistik</label>
+            <input id="logistics_fee" type="number" min="0" step="1" placeholder="3000000">
+          </div>
+          <div class="field">
+            <label for="tax_fee">Pajak</label>
+            <input id="tax_fee" type="number" min="0" step="1" placeholder="750000">
+          </div>
+          <div class="field">
+            <label for="fixed_fee">Biaya tetap</label>
+            <input id="fixed_fee" type="number" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="status">Status kasus</label>
+            <select id="status"></select>
+          </div>
+          <div class="field span-3">
+            <label for="note">Catatan</label>
+            <textarea id="note" maxlength="400" placeholder="Catatan singkat tentang periode atau temuan."></textarea>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="analyze-btn" type="button">Analisis</button>
+          <button class="btn ghost" id="example-btn" type="button">Muat contoh</button>
+          <button class="btn ghost" id="save-btn" type="button">Simpan kasus</button>
+          <button class="btn ghost" id="reset-btn" type="button">Kosongkan</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Bukti pendukung</h2>
+            <p class="sub">Centang bukti yang sudah ada. Empat bukti kritis ditandai.</p>
+          </div>
+        </div>
+        <div class="evidence-list" id="evidence-list"></div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card raised">
+        <div class="section-head">
+          <div>
+            <h2>Hasil analisis</h2>
+            <p class="sub">Perbandingan take rate aktual dan benchmark.</p>
+          </div>
+        </div>
+        <div class="verdict muted" id="verdict-banner">
+          <div class="verdict-label" id="verdict-label">Belum ada analisis</div>
+          <div class="verdict-note" id="verdict-note">Isi data periode lalu tekan Analisis.</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="k">Take rate aktual</div><div class="v" id="stat-take">-</div></div>
+          <div class="stat"><div class="k">Benchmark</div><div class="v" id="stat-benchmark">-</div></div>
+          <div class="stat"><div class="k">Selisih poin</div><div class="v" id="stat-gap-pp">-</div></div>
+          <div class="stat"><div class="k">Selisih per bulan</div><div class="v" id="stat-gap-month">-</div></div>
+          <div class="stat"><div class="k">Selisih per tahun</div><div class="v" id="stat-gap-year">-</div></div>
+          <div class="stat"><div class="k">All-in di luar benchmark</div><div class="v" id="stat-all-in">-</div></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Benchmark per kategori</h2>
+            <p class="sub">Rata-rata non-Mall kuartal II 2026.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Kategori</th>
+                <th class="num">Shopee</th>
+                <th class="num">TikTok</th>
+                <th class="num">Lazada</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-table-body"></tbody>
+          </table>
+        </div>
+        <div class="hint" id="stat-outside">Biaya di luar benchmark: -</div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Indikasi</h2>
+            <p class="sub">Skor heuristik, bukan putusan pelanggaran.</p>
+          </div>
+          <span class="badge" id="indicator-score">0/100</span>
+        </div>
+        <div class="list" id="indicators-list">
+          <div class="empty">Belum ada indikasi.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Rekomendasi</h2>
+            <p class="sub">Langkah pemeriksaan berikutnya.</p>
+          </div>
+        </div>
+        <div class="list" id="recommendations-list">
+          <div class="empty">Belum ada rekomendasi.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Kesiapan bukti</h2>
+            <p class="sub">Empat bukti kritis berbobot dua kali.</p>
+          </div>
+          <span class="badge" id="evidence-score">0%</span>
+        </div>
+        <div class="list">
+          <div class="list-item"><span class="dot ok"></span><span id="evidence-label">Belum siap</span></div>
+          <div class="list-item"><span class="dot"></span><span id="evidence-missing">Belum ada bukti kritis yang hilang.</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Surat</h2>
+            <p class="sub">Minta rincian atau ajukan keberatan.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="letter-type">Jenis surat</label>
+          <select id="letter-type"></select>
+        </div>
+        <div class="actions">
+          <button class="btn primary small" id="letter-btn" type="button">Buat surat</button>
+          <button class="btn ghost small" id="copy-letter-btn" type="button">Salin</button>
+        </div>
+        <div class="letter-out" id="letter-output">Surat belum dibuat.</div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card">
+    <div class="section-head">
+      <div>
+        <h2>Catatan kasus</h2>
+        <p class="sub">Simpan periode yang sudah dianalisis dan pantau selisihnya.</p>
+      </div>
+      <div class="actions" style="margin-top:0">
+        <button class="btn ghost small" id="seed-btn" type="button">Muat contoh kasus</button>
+        <button class="btn ghost small" id="export-btn" type="button">Ekspor CSV</button>
+      </div>
+    </div>
+    <div class="cases-summary" id="cases-summary"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Toko</th>
+            <th>Platform</th>
+            <th>Kategori</th>
+            <th>Periode</th>
+            <th class="num">Take rate</th>
+            <th class="num">Selisih</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="cases-body"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="cases-empty">Belum ada kasus tersimpan.</div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var state = { meta: null, result: null, cases: [] };
+
+  function $(id) { return document.getElementById(id); }
+
+  function fmtNum(value) {
+    return new Intl.NumberFormat('id-ID').format(Math.round(Number(value) || 0));
+  }
+  function rp(value) { return 'Rp ' + fmtNum(value); }
+  function pct(value) { return String(value).replace('.', ',') + '%'; }
+  function pts(value) { return String(value).replace('.', ',') + ' poin'; }
+  function signedRp(value) {
+    var n = Number(value) || 0;
+    return (n > 0 ? '+' : n < 0 ? '-' : '') + rp(Math.abs(n));
+  }
+  function signedPts(value) {
+    var n = Number(value) || 0;
+    return (n > 0 ? '+' : n < 0 ? '-' : '') + pts(Math.abs(n));
+  }
+
+  function toast(message) {
+    var el = $('toast');
+    el.textContent = message;
+    el.classList.add('show');
+    setTimeout(function () { el.classList.remove('show'); }, 2200);
+  }
+
+  function fillSelect(id, list) {
+    var el = $(id);
+    el.innerHTML = '';
+    list.forEach(function (item) {
+      var option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = item.label;
+      el.appendChild(option);
+    });
+  }
+
+  function fillSelectValue(id, value) {
+    var el = $(id);
+    if (value != null && String(value) !== '') el.value = String(value);
+  }
+
+  function readForm() {
+    var evidence = [];
+    document.querySelectorAll('#evidence-list input[type="checkbox"]:checked').forEach(function (input) {
+      evidence.push(input.value);
+    });
+    return {
+      store_name: $('store_name').value,
+      seller_name: $('seller_name').value,
+      contact: $('contact').value,
+      ticket: $('ticket').value,
+      platform: $('platform').value,
+      category: $('category').value,
+      store_type: $('store_type').value,
+      category_confidence: $('category_confidence').value,
+      period: $('period').value,
+      gross_sales: $('gross_sales').value,
+      commission_fee: $('commission_fee').value,
+      transaction_fee: $('transaction_fee').value,
+      scope_confirmed: $('scope_confirmed').value,
+      benchmark_rate: $('benchmark_rate').value,
+      periods_per_year: $('periods_per_year').value,
+      program_fee: $('program_fee').value,
+      ads_fee: $('ads_fee').value,
+      logistics_fee: $('logistics_fee').value,
+      tax_fee: $('tax_fee').value,
+      fixed_fee: $('fixed_fee').value,
+      note: $('note').value,
+      status: $('status').value,
+      evidence: evidence
+    };
+  }
+
+  function writeForm(data) {
+    ['store_name', 'seller_name', 'contact', 'ticket', 'period', 'gross_sales',
+      'commission_fee', 'transaction_fee', 'benchmark_rate', 'periods_per_year',
+      'program_fee', 'ads_fee', 'logistics_fee', 'tax_fee', 'fixed_fee', 'note'].forEach(function (key) {
+      var el = $(key);
+      if (el) el.value = data[key] == null ? '' : data[key];
+    });
+    ['platform', 'category', 'store_type', 'category_confidence', 'scope_confirmed', 'status'].forEach(function (key) {
+      if (data[key] != null) $(key).value = data[key];
+    });
+    var evidence = Array.isArray(data.evidence) ? data.evidence : [];
+    document.querySelectorAll('#evidence-list input[type="checkbox"]').forEach(function (input) {
+      input.checked = evidence.indexOf(input.value) !== -1;
+    });
+  }
+
+  function renderEvidenceOptions(meta) {
+    var wrap = $('evidence-list');
+    wrap.innerHTML = '';
+    meta.evidence.forEach(function (item) {
+      var label = document.createElement('label');
+      label.className = 'check';
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.value = item.id;
+      var text = document.createElement('span');
+      text.textContent = item.label;
+      if (item.critical) {
+        var crit = document.createElement('span');
+        crit.className = 'crit';
+        crit.textContent = 'Kritis';
+        text.appendChild(crit);
+      }
+      label.appendChild(input);
+      label.appendChild(text);
+      wrap.appendChild(label);
+    });
+  }
+
+  function renderSources(sources) {
+    var wrap = $('source-links');
+    wrap.innerHTML = '';
+    sources.forEach(function (source) {
+      var link = document.createElement('a');
+      link.className = 'source-link';
+      link.href = source.url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = source.publisher + ', ' + source.date;
+      link.title = source.title;
+      wrap.appendChild(link);
+    });
+  }
+
+  function renderBenchmarkTable(rows) {
+    var body = $('benchmark-table-body');
+    body.innerHTML = '';
+    rows.forEach(function (row) {
+      var tr = document.createElement('tr');
+      if (row.selected) tr.className = 'selected';
+      [row.label, pct(row.shopee), pct(row.tiktok), pct(row.lazada)].forEach(function (value, index) {
+        var td = document.createElement('td');
+        td.textContent = value;
+        if (index > 0) td.className = 'num';
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  function verdictClass(level) {
+    if (level === 'ok' || level === 'signal' || level === 'ember' || level === 'muted') return level;
+    return 'muted';
+  }
+
+  function renderResult(data) {
+    state.result = data;
+    var verdict = data.verdict;
+    var banner = $('verdict-banner');
+    banner.className = 'verdict ' + verdictClass(verdict.level);
+    $('verdict-label').textContent = verdict.label;
+    $('verdict-note').textContent = verdict.note;
+
+    $('stat-take').textContent = pct(data.actual.take_rate);
+    $('stat-benchmark').textContent = pct(data.benchmark.rate);
+    $('stat-gap-pp').textContent = signedPts(data.gap.pp);
+    $('stat-gap-month').textContent = signedRp(data.gap.rp_month);
+    $('stat-gap-year').textContent = signedRp(data.gap.rp_year);
+    $('stat-all-in').textContent = pct(data.all_in.rate);
+
+    var gapEl = $('stat-gap-pp');
+    gapEl.className = 'v ' + (data.gap.pp > 1 ? 'bad' : data.gap.pp < -1 ? 'warn' : 'good');
+
+    $('stat-outside').textContent = 'Biaya di luar benchmark: ' + rp(data.outside.total) +
+      ' (' + pct(data.outside.rate) + '). Total all-in: ' + rp(data.all_in.total) + ' (' + pct(data.all_in.rate) + ').';
+
+    renderBenchmarkTable(data.benchmark_table);
+
+    var indicators = data.indicators.filter(function (item) { return item.triggered; });
+    var list = $('indicators-list');
+    list.innerHTML = '';
+    if (!indicators.length) {
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'Tidak ada indikasi otomatis.';
+      list.appendChild(empty);
+    } else {
+      indicators.forEach(function (item) {
+        var row = document.createElement('div');
+        row.className = 'list-item';
+        var dot = document.createElement('span');
+        dot.className = 'dot on';
+        var text = document.createElement('span');
+        text.textContent = item.label + (item.note ? ' ' + item.note : '');
+        row.appendChild(dot);
+        row.appendChild(text);
+        list.appendChild(row);
+      });
+    }
+    $('indicator-score').textContent = data.score.value + '/100 ' + data.score.label;
+
+    var rec = $('recommendations-list');
+    rec.innerHTML = '';
+    data.recommendations.forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var dot = document.createElement('span');
+      dot.className = 'dot';
+      var text = document.createElement('span');
+      text.textContent = item;
+      row.appendChild(dot);
+      row.appendChild(text);
+      rec.appendChild(row);
+    });
+
+    $('evidence-score').textContent = data.evidence.score + '%';
+    $('evidence-label').textContent = data.evidence.label + ' (' + data.evidence.checked_count + ' dari ' + data.evidence.total_count + ' bukti)';
+    $('evidence-missing').textContent = data.evidence.missing_critical.length
+      ? 'Bukti kritis belum ada: ' + data.evidence.missing_critical.map(function (item) { return item.label; }).join(', ') + '.'
+      : 'Tidak ada bukti kritis yang hilang.';
+  }
+
+  function analyzeForm() {
+    var payload = readForm();
+    return fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Analisis gagal.');
+        return data;
+      });
+    }).then(function (data) {
+      renderResult(data);
+      toast('Analisis selesai.');
+      return data;
+    }).catch(function (error) {
+      toast(error.message);
+      return null;
+    });
+  }
+
+  function loadExample() {
+    fetch('/api/example').then(function (response) { return response.json(); }).then(function (data) {
+      writeForm(data);
+      return analyzeForm();
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function saveCase() {
+    var payload = readForm();
+    fetch('/api/cases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal menyimpan kasus.');
+        return data;
+      });
+    }).then(function (data) {
+      toast('Kasus disimpan.');
+      renderCases(data.summary);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function loadCases() {
+    fetch('/api/cases').then(function (response) { return response.json(); }).then(function (data) {
+      renderCases(data);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function renderCases(summary) {
+    state.cases = summary.cases || [];
+    var body = $('cases-body');
+    body.innerHTML = '';
+    state.cases.forEach(function (item) {
+      var tr = document.createElement('tr');
+      var cells = [
+        item.store_name || '-',
+        item.platform_label,
+        item.category_label,
+        item.period,
+        pct(item.take_rate),
+        signedPts(item.gap_pp),
+        item.status_label
+      ];
+      cells.forEach(function (value, index) {
+        var td = document.createElement('td');
+        td.textContent = value;
+        if (index === 4 || index === 5) td.className = 'num';
+        tr.appendChild(td);
+      });
+      var action = document.createElement('td');
+      var button = document.createElement('button');
+      button.className = 'btn ghost small';
+      button.type = 'button';
+      button.textContent = 'Hapus';
+      button.addEventListener('click', function () { deleteCase(item.id); });
+      action.appendChild(button);
+      tr.appendChild(action);
+      body.appendChild(tr);
+    });
+
+    $('cases-empty').style.display = state.cases.length ? 'none' : 'block';
+
+    var wrap = $('cases-summary');
+    wrap.innerHTML = '';
+    [
+      ['Total kasus', summary.total],
+      ['Terbuka', summary.open_cases],
+      ['Di atas benchmark', summary.above_benchmark],
+      ['Bukti kritis kurang', summary.missing_evidence],
+      ['Selisih terbuka per bulan', rp(summary.total_gap_month)],
+      ['Selisih terbuka per tahun', rp(summary.total_gap_year)]
+    ].forEach(function (pair) {
+      var pill = document.createElement('span');
+      pill.className = 'summary-pill';
+      pill.innerHTML = pair[0] + ': <strong>' + pair[1] + '</strong>';
+      wrap.appendChild(pill);
+    });
+  }
+
+  function deleteCase(id) {
+    fetch('/api/cases/' + encodeURIComponent(id), { method: 'DELETE' }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal menghapus kasus.');
+        return data;
+      });
+    }).then(function (data) {
+      toast('Kasus dihapus.');
+      renderCases(data);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function seedCases() {
+    fetch('/api/seed', { method: 'POST' }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal memuat contoh.');
+        return data;
+      });
+    }).then(function (data) {
+      toast('Contoh kasus dimuat.');
+      renderCases(data.summary);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function buildLetter() {
+    var payload = readForm();
+    payload.letter_type = $('letter-type').value;
+    fetch('/api/letter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal membuat surat.');
+        return data;
+      });
+    }).then(function (data) {
+      $('letter-output').textContent = 'Subjek: ' + data.subject + '\n\n' + data.body;
+      toast('Surat dibuat.');
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function copyLetter() {
+    var text = $('letter-output').textContent;
+    if (!text || text === 'Surat belum dibuat.') return toast('Buat surat dulu.');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast('Surat disalin.'); });
+    } else {
+      toast('Salin manual dari kotak surat.');
+    }
+  }
+
+  function resetForm() {
+    document.querySelectorAll('input, textarea').forEach(function (el) {
+      if (el.type === 'checkbox') el.checked = false;
+      else if (el.type !== 'month') el.value = '';
+    });
+    $('periods_per_year').value = '12';
+    $('period').value = '';
+    $('letter-output').textContent = 'Surat belum dibuat.';
+    $('verdict-banner').className = 'verdict muted';
+    $('verdict-label').textContent = 'Belum ada analisis';
+    $('verdict-note').textContent = 'Isi data periode lalu tekan Analisis.';
+    ['stat-take', 'stat-benchmark', 'stat-gap-pp', 'stat-gap-month', 'stat-gap-year', 'stat-all-in'].forEach(function (id) {
+      $(id).textContent = '-';
+    });
+    $('indicators-list').innerHTML = '<div class="empty">Belum ada indikasi.</div>';
+    $('recommendations-list').innerHTML = '<div class="empty">Belum ada rekomendasi.</div>';
+    $('evidence-score').textContent = '0%';
+    $('evidence-label').textContent = 'Belum siap';
+    $('evidence-missing').textContent = 'Belum ada bukti kritis yang hilang.';
+    $('indicator-score').textContent = '0/100';
+  }
+
+  function initTheme() {
+    $('theme-btn').addEventListener('click', function () {
+      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  }
+
+  function init() {
+    initTheme();
+    fetch('/api/meta').then(function (response) { return response.json(); }).then(function (meta) {
+      state.meta = meta;
+      fillSelect('platform', meta.platforms);
+      fillSelect('category', meta.categories);
+      fillSelect('store_type', meta.store_types);
+      fillSelect('category_confidence', meta.yes_no);
+      fillSelect('scope_confirmed', meta.yes_no);
+      fillSelect('status', meta.case_statuses);
+      fillSelect('letter-type', meta.letter_types);
+      renderEvidenceOptions(meta);
+      renderSources(meta.sources);
+      renderBenchmarkTable(meta.categories.map(function (category) {
+        return {
+          category: category.id,
+          label: category.label,
+          selected: false,
+          shopee: meta.benchmarks[category.id].shopee,
+          tiktok: meta.benchmarks[category.id].tiktok,
+          lazada: meta.benchmarks[category.id].lazada
+        };
+      }));
+      loadCases();
+    }).catch(function (error) { toast(error.message); });
+
+    $('analyze-btn').addEventListener('click', analyzeForm);
+    $('example-btn').addEventListener('click', loadExample);
+    $('save-btn').addEventListener('click', saveCase);
+    $('reset-btn').addEventListener('click', resetForm);
+    $('seed-btn').addEventListener('click', seedCases);
+    $('export-btn').addEventListener('click', function () { window.location.href = '/api/export'; });
+    $('letter-btn').addEventListener('click', buildLetter);
+    $('copy-letter-btn').addEventListener('click', copyLetter);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
