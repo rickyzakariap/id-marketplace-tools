@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-10",
+  "research_window": "Riset 3 sampai 10 November 2026 tentang kewajiban SNI, kepatuhan produk, dan topik seller marketplace lain yang belum tercakup tool yang ada",
+  "sources": [
+    {
+      "title": "8 Produk Wajib SNI dari Kemenperin: Daftar dan Dampaknya bagi UMKM",
+      "publisher": "UKMINDONESIA.ID",
+      "date": "2026-11-09",
+      "url": "https://ukmindonesia.id/baca-deskripsi-posts/8-produk-wajib-sni-dari-kemenperin-daftar-dan-dampaknya-bagi-umkm",
+      "facts": [
+        "Memuat delapan produk wajib SNI beserta nomor SNI dan dasar Permenperin: selang termoplastik, tangki air silinder, selang karet, karet perapat LPG, helm, perlengkapan melamin, minyak lumas, dan ban.",
+        "Menjelaskan kewajiban produsen, importir, pemilik merek maklun, dan pedagang, termasuk risiko stok tertahan bila dokumen tidak lengkap.",
+        "Menyebut Permenperin 24/2026 ditetapkan 3 September 2026 dan berlaku 17 September 2026 sebagai perubahan aturan ban."
+      ]
+    },
+    {
+      "title": "Apakah SNI Wajib untuk Semua Produk?",
+      "publisher": "Hukumonline",
+      "date": "2026-07-07",
+      "url": "https://www.hukumonline.com/klinik/a/Apakah-sni-wajib-cl3855",
+      "facts": [
+        "SNI pada dasarnya sukarela dan menjadi wajib ketika kementerian teknis menerbitkan aturan.",
+        "PP 34/2018 mewajibkan pedagang hanya memperdagangkan barang bertanda SNI dan mewajibkan produsen atau importir menarik barang yang tidak memenuhi SNI dari peredaran.",
+        "Dipakai sebagai dasar kewajiban pedagang, bukan sebagai daftar produk."
+      ]
+    },
+    {
+      "title": "Ketentuan Bukti Pemenuhan Standar Barang",
+      "publisher": "Pusat Edukasi Penjual Shopee Indonesia",
+      "date": "2026-11-10",
+      "url": "https://seller.shopee.co.id/edu/article/19552",
+      "facts": [
+        "Halaman resmi Seller Center diakses 10 November 2026.",
+        "Menyebut atribut nomor sertifikat SNI untuk kategori wajib dan kewajiban pengisian bagi penjual Mall sejak 1 Juli 2024 untuk mainan anak dan pakaian bayi, serta sejak 7 April 2025 untuk helm, ban, dan elektronik tertentu.",
+        "Menegaskan nomor sertifikat SNI berbeda dari nomor SNI."
+      ]
+    },
+    {
+      "title": "Sertifikasi Produk Wajib dan Sukarela",
+      "publisher": "BBSPJI Tekstil Kementerian Perindustrian",
+      "date": "2026-06-02",
+      "url": "https://bbt.kemenperin.go.id/layanan/sertifikasi-produk",
+      "facts": [
+        "Halaman layanan diperbarui 2 Juni 2026.",
+        "Menjelaskan sertifikasi SNI wajib dan sukarela, pendaftaran NPB melalui OSS, dan registrasi tanda SNI.",
+        "Menyebut contoh produk wajib SNI yang dilayani, termasuk pakaian bayi, mainan anak, sepatu pengaman, dan kertas kemasan, sehingga daftar delapan produk bukan daftar lengkap semua SNI wajib."
+      ]
+    }
+  ],
+  "pain_points_checked": [
+    {
+      "category": "Kesiapan dokumen SNI untuk produk wajib",
+      "description": "Delapan produk wajib SNI diumumkan kembali pada 9 November 2026. Penjual perlu tahu bukti apa yang harus ada per peran, berapa modal yang berisiko tertahan, dan apakah produk masih aman dijual. Belum ada tool yang memetakan bukti kritis per peran dan menerjemahkan risiko stok menjadi nilai rupiah.",
+      "frequency": "HIGH",
+      "reason_not_built": "Dibangun sebagai tool #53. Fokusnya kesiapan bukti, modal tertahan, verdict, dan surat. Tidak menduplikasi #39 tenggat halal, #24 NIB, #41 banding produk, atau #44 faktur pajak."
+    },
+    {
+      "category": "Alat sadap dan penyadapan di marketplace",
+      "description": "Pemberitaan tentang penjualan alat sadap di marketplace dan risiko hukum bagi penjual.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Bukan pain point operasional seller yang bisa diukur dengan data produk dan stok. Topik hukum pidana, bukan kepatuhan dokumen dagang."
+    },
+    {
+      "category": "Transparansi sertifikasi halal",
+      "description": "Pembahasan label halal dan verifikasi sertifikat pada listing marketplace.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #39 pelacak tenggat halal. Menambah tool baru akan menduplikasi pemeriksaan status dan dokumen halal."
+    },
+    {
+      "category": "Harbolnas 2026 etalase UMKM",
+      "description": "Ajakan platform membuka etalase UMKM pada Harbolnas 10 sampai 16 Desember 2026.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Belum ada syarat, mekanisme, atau angka yang bisa diverifikasi. Kalender Harbolnas sudah ada di #21."
+    },
+    {
+      "category": "Pajak digital dan PPh 22",
+      "description": "Kebingungan PPN transaksi digital luar negeri dan pemungutan PPh 22 marketplace.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #22, #25, #26, #44, dan #49."
+    },
+    {
+      "category": "Banding produk diblokir dan take rate",
+      "description": "Keluhan produk diblokir serta perbandingan komisi marketplace.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #41 banding produk diblokir dan #52 pemeriksa take rate."
+    }
+  ],
+  "existing_tools_checked": [
+    "#24-nib-deadline-checker: kewajiban NIB dan OSS.",
+    "#39-pelacak-tenggat-halal: tenggat dan dokumen sertifikasi halal.",
+    "#41-banding-produk-diblokir: banding produk yang diblokir atau salah kategori.",
+    "#44-pemeriksa-faktur-pajak: dokumen PPN dan bukti pungut PPh 22.",
+    "#49-pemeriksa-pajak-digital: PPN digital luar negeri dan SPP-TDLN.",
+    "#52-pemeriksa-take-rate: perbandingan take rate marketplace."
+  ],
+  "decision": {
+    "action": "build-new-tool",
+    "target": "53-pemeriksa-kesiapan-sni",
+    "reason": "Publikasi 9 November 2026 memberi daftar konkret delapan produk wajib SNI beserta nomor SNI dan Permenperin. Belum ada tool yang memetakan bukti kritis per peran, menghitung modal yang berisiko tertahan, memberi verdict berdasarkan status penjualan, dan menyiapkan surat permintaan dokumen.",
+    "scope": [
+      "Delapan produk wajib SNI: selang termoplastik, tangki air silinder, selang karet, karet perapat LPG, helm, perlengkapan melamin, minyak lumas, dan ban.",
+      "Empat peran: pedagang, produsen, importir, dan pemilik merek maklun, dengan bukti kritis berbeda per peran.",
+      "Hitung modal tertahan dari stok dikali harga modal, serta omzet bulanan dan tahunan.",
+      "Verdict risiko tinggi hanya bila bukti kritis kurang dan produk masih dijual.",
+      "Tahan kesimpulan untuk produk di luar daftar, produk tidak dijual, atau status penjualan belum diketahui.",
+      "Empat belas bukti, kewajiban, rekomendasi, tiga surat, catatan kasus, dan ekspor CSV."
+    ],
+    "rejected": [
+      "Tool alat sadap: bukan pain point kepatuhan dagang seller.",
+      "Mengulang #39 sertifikasi halal, #24 NIB, #41 banding produk, #44 faktur pajak, atau #52 take rate.",
+      "Mengarang biaya, waktu sertifikasi, atau ambang omzet.",
+      "Menyimpulkan produk di luar daftar bebas SNI."
+    ]
+  }
+}

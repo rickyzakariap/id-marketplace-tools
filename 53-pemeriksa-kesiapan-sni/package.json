@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-kesiapan-sni",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Periksa kesiapan dokumen SNI untuk 8 produk yang wajib SNI sebelum stok tertahan atau listing bermasalah",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/sni.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

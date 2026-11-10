@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemeriksa Kesiapan SNI</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1120px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.card.raised {
+  background:
+    radial-gradient(58% 52% at 18% 24%, rgba(var(--ink-rgb), 0.085), transparent 62%),
+    radial-gradient(66% 50% at 54% 88%, rgba(var(--ink-rgb), 0.075), transparent 64%),
+    var(--wash);
+}
+
+.policy {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.policy-main p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.policy-main strong { color: var(--ink); font-weight: 500; }
+.policy-note { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+.scope-chip.out { color: var(--ember); }
+.policy-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.source-link {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  text-decoration: none;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.source-link:hover { background: var(--wash-hover); color: var(--ink); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.span-2 { grid-column: span 2; }
+.field.span-3 { grid-column: span 3; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select, textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+textarea { resize: vertical; min-height: 72px; }
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+
+.rule-note {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+.rule-note strong { color: var(--ink); font-weight: 500; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tr.selected td { background: var(--surface-2); }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.on { background: var(--ember); }
+.dot.ok { background: var(--ok); }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.evidence-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+.check {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+.check input { width: auto; margin-top: 3px; accent-color: var(--ink); }
+.check .crit { color: var(--ember); font-size: 11px; margin-left: 4px; }
+
+.letter-out {
+  white-space: pre-wrap;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.cases-summary { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.summary-pill {
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.summary-pill strong { color: var(--ink); font-weight: 500; }
+
+.case-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.empty { color: var(--ink-4); font-size: 13.5px; padding: 10px 0; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 860px) {
+  .policy, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .field.span-3 { grid-column: span 2; }
+}
+
+@media (max-width: 560px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .field.span-2, .field.span-3 { grid-column: span 1; }
+  .stats { grid-template-columns: 1fr; }
+  header { align-items: flex-start; }
+  .brand { gap: 12px; }
+  .mark { width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">SNI</div>
+      <div>
+        <div class="eyebrow">Tool 53</div>
+        <h1>Pemeriksa Kesiapan SNI</h1>
+        <p class="lede">Cek kesiapan dokumen SNI untuk 8 produk yang wajib SNI sebelum menambah stok atau mempertahankan listing. Bukti kritis menyesuaikan peran: pedagang, produsen, importir, atau maklun.</p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg>
+    </button>
+  </header>
+
+  <section class="card policy">
+    <div class="policy-main">
+      <h2>8 produk wajib SNI per 9 November 2026</h2>
+      <p>Daftar dari UKMINDONESIA.ID yang mengutip Kemenperin. Nomor SNI dan dasar aturan dicantumkan per produk. Ini <strong>bukan daftar lengkap semua SNI wajib</strong> dan bukan pengganti pengecekan JDIH Kemenperin.</p>
+      <div class="scope-grid">
+        <span class="scope-chip in">Masuk: 8 produk wajib SNI</span>
+        <span class="scope-chip in">Masuk: dokumen dan tanda SNI</span>
+        <span class="scope-chip in">Masuk: peran dalam rantai pasok</span>
+        <span class="scope-chip out">Di luar: putusan hukum atau kelayakan sertifikasi</span>
+        <span class="scope-chip out">Di luar: seluruh sektor di luar 8 produk</span>
+        <span class="scope-chip out">Di luar: biaya dan waktu sertifikasi</span>
+      </div>
+      <div class="policy-links" id="source-links"></div>
+    </div>
+    <div class="policy-note">
+      Produk di luar daftar belum tentu bebas SNI. Untuk produk lain, cek daftar resmi Kemenperin dan peraturan terbaru. Skor menilai kelengkapan bukti, bukan menjamin sertifikat terbit atau listing aman.
+    </div>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Data produk dan penjual</h2>
+            <p class="sub">Pilih produk dan peran. Bukti kritis akan menyesuaikan otomatis.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="store_name">Nama toko</label>
+            <input id="store_name" type="text" maxlength="160" placeholder="Contoh: Toko Dapur Aman">
+          </div>
+          <div class="field">
+            <label for="seller_name">Nama penjual</label>
+            <input id="seller_name" type="text" maxlength="160" placeholder="Nama untuk surat">
+          </div>
+          <div class="field">
+            <label for="contact">Kontak</label>
+            <input id="contact" type="text" maxlength="160" placeholder="Email atau nomor">
+          </div>
+          <div class="field">
+            <label for="ticket">Nomor tiket</label>
+            <input id="ticket" type="text" maxlength="160" placeholder="Opsional">
+          </div>
+          <div class="field span-2">
+            <label for="product">Produk</label>
+            <select id="product"></select>
+          </div>
+          <div class="field">
+            <label for="role">Peran</label>
+            <select id="role"></select>
+          </div>
+          <div class="field">
+            <label for="marketplace">Marketplace</label>
+            <select id="marketplace"></select>
+          </div>
+          <div class="field span-2">
+            <label for="selling_now">Sedang dijual?</label>
+            <select id="selling_now"></select>
+            <div class="hint">Pilih Ya bila stok sedang aktif dijual. Verdict risiko tinggi hanya muncul untuk produk yang masih dijual.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Stok dan omzet</h2>
+            <p class="sub">Angka dari penjual, bukan data resmi platform atau Kemenperin.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label for="stock_units">Stok tersisa (unit)</label>
+            <input id="stock_units" type="number" min="0" step="1" placeholder="240">
+          </div>
+          <div class="field">
+            <label for="unit_cost">Harga modal per unit (Rp)</label>
+            <input id="unit_cost" type="number" min="0" step="1" placeholder="35000">
+          </div>
+          <div class="field">
+            <label for="monthly_revenue">Omzet produk per bulan (Rp)</label>
+            <input id="monthly_revenue" type="number" min="0" step="1" placeholder="12000000">
+          </div>
+          <div class="field span-2">
+            <label for="note">Catatan</label>
+            <textarea id="note" maxlength="400" placeholder="Catatan singkat tentang produk, pemasok, atau temuan."></textarea>
+          </div>
+          <div class="field">
+            <label for="status">Status kasus</label>
+            <select id="status"></select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="analyze-btn" type="button">Analisis</button>
+          <button class="btn ghost" id="example-btn" type="button">Muat contoh</button>
+          <button class="btn ghost" id="save-btn" type="button">Simpan kasus</button>
+          <button class="btn ghost" id="reset-btn" type="button">Kosongkan</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Bukti yang sudah ada</h2>
+            <p class="sub">Centang bukti yang bisa ditunjukkan. Bukti kritis berbobot dua kali.</p>
+          </div>
+          <span class="badge" id="evidence-role-badge">Pedagang</span>
+        </div>
+        <div class="evidence-list" id="evidence-list"></div>
+        <div class="hint" id="evidence-hint"></div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card raised">
+        <div class="section-head">
+          <div>
+            <h2>Hasil analisis</h2>
+            <p class="sub">Kesiapan bukti dan nilai yang berisiko.</p>
+          </div>
+        </div>
+        <div class="verdict muted" id="verdict-banner">
+          <div class="verdict-label" id="verdict-label">Belum ada analisis</div>
+          <div class="verdict-note" id="verdict-note">Isi data produk lalu tekan Analisis.</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="k">Modal tertahan</div><div class="v" id="stat-stuck">-</div></div>
+          <div class="stat"><div class="k">Omzet setahun</div><div class="v" id="stat-annual">-</div></div>
+          <div class="stat"><div class="k">Stok tersisa</div><div class="v" id="stat-stock">-</div></div>
+          <div class="stat"><div class="k">Modal per unit</div><div class="v" id="stat-unit-cost">-</div></div>
+          <div class="stat"><div class="k">Skor bukti</div><div class="v" id="stat-evidence-score">-</div></div>
+          <div class="stat"><div class="k">Bukti kritis kurang</div><div class="v" id="stat-critical-missing">-</div></div>
+        </div>
+        <div class="rule-note" id="product-rule">Nomor SNI: - | Dasar aturan: -</div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Kewajiban dan risiko</h2>
+            <p class="sub">Poin pemeriksaan sesuai produk dan peran.</p>
+          </div>
+        </div>
+        <div class="list" id="obligations-list">
+          <div class="empty">Belum ada kewajiban yang ditampilkan.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Rekomendasi</h2>
+            <p class="sub">Langkah berikutnya sebelum menambah stok.</p>
+          </div>
+        </div>
+        <div class="list" id="recommendations-list">
+          <div class="empty">Belum ada rekomendasi.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Kesiapan bukti</h2>
+            <p class="sub">Skor heuristik, bukan putusan hukum.</p>
+          </div>
+          <span class="badge" id="evidence-score">0%</span>
+        </div>
+        <div class="list">
+          <div class="list-item"><span class="dot ok" id="evidence-dot"></span><span id="evidence-label">Belum siap</span></div>
+          <div class="list-item"><span class="dot"></span><span id="evidence-missing">Belum ada bukti kritis yang hilang.</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Surat</h2>
+            <p class="sub">Minta dokumen ke pemasok, LSPro, atau marketplace.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="letter-type">Jenis surat</label>
+          <select id="letter-type"></select>
+        </div>
+        <div class="actions">
+          <button class="btn primary small" id="letter-btn" type="button">Buat surat</button>
+          <button class="btn ghost small" id="copy-letter-btn" type="button">Salin</button>
+        </div>
+        <div class="letter-out" id="letter-output">Surat belum dibuat.</div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card">
+    <div class="section-head">
+      <div>
+        <h2>Daftar produk wajib SNI</h2>
+        <p class="sub">Delapan produk, nomor SNI, dan dasar aturannya.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Produk</th>
+            <th>Nomor SNI</th>
+            <th>Dasar aturan</th>
+            <th>Kelompok</th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body"></tbody>
+      </table>
+    </div>
+    <div class="hint" id="scope-note"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-head">
+      <div>
+        <h2>Catatan kasus</h2>
+        <p class="sub">Simpan produk yang sudah dianalisis dan pantau modal yang tertahan.</p>
+      </div>
+      <div class="actions" style="margin-top:0">
+        <button class="btn ghost small" id="seed-btn" type="button">Muat contoh kasus</button>
+        <button class="btn ghost small" id="export-btn" type="button">Ekspor CSV</button>
+      </div>
+    </div>
+    <div class="cases-summary" id="cases-summary"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Toko</th>
+            <th>Produk</th>
+            <th>Peran</th>
+            <th class="num">Stok</th>
+            <th class="num">Modal tertahan</th>
+            <th class="num">Skor</th>
+            <th>Verdict</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="cases-body"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="cases-empty">Belum ada kasus tersimpan.</div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var state = { meta: null, result: null, cases: [] };
+
+  function $(id) { return document.getElementById(id); }
+
+  function fmtNum(value) {
+    return new Intl.NumberFormat('id-ID').format(Math.round(Number(value) || 0));
+  }
+  function rp(value) { return 'Rp ' + fmtNum(value); }
+
+  function toast(message) {
+    var el = $('toast');
+    el.textContent = message;
+    el.classList.add('show');
+    setTimeout(function () { el.classList.remove('show'); }, 2200);
+  }
+
+  function fillSelect(id, list, includeEmpty) {
+    var el = $(id);
+    el.innerHTML = '';
+    if (includeEmpty) {
+      var empty = document.createElement('option');
+      empty.value = '';
+      empty.textContent = 'Pilih';
+      el.appendChild(empty);
+    }
+    list.forEach(function (item) {
+      var option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = item.label;
+      el.appendChild(option);
+    });
+  }
+
+  function currentEvidence() {
+    var result = [];
+    document.querySelectorAll('#evidence-list input[type="checkbox"]:checked').forEach(function (input) {
+      result.push(input.value);
+    });
+    return result;
+  }
+
+  function readForm() {
+    return {
+      store_name: $('store_name').value,
+      seller_name: $('seller_name').value,
+      contact: $('contact').value,
+      ticket: $('ticket').value,
+      product: $('product').value,
+      role: $('role').value,
+      marketplace: $('marketplace').value,
+      selling_now: $('selling_now').value,
+      stock_units: $('stock_units').value,
+      unit_cost: $('unit_cost').value,
+      monthly_revenue: $('monthly_revenue').value,
+      note: $('note').value,
+      status: $('status').value,
+      evidence: currentEvidence()
+    };
+  }
+
+  function writeForm(data) {
+    ['store_name', 'seller_name', 'contact', 'ticket', 'stock_units', 'unit_cost',
+      'monthly_revenue', 'note'].forEach(function (key) {
+      var el = $(key);
+      if (el) el.value = data[key] == null ? '' : data[key];
+    });
+    ['product', 'role', 'marketplace', 'selling_now', 'status'].forEach(function (key) {
+      if (data[key] != null) $(key).value = data[key];
+    });
+    renderEvidenceOptions(data.role, data.evidence || []);
+    renderProductTable(data.product);
+  }
+
+  function roleLabel(item) {
+    return item ? item.label : 'Pedagang atau reseller';
+  }
+
+  function renderEvidenceOptions(role, selected) {
+    if (!state.meta) return;
+    var wrap = $('evidence-list');
+    wrap.innerHTML = '';
+    selected = Array.isArray(selected) ? selected : currentEvidence();
+    var roleItem = state.meta.roles.find(function (item) { return item.id === role; });
+    $('evidence-role-badge').textContent = roleLabel(roleItem);
+
+    var items = state.meta.evidence.filter(function (item) {
+      return Array.isArray(item.roles) && item.roles.indexOf(role) !== -1;
+    });
+
+    items.forEach(function (item) {
+      var label = document.createElement('label');
+      label.className = 'check';
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.value = item.id;
+      input.checked = selected.indexOf(item.id) !== -1;
+      var text = document.createElement('span');
+      text.textContent = item.label;
+      if (item.critical) {
+        var crit = document.createElement('span');
+        crit.className = 'crit';
+        crit.textContent = 'Kritis';
+        text.appendChild(crit);
+      }
+      label.appendChild(input);
+      label.appendChild(text);
+      wrap.appendChild(label);
+    });
+
+    var critical = items.filter(function (item) { return item.critical; }).length;
+    $('evidence-hint').textContent = items.length + ' bukti berlaku untuk peran ini. ' +
+      critical + ' di antaranya kritis dan berbobot dua kali.';
+  }
+
+  function renderSources(sources) {
+    var wrap = $('source-links');
+    wrap.innerHTML = '';
+    sources.forEach(function (source) {
+      var link = document.createElement('a');
+      link.className = 'source-link';
+      link.href = source.url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = source.publisher + ', ' + source.date;
+      link.title = source.title;
+      wrap.appendChild(link);
+    });
+  }
+
+  function renderProductTable(selected) {
+    if (!state.meta) return;
+    var body = $('product-table-body');
+    body.innerHTML = '';
+    state.meta.products.filter(function (item) { return item.mandatory; }).forEach(function (item) {
+      var tr = document.createElement('tr');
+      if (item.id === selected) tr.className = 'selected';
+      [item.short, item.sni, item.regulation, item.group].forEach(function (value) {
+        var td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    $('scope-note').textContent = state.meta.rules.scope_note;
+  }
+
+  function verdictClass(level) {
+    if (level === 'ok' || level === 'signal' || level === 'ember' || level === 'muted') return level;
+    return 'muted';
+  }
+
+  function renderList(id, items, dotClass) {
+    var list = $(id);
+    list.innerHTML = '';
+    if (!items || !items.length) {
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'Tidak ada poin untuk ditampilkan.';
+      list.appendChild(empty);
+      return;
+    }
+    items.forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var dot = document.createElement('span');
+      dot.className = 'dot' + (dotClass ? ' ' + dotClass : '');
+      var text = document.createElement('span');
+      text.textContent = item;
+      row.appendChild(dot);
+      row.appendChild(text);
+      list.appendChild(row);
+    });
+  }
+
+  function renderResult(data) {
+    state.result = data;
+    var verdict = data.verdict;
+    var banner = $('verdict-banner');
+    banner.className = 'verdict ' + verdictClass(verdict.level);
+    $('verdict-label').textContent = verdict.label;
+    $('verdict-note').textContent = verdict.note;
+
+    $('stat-stuck').textContent = rp(data.exposure.stuck_capital);
+    $('stat-annual').textContent = rp(data.exposure.annual_revenue);
+    $('stat-stock').textContent = fmtNum(data.exposure.stock_units) + ' unit';
+    $('stat-unit-cost').textContent = rp(data.exposure.unit_cost);
+    $('stat-evidence-score').textContent = data.evidence.score + '%';
+    $('stat-critical-missing').textContent = String(data.evidence.missing_critical.length);
+
+    $('stat-stuck').className = 'v ' + (data.exposure.stuck_capital > 0 ? 'bad' : 'good');
+    $('stat-critical-missing').className = 'v ' + (data.evidence.missing_critical.length ? 'bad' : 'good');
+
+    $('product-rule').textContent = 'Nomor SNI: ' + data.product.sni + ' | Dasar aturan: ' + data.product.regulation;
+
+    renderList('obligations-list', data.obligations, 'on');
+    renderList('recommendations-list', data.recommendations, '');
+
+    $('evidence-score').textContent = data.evidence.score + '%';
+    $('evidence-label').textContent = data.evidence.label + ' (' + data.evidence.checked_count + ' dari ' + data.evidence.total_count + ' bukti)';
+    $('evidence-missing').textContent = data.evidence.missing_critical.length
+      ? 'Bukti kritis belum ada: ' + data.evidence.missing_critical.map(function (item) { return item.label; }).join(', ') + '.'
+      : 'Tidak ada bukti kritis yang hilang.';
+    $('evidence-dot').className = 'dot ' + (data.evidence.missing_critical.length ? 'on' : 'ok');
+
+    renderProductTable(data.product.id);
+  }
+
+  function analyzeForm() {
+    var payload = readForm();
+    return fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Analisis gagal.');
+        return data;
+      });
+    }).then(function (data) {
+      renderResult(data);
+      toast('Analisis selesai.');
+      return data;
+    }).catch(function (error) {
+      toast(error.message);
+      return null;
+    });
+  }
+
+  function loadExample() {
+    fetch('/api/example').then(function (response) { return response.json(); }).then(function (data) {
+      writeForm(data);
+      return analyzeForm();
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function saveCase() {
+    var payload = readForm();
+    fetch('/api/cases', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal menyimpan kasus.');
+        return data;
+      });
+    }).then(function (data) {
+      toast('Kasus disimpan.');
+      renderCases(data.summary);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function loadCases() {
+    fetch('/api/cases').then(function (response) { return response.json(); }).then(function (data) {
+      renderCases(data);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function renderCases(summary) {
+    state.cases = summary.cases || [];
+    var body = $('cases-body');
+    body.innerHTML = '';
+    state.cases.forEach(function (item) {
+      var tr = document.createElement('tr');
+      [
+        item.store_name || '-',
+        item.product_label,
+        item.role_label
+      ].forEach(function (value) {
+        var td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      [fmtNum(item.stock_units), rp(item.stuck_capital), item.readiness_score + '%'].forEach(function (value) {
+        var td = document.createElement('td');
+        td.className = 'num';
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      [item.verdict.label, item.status_label].forEach(function (value) {
+        var td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+
+      var action = document.createElement('td');
+      action.className = 'case-actions';
+      if (item.status !== 'selesai') {
+        var done = document.createElement('button');
+        done.className = 'btn ghost small';
+        done.type = 'button';
+        done.textContent = 'Selesai';
+        done.addEventListener('click', function () { markDone(item.id); });
+        action.appendChild(done);
+      }
+      var button = document.createElement('button');
+      button.className = 'btn ghost small';
+      button.type = 'button';
+      button.textContent = 'Hapus';
+      button.addEventListener('click', function () { deleteCase(item.id); });
+      action.appendChild(button);
+      tr.appendChild(action);
+      body.appendChild(tr);
+    });
+
+    $('cases-empty').style.display = state.cases.length ? 'none' : 'block';
+
+    var wrap = $('cases-summary');
+    wrap.innerHTML = '';
+    [
+      ['Total kasus', summary.total],
+      ['Terbuka', summary.open_cases],
+      ['Risiko tinggi', summary.high_risk],
+      ['Bukti kritis kurang', summary.missing_evidence],
+      ['Modal tertahan terbuka', rp(summary.total_stuck_capital)],
+      ['Omzet terbuka per bulan', rp(summary.total_monthly_revenue)]
+    ].forEach(function (pair) {
+      var pill = document.createElement('span');
+      pill.className = 'summary-pill';
+      pill.textContent = pair[0] + ': ';
+      var strong = document.createElement('strong');
+      strong.textContent = String(pair[1]);
+      pill.appendChild(strong);
+      wrap.appendChild(pill);
+    });
+  }
+
+  function deleteCase(id) {
+    fetch('/api/cases/' + encodeURIComponent(id), { method: 'DELETE' }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal menghapus kasus.');
+        return data;
+      });
+    }).then(function (data) {
+      toast('Kasus dihapus.');
+      renderCases(data);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function markDone(id) {
+    fetch('/api/cases/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'selesai' })
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal memperbarui kasus.');
+        return data;
+      });
+    }).then(function (data) {
+      toast('Kasus ditandai selesai.');
+      renderCases(data.summary);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function seedCases() {
+    fetch('/api/seed', { method: 'POST' }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal memuat contoh.');
+        return data;
+      });
+    }).then(function (data) {
+      toast('Contoh kasus dimuat.');
+      renderCases(data.summary);
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function buildLetter() {
+    var payload = readForm();
+    payload.letter_type = $('letter-type').value;
+    fetch('/api/letter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Gagal membuat surat.');
+        return data;
+      });
+    }).then(function (data) {
+      $('letter-output').textContent = 'Subjek: ' + data.subject + '\n\n' + data.body;
+      toast('Surat dibuat.');
+    }).catch(function (error) { toast(error.message); });
+  }
+
+  function copyLetter() {
+    var text = $('letter-output').textContent;
+    if (!text || text === 'Surat belum dibuat.') return toast('Buat surat dulu.');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast('Surat disalin.'); });
+    } else {
+      toast('Salin manual dari kotak surat.');
+    }
+  }
+
+  function resetForm() {
+    document.querySelectorAll('input, textarea').forEach(function (el) {
+      if (el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+    var currentRole = $('role').value;
+    $('letter-output').textContent = 'Surat belum dibuat.';
+    $('verdict-banner').className = 'verdict muted';
+    $('verdict-label').textContent = 'Belum ada analisis';
+    $('verdict-note').textContent = 'Isi data produk lalu tekan Analisis.';
+    ['stat-stuck', 'stat-annual', 'stat-stock', 'stat-unit-cost', 'stat-evidence-score', 'stat-critical-missing'].forEach(function (id) {
+      $(id).textContent = '-';
+      $(id).className = 'v';
+    });
+    $('product-rule').textContent = 'Nomor SNI: - | Dasar aturan: -';
+    $('obligations-list').innerHTML = '<div class="empty">Belum ada kewajiban yang ditampilkan.</div>';
+    $('recommendations-list').innerHTML = '<div class="empty">Belum ada rekomendasi.</div>';
+    $('evidence-score').textContent = '0%';
+    $('evidence-label').textContent = 'Belum siap';
+    $('evidence-missing').textContent = 'Belum ada bukti kritis yang hilang.';
+    $('evidence-dot').className = 'dot ok';
+    renderEvidenceOptions(currentRole, []);
+    renderProductTable($('product').value);
+  }
+
+  function initTheme() {
+    $('theme-btn').addEventListener('click', function () {
+      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  }
+
+  function init() {
+    initTheme();
+    fetch('/api/meta').then(function (response) { return response.json(); }).then(function (meta) {
+      state.meta = meta;
+      fillSelect('product', meta.products);
+      fillSelect('role', meta.roles);
+      fillSelect('marketplace', meta.marketplaces);
+      fillSelect('selling_now', meta.yes_no);
+      fillSelect('status', meta.case_statuses);
+      fillSelect('letter-type', meta.letter_types);
+      $('selling_now').value = 'ya';
+      renderEvidenceOptions($('role').value, []);
+      renderSources(meta.sources);
+      renderProductTable($('product').value);
+      loadCases();
+    }).catch(function (error) { toast(error.message); });
+
+    $('role').addEventListener('change', function () {
+      renderEvidenceOptions($('role').value, []);
+    });
+    $('product').addEventListener('change', function () {
+      renderProductTable($('product').value);
+    });
+    $('analyze-btn').addEventListener('click', analyzeForm);
+    $('example-btn').addEventListener('click', loadExample);
+    $('save-btn').addEventListener('click', saveCase);
+    $('reset-btn').addEventListener('click', resetForm);
+    $('seed-btn').addEventListener('click', seedCases);
+    $('export-btn').addEventListener('click', function () { window.location.href = '/api/export'; });
+    $('letter-btn').addEventListener('click', buildLetter);
+    $('copy-letter-btn').addEventListener('click', copyLetter);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-11-10 - Pemeriksa Kesiapan SNI (#53)
+- Masalah: UKMINDONESIA.ID 9 November 2026 memuat delapan produk wajib SNI beserta nomor SNI dan Permenperin, tetapi penjual tidak punya cara cepat memeriksa bukti apa yang harus ada per peran, berapa modal yang berisiko tertahan, dan apakah produk masih aman dijual. Bukti untuk pedagang, produsen, importir, dan pemilik merek maklun berbeda, sedangkan nomor SNI sering tertukar dengan nomor sertifikat SNI
+- Riset: UKMINDONESIA.ID 9 November 2026, Hukumonline 7 Juli 2026 untuk PP 34/2018, Pusat Edukasi Penjual Shopee yang diakses 10 November 2026 untuk atribut nomor sertifikat, dan BBSPJI Tekstil 2 Juni 2026 untuk konteks sertifikasi wajib dan sukarela. Topik yang sudah tercakup #24 NIB, #39 halal, #41 banding produk, #44 faktur pajak, #49 pajak digital, dan #52 take rate tidak dipakai ulang
+- Dasar aturan: Delapan produk dan nomor SNI diambil dari sumber utama. Permenperin 24/2026 dicatat sebagai perubahan aturan ban yang ditetapkan 3 September 2026 dan berlaku 17 September 2026. Kewajiban pedagang hanya menjual barang bertanda SNI dan kewajiban menarik barang tidak memenuhi SNI merujuk PP 34/2018. Tidak ada biaya, waktu sertifikasi, atau ambang omzet yang dikarang
+- Keputusan: Bangun tool #53, bukan mengulang #39 tenggat halal, #24 NIB, #41 banding produk, atau #44 pemeriksa faktur pajak. Fokusnya kesiapan bukti per peran, modal tertahan, verdict berdasarkan status penjualan, kewajiban, dan surat permintaan dokumen
+- Fitur: 8 produk wajib SNI, 4 peran, 14 bukti dengan bukti kritis berbeda per peran (pedagang 5, produsen 6, importir 6, maklun 7), modal tertahan, omzet bulanan dan tahunan, 3 level verdict, kewajiban, rekomendasi, 3 surat, catatan kasus, CSV, dan data contoh
+- Angka contoh: Perlengkapan melamin, pedagang, masih dijual, stok 240 unit, modal Rp35.000 per unit, omzet Rp12.000.000 per bulan. Modal tertahan Rp8.400.000, omzet setahun Rp144.000.000, 6 dari 9 bukti, skor 64 persen (Sebagian siap), 2 bukti kritis kurang, verdict "Risiko tinggi, hentikan penjualan sementara"
+- Verifikasi: 25 unit test lulus. Runtime semua endpoint diuji: halaman statis 200, meta, products, example, analyze, readiness, letter, cases GET 200, POST 201, PATCH 200, DELETE 200, seed 201, export CSV 200, kasus tanpa nama toko 400, kasus tidak ditemukan 404, API tidak dikenal 404, JSON rusak 400, payload 70 KB 413. Server dihentikan, port 8053 kosong, dan data runtime dihapus. Convention check dan README sync OK
+- Works: UI mengikuti DESIGN.md (token monokrom, kartu 28px, pill, Google Sans weight 500, entrance stagger, reduced motion, dark mode no-flash). Bukti kritis dirender ulang saat peran berubah dan tabel produk menandai produk yang dipilih
+- Issues: `decode_gnews()` sempat gagal dengan HTTP 400 saat membuka tautan Google News. URL artikel ditemukan dengan mencocokkan slug penerbit, lalu diverifikasi lewat isi halaman. Jangan bergantung pada satu jalur decode tautan
+- Lesson: Bukti kritis harus dipetakan per peran. Daftar bukti statis akan salah untuk produsen yang butuh SIINas, importir yang butuh perwakilan resmi, atau maklun yang butuh lisensi merek DJKI
+- Lesson: Nomor SNI berbeda dari nomor sertifikat SNI. Menampilkan keduanya sebagai satu field membuat penjual mengisi atribut marketplace dengan nomor yang salah
+- Lesson: Produk di luar daftar tidak boleh disimpulkan bebas SNI. Daftar delapan produk berasal dari satu aturan teknis, bukan daftar lengkap seluruh SNI wajib
+- Next: Pantau Permenperin baru dan perubahan daftar produk. Tambah produk hanya bila nomor SNI dan dasar aturannya punya sumber. Pertimbangkan impor CSV stok, pengingat follow-up surat, dan pencocokan otomatis beberapa SKU
+
+---
+
 ## 2026-11-09 - Pemeriksa Take Rate (#52)
 - Masalah: Databoks Katadata 6 November 2026 memuat benchmark take rate penjual non-Mall Indonesia kuartal II 2026 dari Cube, tetapi penjual tidak punya cara cepat membandingkan komisi dan biaya transaksi aktual dengan angka per kategori dan platform. Selisih take rate sulit diterjemahkan menjadi rupiah per bulan atau per tahun, dan biaya program, iklan, logistik, pajak, serta biaya tetap sering tercampur
 - Riset: Databoks Katadata 6 November 2026 untuk fashion, FMCG, dan elektronik, memakai data Cube, Shopee Take-Rate Tracker edisi Agustus 2026. Kompas.id 18 April 2026 dipakai sebagai konteks beban marketplace, bukan sumber angka. Berita lain yang sudah tercakup #22/#25/#26 PPh 22, #24 NIB, #44 faktur pajak, #49 pajak digital, #50 refund tanpa retur, dan #51 tenggat banding tidak dipakai ulang
