@@ -1,0 +1,133 @@
+{
+  "date": "2026-11-11",
+  "research_window": "Riset 4 sampai 11 November 2026 tentang keluhan pengiriman, status resi, retur sepihak, dan topik seller marketplace lain yang belum tercakup tool yang ada",
+  "sources": [
+    {
+      "title": "Kurir SiCepat \"Tembak Resi\" ATS 1 Menit dan Langsung Main Retur Pusat",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-10",
+      "url": "https://mediakonsumen.com/2026/11/10/surat-pembaca/kurir-sicepat-tembak-resi-ats-1-menit-dan-langsung-main-retur-pusat",
+      "facts": [
+        "Surat pembaca 10 November 2026 mencatat resi SiCepat 006920823346 untuk pesanan TikTok Shop 30 Oktober 2026.",
+        "Paket tiba di Hub Jakabaring 1 November 2026, dibawa kurir 5 November 2026 pukul 09:51, lalu berstatus ATS pukul 16:14 tanpa kurir datang atau menelepon.",
+        "Pada 6 November 2026 paket dibawa kurir pukul 13:05 dan berstatus ATS pukul 13:06, hanya satu menit kemudian, lalu retur pusat pukul 13:40 atau 34 menit setelah ATS.",
+        "Dipakai sebagai dasar pola waktu, bukan sebagai putusan resmi atau bukti kesalahan pihak tertentu."
+      ]
+    },
+    {
+      "title": "Biaya Admin Shopee",
+      "publisher": "Pusat Edukasi Penjual Shopee Indonesia",
+      "date": "2026-11-03",
+      "url": "https://seller.shopee.co.id/edu/article/7187",
+      "facts": [
+        "Halaman resmi diperbarui 3 November 2026.",
+        "Menyebut Biaya Administrasi Non-Star berlaku sejak 1 Agustus 2026 bagi penjual yang tidak menikmati dukungan Program Sukses UMKM Baru.",
+        "Menyebut dukungan Program Sukses UMKM Baru dapat dinikmati hingga 14 November 2026.",
+        "Dicek sebagai kandidat tool, tetapi tidak dipakai karena bertumpang tindih dengan #36 biaya total marketplace dan #52 take rate."
+      ]
+    },
+    {
+      "title": "Ringkasan Biaya Admin Shopee",
+      "publisher": "Pusat Edukasi Penjual Shopee Indonesia",
+      "date": "2026-11-03",
+      "url": "https://seller.shopee.co.id/edu/article/3489",
+      "facts": [
+        "Halaman resmi diperbarui 3 November 2026.",
+        "Memuat rentang biaya administrasi Non-Star dan Gratis Ongkir XTRA per kategori, serta batas bebas biaya berdasarkan tanggal unggah produk pertama dan jumlah pesanan selesai.",
+        "Dicek untuk topik transisi bebas biaya 14 November 2026, tetapi tarif baru Gratis Ongkir XTRA per 1 Desember 2026 belum cukup rinci pada kutipan yang tersedia sehingga tidak dijadikan tool."
+      ]
+    },
+    {
+      "title": "5 Tahun Lancar Jualan, Saldo Mitra Bukalapak Saya Mendadak Dibekukan Setelah Top Up",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-04",
+      "url": "https://mediakonsumen.com/2026/11/04/surat-pembaca/5-tahun-lancar-jualan-saldo-mitra-bukalapak-saya-mendadak-dibekukan-setelah-top-up",
+      "facts": [
+        "Keluhan 4 November 2026 tentang saldo Mitra Bukalapak yang dibekukan setelah top up.",
+        "Dicek sebagai kandidat tool, tetapi tidak dipakai karena pola dana tertahan sudah tercakup #29 dana tertahan tracker."
+      ]
+    },
+    {
+      "title": "Akun GoPay Merchant Saya Dinonaktifkan karena Dituduh Melanggar Pasal 37 Peraturan Bank Indonesia",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-08",
+      "url": "https://mediakonsumen.com/2026/11/08/surat-pembaca/akun-gopay-merchant-saya-dinonaktifkan-karena-dituduh-melanggar-pasal-37-peraturan-bank-indonesia-dana-rp19-940-000-tidak-bisa-dicairkan",
+      "facts": [
+        "Keluhan 8 November 2026 tentang akun GoPay Merchant yang dinonaktifkan dan dana Rp19.940.000 yang tidak bisa dicairkan.",
+        "Dicek sebagai kandidat tool, tetapi tidak dipakai karena bukan pain point khusus marketplace dan mekanisme bandingnya berbeda dari sengketa pesanan."
+      ]
+    }
+  ],
+  "pain_points_checked": [
+    {
+      "category": "ATS dan retur sepihak yang jedanya tidak wajar",
+      "description": "Pembeli dan penjual sama-sama dirugikan ketika resi berubah menjadi ATS tanpa kunjungan, lalu diretur dalam hitungan menit. Penjual perlu menyorot jeda waktu, menghitung kerugian kas, dan menyiapkan bukti klaim. Belum ada tool yang mengaudit pola waktu resi.",
+      "frequency": "HIGH",
+      "reason_not_built": "Dibangun sebagai tool #54. Fokusnya audit jeda waktu, kerugian kas, bukti kritis, dan surat klaim. Tidak menduplikasi #40 paket hilang, #31 biaya retur, #50 refund tanpa retur, #46 COD, atau #51 tenggat banding."
+    },
+    {
+      "category": "Akhir dukungan bebas biaya Program Sukses UMKM Baru 14 November 2026",
+      "description": "Penjual baru kehilangan bebas biaya administrasi dan Gratis Ongkir XTRA setelah 14 November 2026. Perubahan tarif GOX juga diumumkan untuk 1 Desember 2026.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sumber resmi ada, tetapi topik biaya sudah tercakup #36 biaya total marketplace dan #52 take rate. Rincian tarif GOX baru tidak cukup lengkap pada kutipan yang tersedia sehingga tool berisiko mengarang angka."
+    },
+    {
+      "category": "Tuduhan pesanan palsu yang membekukan saldo penjual",
+      "description": "Penjual TikTok Shop dituduh menerima pesanan fiktif dan saldonya tertahan. Topik berbeda dari audit resi, tetapi sumber utama berumur 30 sampai 40 hari.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Tidak ada berita baru dalam 7 hari terakhir. Pola dana tertahan sudah tercakup #29. Topik ini layak dipantau bila muncul kasus baru dengan mekanisme banding yang jelas."
+    },
+    {
+      "category": "Transparansi informasi halal pada listing",
+      "description": "Pembahasan celah transparansi label halal di marketplace.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Sudah tercakup #39 pelacak tenggat halal."
+    },
+    {
+      "category": "Perluasan ekspor UMKM ke empat negara ASEAN",
+      "description": "Shopee membuka akses ekspor dan pelatihan bagi UMKM.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Berita peluang, bukan keluhan operasional. Syarat dan angka keberhasilan belum cukup untuk dijadikan tool yang bisa diverifikasi."
+    },
+    {
+      "category": "TikTok Shop aplikasi terpisah",
+      "description": "Isu TikTok Shop akan menjadi aplikasi terpisah di Indonesia.",
+      "frequency": "LOW",
+      "reason_not_built": "Bukan pain point seller yang bisa diukur dengan data pesanan, biaya, atau bukti."
+    },
+    {
+      "category": "Banding retur rusak dan tenggat banding",
+      "description": "Keluhan penjual yang bandingnya ditolak setelah barang retur rusak.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #50 refund tanpa retur dan #51 tenggat banding retur."
+    }
+  ],
+  "existing_tools_checked": [
+    "#29-dana-tertahan-tracker: saldo platform yang tertahan.",
+    "#31-biaya-retur-tracker: biaya pengiriman gagal dan retur.",
+    "#36-biaya-total-marketplace: perencana biaya all-in.",
+    "#40-klaim-paket-hilang: klaim paket hilang, rusak, atau isi kosong.",
+    "#46-pemeriksa-pesanan-cod: risiko sebelum paket COD dikirim.",
+    "#50-pemeriksa-refund-tanpa-retur: refund saat barang tidak kembali.",
+    "#51-pemeriksa-tenggat-banding-retur: tenggat dan bukti banding retur.",
+    "#52-pemeriksa-take-rate: perbandingan komisi dan biaya transaksi."
+  ],
+  "decision": {
+    "action": "build-new-tool",
+    "target": "54-pemeriksa-resi-fiktif",
+    "reason": "Kasus 10 November 2026 memberi pola waktu yang konkret: ATS satu menit setelah paket dibawa kurir dan retur pusat 34 menit setelah ATS. Belum ada tool yang mengaudit jeda waktu resi, menghitung kerugian kas dan profit secara terpisah, memetakan bukti kritis, dan menyiapkan surat klaim ke ekspedisi serta marketplace.",
+    "scope": [
+      "Sepuluh pola waktu: ATS cepat, retur cepat, paket menginap di hub, ATS berulang, ATS tanpa status dibawa kurir, alamat lengkap tetapi ATS, nomor aktif tetapi ATS, tidak ada percobaan kontak, retur tanpa permintaan pembeli, dan retur tanpa ATS.",
+      "Ambang 5 menit, 60 menit, dan 72 jam diberi label penanda audit internal, bukan aturan resmi.",
+      "Kerugian kas dari HPP, ongkir, kemasan, ongkir retur, biaya lain, dan nilai barang yang kembali.",
+      "Kerugian profit dan dampak total dihitung terpisah agar nilai pesanan tidak dihitung dua kali.",
+      "Dua belas bukti dengan lima bukti kritis, tiga surat, catatan kasus, dan ekspor CSV."
+    ],
+    "rejected": [
+      "Mengulang #40 klaim paket hilang, #31 biaya retur, #50 refund tanpa retur, #46 COD, atau #51 tenggat banding.",
+      "Mengarang tarif baru Gratis Ongkir XTRA per 1 Desember 2026 tanpa rincian yang cukup.",
+      "Menyimpulkan siapa bersalah atau menjamin klaim diterima.",
+      "Memakai berita peluang ekspor atau isu aplikasi terpisah sebagai pain point operasional."
+    ]
+  }
+}

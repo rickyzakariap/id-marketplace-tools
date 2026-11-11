@@ -59,6 +59,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 51 | [51-pemeriksa-tenggat-banding-retur](51-pemeriksa-tenggat-banding-retur/) | Web | Node.js + Express | Check the 7-day return appeal window for TikTok Shop by Tokopedia (policy updates 27 Oct to 5 Nov 2026): deadline and days left, Mall 15-day return window, required unboxing and packing videos per reason, 16 evidence items, 24-hour additional info limit, case log, CSV export and three letters |
 | 52 | [52-pemeriksa-take-rate](52-pemeriksa-take-rate/) | Web | Node.js + Express | Compare actual marketplace take rate with Cube Q2 2026 benchmarks by platform and category (Databoks, 6 Nov 2026): gap in points and rupiah, all-in deduction context, 14 signals, 11 evidence items, case log, CSV export and three letters |
 | 53 | [53-pemeriksa-kesiapan-sni](53-pemeriksa-kesiapan-sni/) | Web | Node.js + Express | Check SNI document readiness for 8 mandatory products (Kemenperin via UKMINDONESIA.ID, 9 Nov 2026): per-role critical evidence, stuck stock value, verdict, obligations, 14 evidence items, case log, CSV export and three letters |
+| 54 | [54-pemeriksa-resi-fiktif](54-pemeriksa-resi-fiktif/) | Web | Node.js + Express | Audit courier tracking for fake ATS and unilateral returns (Media Konsumen case, 10 Nov 2026): 1-minute ATS and 34-minute return detection, cash and profit loss, 10 timing signals, 12 evidence items, case log, CSV export and three letters |
 
 ## Checks
 
