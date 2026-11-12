@@ -1,0 +1,313 @@
+{
+  "date": "2026-11-12",
+  "research_window": "Riset 5 sampai 12 November 2026 tentang keluhan penjual marketplace, biaya, retur, pengiriman, pajak, dan topik seller lain yang belum tercakup tool yang ada",
+  "sources": [
+    {
+      "title": "Terima Barang Pecah, Refund Tertahan 20 Hari Tanpa Kompensasi dari Shopee",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-08",
+      "url": "https://mediakonsumen.com/2026/11/08/surat-pembaca/terima-barang-pecah-refund-tertahan-20-hari-tanpa-kompensasi-dari-shopee",
+      "facts": [
+        "Pembeli menerima kloset duduk pecah pada 12 Oktober 2026 dan refund selesai pada 2 November 2026, lebih dari 20 hari.",
+        "Nominal pembayaran yang disebut adalah Rp946.140.",
+        "Keluhan berasal dari pembeli, bukan penjual. Mekanisme dana tertahan dan retur sudah tercakup #29, #31, #50, dan #51."
+      ]
+    },
+    {
+      "title": "Tokopedia Tolak Komplain Saya Setelah 92 Hari Investigasi, Tablet Itel Cacat Rp2,9 Juta Tak Bisa Diretur",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-11",
+      "url": "https://mediakonsumen.com/2026/11/11/surat-pembaca/tokopedia-tolak-komplain-saya-setelah-92-hari-investigasi-tablet-itel-cacat-rp29-juta-tak-bisa-diretur",
+      "facts": [
+        "Pembeli melaporkan komplain cacat dan segel terbuka ditolak Tokopedia pada 5 November 2026 setelah lebih dari 92 hari investigasi.",
+        "Keluhan menyebut kerugian Rp2.998.377 dan bukti video pengemasan yang berbeda.",
+        "Keluhan berasal dari pembeli. Proses banding dan bukti retur untuk penjual sudah tercakup #50 dan #51."
+      ]
+    },
+    {
+      "title": "Lama, Pengiriman J&T Mencapai Lebih dari 5 Hari Tidak Bergerak",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-11",
+      "url": "https://mediakonsumen.com/2026/11/11/surat-pembaca/lama-pengiriman-jt-mencapai-lebih-dari-5-hari-tidak-bergerak",
+      "facts": [
+        "Surat pembaca 11 November 2026 mengeluhkan resi J&T yang tidak bergerak lebih dari 5 hari.",
+        "Pola paket menginap di hub dan resi tidak wajar sudah menjadi fokus #54 Pemeriksa Resi Fiktif."
+      ]
+    },
+    {
+      "title": "Untung Rugi Promo 11.11: Cara Hitung Margin Seller",
+      "publisher": "Marketing.co.id",
+      "date": "2026-11-12",
+      "url": "https://news.google.com/rss/search?q=Untung+Rugi+Promo+11.11+Cara+Hitung+Margin+Seller",
+      "facts": [
+        "Artikel membahas perhitungan margin seller selama promo 11.11.",
+        "Topik margin promo, diskon bertumpuk, dan buffer harga sudah tercakup #14, #35, dan #36."
+      ]
+    },
+    {
+      "title": "UMKM Menjual Produk Bundling saat 11.11? Ini Simulasi Menghitung Margin Setelah Diskon",
+      "publisher": "Pikiran Rakyat Jatim",
+      "date": "2026-11-11",
+      "url": "https://news.google.com/rss/search?q=UMKM+Menjual+Produk+Bundling+saat+11.11+Simulasi+Menghitung+Margin",
+      "facts": [
+        "Artikel menyimulasikan margin produk bundling setelah diskon 11.11.",
+        "Diskon bertumpuk, voucher, dan buffer margin sudah dihitung #35, sedangkan biaya all-in ada di #36."
+      ]
+    },
+    {
+      "title": "Diskon Biaya Admin Marketplace 50%, Cek Syarat UMKM",
+      "publisher": "Marketing.co.id",
+      "date": "2026-11-09",
+      "url": "https://news.google.com/rss/search?q=Diskon+Biaya+Admin+Marketplace+50+Cek+Syarat+UMKM",
+      "facts": [
+        "Artikel mengulang syarat diskon biaya admin 50 persen untuk UMKM.",
+        "Kelayakan, insentif, dan realisasi diskon sudah tercakup #23, #34, dan #48."
+      ]
+    },
+    {
+      "title": "Take Rate Marketplace: Siapa yang Sebenarnya Menanggung Biaya Komisi?",
+      "publisher": "kumparan",
+      "date": "2026-11-08",
+      "url": "https://news.google.com/rss/search?q=Take+Rate+Marketplace+Siapa+yang+Sebenarnya+Menanggung+Biaya+Komisi",
+      "facts": [
+        "Artikel membahas beban komisi marketplace terhadap penjual.",
+        "Perbandingan take rate dengan benchmark per kategori dan platform sudah menjadi fokus #52."
+      ]
+    },
+    {
+      "title": "Perbandingan Biaya Penjual Elektronik di Shopee, TikTok Shop, dan Lazada Kuartal II 2026",
+      "publisher": "Databoks",
+      "date": "2026-11-06",
+      "url": "https://news.google.com/rss/search?q=Perbandingan+Biaya+Penjual+Elektronik+di+Shopee+TikTok+Shop+Lazada+Kuartal+II+2026",
+      "facts": [
+        "Artikel memuat benchmark biaya penjual elektronik kuartal II 2026.",
+        "Benchmark take rate per kategori, termasuk elektronik, sudah dipakai #52. Tidak ada angka baru yang perlu dibuka dengan tool lain."
+      ]
+    },
+    {
+      "title": "Dari Ulasan Palsu hingga Manipulasi Algoritma, Ini Celah Regulasi Belanja Online Indonesia",
+      "publisher": "Warta Ekonomi",
+      "date": "2026-11-09",
+      "url": "https://news.google.com/rss/search?q=Dari+Ulasan+Palsu+hingga+Manipulasi+Algoritma+Celah+Regulasi+Belanja+Online",
+      "facts": [
+        "Judul artikel menyoroti ulasan palsu dan manipulasi algoritma dalam belanja online.",
+        "Ulasan palsu sudah tercakup #43. Manipulasi algoritma tidak punya mekanisme penjual yang bisa diverifikasi dari ringkasan berita, jadi tidak dijadikan tool."
+      ]
+    },
+    {
+      "title": "Marketplace dan Celah Transparansi Informasi Halal",
+      "publisher": "CNBC Indonesia",
+      "date": "2026-11-08",
+      "url": "https://news.google.com/rss/search?q=Marketplace+dan+Celah+Transparansi+Informasi+Halal",
+      "facts": [
+        "Artikel membahas celah transparansi label halal di marketplace.",
+        "Kewajiban dan tenggat sertifikasi halal sudah tercakup #39 Pelacak Tenggat Halal."
+      ]
+    },
+    {
+      "title": "Marketplace Perlu Hubungkan Sertifikasi Halal ke Data Resmi",
+      "publisher": "ChatNews.id",
+      "date": "2026-11-09",
+      "url": "https://news.google.com/rss/search?q=Marketplace+Perlu+Hubungkan+Sertifikasi+Halal+ke+Data+Resmi",
+      "facts": [
+        "Artikel membahas usulan menghubungkan data sertifikasi halal ke marketplace.",
+        "Topik sertifikasi halal tetap tercakup #39 dan belum ada perubahan aturan yang bisa dijadikan tool baru."
+      ]
+    },
+    {
+      "title": "Setara Bukti Pungut Pajak, Pedagang Marketplace Perlu Simpan Invoice",
+      "publisher": "DDTCNews",
+      "date": "2026-11-06",
+      "url": "https://news.google.com/rss/search?q=Setara+Bukti+Pungut+Pajak+Pedagang+Marketplace+Perlu+Simpan+Invoice",
+      "facts": [
+        "Artikel membahas penyimpanan invoice sebagai bukti pungut pajak bagi pedagang marketplace.",
+        "Dokumen pajak marketplace dan PPh 22 sudah tercakup #22, #25, #26, dan #44."
+      ]
+    },
+    {
+      "title": "DJP Mulai Pungut PPh 0,5 Persen dari Penjual Marketplace, Cek Daftar Platform yang Ditunjuk",
+      "publisher": "Radar Bogor",
+      "date": "2026-11-11",
+      "url": "https://news.google.com/rss/search?q=DJP+Mulai+Pungut+PPh+0%2C5+Persen+dari+Penjual+Marketplace",
+      "facts": [
+        "Artikel mengulang pemungutan PPh 22 sebesar 0,5 persen dari penjual marketplace.",
+        "Status kebijakan, kalkulator, dan pelacak pengembalian sudah ada di #22 dan #25."
+      ]
+    },
+    {
+      "title": "Sederet Kebijakan Baru Pungutan Pajak Jelang Akhir Tahun",
+      "publisher": "Bloomberg Technoz",
+      "date": "2026-11-11",
+      "url": "https://news.google.com/rss/search?q=Sederet+Kebijakan+Baru+Pungutan+Pajak+Jelang+Akhir+Tahun",
+      "facts": [
+        "Artikel merangkum kebijakan pungutan pajak baru menjelang akhir tahun.",
+        "Pajak digital, SPP-TDLN, PPN PMSE, dan PPh 22 marketplace sudah tercakup #22, #44, dan #49."
+      ]
+    },
+    {
+      "title": "Pemerintah Dorong UMKM Naik Kelas Menuju Indonesia Maju 2045, Pajak dan Biaya Marketplace Jadi Sorotan",
+      "publisher": "otoritas.co.id",
+      "date": "2026-11-11",
+      "url": "https://otoritas.co.id/pemerintah-dorong-umkm-naik-kelas-menuju-indonesia-maju-2045-pajak-dan-biaya-marketplace-jadi-sorotan/",
+      "facts": [
+        "Diskusi publik 11 November 2026 membahas pajak digital, biaya layanan platform, dan masa depan UMKM.",
+        "Tidak ada tarif atau mekanisme baru. Biaya all-in, take rate, dan PPh 22 sudah tercakup #36, #52, dan #22."
+      ]
+    },
+    {
+      "title": "TikTok Shop Punya Aplikasi Sendiri, Kenapa Indonesia Belum Kebagian?",
+      "publisher": "Marketing.co.id",
+      "date": "2026-11-09",
+      "url": "https://news.google.com/rss/search?q=TikTok+Shop+Punya+Aplikasi+Sendiri+Kenapa+Indonesia+Belum+Kebagian",
+      "facts": [
+        "Artikel membahas aplikasi TikTok Shop terpisah yang belum tersedia di Indonesia.",
+        "Tidak ada langkah migrasi penjual Indonesia atau tenggat yang bisa dijadikan tool."
+      ]
+    },
+    {
+      "title": "Gudang Ekspedisi Cakung Ricuh, Ketua BPKN: Konsumen Jangan Jadi Korban Promo 11.11",
+      "publisher": "sinarharapan.net",
+      "date": "2026-11-12",
+      "url": "https://news.google.com/rss/search?q=Gudang+Ekspedisi+Cakung+Ricuh+Konsumen+Jangan+Jadi+Korban+Promo+11.11",
+      "facts": [
+        "Artikel melaporkan kepadatan gudang ekspedisi saat puncak promo 11.11.",
+        "Dampaknya pada keterlambatan pengiriman dan resi sudah tercakup audit resi #54 dan pelacak komplain #19."
+      ]
+    },
+    {
+      "title": "65% Sentimen Publik Negatif, RUU Perlindungan Konsumen Perlu Lebih Adaptif",
+      "publisher": "Lensa Medan",
+      "date": "2026-11-11",
+      "url": "https://news.google.com/rss/search?q=65+Sentimen+Publik+Negatif+RUU+Perlindungan+Konsumen+Perlu+Lebih+Adaptif",
+      "facts": [
+        "Artikel membahas RUU Perlindungan Konsumen yang masih dalam pembahasan.",
+        "Belum ada kewajiban operasional baru untuk penjual yang bisa dihitung atau diuji, jadi tidak dijadikan tool."
+      ]
+    }
+  ],
+  "pain_points_checked": [
+    {
+      "category": "Refund pembeli tertahan lebih dari 20 hari",
+      "description": "Pembeli menerima barang pecah dan refund baru selesai setelah lebih dari 20 hari.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Keluhan pembeli, bukan kerugian operasional penjual. Dana tertahan, retur, dan banding sudah tercakup #29, #31, #50, dan #51."
+    },
+    {
+      "category": "Komplain pembeli ditolak setelah 92 hari investigasi",
+      "description": "Pembeli Tokopedia mengeluhkan penolakan komplain cacat setelah investigasi panjang.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Keluhan pembeli. Untuk penjual, tenggat dan bukti banding retur sudah tercakup #51."
+    },
+    {
+      "category": "Resi J&T tidak bergerak lebih dari 5 hari",
+      "description": "Pembeli mengeluhkan paket yang tidak bergerak lebih dari 5 hari.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Pola resi dan paket menginap di hub sudah tercakup #54."
+    },
+    {
+      "category": "Margin promo dan bundling 11.11",
+      "description": "Seller menghitung margin setelah diskon, voucher, dan bundling selama 11.11.",
+      "frequency": "HIGH",
+      "reason_not_built": "Diskon bertumpuk, buffer harga, dan biaya all-in sudah tercakup #14, #35, dan #36."
+    },
+    {
+      "category": "Diskon biaya admin marketplace 50 persen",
+      "description": "Artikel mengulang syarat diskon biaya admin untuk UMKM.",
+      "frequency": "HIGH",
+      "reason_not_built": "Kelayakan, insentif, dan realisasi sudah tercakup #23, #34, dan #48."
+    },
+    {
+      "category": "Take rate dan benchmark biaya penjual",
+      "description": "Artikel membandingkan beban komisi dan biaya penjual per platform.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #52, termasuk benchmark elektronik dan fashion kuartal II 2026."
+    },
+    {
+      "category": "Ulasan palsu dan manipulasi algoritma",
+      "description": "Artikel menyoroti celah regulasi ulasan palsu dan manipulasi algoritma.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Ulasan palsu sudah tercakup #43. Manipulasi algoritma tidak punya mekanisme penjual yang bisa diverifikasi dari sumber."
+    },
+    {
+      "category": "Transparansi informasi halal di listing",
+      "description": "Artikel membahas celah label halal dan usulan menghubungkan sertifikasi ke data resmi.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Sudah tercakup #39 Pelacak Tenggat Halal."
+    },
+    {
+      "category": "Arsip invoice sebagai bukti pungut pajak",
+      "description": "Pedagang marketplace perlu menyimpan invoice sebagai bukti pungut pajak.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Dokumen pajak marketplace dan PPh 22 sudah tercakup #22, #25, #26, dan #44."
+    },
+    {
+      "category": "Perluasan pungutan pajak digital dan marketplace",
+      "description": "DJP kembali menyoroti PPh 22 dan pajak digital menjelang akhir tahun.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #22, #44, dan #49. Tidak ada tarif atau mekanisme baru yang bisa diground."
+    },
+    {
+      "category": "Aplikasi TikTok Shop terpisah",
+      "description": "TikTok Shop memiliki aplikasi sendiri di beberapa negara.",
+      "frequency": "LOW",
+      "reason_not_built": "Belum ada langkah migrasi penjual Indonesia atau tenggat resmi yang bisa dijadikan tool."
+    },
+    {
+      "category": "Kepadatan gudang ekspedisi saat 11.11",
+      "description": "Gudang ekspedisi padat dan pengiriman berpotensi terlambat saat puncak promo.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Pola keterlambatan dan resi tidak wajar sudah tercakup #54, sedangkan komplain berulang ada di #19."
+    },
+    {
+      "category": "RUU Perlindungan Konsumen",
+      "description": "DPR membahas pembaruan UU Perlindungan Konsumen untuk era digital.",
+      "frequency": "LOW",
+      "reason_not_built": "Masih berupa rancangan tanpa kewajiban operasional baru yang bisa dihitung atau diuji."
+    }
+  ],
+  "existing_tools_checked": [
+    "#14-promo-cost-calculator: biaya promo dan break-even.",
+    "#19-komplain-tracker: pelacakan komplain dan SLA.",
+    "#22-pph22-tax-calculator: PPh 22 marketplace.",
+    "#23-umkm-service-fee-checker: kelayakan diskon biaya layanan.",
+    "#25-pph22-refund-tracker: pengembalian PPh 22.",
+    "#26-omzet-gabungan-tracker: omzet gabungan terhadap ambang Rp500 juta.",
+    "#29-dana-tertahan-tracker: saldo platform tertahan.",
+    "#31-biaya-retur-tracker: biaya retur.",
+    "#34-insentif-permen-2026: insentif biaya layanan.",
+    "#35-program-diskon-checker: diskon bertumpuk dan buffer harga.",
+    "#36-biaya-total-marketplace: biaya all-in.",
+    "#39-pelacak-tenggat-halal: sertifikasi dan tenggat halal.",
+    "#43-pelacak-ulasan-palsu: ulasan palsu.",
+    "#44-pemeriksa-faktur-pajak: faktur pajak marketplace.",
+    "#48-pemeriksa-realisasi-diskon: realisasi diskon 50 persen.",
+    "#49-pemeriksa-pajak-digital: PPN digital dan SPP-TDLN.",
+    "#50-pemeriksa-refund-tanpa-retur: refund tanpa barang kembali.",
+    "#51-pemeriksa-tenggat-banding-retur: tenggat dan bukti banding retur.",
+    "#52-pemeriksa-take-rate: benchmark take rate.",
+    "#54-pemeriksa-resi-fiktif: audit jeda waktu resi dan paket menginap."
+  ],
+  "decision": {
+    "action": "fix-audit-item",
+    "target": "27-tiktok-komisi-calculator",
+    "audit_item": "B4 (P1)",
+    "reason": "Riset 5 sampai 12 November 2026 tidak menemukan pain point penjual baru yang belum tercakup. Sebagian besar berita adalah promo 11.11, pengulangan pajak dan biaya yang sudah punya tool, keluhan pembeli, atau berita peluang tanpa mekanisme yang bisa diverifikasi. Sesuai aturan fallback, item P1 tertinggi yang masih terbuka di REVIVAL_AUDIT.md diperbaiki daripada membuat tool baru yang menduplikasi topik.",
+    "scope": [
+      "Hitung label tarif Shopee di server agar kelompok dengan tarif tunggal tidak menampilkan null-null%.",
+      "Kirim rate_label pada /api/shopee dan hasil /api/calculate.",
+      "Pakai rate_label di halaman untuk daftar kelompok dan kartu hasil.",
+      "Tambah 9 test Python untuk label, hasil kalkulasi, komisi, validasi, dan pemakaian rate_label di HTML.",
+      "Update README tool dengan perilaku label dan cara test.",
+      "Tandai B4 selesai di REVIVAL_AUDIT.md."
+    ],
+    "rejected": [
+      "Tool refund atau komplain pembeli: bukan pain point operasional penjual dan sudah tercakup #29, #31, #50, #51.",
+      "Tool margin promo atau bundling 11.11: tumpang tindih dengan #14, #35, dan #36.",
+      "Tool pajak marketplace baru: hanya pengulangan #22, #25, #26, #44, dan #49.",
+      "Tool take rate baru: sudah ada #52.",
+      "Tool halal baru: sudah ada #39.",
+      "Tool aplikasi TikTok Shop terpisah: belum ada langkah migrasi Indonesia yang bisa diground.",
+      "Tool RUU Perlindungan Konsumen: masih rancangan tanpa kewajiban operasional yang bisa diuji."
+    ]
+  }
+}

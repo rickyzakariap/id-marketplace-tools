@@ -559,7 +559,7 @@ function loadShopee() {
     list.forEach(g => {
       const opt = document.createElement('option');
       opt.value = g.id;
-      const r = g.rate_min ? g.rate_min + '-' + g.rate_max + '%' : g.rate + '%';
+      const r = g.rate_label || (g.rate + '%');
       opt.textContent = g.label + ' (' + r + ')';
       sel.appendChild(opt);
     });
@@ -656,9 +656,7 @@ function render(d) {
   if (d.shopee) {
     $('shopeeCard').style.display = 'block';
     $('sGroup').textContent = d.shopee.group;
-    const rateTxt = d.shopee.rate_min !== undefined
-      ? d.shopee.rate_min + '-' + d.shopee.rate_max + '%'
-      : d.shopee.rate + '%';
+    const rateTxt = d.shopee.rate_label || (d.shopee.rate + '%');
     $('sRate').textContent = rateTxt;
     $('sComm').textContent = fmt(d.shopee.comm);
     const sd = d.shopee.diff_vs_tiktok;

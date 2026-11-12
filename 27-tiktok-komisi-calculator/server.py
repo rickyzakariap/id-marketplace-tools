@@ -98,6 +98,24 @@ def calc_commission(base, rate_pct, cap):
     return min(raw, cap)
 
 
+def format_rate(value):
+    """Format a numeric rate without trailing zeros (9.0 -> 9, 9.50 -> 9.5)."""
+    return f"{value:g}"
+
+
+def rate_label(group):
+    """Human-readable rate label for a Shopee group.
+
+    Some groups have a single rate and no rate_min/rate_max. The label must
+    never contain "null" or "None" for those groups.
+    """
+    low = group.get("rate_min")
+    high = group.get("rate_max")
+    if low is not None and high is not None:
+        return f"{format_rate(low)}-{format_rate(high)}%"
+    return f"{format_rate(group['rate'])}%"
+
+
 def rec_price(modal, diskon, profit_old, rate_new, cap_new):
     """Harga baru agar profit per item sama dengan skema lama.
 
@@ -185,7 +203,7 @@ def calc(body):
         grp = next((g for g in SHOPEE_GROUPS if g["id"] == sg), None)
         if grp:
             rate = grp["rate"]
-            if grp.get("rate_min"):
+            if grp.get("rate_min") is not None:
                 rate = grp["rate_min"]
             comm_shopee = base * rate / 100.0
             result["shopee"] = {
@@ -193,6 +211,7 @@ def calc(body):
                 "rate": rate,
                 "rate_min": grp.get("rate_min"),
                 "rate_max": grp.get("rate_max"),
+                "rate_label": rate_label(grp),
                 "comm": round(comm_shopee),
                 "diff_vs_tiktok": round(comm_shopee - comm_new),
             }
@@ -230,7 +249,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         elif self.path == "/api/categories":
             self._json([{"name": n, "old": o, "new": w} for n, o, w in CATEGORIES])
         elif self.path == "/api/shopee":
-            self._json(SHOPEE_GROUPS)
+            self._json([dict(g, rate_label=rate_label(g)) for g in SHOPEE_GROUPS])
         elif self.path == "/api/example":
             self._json(EXAMPLE)
         else:

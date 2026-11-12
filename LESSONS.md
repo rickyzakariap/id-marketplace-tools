@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-11-12 - Perbaikan B4 TikTok Komisi Calculator (#27)
+- Masalah: `27-tiktok-komisi-calculator` menampilkan `null-null%` untuk Kategori A Shopee. Server mengirim `rate_min: null` karena kelompok itu hanya punya satu tarif, sedangkan frontend memeriksa `rate_min !== undefined` sehingga `null` dianggap ada. Penjual melihat rentang tarif yang tidak valid di kartu perbandingan
+- Riset: Google News RSS `when:7d` 5 sampai 12 November 2026, feed Media Konsumen, dan web search. Topik yang muncul adalah promo dan margin 11.11 (sudah tercakup #14, #35, #36), pengulangan pajak dan biaya marketplace (#22, #23, #25, #26, #34, #44, #48, #49, #52), keluhan pembeli tentang refund 20 hari dan komplain Tokopedia 92 hari (bukan pain point penjual), resi J&T lebih dari 5 hari (#54), ulasan palsu (#43), halal (#39), serta berita peluang seperti aplikasi TikTok Shop terpisah dan RUU Perlindungan Konsumen yang belum punya kewajiban operasional
+- Keputusan: Tidak ada pain point penjual baru yang bisa diground tanpa menduplikasi tool. Sesuai aturan fallback, item P1 tertinggi yang masih terbuka di REVIVAL_AUDIT.md yaitu B4 diperbaiki, bukan memaksakan tool #55
+- Perbaikan: Label tarif dihitung di server lewat `rate_label()`. `/api/shopee` dan hasil `/api/calculate` mengirim `rate_label`, dan halaman memakainya untuk daftar kelompok serta kartu perbandingan. Kelompok tarif tunggal tampil `10%`, kelompok rentang tampil `9-9.5%`
+- Perbaikan test: `test/test_server.py` berisi 9 test Python untuk label semua kelompok, kelompok tarif tunggal, kelompok rentang, label pada hasil kalkulasi, kelompok tidak dikenal, komisi dan cap, validasi harga, serta pemakaian `rate_label` di HTML
+- Verifikasi: 9 test lulus. Runtime: halaman statis 200, status 200, shopee 200, categories 200, example 200, calculate Kategori A dan B 200, JSON rusak 400, API tidak dikenal 404. Server dihentikan dan port 8027 kosong. Convention check dan README sync OK
+- Lesson: Pemeriksaan `!== undefined` tidak menangkap `null`. Untuk pasangan batas bawah dan atas, kedua nilai harus dicek dengan `!= null` atau label harus dibentuk di satu tempat saja
+- Lesson: Format angka yang dipakai banyak jalur sebaiknya dibuat di server, bukan disalin di frontend. Satu fungsi label mencegah daftar kelompok dan kartu hasil menampilkan format berbeda
+- Lesson: Bug tampilan yang berasal dari data `null` perlu test yang mengunci kontrak API, bukan hanya test fungsi kalkulasi. Test harus memastikan label tidak mengandung `null` atau `None`
+- Next: Perbaiki B5 (P2) `01-fee-calculator` yang menghitung `profitMargin` dengan rumus ROI, lalu B6 `11-shipping-cost-estimator` dan B8 `33-kanal-sendiri-vs-marketplace`. Tambah test untuk tool yang masih tanpa test, terutama 01, 04, 11, 26, 28, dan 35
+
+---
+
 ## 2026-11-11 - Pemeriksa Resi Fiktif (#54)
 - Masalah: Media Konsumen 10 November 2026 melaporkan resi SiCepat yang berstatus ATS satu menit setelah paket dibawa kurir, lalu retur pusat 34 menit kemudian. Penjual tidak punya cara cepat menyorot jeda waktu yang tidak wajar, menghitung kerugian kas, dan menyiapkan bukti klaim. Status ATS bisa sah, jadi tool harus memisahkan indikasi pola dari putusan siapa bersalah
 - Riset: Media Konsumen 10 November 2026 untuk kronologi resi 006920823346, ATS pukul 13:06, dan retur pukul 13:40. Pusat Edukasi Penjual Shopee 3 November 2026 dicek untuk topik akhir bebas biaya 14 November 2026, tetapi tidak dipakai karena bertumpang tindih dengan #36 dan #52 serta rincian tarif baru belum cukup. Keluhan saldo Mitra Bukalapak 4 November 2026 dan GoPay Merchant 8 November 2026 tidak dipakai karena sudah tercakup #29 atau bukan pain point marketplace

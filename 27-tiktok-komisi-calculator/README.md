@@ -18,6 +18,7 @@ Buka http://localhost:8027
 - Dampak ke margin: profit per item dan margin % sebelum vs sesudah
 - Rekomendasi harga baru agar profit per item tetap sama dengan skema lama
 - Perbandingan opsional dengan biaya admin Shopee 2026 per kelompok kategori
+- Kelompok Shopee dengan tarif tunggal tampil sebagai satu angka (contoh 10%), bukan rentang kosong
 - Info biaya retur baru (hingga Rp10.000 per kejadian, berlaku 1 Juni 2026)
 - Auto-fill contoh, light minimal theme, responsive, toggle dark/light
 
@@ -30,6 +31,14 @@ GET  /api/shopee        kelompok biaya admin Shopee 2026
 GET  /api/example       contoh data
 POST /api/calculate     hitung komisi (category, price, modal, discount, volume, shopee_group)
 ```
+
+## Test
+
+```bash
+python3 -m unittest discover -s test -p 'test_*.py' -v
+```
+
+Sembilan test: label tarif untuk semua kelompok Shopee, kelompok tarif tunggal, kelompok rentang, label pada hasil kalkulasi, kelompok tidak dikenal, komisi dan cap, validasi harga, dan pemakaian `rate_label` di halaman.
 
 ## Sumber tarif
 

@@ -46,7 +46,7 @@ Catatan: `git config user.name` kosong di repo; commit akan memakai env git iden
 | B1 | **06-dropship** | `profit` tidak mengurangi ongkir yang ditanggung seller; nilai profit identik untuk berat 0.3kg vs 5kg dan free-ongkir on/off. `break_even` juga tidak menutup `admin_fee` → harga rekomendasi masih rugi. | Sebelum fix: profit `61625` untuk semua berat & toggle; pada `break_even=106383` profit `-1000`. `server.py:118-126` | **P0** | ✅ FIXED + test |
 | B2 | **03-sentiment** | Pencocokan kata kunci memakai substring: `"ok"` cocok pada `"toko"`. Negation flip salah. | `"Stok barang di toko kosong"` → **positive +1.0**; `"Pelayanan bagus, tidak ada keluhan"` → **negative -0.7**. `analyze.py:175,179,204` | P1 | ✅ FIXED + test |
 | B3 | **09-profit-tracker** | `platform_fee`, `shipping_cost`, `other_fees` dikali `qty`, padahal label UI "Biaya platform **per transaksi**" → fee bisa overstate. | `server.py:343` (`(t.platform_fee * t.qty)` dst). Perlu klarifikasi semantik transaksi vs item. | P1 | ✅ FIXED + test |
-| B4 | **27-tiktok-komisi** | Shopee Group A `rate_min: null`; frontend cek `!== undefined` → tampil `"null-null%"`. | `index.html:396` vs `:299`. | P1 | Belum |
+| B4 | **27-tiktok-komisi** | Shopee Group A `rate_min: null`; frontend cek `!== undefined` → tampil `"null-null%"`. | `index.html:396` vs `:299`. | P1 | ✅ FIXED + test |
 | B5 | **01-fee-calculator** | `profitMargin` dihitung `grossProfit / cost` (identik dengan `roi`), bukan `profit / price`. Field tidak ditampilkan saat ini, jadi latent. | `index.js:210-211`. | P2 | Belum |
 | B6 | **11-shipping** | Faktor zona diterapkan **dua kali** (zoneMultiplier courier × zoneFactor) untuk rute antar-zona → biaya bisa overestimate. | `server.js:152-157`. | P2 | Belum |
 | B7 | **23 vs 34** | Status regulasi biaya layanan 50% tidak konsisten dan keduanya usang: 23 (date-based) → `active`, 34 (hardcoded) → `tahapan-final`. Per 21 Okt 2026 keduanya belum menyebut tanggal resmi 25 Okt 2026. | `/api/status` 23 vs 34; dibandingkan dengan ANTARA/Bisnis 16-17 Okt 2026. | P1 | ✅ FIXED + test |
@@ -86,7 +86,7 @@ Keterangan: ✅ terverifikasi jalan · ⚠️ jalan tapi ada cacat · 🔒 butuh
 | 24 | nib-deadline-checker | Python stdlib | HTTP 200 | ✅ tanpa test |
 | 25 | pph22-refund-tracker | Go | Go tidak tersedia | ❔ |
 | 26 | omzet-gabungan-tracker | Node+Express | HTTP 200 (`/api/status` & `/api/analyze`) | ✅ tanpa test |
-| 27 | tiktok-komisi-calculator | Python stdlib | HTTP 200; bug B4 | ⚠️ tanpa test |
+| 27 | tiktok-komisi-calculator | Python stdlib | HTTP 200; B4 fixed; 9 test lulus | ✅🧪 |
 | 28 | toco-migration-calculator | Node+Express | HTTP 200; matematika profit/margin benar | ✅ tanpa test |
 | 29 | dana-tertahan-tracker | Node+Express | HTTP 200 | ✅ tanpa test |
 | 30 | hak-tolak-seller | Go | Go tidak tersedia | ❔ |
@@ -108,7 +108,7 @@ Ringkasan: 22 server Node/Python terverifikasi hidup, 1 CLI Node + 2 CLI Python 
 ### P1 (cacat kebenaran yang terlihat pengguna)
 - B2 — 03 sentiment salah klasifikasi (substring + negation). → **sudah diperbaiki 2026-11-06**, lihat §9.
 - B3 — 09 profit-tracker fee ×qty (perlu konfirmasi semantik). → **sudah diperbaiki 2026-11-07**, lihat §10.
-- B4 — 27 tampilan `null-null%`.
+- B4 — 27 tampilan `null-null%`. → **sudah diperbaiki 2026-11-12**, lihat §11.
 - B7 — 23 vs 34 status regulasi biaya layanan tidak konsisten (data regulasi perlu diselaraskan & diberi sumber; jangan mengarang tarif). → **sudah diperbaiki 2026-10-21**, lihat §8.
 - Tambah test untuk semua tool tanpa test (prioritas yang menghasilkan uang: 01, 04, 09, 11, 26, 27, 28, 35).
 
@@ -213,3 +213,27 @@ Bukti runtime: halaman statis 200, `GET /api/summary` 200, `GET /api/transaction
 API tidak dikenal 404. Contoh qty 2 dengan harga jual Rp 75.000, modal Rp 35.000, komisi 4,5%,
 biaya layanan Rp 1.000, ongkir Rp 5.000, biaya lain Rp 2.000 menghasilkan revenue Rp 150.000,
 biaya Rp 70.000, fees Rp 14.750 (bukan Rp 22.750), dan profit Rp 65.250.
+
+---
+
+## 11. Perbaikan 2026-11-12 (B4)
+
+Riset harian 12 November 2026 tidak menemukan pain point penjual baru di luar tool yang sudah
+ada. Berita 5 sampai 12 November 2026 didominasi promo 11.11, pengulangan pajak dan biaya
+marketplace, keluhan pembeli, atau berita peluang tanpa mekanisme yang bisa diverifikasi.
+Sesuai aturan fallback, item P1 tertinggi yang masih terbuka diperbaiki.
+
+Yang diperbaiki di **27-tiktok-komisi-calculator**:
+
+1. Label tarif Shopee dihitung di server lewat `rate_label()`, sehingga kelompok dengan tarif
+   tunggal (Kategori A, D, E, X) tampil sebagai satu angka dan tidak lagi menjadi `null-null%`.
+2. `/api/shopee` dan hasil `/api/calculate` sekarang mengirim `rate_label` untuk setiap kelompok.
+3. Halaman memakai `rate_label` pada daftar kelompok dan kartu perbandingan Shopee.
+4. Test baru `test/test_server.py`: 9 test Python mencakup label semua kelompok, kelompok tarif
+   tunggal, kelompok rentang, label pada hasil kalkulasi, kelompok tidak dikenal, komisi dan cap,
+   validasi harga, serta pemakaian `rate_label` di HTML.
+
+Bukti runtime: halaman statis 200, `/api/status` 200, `/api/shopee` 200 dengan Kategori A
+`rate_label` `10%`, `/api/categories` 200, `/api/example` 200, `POST /api/calculate` dengan
+Kategori A dan B 200, JSON rusak 400, API tidak dikenal 404. Server dihentikan dan port 8027
+kosong kembali. `check-tool-conventions.sh` dan `check-readme-sync.sh` OK.
