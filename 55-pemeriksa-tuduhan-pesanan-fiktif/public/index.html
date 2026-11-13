@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemeriksa Tuduhan Pesanan Fiktif</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.card.raised {
+  background:
+    radial-gradient(58% 52% at 18% 24%, rgba(var(--ink-rgb), 0.085), transparent 62%),
+    radial-gradient(66% 50% at 54% 88%, rgba(var(--ink-rgb), 0.075), transparent 64%),
+    var(--wash);
+}
+
+.policy {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.policy-main p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.policy-main strong { color: var(--ink); font-weight: 500; }
+.policy-note { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+.scope-chip.out { color: var(--ember); }
+.policy-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.source-link {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  text-decoration: none;
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+.source-link:hover { background: var(--wash-hover); color: var(--ink); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(310px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.span-2 { grid-column: span 2; }
+.field.span-3 { grid-column: span 3; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select, textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+textarea { resize: vertical; min-height: 72px; }
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+
+.rule-note {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+.rule-note strong { color: var(--ink); font-weight: 500; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+tr.selected td { background: var(--surface-2); }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.on { background: var(--ember); }
+.dot.ok { background: var(--ok); }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.evidence-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 10px;
+}
+.check {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+.check input { width: auto; margin-top: 3px; accent-color: var(--ink); }
+.check .crit { color: var(--ember); font-size: 11px; margin-left: 4px; }
+
+.facts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.fact-field { display: flex; flex-direction: column; gap: 4px; }
+.fact-field label { font-size: 12px; font-weight: 400; }
+
+.letter-out {
+  white-space: pre-wrap;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.cases-summary { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.summary-pill {
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.summary-pill strong { color: var(--ink); font-weight: 500; }
+
+.case-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.empty { color: var(--ink-4); font-size: 13.5px; padding: 10px 0; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 900px) {
+  .policy, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .field.span-3 { grid-column: span 2; }
+  .facts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .field.span-2, .field.span-3 { grid-column: span 1; }
+  .stats { grid-template-columns: 1fr; }
+  header { align-items: flex-start; }
+  .brand { gap: 12px; }
+  .mark { width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">TUDUH</div>
+      <div>
+        <div class="eyebrow">Tool 55</div>
+        <h1>Pemeriksa Tuduhan Pesanan Fiktif</h1>
+        <p class="lede">Hitung dana berisiko saat toko dituduh pesanan fiktif atau menyalahgunakan subsidi, nilai kelengkapan pembelaan, susun bukti, dan siapkan surat banding atau pemulihan saldo.</p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg>
+    </button>
+  </header>
+
+  <section class="card policy">
+    <div class="policy-main">
+      <h2>Sanksi batal, saldo tetap diambil</h2>
+      <p>Media Konsumen 12 November 2026 mencatat toko TikTok Shop Tokopedia yang dinonaktifkan karena tuduhan penyalahgunaan subsidi. Saldo Rp38.513.620 ditahan 90 hari, diambil pada 7 Agustus 2026, lalu pelanggaran dibatalkan tanpa memulihkan saldo. Tool ini memisahkan <strong>dana berisiko</strong>, <strong>kualitas pembelaan</strong>, dan <strong>penanda proses</strong>.</p>
+      <div class="scope-grid">
+        <span class="scope-chip in">Masuk: saldo ditahan dan dipotong</span>
+        <span class="scope-chip in">Masuk: bukti pesanan nyata</span>
+        <span class="scope-chip in">Masuk: surat banding dan pemulihan</span>
+        <span class="scope-chip out">Di luar: putusan siapa bersalah</span>
+        <span class="scope-chip out">Di luar: jaminan saldo kembali</span>
+        <span class="scope-chip out">Di luar: tarif atau SLA resmi</span>
+      </div>
+      <div class="policy-links" id="source-links"></div>
+    </div>
+    <div class="policy-note">
+      Janji jawaban 14 hari kalender berasal dari kasus contoh dan bukan aturan umum. Jangka 90 hari plus 90 hari berasal dari pernyataan platform dalam dengar pendapat DPR 8 September 2026, bukan aturan tertulis. Semua penanda dipakai sebagai alat audit internal.
+    </div>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Data toko dan tuduhan</h2>
+            <p class="sub">Nama toko dan tanggal tuduhan wajib untuk menyimpan kasus. Isi tanggal yang Anda punya.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="store_name">Nama toko</label>
+            <input id="store_name" type="text" maxlength="160" placeholder="Contoh: Toko Contoh Sejahtera">
+          </div>
+          <div class="field">
+            <label for="seller_name">Nama penjual</label>
+            <input id="seller_name" type="text" maxlength="160" placeholder="Nama untuk surat">
+          </div>
+          <div class="field">
+            <label for="contact">Kontak</label>
+            <input id="contact" type="text" maxlength="160" placeholder="Email atau nomor">
+          </div>
+          <div class="field">
+            <label for="ticket">Nomor tiket</label>
+            <input id="ticket" type="text" maxlength="160" placeholder="Opsional">
+          </div>
+          <div class="field">
+            <label for="marketplace">Marketplace</label>
+            <select id="marketplace"></select>
+          </div>
+          <div class="field">
+            <label for="trigger">Jenis tuduhan</label>
+            <select id="trigger"></select>
+          </div>
+          <div class="field">
+            <label for="sanction_status">Status sanksi</label>
+            <select id="sanction_status"></select>
+          </div>
+          <div class="field">
+            <label for="status">Status kasus</label>
+            <select id="status"></select>
+          </div>
+          <div class="field">
+            <label for="accusation_date">Tanggal tuduhan</label>
+            <input id="accusation_date" type="date">
+          </div>
+          <div class="field">
+            <label for="deactivation_date">Tanggal toko nonaktif</label>
+            <input id="deactivation_date" type="date">
+          </div>
+          <div class="field">
+            <label for="reactivated_date">Tanggal toko aktif kembali</label>
+            <input id="reactivated_date" type="date">
+          </div>
+          <div class="field">
+            <label for="as_of">Tanggal hari ini</label>
+            <input id="as_of" type="date">
+          </div>
+          <div class="field">
+            <label for="appeal_date">Tanggal banding diajukan</label>
+            <input id="appeal_date" type="date">
+          </div>
+          <div class="field">
+            <label for="appeal_result_date">Tanggal hasil banding</label>
+            <input id="appeal_result_date" type="date">
+          </div>
+          <div class="field">
+            <label for="deduction_date">Tanggal saldo dipotong</label>
+            <input id="deduction_date" type="date">
+          </div>
+          <div class="field">
+            <label for="hold_end_date">Tanggal masa tahan berakhir</label>
+            <input id="hold_end_date" type="date">
+          </div>
+          <div class="field span-2">
+            <label for="note">Catatan kasus</label>
+            <textarea id="note" maxlength="400" placeholder="Ringkasan kronologi, nomor tiket, atau hal penting lain"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Saldo dan dampak usaha</h2>
+            <p class="sub">Pisahkan saldo yang masih ditahan, sudah dipotong, dan sudah dikembalikan.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label for="balance_before">Saldo sebelum sanksi</label>
+            <input id="balance_before" type="number" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="balance_held">Saldo masih ditahan</label>
+            <input id="balance_held" type="number" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="balance_deducted">Saldo sudah dipotong</label>
+            <input id="balance_deducted" type="number" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="balance_restored">Saldo sudah dikembalikan</label>
+            <input id="balance_restored" type="number" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="orders_per_day">Pesanan per hari</label>
+            <input id="orders_per_day" type="number" min="0" step="0.1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="aov">Nilai pesanan rata-rata</label>
+            <input id="aov" type="number" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="margin_pct">Margin laba (%)</label>
+            <input id="margin_pct" type="number" min="0" max="100" step="0.1" placeholder="0">
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="analyze-btn" type="button">Hitung dampak</button>
+          <button class="btn ghost" id="example-btn" type="button">Isi contoh</button>
+          <button class="btn ghost" id="save-btn" type="button">Simpan kasus</button>
+          <button class="btn ghost" id="reset-btn" type="button">Bersihkan</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Fakta dan bukti</h2>
+            <p class="sub">Jawab apa adanya. Skor pembelaan bukan peluang menang.</p>
+          </div>
+          <span class="badge" id="evidence-badge">0 dari 13</span>
+        </div>
+        <div class="facts-grid" id="facts-list"></div>
+        <h3 style="margin-top:18px">Bukti yang sudah dimiliki</h3>
+        <p class="hint" id="evidence-hint">Pilih bukti yang benar-benar ada. Bukti kritis berbobot dua kali.</p>
+        <div class="evidence-list" id="evidence-list"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Surat</h2>
+            <p class="sub">Buat surat banding, permintaan pemulihan saldo, atau eskalasi.</p>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field span-2">
+            <label for="letter_type">Jenis surat</label>
+            <select id="letter_type"></select>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="letter-btn" type="button">Buat surat</button>
+          <button class="btn ghost" id="copy-letter-btn" type="button">Salin</button>
+          <button class="btn ghost" id="download-letter-btn" type="button">Unduh .txt</button>
+        </div>
+        <div class="letter-out" id="letter-out">Surat akan muncul di sini.</div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card raised">
+        <div class="section-head">
+          <div>
+            <h2>Hasil analisis</h2>
+            <p class="sub">Dihitung dari data yang Anda isi.</p>
+          </div>
+        </div>
+        <div class="verdict muted" id="verdict">
+          <div class="verdict-label" id="verdict-label">Belum dihitung</div>
+          <div class="verdict-note" id="verdict-note">Isi data lalu tekan Hitung dampak.</div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="k">Dana berisiko</div>
+            <div class="v bad" id="stat-outstanding">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Laba hilang</div>
+            <div class="v warn" id="stat-lost-profit">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Dampak total</div>
+            <div class="v bad" id="stat-total">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Hari toko nonaktif</div>
+            <div class="v" id="stat-days">0</div>
+          </div>
+        </div>
+        <div class="rule-note" id="score-note">
+          Skor pembelaan, penanda proses, dan kesiapan bukti muncul setelah analisis.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Penanda proses</h2>
+            <p class="sub" id="signals-sub">Belum ada penanda.</p>
+          </div>
+        </div>
+        <div class="list" id="signals-list">
+          <div class="empty">Hitung dulu untuk melihat penanda.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Rekomendasi</h2>
+            <p class="sub">Langkah berikutnya.</p>
+          </div>
+        </div>
+        <div class="list" id="recommendations-list">
+          <div class="empty">Belum ada rekomendasi.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Tanggal penting</h2>
+            <p class="sub">Selisih hari dari tanggal hari ini.</p>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="k">Sejak tuduhan</div>
+            <div class="v" id="date-accusation">-</div>
+          </div>
+          <div class="stat">
+            <div class="k">Hasil banding</div>
+            <div class="v" id="date-appeal-result">-</div>
+          </div>
+          <div class="stat">
+            <div class="k">Sisa masa tahan</div>
+            <div class="v" id="date-hold">-</div>
+          </div>
+          <div class="stat">
+            <div class="k">Bukti kurang</div>
+            <div class="v" id="date-missing">-</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card" style="margin-top:18px">
+    <div class="section-head">
+      <div>
+        <h2>Catatan kasus</h2>
+        <p class="sub">Data tersimpan lokal di folder tool. Ekspor CSV untuk arsip.</p>
+      </div>
+      <div class="case-actions">
+        <button class="btn ghost small" id="refresh-cases-btn" type="button">Muat ulang</button>
+        <button class="btn ghost small" id="seed-btn" type="button">Muat contoh</button>
+        <a class="btn ghost small" id="export-link" href="/api/export">Ekspor CSV</a>
+      </div>
+    </div>
+    <div class="cases-summary" id="cases-summary"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Toko</th>
+            <th>Tuduhan</th>
+            <th class="num">Dana berisiko</th>
+            <th class="num">Dampak total</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="cases-body">
+          <tr><td colspan="6" class="empty">Belum ada kasus.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var state = { meta: null, lastResult: null, lastLetter: null, cases: [] };
+
+  function $(id) { return document.getElementById(id); }
+
+  function formatNumber(value) {
+    var number = Number(value);
+    if (!Number.isFinite(number)) number = 0;
+    return new Intl.NumberFormat('id-ID').format(Math.round(number));
+  }
+
+  function formatRupiah(value) {
+    return 'Rp ' + formatNumber(value);
+  }
+
+  function showToast(message) {
+    var toast = $('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function () { toast.classList.remove('show'); }, 2400);
+  }
+
+  function fillSelect(id, items) {
+    var el = $(id);
+    el.innerHTML = '';
+    items.forEach(function (item) {
+      var option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = item.label;
+      el.appendChild(option);
+    });
+  }
+
+  function currentEvidence() {
+    var result = [];
+    document.querySelectorAll('#evidence-list input[type="checkbox"]:checked').forEach(function (input) {
+      result.push(input.value);
+    });
+    return result;
+  }
+
+  function readFacts() {
+    var facts = {};
+    if (!state.meta) return facts;
+    state.meta.facts.forEach(function (item) {
+      var el = $('fact_' + item.id);
+      facts[item.id] = el ? el.value : 'tidak_tahu';
+    });
+    return facts;
+  }
+
+  function readForm() {
+    var data = {};
+    ['store_name', 'seller_name', 'contact', 'ticket', 'marketplace', 'trigger',
+      'sanction_status', 'status', 'accusation_date', 'deactivation_date',
+      'reactivated_date', 'as_of', 'appeal_date', 'appeal_result_date',
+      'deduction_date', 'hold_end_date', 'note', 'balance_before', 'balance_held',
+      'balance_deducted', 'balance_restored', 'orders_per_day', 'aov', 'margin_pct'
+    ].forEach(function (key) {
+      var el = $(key);
+      data[key] = el ? el.value : '';
+    });
+    data.facts = readFacts();
+    data.evidence = currentEvidence();
+    return data;
+  }
+
+  function writeForm(data) {
+    ['store_name', 'seller_name', 'contact', 'ticket', 'marketplace', 'trigger',
+      'sanction_status', 'status', 'accusation_date', 'deactivation_date',
+      'reactivated_date', 'as_of', 'appeal_date', 'appeal_result_date',
+      'deduction_date', 'hold_end_date', 'note', 'balance_before', 'balance_held',
+      'balance_deducted', 'balance_restored', 'orders_per_day', 'aov', 'margin_pct'
+    ].forEach(function (key) {
+      var el = $(key);
+      if (!el) return;
+      el.value = data[key] == null ? '' : data[key];
+    });
+    renderEvidenceOptions(data.evidence || []);
+    renderFacts(data.facts || {});
+  }
+
+  function renderFacts(values) {
+    if (!state.meta) return;
+    var wrap = $('facts-list');
+    wrap.innerHTML = '';
+    state.meta.facts.forEach(function (item) {
+      var field = document.createElement('div');
+      field.className = 'fact-field';
+      var label = document.createElement('label');
+      label.setAttribute('for', 'fact_' + item.id);
+      label.textContent = item.label;
+      var select = document.createElement('select');
+      select.id = 'fact_' + item.id;
+      state.meta.yes_no.forEach(function (option) {
+        var opt = document.createElement('option');
+        opt.value = option.id;
+        opt.textContent = option.label;
+        select.appendChild(opt);
+      });
+      var value = values[item.id] || 'tidak_tahu';
+      select.value = value;
+      field.appendChild(label);
+      field.appendChild(select);
+      wrap.appendChild(field);
+    });
+  }
+
+  function renderEvidenceOptions(selected) {
+    if (!state.meta) return;
+    var wrap = $('evidence-list');
+    wrap.innerHTML = '';
+    selected = Array.isArray(selected) ? selected : [];
+    state.meta.evidence.forEach(function (item) {
+      var label = document.createElement('label');
+      label.className = 'check';
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.value = item.id;
+      input.checked = selected.indexOf(item.id) !== -1;
+      input.addEventListener('change', updateEvidenceBadge);
+      var text = document.createElement('span');
+      text.textContent = item.label;
+      if (item.critical) {
+        var crit = document.createElement('span');
+        crit.className = 'crit';
+        crit.textContent = 'Kritis';
+        text.appendChild(crit);
+      }
+      label.appendChild(input);
+      label.appendChild(text);
+      wrap.appendChild(label);
+    });
+    var criticalCount = state.meta.evidence.filter(function (item) { return item.critical; }).length;
+    $('evidence-hint').textContent = state.meta.evidence.length + ' bukti. ' +
+      criticalCount + ' di antaranya kritis dan berbobot dua kali.';
+    updateEvidenceBadge();
+  }
+
+  function updateEvidenceBadge() {
+    var checked = currentEvidence().length;
+    $('evidence-badge').textContent = checked + ' dari ' + (state.meta ? state.meta.evidence.length : 13);
+  }
+
+  function renderSources(sources) {
+    var wrap = $('source-links');
+    wrap.innerHTML = '';
+    sources.forEach(function (source) {
+      var link = document.createElement('a');
+      link.className = 'source-link';
+      link.href = source.url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = source.publisher + ', ' + source.date;
+      link.title = source.title;
+      wrap.appendChild(link);
+    });
+  }
+
+  function renderList(id, items, dotClass, emptyText) {
+    var list = $(id);
+    list.innerHTML = '';
+    if (!items || !items.length) {
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = emptyText;
+      list.appendChild(empty);
+      return;
+    }
+    items.forEach(function (text) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var dot = document.createElement('span');
+      dot.className = 'dot ' + (dotClass || '');
+      var span = document.createElement('span');
+      span.textContent = text;
+      row.appendChild(dot);
+      row.appendChild(span);
+      list.appendChild(row);
+    });
+  }
+
+  function verdictClass(level) {
+    if (level === 'ok' || level === 'signal' || level === 'ember' || level === 'muted') return level;
+    return 'muted';
+  }
+
+  function renderResult(result) {
+    state.lastResult = result;
+    var verdict = $('verdict');
+    verdict.className = 'verdict ' + verdictClass(result.verdict.level);
+    $('verdict-label').textContent = result.verdict.label;
+    $('verdict-note').textContent = result.verdict.note;
+
+    $('stat-outstanding').textContent = formatRupiah(result.loss.outstanding);
+    $('stat-lost-profit').textContent = formatRupiah(result.loss.lost_profit);
+    $('stat-total').textContent = formatRupiah(result.loss.total_impact);
+    $('stat-days').textContent = formatNumber(result.loss.days_down);
+
+    $('score-note').innerHTML = 'Skor pembelaan <strong>' + result.defense.score + '/100 (' +
+      result.defense.label + ')</strong>. Penanda proses <strong>' + result.signals.score +
+      '/100 (' + result.signals.label + ')</strong>. Kesiapan bukti <strong>' +
+      result.evidence.score + '% (' + result.evidence.label + ')</strong>.';
+
+    var triggered = result.signals.signals.filter(function (item) { return item.triggered; });
+    renderList('signals-list',
+      triggered.map(function (item) { return item.label + ': ' + item.note; }),
+      'on',
+      'Tidak ada penanda proses yang terpicu.');
+
+    $('signals-sub').textContent = triggered.length + ' dari ' + result.signals.signals.length + ' penanda terpicu.';
+    renderList('recommendations-list', result.recommendations, '', 'Belum ada rekomendasi.');
+
+    var dates = result.dates;
+    $('date-accusation').textContent = dates.days_since_accusation == null ? '-' : dates.days_since_accusation + ' hari';
+    $('date-appeal-result').textContent = dates.appeal_result_days == null ? '-' : dates.appeal_result_days + ' hari';
+    $('date-hold').textContent = dates.hold_remaining_days == null ? '-' : dates.hold_remaining_days + ' hari';
+    $('date-missing').textContent = result.evidence.missing_critical.length + ' bukti';
+  }
+
+  function postJson(url, body) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(function (response) {
+      return response.json().then(function (data) {
+        if (!response.ok) throw new Error(data.error || 'Permintaan gagal.');
+        return data;
+      });
+    });
+  }
+
+  function analyze() {
+    postJson('/api/analyze', readForm())
+      .then(function (result) {
+        renderResult(result);
+        showToast('Analisis selesai.');
+      })
+      .catch(function (error) { showToast(error.message); });
+  }
+
+  function loadExample() {
+    fetch('/api/example')
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        writeForm(data);
+        analyze();
+      })
+      .catch(function () { showToast('Gagal memuat contoh.'); });
+  }
+
+  function saveCase() {
+    var data = readForm();
+    postJson('/api/cases', data)
+      .then(function () {
+        showToast('Kasus disimpan.');
+        loadCases();
+      })
+      .catch(function (error) { showToast(error.message); });
+  }
+
+  function loadCases() {
+    fetch('/api/cases')
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        state.cases = data.cases || [];
+        renderCases(data);
+      })
+      .catch(function () { showToast('Gagal memuat kasus.'); });
+  }
+
+  function renderCases(summary) {
+    var body = $('cases-body');
+    body.innerHTML = '';
+    if (!summary.cases || !summary.cases.length) {
+      var row = document.createElement('tr');
+      var cell = document.createElement('td');
+      cell.colSpan = 6;
+      cell.className = 'empty';
+      cell.textContent = 'Belum ada kasus.';
+      row.appendChild(cell);
+      body.appendChild(row);
+    } else {
+      summary.cases.forEach(function (item) {
+        var row = document.createElement('tr');
+        var store = document.createElement('td');
+        store.textContent = item.store_name + (item.ticket ? ' (' + item.ticket + ')' : '');
+        var trigger = document.createElement('td');
+        trigger.textContent = item.trigger_label;
+        var outstanding = document.createElement('td');
+        outstanding.className = 'num';
+        outstanding.textContent = formatRupiah(item.outstanding);
+        var impact = document.createElement('td');
+        impact.className = 'num';
+        impact.textContent = formatRupiah(item.total_impact);
+        var status = document.createElement('td');
+        var badge = document.createElement('span');
+        badge.className = 'badge ' + (item.verdict.level === 'ember' ? 'bad' : item.verdict.level === 'ok' ? 'good' : 'warn');
+        badge.textContent = item.status_label;
+        status.appendChild(badge);
+        var action = document.createElement('td');
+        var del = document.createElement('button');
+        del.className = 'btn ghost small';
+        del.type = 'button';
+        del.textContent = 'Hapus';
+        del.addEventListener('click', function () { deleteCase(item.id); });
+        action.appendChild(del);
+        row.appendChild(store);
+        row.appendChild(trigger);
+        row.appendChild(outstanding);
+        row.appendChild(impact);
+        row.appendChild(status);
+        row.appendChild(action);
+        body.appendChild(row);
+      });
+    }
+
+    var wrap = $('cases-summary');
+    wrap.innerHTML = '';
+    [
+      ['Kasus', summary.total],
+      ['Terbuka', summary.open_cases],
+      ['Sanksi batal', summary.cancelled_not_restored],
+      ['Dana berisiko', formatRupiah(summary.total_outstanding)],
+      ['Dampak total', formatRupiah(summary.total_impact)]
+    ].forEach(function (pair) {
+      var pill = document.createElement('span');
+      pill.className = 'summary-pill';
+      var strong = document.createElement('strong');
+      strong.textContent = pair[1];
+      pill.textContent = pair[0] + ': ';
+      pill.appendChild(strong);
+      wrap.appendChild(pill);
+    });
+  }
+
+  function deleteCase(id) {
+    fetch('/api/cases/' + id, { method: 'DELETE' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Gagal menghapus.');
+        return response.json();
+      })
+      .then(function (summary) {
+        renderCases(summary);
+        showToast('Kasus dihapus.');
+      })
+      .catch(function (error) { showToast(error.message); });
+  }
+
+  function seedCases() {
+    postJson('/api/seed', {})
+      .then(function () {
+        showToast('Contoh kasus dimuat.');
+        loadCases();
+      })
+      .catch(function (error) { showToast(error.message); });
+  }
+
+  function makeLetter() {
+    var data = readForm();
+    data.letter_type = $('letter_type').value;
+    postJson('/api/letter', data)
+      .then(function (result) {
+        state.lastLetter = result;
+        $('letter-out').textContent = result.heading + '\n\n' + result.body;
+        showToast('Surat dibuat.');
+      })
+      .catch(function (error) { showToast(error.message); });
+  }
+
+  function copyLetter() {
+    if (!state.lastLetter) { showToast('Buat surat dulu.'); return; }
+    var text = state.lastLetter.heading + '\n\n' + state.lastLetter.body;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast('Surat disalin.'); });
+    } else {
+      showToast('Salin manual dari kotak surat.');
+    }
+  }
+
+  function downloadLetter() {
+    if (!state.lastLetter) { showToast('Buat surat dulu.'); return; }
+    var text = state.lastLetter.heading + '\n\n' + state.lastLetter.body;
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'surat-' + state.lastLetter.type + '.txt';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function resetForm() {
+    writeForm({ as_of: new Date().toISOString().slice(0, 10) });
+    state.lastResult = null;
+    state.lastLetter = null;
+    $('letter-out').textContent = 'Surat akan muncul di sini.';
+    $('verdict').className = 'verdict muted';
+    $('verdict-label').textContent = 'Belum dihitung';
+    $('verdict-note').textContent = 'Isi data lalu tekan Hitung dampak.';
+    $('stat-outstanding').textContent = 'Rp 0';
+    $('stat-lost-profit').textContent = 'Rp 0';
+    $('stat-total').textContent = 'Rp 0';
+    $('stat-days').textContent = '0';
+  }
+
+  function initTheme() {
+    $('theme-btn').addEventListener('click', function () {
+      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  }
+
+  function init() {
+    initTheme();
+    $('analyze-btn').addEventListener('click', analyze);
+    $('example-btn').addEventListener('click', loadExample);
+    $('save-btn').addEventListener('click', saveCase);
+    $('reset-btn').addEventListener('click', resetForm);
+    $('letter-btn').addEventListener('click', makeLetter);
+    $('copy-letter-btn').addEventListener('click', copyLetter);
+    $('download-letter-btn').addEventListener('click', downloadLetter);
+    $('refresh-cases-btn').addEventListener('click', loadCases);
+    $('seed-btn').addEventListener('click', seedCases);
+
+    fetch('/api/meta')
+      .then(function (response) { return response.json(); })
+      .then(function (data) {
+        state.meta = data;
+        fillSelect('marketplace', data.marketplaces);
+        fillSelect('trigger', data.triggers);
+        fillSelect('sanction_status', data.sanction_statuses);
+        fillSelect('status', data.case_statuses);
+        fillSelect('letter_type', data.letter_types);
+        renderFacts({});
+        renderEvidenceOptions([]);
+        renderSources(data.sources);
+        $('as_of').value = new Date().toISOString().slice(0, 10);
+        loadCases();
+        loadExample();
+      })
+      .catch(function () { showToast('Gagal memuat data awal.'); });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>

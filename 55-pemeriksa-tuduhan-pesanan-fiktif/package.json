@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-tuduhan-pesanan-fiktif",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Audit tuduhan pesanan fiktif dan penyalahgunaan subsidi, hitung dana berisiko, susun bukti, dan siapkan surat banding atau pemulihan saldo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/pesanan.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

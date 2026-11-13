@@ -1,0 +1,183 @@
+{
+  "date": "2026-11-13",
+  "research_window": "Riset 6 sampai 13 November 2026 tentang keluhan penjual marketplace, tuduhan pesanan fiktif, saldo ditahan, voucher, retur, pajak, dan topik seller lain yang belum tercakup tool yang ada",
+  "sources": [
+    {
+      "title": "Rp38,5 Juta Saldo Penjualan Diambil Sepihak oleh TikTok Shop Tokopedia, Meski Sanksi Sudah Dibatalkan",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-12",
+      "url": "https://mediakonsumen.com/2026/11/12/surat-pembaca/rp38-juta-saldo-penjualan-diambil-sepihak-oleh-tiktok-shop-tokopedia-meski-sanksi-sudah-dibatalkan",
+      "facts": [
+        "Toko dinonaktifkan 10 Mei 2026 karena diduga menyalahgunakan subsidi.",
+        "Saldo Rp38.513.620 ditahan 90 hari sampai 8 Agustus 2026, lalu diambil seluruhnya pada 7 Agustus 2026 atau satu hari sebelum masa tahan berakhir.",
+        "Setelah mediasi Kementerian UMKM dan banding, pelanggaran dibatalkan dan toko bisa diakses lagi, tetapi saldo tetap Rp0.",
+        "Penjual meminta pemulihan saldo dan pengawasan Kementerian UMKM."
+      ]
+    },
+    {
+      "title": "Sistem AI TikTok Shop Merampas Modal Usaha Rp12,8 Juta Secara Sepihak dengan Tuduhan Fake Order",
+      "publisher": "Media Konsumen",
+      "date": "2026-09-12",
+      "url": "https://mediakonsumen.com/2026/09/12/surat-pembaca/sistem-ai-tiktok-shop-merampas-modal-usaha-rp128-juta-secara-sepihak-dengan-tuduhan-fake-order-yang-tidak-berdasar",
+      "facts": [
+        "Tuduhan fake order muncul 11 Juni 2026 setelah toko ikut program subsidi resmi.",
+        "Saldo Rp12.805.727 dipotong, toko dinonaktifkan, dan sisa Rp13.421.313 ditahan 90 hari.",
+        "Banding lewat Seller Center ditolak otomatis tanpa peninjauan manusia terhadap bukti resi.",
+        "Penjual menyebut keputusan dibuat mesin otomatis dan menyiapkan somasi."
+      ]
+    },
+    {
+      "title": "Tokopedia dan TikTok Shop jelaskan soal polemik saldo penjual ke DPR",
+      "publisher": "ANTARA News",
+      "date": "2026-09-08",
+      "url": "https://www.antaranews.com/berita/5731873/tokopedia-dan-tiktok-shop-jelaskan-soal-polemik-saldo-penjual-ke-dpr",
+      "facts": [
+        "Dalam dengar pendapat Komisi VII DPR RI, platform menyebut 217 penjual terdampak dengan dana Rp24 miliar.",
+        "Sebanyak Rp16,7 miliar di antaranya terkait kasus fraud menurut platform.",
+        "Platform menyatakan jangka waktu investigasi 90 hari plus 90 hari.",
+        "Platform menyatakan penjual tetap dapat mengajukan banding."
+      ]
+    },
+    {
+      "title": "Miris Nasib Seller TikTok: Saldo Ditahan Kemudian Lenyap",
+      "publisher": "detikFinance",
+      "date": "2026-10-01",
+      "url": "https://finance.detik.com/berita-ekonomi-bisnis/d-8686816/miris-nasib-seller-tiktok-saldo-ditahan-kemudian-lenyap",
+      "facts": [
+        "Dua penjual mengadu ke Badan Aspirasi Masyarakat DPR RI karena saldo tidak dapat ditarik lalu menjadi Rp0.",
+        "Satu penjual kehilangan Rp549 juta dan memutus hubungan kerja 20 karyawan.",
+        "Penjual lain kehilangan sekitar Rp566 juta setelah saldo ditahan tiga bulan tanpa kejelasan.",
+        "Kasus menunjukkan pola saldo ditahan lalu diambil, bukan hanya tertunda."
+      ]
+    },
+    {
+      "title": "Toko Saya di Shopee Dinormalkan Lalu Dimatikan Lagi dalam 24 Jam, Toko Tidak Bisa Nempel Voucher",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-13",
+      "url": "https://mediakonsumen.com/2026/11/13/surat-pembaca/toko-saya-di-shopee-dinormalkan-lalu-dimatikan-lagi-dalam-24-jam-toko-tidak-bisa-nempel-voucher",
+      "facts": [
+        "Toko bisa menempel voucher pada 19 Oktober 2026, lalu kembali tidak bisa menempel voucher pada 3 November 2026.",
+        "CS menyatakan toko normal, tetapi voucher tetap tidak bisa dipakai sampai 5 November 2026.",
+        "Toko sempat normal kurang dari 24 jam pada 6 November 2026 lalu tidak bisa menempel voucher lagi.",
+        "Kasus ditutup pada 8 November 2026 meski keluhan belum selesai."
+      ]
+    },
+    {
+      "title": "Kerugian Dobel Seller Shopee: Barang Rusak Saat Retur dan Ongkir Bolak-Balik Dipotong dari Saldo",
+      "publisher": "Media Konsumen",
+      "date": "2026-11-13",
+      "url": "https://mediakonsumen.com/2026/11/13/surat-pembaca/kerugian-dobel-seller-shopee-barang-rusak-saat-retur-dan-ongkir-bolak-balik-dipotong-dari-saldo",
+      "facts": [
+        "Pembeli mengajukan retur remot set-top box pada 4 November 2026.",
+        "Barang kembali dalam keadaan rusak dan hanya dikemas plastik hitam.",
+        "Penjual menanggung ongkir kirim dan retur yang dipotong dari saldo penjualan lain.",
+        "Banding penjual ditolak Shopee."
+      ]
+    }
+  ],
+  "pain_points_checked": [
+    {
+      "category": "Sanksi dibatalkan tetapi saldo tidak dipulihkan",
+      "description": "Toko dinonaktifkan karena tuduhan penyalahgunaan subsidi atau pesanan fiktif, saldo ditahan lalu diambil, dan setelah banding diterima saldo tetap Rp0.",
+      "frequency": "HIGH",
+      "reason_built": "Belum ada tool yang fokus pada pembelaan tuduhan dan pemulihan saldo. #29 mencatat saldo tertahan, #38 mengurus poin penalti, #37 memulihkan akses akun, dan #50 fokus pada refund tanpa retur."
+    },
+    {
+      "category": "Tuduhan fake order dari program subsidi resmi",
+      "description": "Lonjakan pesanan dari voucher subsidi dianggap pesanan fiktif, lalu saldo dipotong dan toko dinonaktifkan.",
+      "frequency": "HIGH",
+      "reason_built": "Menjadi inti tool #55: memisahkan bukti pesanan nyata dari tuduhan, menghitung dana berisiko, dan menyiapkan banding."
+    },
+    {
+      "category": "Voucher toko mati lalu normal dalam 24 jam",
+      "description": "Toko bisa menempel voucher, lalu tidak bisa, dinormalkan, dan dimatikan lagi berulang.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Sudah tercakup #42 Pelacak Kunci Promosi yang menangani voucher dan promo yang gagal dipakai meski poin nol."
+    },
+    {
+      "category": "Kerugian dobel retur dan ongkir bolak-balik",
+      "description": "Barang retur rusak dan ongkir kirim serta retur dipotong dari saldo.",
+      "frequency": "MEDIUM",
+      "reason_not_built": "Sudah tercakup #31 Biaya Retur Tracker yang menghitung kerugian barang dan ongkir dua arah."
+    },
+    {
+      "category": "PPh 22 marketplace dan batas setor",
+      "description": "Berita 11 sampai 13 November 2026 mengulang pemungutan PPh 22 oleh Shopee, Tokopedia, Lazada, dan Blibli.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #22 kalkulator PPh 22, #25 pelacak pengembalian, #26 omzet gabungan, #44 faktur pajak, dan #49 pajak digital."
+    },
+    {
+      "category": "Diskon biaya platform 50 persen",
+      "description": "Artikel 11 November 2026 mengulang diskon biaya platform untuk UMKM.",
+      "frequency": "HIGH",
+      "reason_not_built": "Kelayakan, insentif, dan realisasi sudah tercakup #23, #34, dan #48."
+    },
+    {
+      "category": "Take rate dan biaya komisi",
+      "description": "Artikel 8 November 2026 membahas siapa yang menanggung biaya komisi marketplace.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #52 Pemeriksa Take Rate."
+    },
+    {
+      "category": "Margin promo dan bundling 11.11",
+      "description": "Artikel 11 sampai 12 November 2026 membahas margin setelah diskon dan bundling.",
+      "frequency": "HIGH",
+      "reason_not_built": "Sudah tercakup #14, #35, dan #36."
+    },
+    {
+      "category": "Transaksi video commerce naik 90 persen",
+      "description": "Berita 13 November 2026 menyebut pertumbuhan livestreaming dan video commerce.",
+      "frequency": "LOW",
+      "reason_not_built": "Berita peluang, bukan pain point operasional penjual yang bisa dihitung dengan sumber."
+    },
+    {
+      "category": "Marketplace nasional Padisera",
+      "description": "Berita 10 sampai 11 November 2026 membahas marketplace nasional untuk UMKM.",
+      "frequency": "LOW",
+      "reason_not_built": "Belum ada mekanisme, biaya, atau kewajiban penjual yang bisa dijadikan tool."
+    }
+  ],
+  "existing_tools_checked": [
+    "#14-promo-cost-calculator: biaya promo dan break-even.",
+    "#22-pph22-tax-calculator: PPh 22 marketplace.",
+    "#23-umkm-service-fee-checker: kelayakan diskon biaya layanan.",
+    "#25-pph22-refund-tracker: pengembalian PPh 22.",
+    "#26-omzet-gabungan-tracker: omzet gabungan terhadap ambang Rp500 juta.",
+    "#29-dana-tertahan-tracker: saldo platform tertahan dan eskalasi.",
+    "#31-biaya-retur-tracker: kerugian retur dua arah.",
+    "#34-insentif-permen-2026: insentif biaya layanan.",
+    "#35-program-diskon-checker: diskon bertumpuk dan buffer harga.",
+    "#36-biaya-total-marketplace: biaya all-in.",
+    "#37-pemulih-toko: pemulihan akses akun.",
+    "#38-pelacak-poin-penalti: poin penalti dan banding poin.",
+    "#42-pelacak-kunci-promosi: voucher dan promo yang gagal dipakai.",
+    "#44-pemeriksa-faktur-pajak: faktur pajak marketplace.",
+    "#48-pemeriksa-realisasi-diskon: realisasi diskon 50 persen.",
+    "#49-pemeriksa-pajak-digital: PPN digital dan SPP-TDLN.",
+    "#50-pemeriksa-refund-tanpa-retur: refund tanpa barang kembali.",
+    "#52-pemeriksa-take-rate: benchmark take rate.",
+    "#54-pemeriksa-resi-fiktif: audit jeda waktu resi."
+  ],
+  "decision": {
+    "action": "build-new-tool",
+    "target": "55-pemeriksa-tuduhan-pesanan-fiktif",
+    "reason": "Riset 6 sampai 13 November 2026 menemukan pain point baru yang belum tercakup: penjual yang dituduh pesanan fiktif atau menyalahgunakan subsidi, saldonya ditahan atau dipotong, lalu pelanggaran dibatalkan tanpa memulihkan saldo. Kasus 12 November 2026 adalah sumber terbaru, didukung kasus 12 September 2026, dengar pendapat DPR 8 September 2026, dan pemberitaan 1 Oktober 2026.",
+    "scope": [
+      "Hitung saldo ditahan, saldo dipotong, saldo dikembalikan, dana berisiko, dan selisih saldo.",
+      "Hitung laba hilang selama toko nonaktif dan dampak total secara terpisah.",
+      "Skor pembelaan dari 14 fakta dan kesiapan 13 bukti dengan 5 bukti kritis.",
+      "Tiga belas penanda proses, termasuk sanksi batal tetapi saldo belum pulih dan potong sebelum masa tahan berakhir.",
+      "Tiga surat: banding, pemulihan saldo, dan eskalasi ke Kementerian UMKM melalui SP4N-Lapor.",
+      "Catatan kasus, CSV, dan data contoh dari kasus 12 November 2026.",
+      "24 test Node tanpa framework tambahan."
+    ],
+    "rejected": [
+      "Tool kunci voucher baru: sudah ada #42.",
+      "Tool kerugian retur baru: sudah ada #31.",
+      "Tool pajak marketplace baru: sudah ada #22, #25, #26, #44, dan #49.",
+      "Tool diskon biaya platform baru: sudah ada #23, #34, dan #48.",
+      "Tool take rate baru: sudah ada #52.",
+      "Tool video commerce atau Padisera: belum ada mekanisme penjual yang bisa diground."
+    ]
+  }
+}
