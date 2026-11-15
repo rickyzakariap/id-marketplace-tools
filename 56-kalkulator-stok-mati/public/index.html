@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Stok Mati</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.layout main .card:nth-child(2) { animation-delay: 60ms; }
+.layout main .card:nth-child(3) { animation-delay: 120ms; }
+.layout aside .card:nth-child(2) { animation-delay: 90ms; }
+.layout aside .card:nth-child(3) { animation-delay: 150ms; }
+
+.policy {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.policy-main p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.policy-main strong { color: var(--ink); font-weight: 500; }
+.policy-note { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+.scope-chip.out { color: var(--ember); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(310px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.span-2 { grid-column: span 2; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select, textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn:disabled { cursor: wait; opacity: 0.65; transform: none; }
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+.btn.icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--ink-4);
+  font-size: 18px;
+  flex: none;
+}
+.btn.icon:hover { background: var(--wash-hover); color: var(--ember); }
+
+.sku-list { display: flex; flex-direction: column; gap: 10px; }
+.sku-row {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 14px;
+}
+.sku-head { display: flex; gap: 8px; align-items: flex-end; }
+.sku-head .field { flex: 1; }
+.sku-fields {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+.sku-fields input { padding: 8px 9px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.hero {
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-top: 14px;
+}
+.hero-k { color: var(--ink-4); font-size: 12px; }
+.hero-v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.15;
+  margin-top: 4px;
+  letter-spacing: -0.03em;
+}
+.hero-v.bad { color: var(--ember); }
+.hero-sub { color: var(--ink-3); font-size: 12.5px; margin-top: 5px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+
+.status-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.on { background: var(--ember); }
+.dot.ok { background: var(--ok); }
+
+.rule-note {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+.rule-note strong { color: var(--ink); font-weight: 500; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+td.num, th.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.row-sub { color: var(--ink-4); font-size: 12.5px; line-height: 1.45; margin-top: 3px; }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+.table-card { margin-top: 18px; }
+
+.scenario-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin-top: 12px;
+}
+.scenario-result { margin-top: 14px; }
+
+.form-error {
+  color: var(--ember);
+  font-size: 13px;
+  margin-top: 12px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.form-error[hidden] { display: none; }
+
+details { margin-top: 12px; }
+summary {
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+}
+details .list { margin-top: 8px; }
+
+footer {
+  color: var(--ink-5);
+  font-size: 12.5px;
+  margin-top: 24px;
+  line-height: 1.6;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.empty { color: var(--ink-4); font-size: 13.5px; padding: 10px 0; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 980px) {
+  .policy, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .sku-fields { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 620px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .field.span-2 { grid-column: span 1; }
+  .stats { grid-template-columns: 1fr; }
+  .sku-fields { grid-template-columns: 1fr 1fr; }
+  .scenario-controls { grid-template-columns: 1fr; }
+  header { align-items: flex-start; }
+  .brand { gap: 12px; }
+  .mark { width: 38px; height: 38px; }
+  .card { padding: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">STOK</div>
+      <div>
+        <div class="eyebrow">Tool 56</div>
+        <h1>Kalkulator Stok Mati</h1>
+        <p class="lede">Hitung modal yang tertahan di stok lambat dan mati, biaya simpan per bulan, batas diskon impas, lalu bandingkan jual sekarang atau tunggu.</p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg>
+    </button>
+  </header>
+
+  <section class="card policy">
+    <div class="policy-main">
+      <h2>Modal yang tidak berputar tetap menagih biaya</h2>
+      <p>Stok yang tidak laku bukan hanya soal harga turun. Modal kerja terkunci, gudang penuh, dan barang berisiko rusak atau ketinggalan tren. Tool ini memisahkan <strong>stok sehat</strong>, <strong>melambat</strong>, dan <strong>mati</strong>, lalu menghitung biaya simpan yang bisa dihemat dengan likuidasi.</p>
+      <div class="scope-grid">
+        <span class="scope-chip in">Masuk: modal tertahan</span>
+        <span class="scope-chip in">Masuk: biaya simpan</span>
+        <span class="scope-chip in">Masuk: batas diskon impas</span>
+        <span class="scope-chip in">Masuk: skenario likuidasi</span>
+        <span class="scope-chip out">Di luar: prediksi penjualan</span>
+        <span class="scope-chip out">Di luar: tarif resmi platform</span>
+      </div>
+    </div>
+    <div class="policy-note">
+      Biaya simpan, biaya modal, risiko rusak, dan biaya marketplace diisi manual. Nilai awalnya adalah asumsi untuk memulai, bukan tarif resmi marketplace. Cocokkan dengan catatan gudang dan arus kas toko Anda.
+    </div>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Pengaturan biaya</h2>
+            <p class="sub">Ubah asumsi agar sesuai kondisi toko. Biaya simpan bisa mencakup sewa gudang, listrik, dan tenaga kerja.</p>
+          </div>
+        </div>
+        <div class="grid-3" id="settings-grid"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Daftar stok</h2>
+            <p class="sub">Isi sisa stok, modal per unit, harga jual, rata-rata penjualan per bulan, dan umur stok.</p>
+          </div>
+          <button class="btn ghost small" id="add-sku" type="button">Tambah SKU</button>
+        </div>
+        <div class="sku-list" id="sku-list"></div>
+        <div class="actions">
+          <button class="btn primary" id="analyze-btn" type="button">Hitung stok</button>
+          <button class="btn ghost" id="example-btn" type="button">Muat contoh</button>
+          <button class="btn ghost" id="csv-btn" type="button">Unduh CSV</button>
+        </div>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Skenario diskon</h2>
+            <p class="sub">Bandingkan uang bersih jika semua sisa stok berisiko dijual sekarang dengan menjual bertahap.</p>
+          </div>
+        </div>
+        <div class="scenario-controls">
+          <div class="field">
+            <label for="discount-pct">Diskon yang diuji (%)</label>
+            <input id="discount-pct" type="number" min="0" max="90" step="1" value="20">
+          </div>
+          <div class="field">
+            <label for="clear-months">Horizon bila tidak laku (bulan)</label>
+            <input id="clear-months" type="number" min="1" max="24" step="1" value="3">
+          </div>
+          <button class="btn primary" id="scenario-btn" type="button">Hitung skenario</button>
+        </div>
+        <div class="scenario-result" id="scenario-result"></div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card">
+        <div id="verdict"></div>
+        <div id="hero"></div>
+        <div class="stats" id="stats"></div>
+        <div class="status-chips" id="status-chips"></div>
+      </section>
+
+      <section class="card">
+        <h2>Rekomendasi</h2>
+        <div class="list" id="recommendations"></div>
+      </section>
+
+      <section class="card">
+        <h2>Asumsi</h2>
+        <div class="list" id="assumptions"></div>
+        <details>
+          <summary>Rumus yang dipakai</summary>
+          <div class="list" id="formulas"></div>
+        </details>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card table-card">
+    <div class="section-head">
+      <div>
+        <h2>Rincian per SKU</h2>
+        <p class="sub">Biaya simpan sampai habis memakai kecepatan jual saat ini. Bila belum ada penjualan, dipakai horizon target.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Rincian stok per SKU</caption>
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th class="num">Stok</th>
+            <th class="num">Modal</th>
+            <th class="num">Nilai jual</th>
+            <th class="num">Habis</th>
+            <th>Status</th>
+            <th class="num">Simpan/bln</th>
+            <th class="num">Diskon impas</th>
+          </tr>
+        </thead>
+        <tbody id="sku-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Tool 56 - Kalkulator Stok Mati. Perhitungan berjalan di server lokal ini dan tidak mengirim data ke pihak lain. Hasil adalah estimasi dari input Anda, bukan jaminan penjualan.
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+var state = { meta: null, result: null, scenario: null };
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function numberText(value) {
+  var number = Number(value);
+  if (!Number.isFinite(number)) return '0';
+  return new Intl.NumberFormat('id-ID', { maximumFractionDigits: 2 }).format(number);
+}
+
+function rupiah(value) {
+  return 'Rp ' + numberText(Math.round(Number(value) || 0));
+}
+
+function signedRupiah(value) {
+  var number = Number(value) || 0;
+  return (number >= 0 ? '+' : '-') + rupiah(Math.abs(number));
+}
+
+function percent(value) {
+  return numberText(value) + '%';
+}
+
+function statusClass(id) {
+  if (id === 'mati') return 'bad';
+  if (id === 'melambat' || id === 'baru') return 'warn';
+  if (id === 'sehat') return 'good';
+  return '';
+}
+
+function toast(message) {
+  var element = document.getElementById('toast');
+  element.textContent = message;
+  element.classList.add('show');
+  window.clearTimeout(toast.timer);
+  toast.timer = window.setTimeout(function () {
+    element.classList.remove('show');
+  }, 2200);
+}
+
+function showError(message) {
+  var element = document.getElementById('form-error');
+  element.textContent = message;
+  element.hidden = false;
+}
+
+function hideError() {
+  var element = document.getElementById('form-error');
+  element.hidden = true;
+  element.textContent = '';
+}
+
+async function requestJson(url, options) {
+  var response = await fetch(url, options);
+  var data = null;
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = null;
+  }
+  if (!response.ok) {
+    throw new Error(data && data.error ? data.error : 'Permintaan gagal.');
+  }
+  return data;
+}
+
+function postJson(url, payload) {
+  return requestJson(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+
+function numberValue(id) {
+  var raw = document.getElementById(id).value;
+  if (raw === '') return 0;
+  return Number(raw);
+}
+
+function collectSettings() {
+  var settings = {};
+  state.meta.setting_fields.forEach(function (field) {
+    settings[field.key] = numberValue('set-' + field.key);
+  });
+  return settings;
+}
+
+function collectSkus() {
+  return Array.prototype.map.call(
+    document.querySelectorAll('.sku-row'),
+    function (row) {
+      function value(field) {
+        return row.querySelector('[data-field="' + field + '"]').value;
+      }
+      function numeric(field) {
+        var raw = value(field);
+        return raw === '' ? 0 : Number(raw);
+      }
+      return {
+        code: value('code'),
+        name: value('name'),
+        quantity: numeric('quantity'),
+        unit_cost: numeric('unit_cost'),
+        unit_price: numeric('unit_price'),
+        monthly_sales: numeric('monthly_sales'),
+        days_in_stock: numeric('days_in_stock'),
+      };
+    }
+  );
+}
+
+function collectPayload() {
+  return { settings: collectSettings(), skus: collectSkus() };
+}
+
+function renderSettings(settings) {
+  var grid = document.getElementById('settings-grid');
+  grid.innerHTML = state.meta.setting_fields
+    .map(function (field) {
+      var value = settings[field.key] == null ? field.default_value : settings[field.key];
+      return (
+        '<div class="field">' +
+        '<label for="set-' + field.key + '">' +
+        escapeHtml(field.label) +
+        ' (' +
+        escapeHtml(field.unit) +
+        ')</label>' +
+        '<input id="set-' + field.key + '" type="number" min="' + field.min +
+        '" max="' + field.max + '" step="' + field.step + '" value="' +
+        escapeHtml(value) + '">' +
+        '</div>'
+      );
+    })
+    .join('');
+}
+
+function skuRowMarkup(sku, index) {
+  return (
+    '<div class="sku-row" data-index="' + index + '">' +
+    '<div class="sku-head">' +
+    '<div class="field">' +
+    '<label for="sku-name-' + index + '">Nama produk</label>' +
+    '<input id="sku-name-' + index + '" data-field="name" type="text" maxlength="120" ' +
+    'value="' + escapeHtml(sku.name) + '" placeholder="Contoh: Kaos Polos">' +
+    '</div>' +
+    '<div class="field">' +
+    '<label for="sku-code-' + index + '">Kode SKU</label>' +
+    '<input id="sku-code-' + index + '" data-field="code" type="text" maxlength="40" ' +
+    'value="' + escapeHtml(sku.code) + '" placeholder="Opsional">' +
+    '</div>' +
+    '<button class="btn icon" type="button" data-remove="' + index + '" ' +
+    'aria-label="Hapus SKU ' + escapeHtml(sku.name || index + 1) + '">&times;</button>' +
+    '</div>' +
+    '<div class="sku-fields">' +
+    '<div class="field"><label for="sku-qty-' + index + '">Sisa stok</label>' +
+    '<input id="sku-qty-' + index + '" data-field="quantity" type="number" min="0" ' +
+    'step="1" value="' + escapeHtml(sku.quantity) + '"></div>' +
+    '<div class="field"><label for="sku-cost-' + index + '">Modal/unit (Rp)</label>' +
+    '<input id="sku-cost-' + index + '" data-field="unit_cost" type="number" min="0" ' +
+    'step="100" value="' + escapeHtml(sku.unit_cost) + '"></div>' +
+    '<div class="field"><label for="sku-price-' + index + '">Harga jual (Rp)</label>' +
+    '<input id="sku-price-' + index + '" data-field="unit_price" type="number" min="0" ' +
+    'step="100" value="' + escapeHtml(sku.unit_price) + '"></div>' +
+    '<div class="field"><label for="sku-sales-' + index + '">Jual/bulan</label>' +
+    '<input id="sku-sales-' + index + '" data-field="monthly_sales" type="number" min="0" ' +
+    'step="1" value="' + escapeHtml(sku.monthly_sales) + '"></div>' +
+    '<div class="field"><label for="sku-days-' + index + '">Umur stok (hari)</label>' +
+    '<input id="sku-days-' + index + '" data-field="days_in_stock" type="number" min="0" ' +
+    'step="1" value="' + escapeHtml(sku.days_in_stock) + '"></div>' +
+    '</div>' +
+    '</div>'
+  );
+}
+
+function bindRemoveButtons() {
+  Array.prototype.forEach.call(
+    document.querySelectorAll('[data-remove]'),
+    function (button) {
+      button.addEventListener('click', function () {
+        var skus = collectSkus();
+        var index = Number(button.getAttribute('data-remove'));
+        skus.splice(index, 1);
+        renderSkus(skus);
+      });
+    }
+  );
+}
+
+function renderSkus(skus) {
+  var list = document.getElementById('sku-list');
+  if (!skus.length) {
+    list.innerHTML = '<div class="empty">Belum ada SKU. Tambahkan minimal satu baris.</div>';
+    return;
+  }
+  list.innerHTML = skus.map(skuRowMarkup).join('');
+  bindRemoveButtons();
+}
+
+function addSku() {
+  var skus = collectSkus();
+  skus.push({
+    code: '',
+    name: '',
+    quantity: 0,
+    unit_cost: 0,
+    unit_price: 0,
+    monthly_sales: 0,
+    days_in_stock: 0,
+  });
+  renderSkus(skus);
+  var rows = document.querySelectorAll('.sku-row');
+  var last = rows[rows.length - 1];
+  if (last) {
+    var input = last.querySelector('[data-field="name"]');
+    if (input) input.focus();
+  }
+}
+
+function renderResult(result) {
+  var summary = result.summary;
+  var verdict = result.verdict;
+  document.getElementById('verdict').innerHTML =
+    '<div class="verdict ' + escapeHtml(verdict.level) + '">' +
+    '<div class="verdict-label">' + escapeHtml(verdict.label) + '</div>' +
+    '<div class="verdict-note">' + escapeHtml(verdict.note) + '</div>' +
+    '</div>';
+
+  document.getElementById('hero').innerHTML =
+    '<div class="hero">' +
+    '<div class="hero-k">Modal di stok mati</div>' +
+    '<div class="hero-v ' + (summary.dead_capital > 0 ? 'bad' : '') + '">' +
+    rupiah(summary.dead_capital) + '</div>' +
+    '<div class="hero-sub">' + percent(summary.dead_ratio_pct) +
+    ' dari total modal. Stok melambat: ' + rupiah(summary.slow_capital) + '.</div>' +
+    '</div>';
+
+  var stats = [
+    { k: 'Total modal stok', v: rupiah(summary.total_capital), cls: '' },
+    { k: 'Biaya simpan per bulan', v: rupiah(summary.monthly_holding_cost), cls: 'warn' },
+    { k: 'Diskon impas agregat', v: percent(summary.break_even_discount_pct), cls: 'warn' },
+    { k: 'Unit berisiko', v: numberText(summary.at_risk_units) + ' unit', cls: '' },
+  ];
+  document.getElementById('stats').innerHTML = stats
+    .map(function (item) {
+      return (
+        '<div class="stat"><div class="k">' + item.k + '</div>' +
+        '<div class="v ' + item.cls + '">' + item.v + '</div></div>'
+      );
+    })
+    .join('');
+
+  document.getElementById('status-chips').innerHTML = summary.status_counts
+    .filter(function (item) { return item.count > 0; })
+    .map(function (item) {
+      return (
+        '<span class="badge ' + statusClass(item.id) + '">' +
+        escapeHtml(item.label) + ' ' + item.count + '</span>'
+      );
+    })
+    .join('');
+
+  document.getElementById('recommendations').innerHTML = result.recommendations
+    .map(function (text, index) {
+      var dot = index === 0 && summary.at_risk_capital > 0 ? 'on' : '';
+      return (
+        '<div class="list-item"><span class="dot ' + dot + '"></span>' +
+        '<span>' + escapeHtml(text) + '</span></div>'
+      );
+    })
+    .join('');
+}
+
+function renderTable(skus) {
+  document.getElementById('sku-table').innerHTML = skus
+    .map(function (item) {
+      var coverage = item.coverage_months === null
+        ? 'tidak terjual'
+        : numberText(item.coverage_months) + ' bln';
+      return (
+        '<tr>' +
+        '<td><strong>' + escapeHtml(item.name) + '</strong>' +
+        '<div class="row-sub">' + escapeHtml(item.code || '-') + '</div></td>' +
+        '<td class="num">' + numberText(item.quantity) + '</td>' +
+        '<td class="num">' + rupiah(item.capital) + '</td>' +
+        '<td class="num">' + rupiah(item.retail_value) + '</td>' +
+        '<td class="num">' + coverage + '</td>' +
+        '<td><span class="badge ' + statusClass(item.status) + '">' +
+        escapeHtml(item.status_label) + '</span>' +
+        '<div class="row-sub">' + escapeHtml(item.note) + '</div></td>' +
+        '<td class="num">' + rupiah(item.holding_cost_month) + '</td>' +
+        '<td class="num">' + percent(item.break_even_discount_pct) + '</td>' +
+        '</tr>'
+      );
+    })
+    .join('');
+}
+
+function renderScenario(result) {
+  var target = document.getElementById('scenario-result');
+  if (!result.items.length) {
+    target.innerHTML =
+      '<div class="verdict ' + escapeHtml(result.summary.verdict.level) + '">' +
+      '<div class="verdict-label">' + escapeHtml(result.summary.verdict.label) + '</div>' +
+      '<div class="verdict-note">' + escapeHtml(result.summary.verdict.note) + '</div>' +
+      '</div>';
+    return;
+  }
+
+  var summary = result.summary;
+  var stats = [
+    { k: 'Uang bersih jual sekarang', v: rupiah(summary.total_net_now), cls: '' },
+    {
+      k: 'Selisih vs jual bertahap',
+      v: signedRupiah(summary.total_advantage),
+      cls: summary.total_advantage >= 0 ? 'good' : 'bad',
+    },
+    { k: 'SKU disarankan likuidasi', v: summary.liquidate_count + ' dari ' + summary.item_count, cls: '' },
+    { k: 'Pemulihan modal', v: percent(summary.cash_recovery_pct), cls: 'warn' },
+  ];
+
+  target.innerHTML =
+    '<div class="verdict ' + escapeHtml(summary.verdict.level) + '">' +
+    '<div class="verdict-label">' + escapeHtml(summary.verdict.label) + '</div>' +
+    '<div class="verdict-note">' + escapeHtml(summary.verdict.note) + '</div>' +
+    '</div>' +
+    '<div class="stats">' +
+    stats.map(function (item) {
+      return (
+        '<div class="stat"><div class="k">' + item.k + '</div>' +
+        '<div class="v ' + item.cls + '">' + item.v + '</div></div>'
+      );
+    }).join('') +
+    '</div>' +
+    '<div class="table-wrap"><table>' +
+    '<caption class="sr-only">Perbandingan likuidasi per SKU</caption>' +
+    '<thead><tr><th>SKU</th><th class="num">Jual sekarang</th>' +
+    '<th class="num">Jual bertahap</th><th class="num">Selisih</th>' +
+    '<th>Putusan</th></tr></thead><tbody>' +
+    result.items.map(function (item) {
+      return (
+        '<tr><td><strong>' + escapeHtml(item.name) + '</strong>' +
+        '<div class="row-sub">Diskon ' + numberText(result.discount_pct) +
+        '%, horizon ' + numberText(item.wait_months) + ' bulan</div></td>' +
+        '<td class="num">' + rupiah(item.net_now) + '</td>' +
+        '<td class="num">' + rupiah(item.net_wait) + '</td>' +
+        '<td class="num">' + signedRupiah(item.advantage) + '</td>' +
+        '<td><span class="badge ' + (item.verdict === 'likuidasi' ? 'good' : 'warn') + '">' +
+        escapeHtml(item.verdict_label) + '</span>' +
+        '<div class="row-sub">' + escapeHtml(item.note) + '</div></td></tr>'
+      );
+    }).join('') +
+    '</tbody></table></div>' +
+    '<div class="rule-note">' + escapeHtml(result.note) + '</div>';
+}
+
+function setBusy(button, busy, label) {
+  if (!button.dataset.label) button.dataset.label = label;
+  button.disabled = busy;
+  button.textContent = busy ? 'Menghitung...' : button.dataset.label;
+}
+
+async function runAnalyze() {
+  hideError();
+  var button = document.getElementById('analyze-btn');
+  setBusy(button, true, 'Hitung stok');
+  try {
+    var result = await postJson('/api/analyze', collectPayload());
+    state.result = result;
+    renderResult(result);
+    renderTable(result.skus);
+    return result;
+  } catch (error) {
+    showError(error.message);
+    return null;
+  } finally {
+    setBusy(button, false, 'Hitung stok');
+  }
+}
+
+async function runScenario() {
+  hideError();
+  var button = document.getElementById('scenario-btn');
+  setBusy(button, true, 'Hitung skenario');
+  try {
+    var payload = collectPayload();
+    payload.discount_pct = numberValue('discount-pct');
+    payload.clear_months = numberValue('clear-months');
+    var result = await postJson('/api/scenario', payload);
+    state.scenario = result;
+    renderScenario(result);
+    return result;
+  } catch (error) {
+    showError(error.message);
+    return null;
+  } finally {
+    setBusy(button, false, 'Hitung skenario');
+  }
+}
+
+async function runAll() {
+  var result = await runAnalyze();
+  if (result) await runScenario();
+}
+
+async function loadExample() {
+  var example = await requestJson('/api/example');
+  renderSettings(example.settings);
+  renderSkus(example.skus);
+  document.getElementById('discount-pct').value = '20';
+  document.getElementById('clear-months').value = '3';
+  await runAll();
+}
+
+async function downloadCsv() {
+  hideError();
+  try {
+    var response = await fetch('/api/export', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(collectPayload()),
+    });
+    if (!response.ok) {
+      var data = null;
+      try { data = await response.json(); } catch (error) { data = null; }
+      throw new Error(data && data.error ? data.error : 'Ekspor gagal.');
+    }
+    var blob = await response.blob();
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'kalkulator-stok-mati.csv';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    toast('CSV diunduh');
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+function renderTextList(id, items, dotClass) {
+  document.getElementById(id).innerHTML = items
+    .map(function (text) {
+      return (
+        '<div class="list-item"><span class="dot ' + (dotClass || '') + '"></span>' +
+        '<span>' + escapeHtml(text) + '</span></div>'
+      );
+    })
+    .join('');
+}
+
+async function init() {
+  document.getElementById('theme-btn').addEventListener('click', function () {
+    var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (error) {}
+  });
+  document.getElementById('add-sku').addEventListener('click', addSku);
+  document.getElementById('analyze-btn').addEventListener('click', runAll);
+  document.getElementById('scenario-btn').addEventListener('click', runScenario);
+  document.getElementById('csv-btn').addEventListener('click', downloadCsv);
+  document.getElementById('example-btn').addEventListener('click', function () {
+    loadExample().catch(function (error) { showError(error.message); });
+  });
+
+  try {
+    var results = await Promise.all([
+      requestJson('/api/meta'),
+      requestJson('/api/example'),
+    ]);
+    state.meta = results[0];
+    renderSettings(results[1].settings);
+    renderSkus(results[1].skus);
+    renderTextList('assumptions', state.meta.assumptions, '');
+    renderTextList('formulas', state.meta.formulas, '');
+    await runAll();
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
