@@ -1,0 +1,14 @@
+{
+  "name": "kalkulator-stok-mati",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hitung modal tertahan di stok mati, biaya simpan, batas diskon impas, dan skenario likuidasi",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
