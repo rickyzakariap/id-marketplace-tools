@@ -62,6 +62,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 54 | [54-pemeriksa-resi-fiktif](54-pemeriksa-resi-fiktif/) | Web | Node.js + Express | Audit courier tracking for fake ATS and unilateral returns (Media Konsumen case, 10 Nov 2026): 1-minute ATS and 34-minute return detection, cash and profit loss, 10 timing signals, 12 evidence items, case log, CSV export and three letters |
 | 55 | [55-pemeriksa-tuduhan-pesanan-fiktif](55-pemeriksa-tuduhan-pesanan-fiktif/) | Web | Node.js + Express | Audit fake-order and subsidy-abuse accusations (TikTok Shop Tokopedia case, 12 Nov 2026): balance at risk, lost profit, defense score, 13 process signals, 13 evidence items, balance-restoration tracking, case log, CSV export and three letters |
 | 56 | [56-kalkulator-stok-mati](56-kalkulator-stok-mati/) | Web | Node.js + Express | Calculate capital tied in dead stock, monthly holding cost, break-even discount, and liquidation scenario |
+| 57 | [57-pemeriksa-efisiensi-iklan](57-pemeriksa-efisiensi-iklan/) | Web | Node.js + Express | Audit ad efficiency: ROAS, ACOS, CPA, break-even ROAS from margin, wasted budget, and profit-target budget plan |
 
 ## Checks
 
