@@ -1,0 +1,14 @@
+{
+  "name": "kalkulator-biaya-pinjaman-modal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hitung biaya pinjaman modal, bunga efektif, beban cicilan, dan plafon aman seller marketplace",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -63,6 +63,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 55 | [55-pemeriksa-tuduhan-pesanan-fiktif](55-pemeriksa-tuduhan-pesanan-fiktif/) | Web | Node.js + Express | Audit fake-order and subsidy-abuse accusations (TikTok Shop Tokopedia case, 12 Nov 2026): balance at risk, lost profit, defense score, 13 process signals, 13 evidence items, balance-restoration tracking, case log, CSV export and three letters |
 | 56 | [56-kalkulator-stok-mati](56-kalkulator-stok-mati/) | Web | Node.js + Express | Calculate capital tied in dead stock, monthly holding cost, break-even discount, and liquidation scenario |
 | 57 | [57-pemeriksa-efisiensi-iklan](57-pemeriksa-efisiensi-iklan/) | Web | Node.js + Express | Audit ad efficiency: ROAS, ACOS, CPA, break-even ROAS from margin, wasted budget, and profit-target budget plan |
+| 58 | [58-kalkulator-biaya-pinjaman-modal](58-kalkulator-biaya-pinjaman-modal/) | Web | Node.js + Express | Calculate loan cost for restocking: flat vs effective interest, upfront fees, installment burden, safe principal, and offer comparison |
 
 ## Checks
 

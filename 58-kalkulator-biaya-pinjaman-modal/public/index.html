@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Biaya Pinjaman Modal</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.layout main .card:nth-child(2) { animation-delay: 60ms; }
+.layout aside .card:nth-child(2) { animation-delay: 90ms; }
+
+.policy {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.policy-main p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.policy-main strong { color: var(--ink); font-weight: 500; }
+.policy-note { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.policy-note strong { color: var(--ink); font-weight: 500; }
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(310px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.span-2 { grid-column: span 2; }
+.form-block { margin-top: 12px; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select, textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0;
+}
+.chip {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 7px 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); }
+.chip:active { transform: scale(0.96); }
+.chip.active { background: var(--slab); color: var(--on-slab); }
+
+.btn:focus-visible,
+.chip:focus-visible,
+.theme:focus-visible,
+summary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn:disabled { cursor: wait; opacity: 0.65; transform: none; }
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.hero {
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-top: 14px;
+}
+.hero-k { color: var(--ink-4); font-size: 12px; }
+.hero-v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.15;
+  margin-top: 4px;
+  letter-spacing: -0.03em;
+}
+.hero-v.bad { color: var(--ember); }
+.hero-v.warn { color: var(--signal); }
+.hero-sub { color: var(--ink-3); font-size: 12.5px; margin-top: 5px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+
+.bar-wrap { margin-top: 14px; }
+.bar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink-4);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.bar {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ink-3);
+  transition: width 240ms var(--ease-out);
+}
+.bar-fill.ok { background: var(--ok); }
+.bar-fill.warn { background: var(--signal); }
+.bar-fill.bad { background: var(--ember); }
+.bar-note { color: var(--ink-3); font-size: 13px; margin-top: 10px; }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.ok { background: var(--ok); }
+.dot.warn { background: var(--signal); }
+.dot.bad { background: var(--ember); }
+
+.rule-note {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+.rule-note strong { color: var(--ink); font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+td.num, th.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.row-sub { color: var(--ink-4); font-size: 12.5px; line-height: 1.45; margin-top: 3px; }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+.scroll-y { max-height: 420px; overflow-y: auto; }
+.table-card { margin-top: 18px; }
+.total-row td { border-bottom: 0; font-weight: 500; color: var(--ink); }
+
+.compare-result { margin-top: 16px; }
+.best-row td { background: var(--wash); }
+
+.form-error {
+  color: var(--ember);
+  font-size: 13px;
+  margin-top: 12px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.form-error[hidden] { display: none; }
+
+details { margin-top: 12px; }
+summary {
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+}
+details .list { margin-top: 8px; }
+
+footer {
+  color: var(--ink-5);
+  font-size: 12.5px;
+  margin-top: 24px;
+  line-height: 1.6;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 980px) {
+  .policy, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 620px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .field.span-2 { grid-column: span 1; }
+  .stats { grid-template-columns: 1fr; }
+  header { align-items: flex-start; }
+  .brand { gap: 12px; }
+  .mark { width: 38px; height: 38px; }
+  .card { padding: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">58</div>
+      <div>
+        <div class="eyebrow">Alat seller marketplace</div>
+        <h1>Kalkulator Biaya Pinjaman Modal</h1>
+        <p class="lede">
+          Bunga 1,5% per bulan terlihat kecil. Setelah bunga flat dan biaya awal,
+          biaya efektif tahunannya bisa jauh lebih tinggi. Hitung angsuran, uang
+          bersih yang diterima, dan sisa laba sebelum meminjam untuk stok.
+        </p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <div class="policy">
+    <section class="card policy-main">
+      <h2>Hitung biaya sebenarnya, bukan hanya bunga per bulan</h2>
+      <p>
+        Masukkan plafon, tenor, bunga, dan semua biaya awal. Tool menghitung
+        <strong>uang yang benar-benar diterima</strong>, total biaya, bunga efektif
+        tahunan, dan rasio cicilan terhadap laba kotor toko.
+      </p>
+      <div class="scope-grid">
+        <span class="scope-chip in">Bunga flat</span>
+        <span class="scope-chip in">Bunga efektif</span>
+        <span class="scope-chip in">Biaya admin dan provisi</span>
+        <span class="scope-chip in">Denda telat</span>
+        <span class="scope-chip in">Plafon aman</span>
+      </div>
+    </section>
+    <section class="card policy-note">
+      <strong>Batas aman 30% adalah patokan tool</strong>
+      <p>
+        Batas cicilan 30% dari laba kotor bukan aturan marketplace atau lembaga
+        pembiayaan. Anggap sebagai pengingat agar penurunan penjualan tidak langsung
+        membuat cicilan menunggak. Kamu bisa mengubahnya di form.
+      </p>
+    </section>
+  </div>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Data pinjaman</h2>
+            <p class="sub">Isi sesuai tabel angsuran atau penawaran yang kamu terima.</p>
+          </div>
+        </div>
+
+        <form id="loan-form" autocomplete="off">
+          <div class="grid-2">
+            <div class="field">
+              <label for="lender">Pemberi pinjaman</label>
+              <input id="lender" type="text" maxlength="120" placeholder="Contoh: pinjaman modal toko">
+            </div>
+            <div class="field">
+              <label for="product_name">Tujuan pinjaman</label>
+              <input id="product_name" type="text" maxlength="120" placeholder="Contoh: restock 200 pcs">
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="principal">Plafon pinjaman (Rp)</label>
+              <input id="principal" type="number" min="1" step="100000" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="tenor_months">Tenor (bulan)</label>
+              <input id="tenor_months" type="number" min="1" max="120" step="1" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="field form-block">
+            <label>Jenis bunga</label>
+            <input id="interest_type" type="hidden" value="flat">
+            <div class="chip-row" id="interest-chips" role="group" aria-label="Jenis bunga">
+              <button type="button" class="chip active" data-value="flat" aria-pressed="true">
+                Bunga flat
+              </button>
+              <button type="button" class="chip" data-value="efektif" aria-pressed="false">
+                Bunga efektif
+              </button>
+            </div>
+            <p class="hint" id="interest-hint">
+              Bunga flat dihitung dari plafon awal setiap bulan. Angsuran tetap.
+            </p>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="interest_rate_pct">Bunga per bulan (%)</label>
+              <input id="interest_rate_pct" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+            </div>
+            <div class="field">
+              <label for="admin_fee_pct">Biaya admin (%)</label>
+              <input id="admin_fee_pct" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+              <p class="hint">Dipakai bila nominal admin dikosongkan.</p>
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="admin_fee_amount">Biaya admin nominal (Rp)</label>
+              <input id="admin_fee_amount" type="number" min="0" step="1000" inputmode="numeric">
+              <p class="hint">Isi ini bila penawaran menyebut nominal tetap. Nominal menang dari persen.</p>
+            </div>
+            <div class="field">
+              <label for="provision_pct">Provisi (%)</label>
+              <input id="provision_pct" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="insurance_pct">Asuransi (%)</label>
+              <input id="insurance_pct" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+            </div>
+            <div class="field">
+              <label for="other_fee_amount">Biaya lain (Rp)</label>
+              <input id="other_fee_amount" type="number" min="0" step="1000" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="monthly_gross_profit">Laba kotor bulanan dari modal (Rp)</label>
+              <input id="monthly_gross_profit" type="number" min="0" step="100000" inputmode="numeric">
+              <p class="hint">Laba sebelum cicilan, bukan omzet.</p>
+            </div>
+            <div class="field">
+              <label for="existing_installment">Cicilan lain per bulan (Rp)</label>
+              <input id="existing_installment" type="number" min="0" step="100000" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="max_installment_pct">Batas aman cicilan (% laba)</label>
+              <input id="max_installment_pct" type="number" min="1" max="100" step="1" inputmode="numeric">
+              <p class="hint">Patokan internal tool, bukan aturan resmi.</p>
+            </div>
+            <div class="field">
+              <label for="late_fee_per_day_pct">Denda telat per hari (%)</label>
+              <input id="late_fee_per_day_pct" type="number" min="0" max="10" step="0.01" inputmode="decimal">
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="late_days">Skenario telat (hari)</label>
+              <input id="late_days" type="number" min="0" max="365" step="1" inputmode="numeric">
+              <p class="hint">Isi 0 bila ingin menghitung tanpa denda.</p>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="analyze-btn" type="submit">Hitung biaya pinjaman</button>
+            <button class="btn ghost" id="example-btn" type="button">Muat contoh</button>
+            <button class="btn ghost" id="csv-btn" type="button">Unduh CSV</button>
+          </div>
+          <div class="form-error" id="form-error" role="alert" hidden></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Bandingkan penawaran</h2>
+            <p class="sub">Satu penawaran lain, dihitung dengan laba dan cicilan yang sama.</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="offer-b-lender">Nama penawaran B</label>
+            <input id="offer-b-lender" type="text" maxlength="120" placeholder="Contoh: Bank atau koperasi">
+          </div>
+          <div class="field">
+            <label for="offer-b-principal">Plafon penawaran B (Rp)</label>
+            <input id="offer-b-principal" type="number" min="1" step="100000" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="grid-2 form-block">
+          <div class="field">
+            <label for="offer-b-tenor">Tenor penawaran B (bulan)</label>
+            <input id="offer-b-tenor" type="number" min="1" max="120" step="1" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="offer-b-rate">Bunga per bulan penawaran B (%)</label>
+            <input id="offer-b-rate" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="grid-2 form-block">
+          <div class="field">
+            <label for="offer-b-type">Jenis bunga penawaran B</label>
+            <select id="offer-b-type">
+              <option value="efektif">Bunga efektif</option>
+              <option value="flat">Bunga flat</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="offer-b-admin">Biaya admin penawaran B (%)</label>
+            <input id="offer-b-admin" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="grid-2 form-block">
+          <div class="field">
+            <label for="offer-b-insurance">Asuransi penawaran B (%)</label>
+            <input id="offer-b-insurance" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+          </div>
+          <div class="field">
+            <label for="offer-b-provision">Provisi penawaran B (%)</label>
+            <input id="offer-b-provision" type="number" min="0" max="100" step="0.01" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn ghost" id="compare-btn" type="button">Bandingkan dengan pinjaman di atas</button>
+        </div>
+        <div class="compare-result" id="compare-result">
+          <p class="muted">Hasil perbandingan muncul di sini.</p>
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card">
+        <div class="verdict muted" id="verdict" aria-live="polite">
+          <div class="verdict-label">Menunggu data</div>
+          <div class="verdict-note">Isi form untuk melihat hasil.</div>
+        </div>
+
+        <div class="hero">
+          <div class="hero-k">Bunga efektif per tahun</div>
+          <div class="hero-v" id="hero-rate">-</div>
+          <div class="hero-sub" id="hero-sub">Termasuk bunga dan semua biaya awal.</div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+      </section>
+
+      <section class="card">
+        <h2>Beban cicilan</h2>
+        <div id="affordability">
+          <p class="muted">Beban cicilan dihitung dari laba kotor bulanan.</p>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card table-card">
+    <div class="section-head">
+      <div>
+        <h2>Jadwal angsuran</h2>
+        <p class="sub">Pokok, bunga, angsuran, dan sisa pinjaman per bulan.</p>
+      </div>
+      <span class="badge" id="schedule-badge">-</span>
+    </div>
+    <div class="table-wrap scroll-y">
+      <table>
+        <thead>
+          <tr>
+            <th>Bulan</th>
+            <th class="num">Saldo awal</th>
+            <th class="num">Pokok</th>
+            <th class="num">Bunga</th>
+            <th class="num">Angsuran</th>
+            <th class="num">Sisa</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-body"></tbody>
+        <tfoot id="schedule-foot"></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Saran sebelum tanda tangan</h2>
+    <div class="list" id="recommendations">
+      <p class="muted">Saran muncul setelah perhitungan.</p>
+    </div>
+    <details>
+      <summary>Asumsi dan rumus</summary>
+      <div class="list" id="assumptions"></div>
+      <div class="list" id="formulas"></div>
+    </details>
+  </section>
+
+  <footer>
+    Tool ini menghitung dari angka yang kamu masukkan dan tidak mengakses akun pinjaman.
+    Hasil bukan penawaran resmi atau nasihat keuangan. Selalu cocokkan dengan tabel angsuran
+    dan perjanjian tertulis. Jangan pernah membagikan OTP, password, atau kode verifikasi.
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+var state = {
+  meta: null,
+  result: null,
+  interestType: 'flat'
+};
+
+function el(id) {
+  return document.getElementById(id);
+}
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatNumber(value, digits) {
+  var options = {
+    minimumFractionDigits: digits || 0,
+    maximumFractionDigits: digits || 0
+  };
+  return new Intl.NumberFormat('id-ID', options).format(value || 0);
+}
+
+function formatRupiah(value) {
+  var number = Number(value) || 0;
+  var sign = number < 0 ? '-' : '';
+  return sign + 'Rp ' + formatNumber(Math.abs(number), 0);
+}
+
+function formatPercent(value, digits) {
+  if (value === null || value === undefined) return '-';
+  return formatNumber(value, digits === undefined ? 2 : digits) + '%';
+}
+
+function showError(message) {
+  var box = el('form-error');
+  box.textContent = message;
+  box.hidden = false;
+}
+
+function hideError() {
+  var box = el('form-error');
+  box.textContent = '';
+  box.hidden = true;
+}
+
+function toast(message) {
+  var box = el('toast');
+  box.textContent = message;
+  box.classList.add('show');
+  window.setTimeout(function () {
+    box.classList.remove('show');
+  }, 1800);
+}
+
+function numberValue(id) {
+  var raw = el(id).value;
+  if (raw === '' || raw === null) return 0;
+  return Number(raw);
+}
+
+function setInterestType(value) {
+  state.interestType = value;
+  el('interest_type').value = value;
+  var chips = document.querySelectorAll('#interest-chips .chip');
+  chips.forEach(function (chip) {
+    var active = chip.getAttribute('data-value') === value;
+    chip.classList.toggle('active', active);
+    chip.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+  el('interest-hint').textContent = value === 'efektif'
+    ? 'Bunga efektif dihitung dari sisa pokok. Angsuran tetap, porsi bunga menurun.'
+    : 'Bunga flat dihitung dari plafon awal setiap bulan. Angsuran tetap.';
+}
+
+function collectPayload() {
+  return {
+    lender: el('lender').value,
+    product_name: el('product_name').value,
+    principal: numberValue('principal'),
+    tenor_months: numberValue('tenor_months'),
+    interest_type: state.interestType,
+    interest_rate_pct: numberValue('interest_rate_pct'),
+    admin_fee_pct: numberValue('admin_fee_pct'),
+    admin_fee_amount: numberValue('admin_fee_amount'),
+    provision_pct: numberValue('provision_pct'),
+    insurance_pct: numberValue('insurance_pct'),
+    other_fee_amount: numberValue('other_fee_amount'),
+    monthly_gross_profit: numberValue('monthly_gross_profit'),
+    existing_installment: numberValue('existing_installment'),
+    max_installment_pct: numberValue('max_installment_pct'),
+    late_days: numberValue('late_days'),
+    late_fee_per_day_pct: numberValue('late_fee_per_day_pct')
+  };
+}
+
+function collectOfferB() {
+  return {
+    lender: el('offer-b-lender').value || 'Penawaran B',
+    principal: numberValue('offer-b-principal'),
+    tenor_months: numberValue('offer-b-tenor'),
+    interest_type: el('offer-b-type').value,
+    interest_rate_pct: numberValue('offer-b-rate'),
+    admin_fee_pct: numberValue('offer-b-admin'),
+    admin_fee_amount: 0,
+    provision_pct: numberValue('offer-b-provision'),
+    insurance_pct: numberValue('offer-b-insurance'),
+    other_fee_amount: 0
+  };
+}
+
+function setBusy(busy) {
+  var button = el('analyze-btn');
+  button.disabled = busy;
+  button.textContent = busy ? 'Menghitung...' : 'Hitung biaya pinjaman';
+}
+
+function statHtml(label, value, className) {
+  return '<div class="stat"><div class="k">' + escapeHtml(label) + '</div>' +
+    '<div class="v ' + (className || '') + '">' + escapeHtml(value) + '</div></div>';
+}
+
+function renderResult(data) {
+  state.result = data;
+  var verdict = data.verdict;
+  var box = el('verdict');
+  box.className = 'verdict ' + verdict.level;
+  box.innerHTML = '<div class="verdict-label">' + escapeHtml(verdict.label) + '</div>' +
+    '<div class="verdict-note">' + escapeHtml(verdict.note) + '</div>';
+
+  var hero = el('hero-rate');
+  hero.textContent = formatPercent(data.loan.effective_annual_pct);
+  hero.className = 'hero-v';
+  if (data.loan.effective_annual_pct >= 100) hero.classList.add('bad');
+  else if (data.loan.effective_annual_pct >= 60) hero.classList.add('warn');
+
+  el('hero-sub').textContent = 'Bunga tertulis ' +
+    formatPercent(data.loan.nominal_annual_pct, 2) + ' per tahun (nominal). Selisih ' +
+    formatPercent(data.loan.rate_gap_points, 2) + ' poin dari hitungan efektif.';
+
+  var affordability = data.affordability;
+  var netClass = affordability.net_monthly_after_debt < 0 ? 'bad' : 'good';
+  var stats = [
+    ['Angsuran per bulan', formatRupiah(data.loan.monthly_installment), ''],
+    ['Uang diterima bersih', formatRupiah(data.loan.net_disbursed), ''],
+    ['Total biaya', formatRupiah(data.loan.total_cost), ''],
+    ['Rasio biaya dari uang diterima', formatPercent(data.loan.cost_ratio_pct), ''],
+    ['Sisa laba per bulan', formatRupiah(affordability.net_monthly_after_debt), netClass],
+    ['Plafon aman', formatRupiah(data.max_safe.max_safe_principal), ''],
+    ['Bunga nominal per tahun', formatPercent(data.loan.nominal_annual_pct), ''],
+    [
+      data.loan.late_days > 0 ? 'Denda telat' : 'Cicilan lain per bulan',
+      data.loan.late_days > 0
+        ? formatRupiah(data.loan.late_fee)
+        : formatRupiah(affordability.existing_installment),
+      data.loan.late_days > 0 ? 'bad' : ''
+    ]
+  ];
+  el('stats').innerHTML = stats.map(function (row) {
+    return statHtml(row[0], row[1], row[2]);
+  }).join('');
+
+  renderAffordability(data);
+  renderSchedule(data);
+  renderRecommendations(data);
+}
+
+function renderAffordability(data) {
+  var box = el('affordability');
+  var affordability = data.affordability;
+  var ratio = affordability.total_debt_ratio_pct;
+
+  if (ratio === null) {
+    box.innerHTML = '<p class="muted">Isi laba kotor bulanan agar rasio cicilan bisa dihitung.</p>';
+    return;
+  }
+
+  var width = Math.min(100, Math.max(0, ratio));
+  var level = ratio > 50 ? 'bad' : (ratio > data.input.max_installment_pct ? 'warn' : 'ok');
+  var levelText = level === 'bad' ? 'berat' : (level === 'warn' ? 'di atas batas aman' : 'aman');
+  var gapNote = affordability.excess > 0
+    ? 'Kelebihan ' + formatRupiah(affordability.excess) + ' per bulan di atas batas aman.'
+    : 'Masih ada ruang ' + formatRupiah(affordability.headroom) + ' per bulan di bawah batas aman.';
+
+  box.innerHTML =
+    '<div class="bar-wrap">' +
+      '<div class="bar-head"><span>Total cicilan dari laba kotor</span>' +
+      '<span>' + formatPercent(ratio) + '</span></div>' +
+      '<div class="bar"><div class="bar-fill ' + level + '" style="width:' + width + '%"></div></div>' +
+      '<div class="bar-note">Status: <strong>' + levelText + '</strong>. ' +
+      escapeHtml(gapNote) + '</div>' +
+    '</div>' +
+    '<div class="stats">' +
+      statHtml('Batas aman ' + formatPercent(data.input.max_installment_pct, 0),
+        formatRupiah(affordability.safe_installment_limit), '') +
+      statHtml('Cicilan maksimal yang muat', formatRupiah(affordability.max_safe_installment), '') +
+      statHtml('Laba menutup cicilan', formatNumber(affordability.coverage_ratio, 2) + 'x', '') +
+      statHtml('Sisa laba setahun', formatRupiah(affordability.annual_net_after_debt),
+        affordability.net_monthly_after_debt < 0 ? 'bad' : 'good') +
+    '</div>';
+}
+
+function renderSchedule(data) {
+  var rows = data.schedule.rows;
+  el('schedule-badge').textContent = rows.length + ' bulan, ' +
+    data.loan.interest_type_label.toLowerCase();
+  el('schedule-body').innerHTML = rows.map(function (row) {
+    return '<tr>' +
+      '<td>' + row.month + '</td>' +
+      '<td class="num">' + formatRupiah(row.opening) + '</td>' +
+      '<td class="num">' + formatRupiah(row.principal) + '</td>' +
+      '<td class="num">' + formatRupiah(row.interest) + '</td>' +
+      '<td class="num">' + formatRupiah(row.installment) + '</td>' +
+      '<td class="num">' + formatRupiah(row.closing) + '</td>' +
+    '</tr>';
+  }).join('');
+
+  el('schedule-foot').innerHTML = '<tr class="total-row">' +
+    '<td>Total</td>' +
+    '<td class="num">-</td>' +
+    '<td class="num">' + formatRupiah(data.schedule.totals.principal) + '</td>' +
+    '<td class="num">' + formatRupiah(data.schedule.totals.interest) + '</td>' +
+    '<td class="num">' + formatRupiah(data.schedule.totals.installment) + '</td>' +
+    '<td class="num">-</td>' +
+  '</tr>';
+}
+
+function renderRecommendations(data) {
+  var dotClass = data.verdict.level === 'ember'
+    ? 'bad'
+    : (data.verdict.level === 'signal' ? 'warn' : 'ok');
+  el('recommendations').innerHTML = data.recommendations.map(function (text) {
+    return '<div class="list-item"><span class="dot ' + dotClass + '"></span>' +
+      '<span>' + escapeHtml(text) + '</span></div>';
+  }).join('');
+}
+
+function renderMeta(meta) {
+  state.meta = meta;
+  el('max_installment_pct').value = meta.defaults.max_installment_pct;
+  el('late_fee_per_day_pct').value = meta.defaults.late_fee_per_day_pct;
+  el('assumptions').innerHTML = meta.assumptions.map(function (text) {
+    return '<div class="list-item"><span class="dot"></span><span>' +
+      escapeHtml(text) + '</span></div>';
+  }).join('');
+  el('formulas').innerHTML = meta.formulas.map(function (text) {
+    return '<div class="list-item"><span class="dot"></span><span>' +
+      escapeHtml(text) + '</span></div>';
+  }).join('');
+}
+
+function fillForm(data) {
+  el('lender').value = data.lender || '';
+  el('product_name').value = data.product_name || '';
+  el('principal').value = data.principal;
+  el('tenor_months').value = data.tenor_months;
+  setInterestType(data.interest_type || 'flat');
+  el('interest_rate_pct').value = data.interest_rate_pct;
+  el('admin_fee_pct').value = data.admin_fee_pct;
+  el('admin_fee_amount').value = data.admin_fee_amount;
+  el('provision_pct').value = data.provision_pct;
+  el('insurance_pct').value = data.insurance_pct;
+  el('other_fee_amount').value = data.other_fee_amount;
+  el('monthly_gross_profit').value = data.monthly_gross_profit;
+  el('existing_installment').value = data.existing_installment;
+  el('max_installment_pct').value = data.max_installment_pct;
+  el('late_days').value = data.late_days;
+  el('late_fee_per_day_pct').value = data.late_fee_per_day_pct;
+
+  el('offer-b-lender').value = 'Bank atau koperasi';
+  el('offer-b-principal').value = data.principal;
+  el('offer-b-tenor').value = 18;
+  el('offer-b-rate').value = 1.2;
+  el('offer-b-type').value = 'efektif';
+  el('offer-b-admin').value = 0.5;
+  el('offer-b-insurance').value = 0.2;
+  el('offer-b-provision').value = 0.5;
+}
+
+async function requestJson(url, options) {
+  var response = await fetch(url, options);
+  var data = null;
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = null;
+  }
+  if (!response.ok) {
+    throw new Error(data && data.error ? data.error : 'Permintaan gagal.');
+  }
+  return data;
+}
+
+async function runAnalyze(event) {
+  if (event && event.preventDefault) event.preventDefault();
+  hideError();
+  setBusy(true);
+  try {
+    var data = await requestJson('/api/analyze', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(collectPayload())
+    });
+    renderResult(data);
+  } catch (error) {
+    showError(error.message);
+  } finally {
+    setBusy(false);
+  }
+}
+
+async function runCompare() {
+  hideError();
+  var button = el('compare-btn');
+  button.disabled = true;
+  button.textContent = 'Membandingkan...';
+  try {
+    var payload = {
+      monthly_gross_profit: numberValue('monthly_gross_profit'),
+      existing_installment: numberValue('existing_installment'),
+      max_installment_pct: numberValue('max_installment_pct'),
+      offers: [collectPayload(), collectOfferB()]
+    };
+    var data = await requestJson('/api/compare', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    renderCompare(data);
+    toast('Perbandingan selesai');
+  } catch (error) {
+    showError(error.message);
+    el('compare-result').innerHTML = '<p class="muted">Perbandingan belum bisa dihitung.</p>';
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Bandingkan dengan pinjaman di atas';
+  }
+}
+
+function renderCompare(data) {
+  var rows = data.offers.map(function (item) {
+    var isBest = item.label === data.best_label;
+    var badgeClass = item.verdict.level === 'ember'
+      ? 'bad'
+      : (item.verdict.level === 'signal' ? 'warn' : 'good');
+    return '<tr class="' + (isBest ? 'best-row' : '') + '">' +
+      '<td><strong>' + escapeHtml(item.label) + '</strong>' +
+        '<div class="row-sub">' + escapeHtml(item.interest_type_label) + ', ' +
+        item.tenor_months + ' bulan</div></td>' +
+      '<td class="num">' + formatRupiah(item.monthly_installment) + '</td>' +
+      '<td class="num">' + formatRupiah(item.total_cost) + '</td>' +
+      '<td class="num">' + formatPercent(item.effective_annual_pct) + '</td>' +
+      '<td><span class="badge ' + badgeClass + '">' +
+        escapeHtml(item.verdict.label) + '</span></td>' +
+    '</tr>';
+  }).join('');
+
+  el('compare-result').innerHTML =
+    '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Penawaran</th><th class="num">Angsuran</th>' +
+      '<th class="num">Total biaya</th><th class="num">Efektif/tahun</th>' +
+      '<th>Verdict</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody>' +
+    '</table></div>' +
+    '<div class="rule-note"><strong>Paling murah: ' + escapeHtml(data.best_label) + '</strong>. ' +
+    escapeHtml(data.note) + '</div>';
+}
+
+async function downloadCsv() {
+  hideError();
+  try {
+    var response = await fetch('/api/export', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(collectPayload())
+    });
+    if (!response.ok) {
+      var data = null;
+      try { data = await response.json(); } catch (error) { data = null; }
+      throw new Error(data && data.error ? data.error : 'Ekspor gagal.');
+    }
+    var blob = await response.blob();
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = 'kalkulator-biaya-pinjaman-modal.csv';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    toast('CSV diunduh');
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+async function loadExample() {
+  hideError();
+  try {
+    var data = await requestJson('/api/example');
+    fillForm(data);
+    await runAnalyze();
+    toast('Contoh dimuat');
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+async function init() {
+  el('theme-btn').addEventListener('click', function () {
+    var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (error) {}
+  });
+
+  el('interest-chips').addEventListener('click', function (event) {
+    var chip = event.target.closest('.chip');
+    if (!chip) return;
+    setInterestType(chip.getAttribute('data-value'));
+    runAnalyze();
+  });
+
+  el('loan-form').addEventListener('submit', runAnalyze);
+  el('loan-form').addEventListener('change', function (event) {
+    if (event.target.id === 'interest_type') return;
+    runAnalyze();
+  });
+  el('example-btn').addEventListener('click', loadExample);
+  el('csv-btn').addEventListener('click', downloadCsv);
+  el('compare-btn').addEventListener('click', runCompare);
+
+  try {
+    var results = await Promise.all([
+      requestJson('/api/meta'),
+      requestJson('/api/example')
+    ]);
+    renderMeta(results[0]);
+    fillForm(results[1]);
+    await runAnalyze();
+  } catch (error) {
+    showError(error.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
