@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemeriksa Kesiapan Stok Kampanye</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.layout main .card:nth-child(2) { animation-delay: 60ms; }
+.layout aside .card:nth-child(2) { animation-delay: 90ms; }
+.layout aside .card:nth-child(3) { animation-delay: 120ms; }
+
+.policy {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.policy-main p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.policy-main strong { color: var(--ink); font-weight: 500; }
+.policy-note { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.policy-note strong { color: var(--ink); font-weight: 500; }
+.policy-note p { margin-top: 6px; }
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(310px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.group-title {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 18px 0 8px;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.span-2 { grid-column: span 2; }
+.form-block { margin-top: 12px; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select, textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+textarea { resize: vertical; min-height: 64px; }
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0;
+  margin-top: 6px;
+}
+.chip {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); }
+.chip:active { transform: scale(0.96); }
+.chip.active { background: var(--slab); color: var(--on-slab); }
+
+.btn:focus-visible,
+.chip:focus-visible,
+.theme:focus-visible,
+summary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn:disabled { cursor: wait; opacity: 0.65; transform: none; }
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.hero {
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 16px 18px;
+  margin-top: 14px;
+}
+.hero-k { color: var(--ink-4); font-size: 12px; }
+.hero-v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.15;
+  margin-top: 4px;
+  letter-spacing: -0.03em;
+}
+.hero-v.good { color: var(--ok); }
+.hero-v.warn { color: var(--signal); }
+.hero-v.bad { color: var(--ember); }
+.hero-sub { color: var(--ink-3); font-size: 12.5px; margin-top: 5px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+
+.bar-wrap { margin-top: 14px; }
+.bar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink-4);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.bar {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ink-3);
+  transition: width 240ms var(--ease-out);
+}
+.bar-fill.ok { background: var(--ok); }
+.bar-fill.warn { background: var(--signal); }
+.bar-fill.bad { background: var(--ember); }
+.bar-note { color: var(--ink-3); font-size: 13px; margin-top: 10px; }
+
+.ledger { display: flex; flex-direction: column; margin-top: 10px; }
+.ledger-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-row .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+.ledger-row .num.bad { color: var(--ember); }
+.ledger-row .num.good { color: var(--ok); }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.ok { background: var(--ok); }
+.dot.warn { background: var(--signal); }
+.dot.bad { background: var(--ember); }
+
+.rule-note {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+.rule-note strong { color: var(--ink); font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+td.num, th.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+tr.selected-row td { background: var(--wash); }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+.table-card { margin-top: 18px; }
+
+.empty {
+  color: var(--ink-4);
+  font-size: 14px;
+  padding: 18px 0 6px;
+}
+
+.form-error {
+  color: var(--ember);
+  font-size: 13px;
+  margin-top: 12px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.form-error[hidden] { display: none; }
+
+details { margin-top: 12px; }
+summary {
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+}
+details .list { margin-top: 8px; }
+details .grid-2 { margin-top: 12px; }
+
+footer {
+  color: var(--ink-5);
+  font-size: 12.5px;
+  margin-top: 24px;
+  line-height: 1.6;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 980px) {
+  .policy, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 620px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .field.span-2 { grid-column: span 1; }
+  .stats { grid-template-columns: 1fr; }
+  header { align-items: flex-start; }
+  .brand { gap: 12px; }
+  .mark { width: 38px; height: 38px; }
+  .card { padding: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">59</div>
+      <div>
+        <div class="eyebrow">Alat seller marketplace</div>
+        <h1>Pemeriksa Kesiapan Stok Kampanye</h1>
+        <p class="lede">
+          Lonjakan pesanan saat kampanye bisa berubah menjadi stok habis, pesanan batal,
+          dan laba hilang. Hitung kebutuhan sampai akhir kampanye, kekurangan unit,
+          tanggal pesan ideal, dan kas restock sebelum promo dimulai.
+        </p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <div class="policy">
+    <section class="card policy-main">
+      <h2>Stok aman bukan hanya soal jumlah besar</h2>
+      <p>
+        Kebutuhan dihitung dari penjualan sebelum kampanye, lonjakan selama kampanye,
+        dan buffer keamanan. Tool lalu membandingkannya dengan <strong>stok di tangan
+        dan stok masuk yang tiba tepat waktu</strong>.
+      </p>
+      <div class="scope-grid">
+        <span class="scope-chip in">Permintaan kampanye</span>
+        <span class="scope-chip in">Buffer keamanan</span>
+        <span class="scope-chip in">Lead time pemasok</span>
+        <span class="scope-chip in">Skenario kenaikan</span>
+        <span class="scope-chip in">Kas restock</span>
+      </div>
+    </section>
+    <section class="card policy-note">
+      <strong>Ambang 110% adalah patokan tool</strong>
+      <p>
+        Kecukupan 110% dipakai sebagai batas aman internal. Angka ini bukan aturan
+        resmi marketplace. Semua default, termasuk lead time, buffer, dan hari
+        penanganan, bisa diubah di form.
+      </p>
+    </section>
+  </div>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Data stok dan kampanye</h2>
+            <p class="sub">Isi dari Seller Center, catatan gudang, dan penawaran pemasok.</p>
+          </div>
+        </div>
+
+        <form id="stock-form" autocomplete="off">
+          <div class="grid-2">
+            <div class="field">
+              <label for="sku_name">Nama atau kode SKU</label>
+              <input id="sku_name" type="text" maxlength="120" placeholder="Contoh: Jaket Bomber Pria">
+            </div>
+            <div class="field">
+              <label for="marketplace">Marketplace</label>
+              <select id="marketplace"></select>
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="campaign_name">Nama kampanye</label>
+              <input id="campaign_name" type="text" maxlength="120" placeholder="Contoh: Flash Sale 12 Desember">
+            </div>
+            <div class="field">
+              <label for="campaign_date">Tanggal kampanye</label>
+              <input id="campaign_date" type="date">
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="as_of">Tanggal acuan</label>
+              <input id="as_of" type="date">
+              <p class="hint">Tanggal saat stok dan penjualan dihitung.</p>
+            </div>
+            <div class="field">
+              <label for="campaign_days">Lama kampanye (hari)</label>
+              <input id="campaign_days" type="number" min="1" max="90" step="1" inputmode="numeric">
+            </div>
+          </div>
+
+          <h3 class="group-title">Permintaan</h3>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="baseline_daily_sales">Penjualan harian biasa (unit)</label>
+              <input id="baseline_daily_sales" type="number" min="0" step="1" inputmode="numeric">
+              <p class="hint">Rata-rata 14 sampai 30 hari terakhir, bukan hari terbaik.</p>
+            </div>
+            <div class="field">
+              <label for="uplift_pct">Kenaikan permintaan saat kampanye (%)</label>
+              <input id="uplift_pct" type="number" min="0" max="1000" step="5" inputmode="decimal">
+              <p class="hint">150 berarti permintaan menjadi 2,5 kali penjualan biasa.</p>
+            </div>
+          </div>
+          <div class="chip-row" id="uplift-chips" role="group" aria-label="Pilihan kenaikan permintaan">
+            <button type="button" class="chip" data-value="0">0%</button>
+            <button type="button" class="chip" data-value="50">50%</button>
+            <button type="button" class="chip" data-value="100">100%</button>
+            <button type="button" class="chip" data-value="150">150%</button>
+            <button type="button" class="chip" data-value="200">200%</button>
+            <button type="button" class="chip" data-value="300">300%</button>
+          </div>
+
+          <h3 class="group-title">Stok</h3>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="stock_on_hand">Stok di tangan (unit)</label>
+              <input id="stock_on_hand" type="number" min="0" step="1" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="incoming_qty">Stok masuk (unit)</label>
+              <input id="incoming_qty" type="number" min="0" step="1" inputmode="numeric">
+              <p class="hint">Isi 0 bila tidak ada pengiriman dari pemasok.</p>
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="incoming_date">Tanggal stok masuk</label>
+              <input id="incoming_date" type="date">
+              <p class="hint">Kosongkan bila stok masuk dianggap tersedia sekarang.</p>
+            </div>
+            <div class="field">
+              <label for="safety_days">Hari buffer keamanan</label>
+              <input id="safety_days" type="number" min="0" max="60" step="1" inputmode="numeric">
+              <p class="hint">Cadangan untuk permintaan tak terduga, bukan aturan resmi.</p>
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="lead_time_days">Lead time pemasok (hari)</label>
+              <input id="lead_time_days" type="number" min="0" max="180" step="1" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="handling_days">Hari penanganan (hari)</label>
+              <input id="handling_days" type="number" min="0" max="30" step="1" inputmode="numeric">
+              <p class="hint">Waktu cek stok dan packing sebelum kampanye.</p>
+            </div>
+          </div>
+
+          <h3 class="group-title">Harga dan biaya</h3>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="unit_price">Harga jual per unit (Rp)</label>
+              <input id="unit_price" type="number" min="0" step="1000" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="unit_cost">Modal per unit (Rp)</label>
+              <input id="unit_cost" type="number" min="0" step="1000" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="grid-2 form-block">
+            <div class="field">
+              <label for="marketplace_fee_pct">Biaya marketplace (%)</label>
+              <input id="marketplace_fee_pct" type="number" min="0" max="100" step="0.1" inputmode="decimal">
+            </div>
+            <div class="field">
+              <label for="packaging_cost">Biaya kemasan per unit (Rp)</label>
+              <input id="packaging_cost" type="number" min="0" step="500" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="field form-block">
+            <label for="uplifts">Skenario kenaikan permintaan (%)</label>
+            <input id="uplifts" type="text" maxlength="120" placeholder="0, 50, 100, 150, 200">
+            <p class="hint">Pisahkan dengan koma, maksimal 10 skenario. Kosongkan untuk memakai 0 sampai 200 persen.</p>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="analyze-btn" type="submit">Hitung kesiapan stok</button>
+            <button class="btn ghost" id="example-btn" type="button">Muat contoh</button>
+            <button class="btn ghost" id="csv-btn" type="button">Unduh CSV</button>
+          </div>
+          <div class="form-error" id="form-error" role="alert" hidden></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Skenario kenaikan permintaan</h2>
+            <p class="sub">Bandingkan kebutuhan stok pada beberapa tingkat lonjakan.</p>
+          </div>
+          <span class="badge" id="scenario-badge">Belum dihitung</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">Perbandingan skenario kenaikan permintaan</caption>
+            <thead>
+              <tr>
+                <th>Kenaikan</th>
+                <th class="num">Permintaan/hari</th>
+                <th class="num">Kebutuhan</th>
+                <th class="num">Kecukupan</th>
+                <th class="num">Kekurangan</th>
+                <th class="num">Laba hilang</th>
+                <th class="num">Restock</th>
+                <th class="num">Kas</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="scenario-body">
+              <tr><td colspan="9" class="muted">Hasil skenario muncul setelah perhitungan.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rule-note" id="scenario-note">
+          Skenario memakai tanggal, stok, dan biaya yang sama. Hanya kenaikan permintaan yang berubah.
+        </div>
+        <div class="actions">
+          <button class="btn ghost small" id="scenario-btn" type="button">Hitung skenario</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <details open>
+          <summary>Asumsi dan rumus</summary>
+          <div class="grid-2">
+            <div>
+              <h3>Asumsi</h3>
+              <div class="list" id="assumptions"></div>
+            </div>
+            <div>
+              <h3>Rumus</h3>
+              <div class="list" id="formulas"></div>
+            </div>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card" aria-live="polite">
+        <div class="section-head">
+          <div>
+            <h2>Hasil kesiapan</h2>
+            <p class="sub" id="result-sub">Menunggu data</p>
+          </div>
+          <span class="badge" id="result-badge">-</span>
+        </div>
+
+        <div class="empty" id="empty-state">Isi form untuk melihat hasil.</div>
+
+        <div id="result-body" hidden>
+          <div class="verdict" id="verdict">
+            <div class="verdict-label">Belum dihitung</div>
+            <div class="verdict-note">Hasil akan muncul di sini.</div>
+          </div>
+
+          <div class="hero">
+            <div class="hero-k">Kecukupan stok sampai akhir kampanye</div>
+            <div class="hero-v" id="coverage">-</div>
+            <div class="hero-sub" id="coverage-sub">-</div>
+          </div>
+
+          <div class="bar-wrap">
+            <div class="bar-head"><span id="coverage-bar-label">Kecukupan</span><span>Target aman 110%</span></div>
+            <div class="bar"><div class="bar-fill" id="coverage-fill" style="width:0%"></div></div>
+            <div class="bar-note" id="coverage-bar-note">-</div>
+          </div>
+
+          <div class="stats" id="stats"></div>
+
+          <h3 class="group-title">Rincian permintaan</h3>
+          <div class="ledger" id="breakdown"></div>
+        </div>
+      </section>
+
+      <section class="card" id="restock-card" hidden>
+        <div class="section-head">
+          <div>
+            <h2>Rencana restock</h2>
+            <p class="sub">Waktu pesan dan kas yang perlu disiapkan.</p>
+          </div>
+          <span class="badge" id="restock-badge">-</span>
+        </div>
+        <div class="stats" id="restock-stats"></div>
+        <div class="rule-note" id="restock-note">-</div>
+      </section>
+
+      <section class="card" id="recommend-card" hidden>
+        <div class="section-head">
+          <div>
+            <h2>Langkah berikutnya</h2>
+            <p class="sub">Prioritas dari angka yang kamu isi.</p>
+          </div>
+        </div>
+        <div class="list" id="recommendations"></div>
+      </section>
+    </aside>
+  </div>
+
+  <footer>
+    Tool ini membantu perencanaan stok dari angka yang kamu isi. Hasil bukan jaminan
+    ketersediaan barang, bukan aturan resmi marketplace, dan bukan nasihat keuangan.
+    Selalu cocokkan dengan laporan penjualan, kapasitas pemasok, dan kanal resmi marketplace.
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var state = {
+    meta: null,
+    result: null,
+    scenario: null,
+    busy: false
+  };
+
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char];
+    });
+  }
+
+  function formatNumber(value, digits) {
+    var number = Number(value);
+    if (!Number.isFinite(number)) number = 0;
+    var maximum = typeof digits === 'number' ? digits : 1;
+    return new Intl.NumberFormat('id-ID', {
+      maximumFractionDigits: maximum
+    }).format(number);
+  }
+
+  function formatRupiah(value) {
+    var number = Number(value);
+    if (!Number.isFinite(number)) number = 0;
+    return 'Rp ' + new Intl.NumberFormat('id-ID', {
+      maximumFractionDigits: 0
+    }).format(Math.round(number));
+  }
+
+  function formatPercent(value, digits) {
+    var number = Number(value);
+    if (!Number.isFinite(number)) number = 0;
+    var maximum = typeof digits === 'number' ? digits : 1;
+    return new Intl.NumberFormat('id-ID', {
+      maximumFractionDigits: maximum
+    }).format(number) + '%';
+  }
+
+  function formatDate(value) {
+    if (!value) return 'belum diisi';
+    var time = Date.parse(value + 'T00:00:00Z');
+    if (!Number.isFinite(time)) return 'tanggal tidak valid';
+    return new Intl.DateTimeFormat('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC'
+    }).format(new Date(time));
+  }
+
+  function numberValue(id) {
+    var raw = el(id).value;
+    if (raw === '' || raw === null) return 0;
+    return Number(raw);
+  }
+
+  function toast(message) {
+    var box = el('toast');
+    box.textContent = message;
+    box.classList.add('show');
+    window.setTimeout(function () {
+      box.classList.remove('show');
+    }, 1800);
+  }
+
+  function showError(message) {
+    var box = el('form-error');
+    box.textContent = message;
+    box.hidden = false;
+  }
+
+  function hideError() {
+    var box = el('form-error');
+    box.hidden = true;
+    box.textContent = '';
+  }
+
+  function setBusy(busy) {
+    state.busy = busy;
+    var button = el('analyze-btn');
+    button.disabled = busy;
+    button.textContent = busy ? 'Menghitung...' : 'Hitung kesiapan stok';
+  }
+
+  function collectPayload() {
+    var payload = {
+      sku_name: el('sku_name').value,
+      marketplace: el('marketplace').value,
+      campaign_name: el('campaign_name').value,
+      campaign_date: el('campaign_date').value,
+      as_of: el('as_of').value,
+      campaign_days: numberValue('campaign_days'),
+      baseline_daily_sales: numberValue('baseline_daily_sales'),
+      uplift_pct: numberValue('uplift_pct'),
+      stock_on_hand: numberValue('stock_on_hand'),
+      incoming_qty: numberValue('incoming_qty'),
+      incoming_date: el('incoming_date').value,
+      safety_days: numberValue('safety_days'),
+      lead_time_days: numberValue('lead_time_days'),
+      handling_days: numberValue('handling_days'),
+      unit_price: numberValue('unit_price'),
+      unit_cost: numberValue('unit_cost'),
+      marketplace_fee_pct: numberValue('marketplace_fee_pct'),
+      packaging_cost: numberValue('packaging_cost')
+    };
+
+    var rawUplifts = el('uplifts').value.trim();
+    if (rawUplifts) {
+      payload.uplifts = rawUplifts.split(',')
+        .map(function (part) { return part.trim(); })
+        .filter(function (part) { return part !== ''; })
+        .map(function (part) { return Number(part); });
+    }
+
+    return payload;
+  }
+
+  function statHtml(label, value, className) {
+    return '<div class="stat"><div class="k">' + escapeHtml(label) + '</div>' +
+      '<div class="v ' + (className || '') + '">' + escapeHtml(value) + '</div></div>';
+  }
+
+  function verdictDot(level) {
+    if (level === 'ember') return 'bad';
+    if (level === 'signal') return 'warn';
+    if (level === 'ok') return 'ok';
+    return '';
+  }
+
+  function renderResult(data) {
+    state.result = data;
+    var projection = data.projection;
+    var verdict = data.verdict;
+
+    el('result-sub').textContent = data.input.sku_name || 'SKU tanpa nama';
+    el('result-badge').textContent = data.marketplace_label;
+
+    var box = el('verdict');
+    box.className = 'verdict ' + verdict.level;
+    box.innerHTML = '<div class="verdict-label">' + escapeHtml(verdict.label) + '</div>' +
+      '<div class="verdict-note">' + escapeHtml(verdict.note) + '</div>';
+
+    var coverage = projection.coverage_pct;
+    var levelClass = coverage >= 110 ? 'good' : (coverage >= 100 ? 'warn' : 'bad');
+    el('coverage').textContent = formatPercent(coverage, 1);
+    el('coverage').className = 'hero-v ' + levelClass;
+    el('coverage-sub').textContent = formatNumber(projection.available, 1) +
+      ' unit tersedia untuk kebutuhan ' + formatNumber(projection.total_need, 1) +
+      ' unit sampai ' + data.timeline.campaign_date_label + '.';
+
+    el('coverage-bar-label').textContent = formatPercent(coverage, 1) + ' dari kebutuhan';
+    var fill = el('coverage-fill');
+    fill.className = 'bar-fill ' + levelClass;
+    fill.style.width = Math.min(100, Math.max(0, coverage)) + '%';
+    el('coverage-bar-note').textContent = coverage >= 110
+      ? 'Di atas ambang aman 110%. Stok cukup untuk permintaan utama dan buffer.'
+      : (coverage >= 100
+        ? 'Permintaan utama tertutup, tetapi buffer keamanan belum penuh.'
+        : 'Stok belum menutup kebutuhan sampai akhir kampanye.');
+
+    var stats = [
+      ['Kebutuhan total', formatNumber(projection.total_need, 1) + ' unit', ''],
+      ['Stok tersedia', formatNumber(projection.available, 1) + ' unit', ''],
+      ['Kekurangan', formatNumber(projection.shortfall_units, 1) + ' unit',
+        projection.shortfall_units > 0 ? 'bad' : 'good'],
+      ['Surplus', formatNumber(projection.surplus_units, 1) + ' unit',
+        projection.surplus_units > 0 ? 'good' : ''],
+      ['Potensi stok habis', formatNumber(projection.stockout_units, 1) + ' unit',
+        projection.stockout_units > 0 ? 'bad' : 'good'],
+      ['Omzet hilang', formatRupiah(projection.lost_revenue),
+        projection.lost_revenue > 0 ? 'bad' : ''],
+      ['Laba hilang', formatRupiah(projection.lost_profit),
+        projection.lost_profit > 0 ? 'bad' : ''],
+      ['Hari tercakup saat kampanye',
+        formatNumber(projection.campaign_cover_days, 1) + ' dari ' +
+        formatNumber(data.input.campaign_days, 0) + ' hari', '']
+    ];
+    el('stats').innerHTML = stats.map(function (row) {
+      return statHtml(row[0], row[1], row[2]);
+    }).join('');
+
+    var breakdown = [
+      ['Penjualan harian biasa', formatNumber(projection.baseline_daily, 1) + ' unit/hari', ''],
+      ['Penjualan harian kampanye', formatNumber(projection.campaign_daily, 1) + ' unit/hari', ''],
+      ['Kebutuhan sebelum kampanye (' + projection.pre_days + ' hari)',
+        formatNumber(projection.pre_demand, 1) + ' unit', ''],
+      ['Kebutuhan selama kampanye (' + data.input.campaign_days + ' hari)',
+        formatNumber(projection.campaign_demand, 1) + ' unit', ''],
+      ['Buffer keamanan (' + data.input.safety_days + ' hari)',
+        formatNumber(projection.safety_units, 1) + ' unit', ''],
+      ['Stok di tangan', formatNumber(projection.stock_on_hand, 1) + ' unit', ''],
+      ['Stok masuk tepat waktu', formatNumber(projection.incoming_usable, 1) + ' unit', 'good'],
+      ['Stok masuk terlambat', formatNumber(projection.incoming_late, 1) + ' unit',
+        projection.incoming_late > 0 ? 'bad' : '']
+    ];
+    el('breakdown').innerHTML = breakdown.map(function (row) {
+      return '<div class="ledger-row"><span>' + escapeHtml(row[0]) + '</span>' +
+        '<span class="num ' + row[2] + '">' + escapeHtml(row[1]) + '</span></div>';
+    }).join('');
+
+    renderRestock(data);
+    renderRecommendations(data);
+
+    el('empty-state').hidden = true;
+    el('result-body').hidden = false;
+    el('restock-card').hidden = false;
+    el('recommend-card').hidden = false;
+  }
+
+  function renderRestock(data) {
+    var projection = data.projection;
+    var timeline = data.timeline;
+    var restock = projection.restock_units;
+    var dayLabel = timeline.days_to_deadline === null
+      ? 'tidak diketahui'
+      : (timeline.days_to_deadline < 0
+        ? 'Lewat ' + Math.abs(timeline.days_to_deadline) + ' hari'
+        : timeline.days_to_deadline + ' hari lagi');
+
+    var badge = el('restock-badge');
+    if (timeline.order_late) {
+      badge.textContent = 'Terlambat';
+      badge.className = 'badge bad';
+    } else if (timeline.order_now) {
+      badge.textContent = 'Pesan sekarang';
+      badge.className = 'badge warn';
+    } else {
+      badge.textContent = 'Masih ada waktu';
+      badge.className = 'badge good';
+    }
+
+    var stats = [
+      ['Saran restock', restock > 0 ? formatNumber(restock, 0) + ' unit' : 'Tidak perlu', restock > 0 ? 'warn' : 'good'],
+      ['Kas dibutuhkan', formatRupiah(projection.cash_needed), restock > 0 ? '' : 'good'],
+      ['Tanggal pesan ideal', timeline.restock_deadline_label, ''],
+      ['Sisa waktu', dayLabel, timeline.order_late ? 'bad' : '']
+    ];
+    el('restock-stats').innerHTML = stats.map(function (row) {
+      return statHtml(row[0], row[1], row[2]);
+    }).join('');
+
+    var incomingNote = '';
+    if (projection.incoming_late > 0) {
+      incomingNote = ' Stok masuk ' + formatNumber(projection.incoming_late, 0) +
+        ' unit tiba setelah tanggal kampanye, jadi belum dihitung sebagai stok tersedia.';
+    } else if (data.input.incoming_qty > 0 && !data.input.incoming_date) {
+      incomingNote = ' Tanggal tiba stok masuk belum diisi, jadi stok itu dianggap tersedia sekarang.';
+    } else if (data.input.incoming_qty > 0) {
+      incomingNote = ' Stok masuk ' + formatNumber(data.input.incoming_qty, 0) +
+        ' unit tiba ' + timeline.incoming_date_label + '.';
+    }
+
+    el('restock-note').innerHTML = 'Tanggal pesan ideal dihitung dari lead time ' +
+      escapeHtml(data.input.lead_time_days) + ' hari dan penanganan ' +
+      escapeHtml(data.input.handling_days) + ' hari. Sisa waktu dihitung dari ' +
+      escapeHtml(timeline.as_of_label) + '.' + escapeHtml(incomingNote);
+  }
+
+  function renderRecommendations(data) {
+    var dot = verdictDot(data.verdict.level);
+    el('recommendations').innerHTML = data.recommendations.map(function (text) {
+      return '<div class="list-item"><span class="dot ' + dot + '"></span>' +
+        '<span>' + escapeHtml(text) + '</span></div>';
+    }).join('');
+  }
+
+  function renderScenarios(data) {
+    state.scenario = data;
+    el('scenario-badge').textContent = data.rows.length + ' skenario';
+
+    if (!data.rows.length) {
+      el('scenario-body').innerHTML =
+        '<tr><td colspan="9" class="muted">Belum ada skenario.</td></tr>';
+      return;
+    }
+
+    el('scenario-body').innerHTML = data.rows.map(function (row) {
+      var badge = row.coverage_pct >= 110
+        ? ['Aman', 'good']
+        : (row.coverage_pct >= 100 ? ['Tipis', 'warn'] : ['Kurang', 'bad']);
+      var selected = state.result &&
+        Number(row.uplift_pct) === Number(state.result.input.uplift_pct);
+      return '<tr class="' + (selected ? 'selected-row' : '') + '">' +
+        '<td>' + formatPercent(row.uplift_pct, 0) + '</td>' +
+        '<td class="num">' + formatNumber(row.campaign_daily, 1) + '</td>' +
+        '<td class="num">' + formatNumber(row.total_need, 1) + '</td>' +
+        '<td class="num">' + formatPercent(row.coverage_pct, 1) + '</td>' +
+        '<td class="num">' + formatNumber(row.shortfall_units, 1) + '</td>' +
+        '<td class="num">' + formatRupiah(row.lost_profit) + '</td>' +
+        '<td class="num">' + formatNumber(row.restock_units, 0) + '</td>' +
+        '<td class="num">' + formatRupiah(row.cash_needed) + '</td>' +
+        '<td><span class="badge ' + badge[1] + '">' + badge[0] + '</span></td>' +
+        '</tr>';
+    }).join('');
+
+    el('scenario-note').textContent = data.note + ' Tanggal pesan ideal: ' +
+      data.timeline.restock_deadline_label + '. Margin bersih per unit ' +
+      formatRupiah(data.margin.net_per_unit) + '.';
+  }
+
+  function renderMeta(meta) {
+    state.meta = meta;
+    el('marketplace').innerHTML = meta.marketplaces.map(function (item) {
+      return '<option value="' + escapeHtml(item.id) + '">' +
+        escapeHtml(item.label) + '</option>';
+    }).join('');
+
+    el('assumptions').innerHTML = meta.assumptions.map(function (text) {
+      return '<div class="list-item"><span class="dot"></span><span>' +
+        escapeHtml(text) + '</span></div>';
+    }).join('');
+    el('formulas').innerHTML = meta.formulas.map(function (text) {
+      return '<div class="list-item"><span class="dot"></span><span>' +
+        escapeHtml(text) + '</span></div>';
+    }).join('');
+
+    if (!el('uplifts').value) {
+      el('uplifts').value = meta.scenario_uplifts.join(', ');
+    }
+  }
+
+  function fillForm(data) {
+    el('sku_name').value = data.sku_name || '';
+    el('marketplace').value = data.marketplace || 'shopee';
+    el('campaign_name').value = data.campaign_name || '';
+    el('campaign_date').value = data.campaign_date || '';
+    el('as_of').value = data.as_of || '';
+    el('campaign_days').value = data.campaign_days;
+    el('baseline_daily_sales').value = data.baseline_daily_sales;
+    el('uplift_pct').value = data.uplift_pct;
+    el('stock_on_hand').value = data.stock_on_hand;
+    el('incoming_qty').value = data.incoming_qty;
+    el('incoming_date').value = data.incoming_date || '';
+    el('safety_days').value = data.safety_days;
+    el('lead_time_days').value = data.lead_time_days;
+    el('handling_days').value = data.handling_days;
+    el('unit_price').value = data.unit_price;
+    el('unit_cost').value = data.unit_cost;
+    el('marketplace_fee_pct').value = data.marketplace_fee_pct;
+    el('packaging_cost').value = data.packaging_cost;
+    syncUpliftChips(data.uplift_pct);
+  }
+
+  function syncUpliftChips(value) {
+    var chips = document.querySelectorAll('#uplift-chips .chip');
+    chips.forEach(function (chip) {
+      var active = Number(chip.getAttribute('data-value')) === Number(value);
+      chip.classList.toggle('active', active);
+      chip.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
+  async function requestJson(url, options) {
+    var response = await fetch(url, options);
+    var data = null;
+    try {
+      data = await response.json();
+    } catch (error) {
+      data = null;
+    }
+    if (!response.ok) {
+      throw new Error(data && data.error ? data.error : 'Permintaan gagal.');
+    }
+    return data;
+  }
+
+  function postJson(url, payload) {
+    return {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload)
+    };
+  }
+
+  async function runAnalyze(event) {
+    if (event && event.preventDefault) event.preventDefault();
+    if (state.busy) return;
+    hideError();
+    setBusy(true);
+    var payload = collectPayload();
+
+    var results = await Promise.allSettled([
+      requestJson('/api/analyze', postJson('/api/analyze', payload)),
+      requestJson('/api/scenarios', postJson('/api/scenarios', payload))
+    ]);
+
+    setBusy(false);
+
+    if (results[0].status === 'rejected') {
+      showError(results[0].reason.message);
+      return;
+    }
+
+    renderResult(results[0].value);
+    syncUpliftChips(results[0].value.input.uplift_pct);
+
+    if (results[1].status === 'fulfilled') {
+      renderScenarios(results[1].value);
+    } else {
+      showError(results[1].reason.message);
+    }
+  }
+
+  async function runScenarios() {
+    hideError();
+    try {
+      var data = await requestJson('/api/scenarios', postJson('/api/scenarios', collectPayload()));
+      renderScenarios(data);
+      toast('Skenario diperbarui');
+    } catch (error) {
+      showError(error.message);
+    }
+  }
+
+  async function downloadCsv() {
+    hideError();
+    try {
+      var response = await fetch('/api/export', postJson('/api/export', collectPayload()));
+      if (!response.ok) {
+        var data = null;
+        try { data = await response.json(); } catch (error) { data = null; }
+        throw new Error(data && data.error ? data.error : 'Ekspor gagal.');
+      }
+      var blob = await response.blob();
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = 'pemeriksa-kesiapan-stok-kampanye.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast('CSV diunduh');
+    } catch (error) {
+      showError(error.message);
+    }
+  }
+
+  async function loadExample() {
+    hideError();
+    try {
+      var data = await requestJson('/api/example');
+      fillForm(data);
+      await runAnalyze();
+      toast('Contoh dimuat');
+    } catch (error) {
+      showError(error.message);
+    }
+  }
+
+  async function init() {
+    el('theme-btn').addEventListener('click', function () {
+      var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (error) {}
+    });
+
+    el('stock-form').addEventListener('submit', runAnalyze);
+    el('stock-form').addEventListener('change', runAnalyze);
+    el('example-btn').addEventListener('click', loadExample);
+    el('csv-btn').addEventListener('click', downloadCsv);
+    el('scenario-btn').addEventListener('click', runScenarios);
+
+    el('uplift-chips').addEventListener('click', function (event) {
+      var chip = event.target.closest('.chip');
+      if (!chip) return;
+      el('uplift_pct').value = chip.getAttribute('data-value');
+      syncUpliftChips(chip.getAttribute('data-value'));
+      runAnalyze();
+    });
+
+    try {
+      var results = await Promise.all([
+        requestJson('/api/meta'),
+        requestJson('/api/example')
+      ]);
+      renderMeta(results[0]);
+      fillForm(results[1]);
+      await runAnalyze();
+    } catch (error) {
+      showError(error.message);
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
