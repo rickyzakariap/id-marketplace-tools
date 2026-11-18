@@ -64,6 +64,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 56 | [56-kalkulator-stok-mati](56-kalkulator-stok-mati/) | Web | Node.js + Express | Calculate capital tied in dead stock, monthly holding cost, break-even discount, and liquidation scenario |
 | 57 | [57-pemeriksa-efisiensi-iklan](57-pemeriksa-efisiensi-iklan/) | Web | Node.js + Express | Audit ad efficiency: ROAS, ACOS, CPA, break-even ROAS from margin, wasted budget, and profit-target budget plan |
 | 58 | [58-kalkulator-biaya-pinjaman-modal](58-kalkulator-biaya-pinjaman-modal/) | Web | Node.js + Express | Calculate loan cost for restocking: flat vs effective interest, upfront fees, installment burden, safe principal, and offer comparison |
+| 59 | [59-pemeriksa-kesiapan-stok-kampanye](59-pemeriksa-kesiapan-stok-kampanye/) | Web | Node.js + Express | Check stock readiness for campaign demand spikes: coverage, stockout loss, restock deadline, quantity, cash need, and uplift scenarios |
 
 ## Checks
 
