@@ -1,0 +1,14 @@
+{
+  "name": "pemeriksa-ongkir-volumetrik",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hitung berat volume, berat tertagih, biaya kirim, dan penghematan dari pengecilan kemasan",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
