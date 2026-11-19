@@ -21,25 +21,39 @@ Legacy tools (#01-#35) use a mix of Node, Go, Python, and React. They stay as th
 
 ## Stack Policy
 
-1. **New web tool:** Node.js 22 + Express, static frontend in `public/`, no bundler. Port is `8000 + project number` (e.g. #49 -> 8049).
-2. **New CLI tool:** Go or Python stdlib only. No external dependency unless justified in the tool README.
-3. **New Chrome extension:** Manifest V3.
+This repository accepts four shapes of tool. Pick the shape that fits the problem instead of
+forcing everything into a web app.
+
+| Shape | Stack | Entry point | Notes |
+|-------|-------|-------------|-------|
+| Web app | Node.js 22 + Express 4 | `server.js` + `public/index.html` | Default for interactive tools. Port is `8000 + project number`. |
+| Web app (Python) | Python 3 stdlib | `index.html` or `public/index.html` | Uses `http.server`, no framework, no build step. |
+| CLI | Go 1.21+ or Python 3 stdlib | `main.go` or `main.py` / `cli.py` | For batch work, exports, and pipelines. Reads stdin/flags, writes stdout/files. |
+| Chrome extension | Manifest V3 | `manifest.json` | No remote code, minimal permissions, all JS bundled locally. |
+
+1. **New web tool:** Node.js 22 + Express, static frontend in `public/`, no bundler. Port is `8000 + project number` (e.g. #49 -> 8049). Python web tools use `http.server` only.
+2. **New CLI tool:** Go or Python stdlib only. No external dependency unless justified in the tool README. CLI tools do not need a port or HTML.
+3. **New Chrome extension:** Manifest V3, `manifest_version: 3`, at least one JS file, and one of `background`, `action`, `content_scripts`, or `side_panel`. No remote scripts.
 4. **Never** introduce React, Vite, Next.js, Tailwind, or another server framework for a new tool unless Architecture.md is updated first.
 5. Every UI follows `DESIGN.md`. Every tool has `README.md`, tests, and a source-grounded default.
 6. Code and comments in English, user-facing text in Bahasa Indonesia.
+
+`scripts/check-tool-conventions.sh` enforces these shapes and rejects folders that mix them.
+`.github/workflows/checks.yml` runs the matching test command per shape: `npm test` for Node,
+`go vet` and `go test` for Go, `py_compile` and `unittest` for Python, and `node --check` plus
+`node --test` for extensions.
 
 ## Legacy Tools (Exempt)
 
 These tools predate the convention checker. They are exempt from retrofitting and should not
 be changed just to satisfy the checker. The list matches the current failures from
-`scripts/check-all.sh` (34 tools pass, 16 are exempt).
+`scripts/check-all.sh` (46 tools pass, 14 are exempt).
 
 | Tool | Exemption reason |
 |------|------------------|
-| `01-marketplace-fee-calculator` | No supported stack detected (no `package.json`, Go, or Python entry point). |
+| `01-marketplace-fee-calculator` | No supported stack detected (no `package.json`, Go, Python, or Chrome manifest). |
 | `02-listing-seo-analyzer` | Missing `test/`; `PORT` is not `8002`. |
 | `04-fee-breakdown-calculator` | Python web tool has no `index.html` or `public/index.html`. |
-| `05-review-extension` | No supported stack detected (no `package.json`, Go, or Python entry point). |
 | `06-dropship-calculator` | Python web tool has no `index.html` or `public/index.html`. |
 | `08-komplain-response-generator` | Python web tool has no `index.html` or `public/index.html`. |
 | `11-shipping-cost-estimator` | Missing `test/`; no `start` script; `PORT` is not `8011`. |
@@ -47,7 +61,6 @@ be changed just to satisfy the checker. The list matches the current failures fr
 | `13-competitor-price-monitor` | Missing `test/`; no `test` script; `PORT` is not `8013`. |
 | `14-promo-cost-calculator` | Go web tool has no `public/index.html` and is not a CLI with `main.go`. |
 | `16-listing-consistency-checker` | Missing `test/`; no `test` script; `PORT` is not `8016`. |
-| `20-stock-sync-checker` | No supported stack detected (no `package.json`, Go, or Python entry point). |
 | `26-omzet-gabungan-tracker` | Missing `test/`; no `start` script. |
 | `28-toco-migration-calculator` | Missing `test/`; no `test` script. |
 | `32-fmcg-trend-analyzer` | Missing `test/`; no `test` script. |

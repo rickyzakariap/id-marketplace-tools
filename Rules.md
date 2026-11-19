@@ -72,6 +72,32 @@ const calc = (p, m) => p * getFeeRate(m);
 - Mobile-first responsive design
 - No `!important` kecuali override third-party
 
+### Python (CLI dan Web)
+
+```python
+# ✅ Good
+def calculate_fee(price: float, rate: float) -> float:
+    return round(price * rate, 2)
+
+# ❌ Bad
+def calc(p, r): return p * r
+```
+
+**Rules:**
+- Python 3 stdlib only: `argparse`, `csv`, `json`, `http.server`, `unittest`. Tanpa `requests`, `flask`, `pandas`, atau library pihak ketiga.
+- CLI memakai `main.py` atau `cli.py`, argumen lewat `argparse`, output ke stdout atau file, dan `test_*.py` dengan `unittest`.
+- Web tool memakai `http.server` dan wajib punya `index.html` atau `public/index.html`.
+- Type hint untuk fungsi publik, error handling eksplisit lewat `SystemExit` atau exception yang jelas.
+
+### Chrome Extension (Manifest V3)
+
+**Rules:**
+- Wajib `manifest.json` dengan `"manifest_version": 3`, satu dari `background`, `action`, `content_scripts`, atau `side_panel`, dan minimal satu file `.js`.
+- Tanpa remote code: semua JS dibundel lokal, tanpa CDN dan tanpa `eval` dari jaringan.
+- Permission seminimal mungkin, jelaskan tiap permission di README.
+- Logika murni dipisah ke file sendiri dan diuji dengan `node --test` di folder `test/`.
+- Tanpa build step: file yang ada di repo adalah file yang dimuat Chrome.
+
 ## Git Workflow
 
 ### Branch Naming
