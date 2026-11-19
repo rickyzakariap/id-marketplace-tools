@@ -66,6 +66,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 58 | [58-kalkulator-biaya-pinjaman-modal](58-kalkulator-biaya-pinjaman-modal/) | Web | Node.js + Express | Calculate loan cost for restocking: flat vs effective interest, upfront fees, installment burden, safe principal, and offer comparison |
 | 59 | [59-pemeriksa-kesiapan-stok-kampanye](59-pemeriksa-kesiapan-stok-kampanye/) | Web | Node.js + Express | Check stock readiness for campaign demand spikes: coverage, stockout loss, restock deadline, quantity, cash need, and uplift scenarios |
 | 60 | [60-pemeriksa-ongkir-volumetrik](60-pemeriksa-ongkir-volumetrik/) | Web | Node.js + Express | Audit courier volumetric billing: chargeable weight, volume overcharge, tier limits, divisor comparison, and packaging savings |
+| 61 | [61-pemantau-tenggat-kirim](61-pemantau-tenggat-kirim/) | Extension | Manifest V3 | Monitor marketplace order dispatch deadlines with countdown, risk status, packing start time, penalty estimate, CSV import and export, and toolbar badge |
 
 ## Checks
 
