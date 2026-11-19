@@ -88,3 +88,6 @@ Feel free to open issues, submit PRs, or suggest new tools. Any contribution is 
 ## License
 
 [MIT](LICENSE)
+| 62 | [62-probe-go](62-probe-go/) | CLI | Go | Temporary CI probe |
+| 63 | [63-probe-py](63-probe-py/) | CLI | Python | Temporary CI probe |
+| 64 | [64-probe-ext](64-probe-ext/) | Extension | Manifest V3 | Temporary CI probe |
