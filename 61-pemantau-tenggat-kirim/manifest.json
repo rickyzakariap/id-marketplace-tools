@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Pemantau Tenggat Kirim",
+  "version": "1.0.0",
+  "description": "Pantau tenggat kirim pesanan marketplace dengan hitungan mundur, status risiko, dan badge peringatan.",
+  "permissions": ["storage", "alarms"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Pemantau Tenggat Kirim"
+  }
+}

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pemantau Tenggat Kirim</title>
+  <script src="theme.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      --bg: #ffffff;
+      --surface: #f7f7f6;
+      --surface-2: #f1f1f0;
+      --surface-3: #ecebe7;
+      --elev: #ffffff;
+
+      --ink: #17181a;
+      --ink-2: #3c3b37;
+      --ink-3: #5c5b56;
+      --ink-4: #6f6e68;
+      --ink-5: #85847e;
+      --ink-rgb: 23, 24, 26;
+
+      --wash: rgba(23, 24, 26, 0.06);
+      --wash-hover: rgba(23, 24, 26, 0.09);
+      --rule: rgba(23, 24, 26, 0.16);
+      --line: rgba(23, 24, 26, 0.08);
+
+      --signal: #2231dd;
+      --ember: #b8431c;
+      --ok: #15803d;
+      --on-slab: #ffffff;
+      --slab: var(--ink);
+
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+      --font-head: "Google Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+
+      --bg: #000000;
+      --surface: #0f0f0f;
+      --surface-2: #181818;
+      --surface-3: #202020;
+      --elev: #202020;
+
+      --ink: #ffffff;
+      --ink-2: #b4b4b4;
+      --ink-3: #9a9a9a;
+      --ink-4: #828282;
+      --ink-5: #6b6b6b;
+      --ink-rgb: 255, 255, 255;
+
+      --wash: rgba(255, 255, 255, 0.06);
+      --wash-hover: rgba(255, 255, 255, 0.1);
+      --rule: rgba(255, 255, 255, 0.14);
+      --line: rgba(255, 255, 255, 0.08);
+
+      --signal: #3aa9ff;
+      --ember: #ff7a4d;
+      --ok: #34d17a;
+      --on-slab: #000000;
+      --slab: var(--ink);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      min-height: 560px;
+      max-height: 600px;
+      margin: 0;
+      overflow-y: auto;
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 14px/1.5 var(--font-ui);
+      scrollbar-width: thin;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+    }
+
+    .app {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .app > * {
+      animation: rise 0.55s var(--ease-out) both;
+    }
+
+    .app > *:nth-child(2) { animation-delay: 40ms; }
+    .app > *:nth-child(3) { animation-delay: 80ms; }
+    .app > *:nth-child(4) { animation-delay: 120ms; }
+    .app > *:nth-child(5) { animation-delay: 160ms; }
+    .app > *:nth-child(6) { animation-delay: 200ms; }
+    .app > *:nth-child(7) { animation-delay: 240ms; }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand__mark {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: var(--slab);
+      color: var(--on-slab);
+      font: 500 10px var(--font-mono);
+      letter-spacing: 0.04em;
+    }
+
+    .brand h1 {
+      font: 500 17px/1.2 var(--font-head);
+      letter-spacing: -0.02em;
+    }
+
+    .brand__sub {
+      margin-top: 2px;
+      color: var(--ink-4);
+      font-size: 12.5px;
+    }
+
+    .theme-toggle {
+      flex: none;
+      height: 32px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--wash);
+      color: var(--ink-2);
+      font: 500 14px var(--font-ui);
+      transition: background 140ms, transform 140ms var(--ease-pop);
+    }
+
+    .theme-toggle:hover {
+      background: var(--wash-hover);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.96);
+    }
+
+    .verdict {
+      padding: 13px 15px;
+      border-left: 3px solid var(--signal);
+      border-radius: 20px;
+      background: var(--wash);
+    }
+
+    .verdict--ok { border-left-color: var(--ok); }
+    .verdict--ember { border-left-color: var(--ember); }
+    .verdict--signal { border-left-color: var(--signal); }
+
+    .verdict__label {
+      color: var(--ink-4);
+      font-size: 12.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .verdict__value {
+      margin-top: 4px;
+      font: 500 20px/1.2 var(--font-head);
+      letter-spacing: -0.02em;
+    }
+
+    .verdict__note {
+      margin-top: 5px;
+      color: var(--ink-3);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 10px 11px;
+      border-radius: 20px;
+      background: var(--wash);
+    }
+
+    .stat__label {
+      color: var(--ink-4);
+      font-size: 12.5px;
+    }
+
+    .stat__value {
+      margin-top: 3px;
+      font: 500 17px/1.15 var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .stat__value--ember { color: var(--ember); }
+
+    .panel {
+      padding: 14px;
+      border-radius: 28px;
+      background: var(--elev);
+      box-shadow: var(--shadow);
+    }
+
+    .panel__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .panel h2 {
+      font: 500 17px/1.25 var(--font-head);
+      letter-spacing: -0.02em;
+    }
+
+    .panel__meta {
+      color: var(--ink-4);
+      font-size: 12.5px;
+    }
+
+    .order-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .order {
+      padding: 12px;
+      border-radius: 20px;
+      background: var(--wash);
+    }
+
+    .order__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .order__code {
+      font: 500 13.5px var(--font-mono);
+      word-break: break-word;
+    }
+
+    .order__meta {
+      margin-top: 2px;
+      color: var(--ink-4);
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .order__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .order__grid > div:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .order__label {
+      color: var(--ink-4);
+      font-size: 12.5px;
+    }
+
+    .order__value {
+      margin-top: 2px;
+      color: var(--ink-2);
+      font: 500 12.5px/1.35 var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .order__action {
+      margin-top: 9px;
+      color: var(--ink-3);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .order__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    .order__penalty {
+      color: var(--ember);
+      font: 500 12.5px var(--font-mono);
+    }
+
+    .order__penalty--muted {
+      color: var(--ink-4);
+      font-family: var(--font-ui);
+      font-weight: 400;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      flex: none;
+      height: 23px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      font: 500 12.5px var(--font-ui);
+    }
+
+    .pill--safe { color: var(--ok); }
+    .pill--warning { color: var(--signal); }
+    .pill--critical,
+    .pill--late { color: var(--ember); }
+
+    .mini-button {
+      flex: none;
+      height: 27px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--ink-4);
+      font: 500 13px var(--font-ui);
+      transition: background 140ms, color 140ms;
+    }
+
+    .mini-button:hover {
+      background: var(--wash-hover);
+      color: var(--ember);
+    }
+
+    .empty {
+      padding: 14px 4px;
+      color: var(--ink-4);
+      font-size: 13px;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field--wide {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      color: var(--ink-4);
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--wash);
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--ink-5);
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+      font: 400 12.5px/1.5 var(--font-mono);
+    }
+
+    .button {
+      height: 40px;
+      padding: 0 15px;
+      border: 0;
+      border-radius: 999px;
+      font: 500 13px var(--font-ui);
+      transition: background 140ms, transform 140ms var(--ease-pop);
+    }
+
+    .button:active {
+      transform: scale(0.96);
+    }
+
+    .button--primary {
+      width: 100%;
+      background: var(--slab);
+      color: var(--on-slab);
+      margin-top: 2px;
+    }
+
+    .button--ghost {
+      height: 34px;
+      background: var(--wash);
+      color: var(--ink-2);
+      font-size: 13px;
+    }
+
+    .button--ghost:hover {
+      background: var(--wash-hover);
+    }
+
+    .button--danger {
+      color: var(--ember);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .actions .button--danger {
+      grid-column: 1 / -1;
+    }
+
+    .helper {
+      margin-top: 6px;
+      color: var(--ink-4);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .status-note {
+      margin-top: 7px;
+      color: var(--ink-3);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .status-note--error {
+      color: var(--ember);
+    }
+
+    .details {
+      padding: 0;
+    }
+
+    .details summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 15px;
+      border-radius: 20px;
+      background: var(--wash);
+      color: var(--ink-2);
+      font: 500 14px var(--font-ui);
+      list-style: none;
+    }
+
+    .details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .details summary::after {
+      content: "Buka";
+      color: var(--ink-4);
+      font-size: 12.5px;
+      font-weight: 400;
+    }
+
+    .details[open] summary {
+      border-radius: 20px 20px 12px 12px;
+    }
+
+    .details[open] summary::after {
+      content: "Tutup";
+    }
+
+    .details__body {
+      display: grid;
+      gap: 8px;
+      padding: 12px 2px 2px;
+    }
+
+    .footer {
+      display: grid;
+      gap: 10px;
+    }
+
+    .caption {
+      color: var(--ink-4);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    [hidden] {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">TG</span>
+        <div>
+          <h1>Pemantau Tenggat Kirim</h1>
+          <p class="brand__sub">Jaga pesanan keluar sebelum tenggat</p>
+        </div>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Ganti tema">Gelap</button>
+    </header>
+
+    <section id="verdict" class="verdict verdict--signal" aria-live="polite">
+      <p class="verdict__label">Ringkasan hari ini</p>
+      <p id="verdict-title" class="verdict__value">Belum ada pesanan</p>
+      <p id="verdict-note" class="verdict__note">Tambahkan pesanan atau muat contoh untuk mulai memantau.</p>
+    </section>
+
+    <section class="stats" aria-label="Statistik tenggat">
+      <div class="stat">
+        <p class="stat__label">Kritis</p>
+        <p id="stat-critical" class="stat__value">0</p>
+      </div>
+      <div class="stat">
+        <p class="stat__label">Terlambat</p>
+        <p id="stat-late" class="stat__value stat__value--ember">0</p>
+      </div>
+      <div class="stat">
+        <p class="stat__label">Estimasi denda</p>
+        <p id="stat-penalty" class="stat__value">Rp 0</p>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="order-heading">
+      <div class="panel__head">
+        <h2 id="order-heading">Pesanan</h2>
+        <span id="order-count" class="panel__meta">0 pesanan</span>
+      </div>
+      <div id="order-list" class="order-list"></div>
+      <p id="data-note" class="status-note" hidden></p>
+    </section>
+
+    <section class="panel" aria-labelledby="add-heading">
+      <div class="panel__head">
+        <h2 id="add-heading">Tambah pesanan</h2>
+      </div>
+      <form id="order-form" class="form-grid" novalidate>
+        <div class="field field--wide">
+          <label for="order-code">Kode pesanan</label>
+          <input id="order-code" name="code" type="text" maxlength="60" placeholder="INV-1001" required>
+        </div>
+        <div class="field">
+          <label for="order-marketplace">Marketplace</label>
+          <select id="order-marketplace" name="marketplace" required></select>
+        </div>
+        <div class="field">
+          <label for="order-sla">SLA kirim (jam)</label>
+          <input id="order-sla" name="slaHours" type="number" min="1" max="240" step="1" value="24" required>
+        </div>
+        <div class="field field--wide">
+          <label for="order-time">Waktu order</label>
+          <input id="order-time" name="orderAt" type="datetime-local" required>
+        </div>
+        <div class="field field--wide">
+          <label for="order-value">Nilai pesanan (Rp)</label>
+          <input id="order-value" name="orderValue" type="number" min="0" step="1000" value="150000" required>
+        </div>
+        <button class="button button--primary field--wide" type="submit">Tambah pesanan</button>
+      </form>
+      <p id="form-note" class="status-note" role="alert" hidden></p>
+    </section>
+
+    <details class="details">
+      <summary>Impor CSV</summary>
+      <div class="details__body">
+        <div class="field">
+          <label for="csv-input">Tempel CSV dengan header kode, marketplace, waktu_order, sla_jam, nilai</label>
+          <textarea id="csv-input" spellcheck="false" placeholder="kode,marketplace,waktu_order,sla_jam,nilai&#10;INV-2001,Shopee,2026-11-19T08:00,24,185000"></textarea>
+        </div>
+        <button id="import-button" class="button button--ghost" type="button">Impor CSV</button>
+        <p id="import-note" class="status-note" role="status" hidden></p>
+      </div>
+    </details>
+
+    <details class="details">
+      <summary>Pengaturan</summary>
+      <div class="details__body">
+        <form id="settings-form" class="form-grid">
+          <div class="field">
+            <label for="warning-hours">Waspada (jam)</label>
+            <input id="warning-hours" type="number" min="0.5" max="168" step="0.5" required>
+          </div>
+          <div class="field">
+            <label for="critical-hours">Kritis (jam)</label>
+            <input id="critical-hours" type="number" min="0.25" max="168" step="0.25" required>
+          </div>
+          <div class="field">
+            <label for="buffer-minutes">Buffer packing (menit)</label>
+            <input id="buffer-minutes" type="number" min="0" max="1440" step="15" required>
+          </div>
+          <div class="field">
+            <label for="penalty-late">Denda per telat (Rp)</label>
+            <input id="penalty-late" type="number" min="0" max="1000000000" step="1000" required>
+          </div>
+          <div class="field field--wide">
+            <label for="default-sla">SLA default untuk form (jam)</label>
+            <input id="default-sla" type="number" min="1" max="240" step="1" required>
+          </div>
+          <button class="button button--primary field--wide" type="submit">Simpan pengaturan</button>
+        </form>
+        <p id="settings-note" class="status-note" role="status" hidden></p>
+      </div>
+    </details>
+
+    <footer class="footer">
+      <div class="actions">
+        <button id="sample-button" class="button button--ghost" type="button">Muat contoh</button>
+        <button id="export-button" class="button button--ghost" type="button">Ekspor CSV</button>
+        <button id="clear-button" class="button button--ghost button--danger" type="button">Hapus semua</button>
+      </div>
+      <p class="caption">Data pesanan dan pengaturan disimpan di chrome.storage.local pada browser ini. Preferensi tema disimpan di localStorage. Extension tidak membaca halaman marketplace dan tidak mengirim data ke mana pun.</p>
+    </footer>
+  </main>
+
+  <script src="../lib/deadline.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
