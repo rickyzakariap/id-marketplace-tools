@@ -20,6 +20,18 @@ jobs:
       - name: README sync
         run: scripts/check-readme-sync.sh
 
+      - name: Setup Go
+        if: hashFiles('**/go.mod') != ''
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          cache: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Changed tool checks
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -77,6 +89,43 @@ jobs:
 
               echo "::group::$tool tests"
               (cd "$tool" && npm test) || failed=1
+              echo "::endgroup::"
+            fi
+
+            if [ -f "$tool/go.mod" ]; then
+              echo "::group::$tool go"
+              if compgen -G "$tool/*_test.go" > /dev/null; then
+                (cd "$tool" && go vet ./... && go test ./...) || failed=1
+              else
+                echo "$tool has no *_test.go files"
+                failed=1
+              fi
+              echo "::endgroup::"
+            fi
+
+            if compgen -G "$tool/*.py" > /dev/null; then
+              echo "::group::$tool python"
+              if compgen -G "$tool/test_*.py" > /dev/null; then
+                (cd "$tool" && python3 -m py_compile ./*.py \
+                  && python3 -m unittest discover -s . -p 'test_*.py' -v) || failed=1
+              else
+                echo "$tool has no test_*.py files"
+                failed=1
+              fi
+              echo "::endgroup::"
+            fi
+
+            if [ -f "$tool/manifest.json" ]; then
+              echo "::group::$tool extension"
+              node -e "
+                const m = require('./$tool/manifest.json');
+                if (m.manifest_version !== 3) { console.error('manifest_version must be 3'); process.exit(1); }
+              " || failed=1
+              (cd "$tool" && find . -type f -name '*.js' -not -path './node_modules/*' -print0 \
+                | xargs -0 -r -n1 node --check) || failed=1
+              if [ -d "$tool/test" ]; then
+                (cd "$tool" && node --test) || failed=1
+              fi
               echo "::endgroup::"
             fi
           done
