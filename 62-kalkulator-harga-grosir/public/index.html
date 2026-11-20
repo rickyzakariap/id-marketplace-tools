@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Harga Grosir</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.card.raised {
+  background:
+    radial-gradient(58% 52% at 18% 24%, rgba(var(--ink-rgb), 0.085), transparent 62%),
+    radial-gradient(66% 50% at 54% 88%, rgba(var(--ink-rgb), 0.075), transparent 64%),
+    var(--wash);
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.intro p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.intro strong { color: var(--ink); font-weight: 500; }
+.intro-note {
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 16px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.intro-note strong { color: var(--ink); font-weight: 500; }
+.formula {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 9px 11px;
+  margin-top: 10px;
+  color: var(--ink-2);
+  overflow-x: auto;
+}
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+.scope-chip.out { color: var(--ember); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-top: 18px;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field.span-2 { grid-column: span 2; }
+.field.span-3 { grid-column: span 3; }
+.field-row { margin-top: 12px; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.tier-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 18px;
+}
+.tier-head h3 { margin-top: 0; }
+.tier-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.tier-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  align-items: end;
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 10px;
+  animation: rise 0.4s var(--ease-out) both;
+}
+.tier-row .field { gap: 3px; }
+.tier-row label { font-size: 11.5px; }
+.tier-row input { background: var(--elev); }
+.tier-row .btn { margin-bottom: 1px; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn:focus-visible, .theme:focus-visible, .remove-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+.stat .v.muted { color: var(--ink-4); }
+
+.tier-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.tier-item {
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 14px;
+  animation: rise 0.5s var(--ease-out) both;
+}
+.tier-item__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.tier-item__title {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+}
+.tier-item__price {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 19px;
+  margin-top: 2px;
+}
+.tier-item__meta { color: var(--ink-3); font-size: 12.5px; margin-top: 4px; }
+.tier-item__note { color: var(--ink-4); font-size: 12px; line-height: 1.5; margin-top: 8px; }
+.tier-item__note strong { color: var(--ink-2); font-weight: 500; }
+
+.meter { margin-top: 9px; }
+.meter-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--ink-4);
+  font-size: 11.5px;
+}
+.meter-top strong {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.track {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  margin-top: 4px;
+  overflow: hidden;
+}
+.fill { height: 100%; border-radius: 999px; background: var(--ink-2); }
+.fill.good { background: var(--ok); }
+.fill.bad { background: var(--ember); }
+.fill.warn { background: var(--signal); }
+
+.table-card { margin-top: 18px; }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  white-space: nowrap;
+}
+td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+td.good { color: var(--ok); }
+td.bad { color: var(--ember); }
+td.warn { color: var(--signal); }
+tr:last-child td { border-bottom: 0; }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-3);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.ok { background: var(--ok); }
+.dot.warn { background: var(--signal); }
+.dot.bad { background: var(--ember); }
+
+.footer {
+  color: var(--ink-5);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 24px;
+  max-width: 900px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+  max-width: calc(100vw - 32px);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 980px) {
+  .intro, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .field.span-3 { grid-column: span 2; }
+}
+
+@media (max-width: 620px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3, .stats { grid-template-columns: 1fr; }
+  .field.span-2, .field.span-3 { grid-column: span 1; }
+  .tier-row { grid-template-columns: 1fr 1fr; }
+  .tier-row .btn { grid-column: span 2; justify-self: start; }
+  header { align-items: flex-start; }
+  .brand { flex: 1; min-width: 0; flex-direction: column; gap: 10px; }
+  .brand > div:last-child { width: 100%; }
+  .mark { width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">62</div>
+      <div>
+        <div class="eyebrow">Tool 62</div>
+        <h1>Kalkulator Harga Grosir</h1>
+        <p class="lede">Susun harga grosir bertingkat dan periksa margin setiap tier.
+          Lihat harga minimum agar target tetap tercapai, kebutuhan pcs untuk menutup
+          biaya pesanan, dan apakah diskon grosir masih lebih untung dari penjualan eceran.</p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <section class="card intro">
+    <div>
+      <h2>Diskon besar belum tentu untung besar</h2>
+      <p>Harga grosir memotong omzet per pcs, tetapi menghemat biaya admin, kemasan, dan
+        ongkir karena beberapa pcs dikirim dalam <strong>satu pesanan</strong>. Tool ini
+        menghitung dua sisi tersebut untuk setiap tier, lalu menunjukkan harga minimum
+        yang masih memenuhi target margin.</p>
+      <div class="formula">margin = (omzet - biaya platform - HPP - biaya pesanan) / omzet</div>
+      <div class="scope-grid">
+        <span class="scope-chip in">Masuk: diskon bertingkat</span>
+        <span class="scope-chip in">Masuk: biaya platform dan HPP</span>
+        <span class="scope-chip in">Masuk: biaya pesanan dan ongkir</span>
+        <span class="scope-chip out">Di luar: pajak dan iklan</span>
+        <span class="scope-chip out">Di luar: biaya retur dan penyimpanan</span>
+      </div>
+    </div>
+    <div class="intro-note">
+      <strong>Biaya pesanan dihitung sekali per pesanan grosir.</strong> Satu pesanan
+      24 pcs tidak menanggung 24 kali biaya admin, kemasan, atau subsidi ongkir. Tetapi
+      diskon yang terlalu dalam bisa memakan penghematan itu dan bahkan membuat tier rugi.
+    </div>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Data produk dan biaya</h2>
+            <p class="sub">Isi angka dari HPP dan biaya platform yang benar-benar Anda bayar.</p>
+          </div>
+          <span class="badge">Estimasi</span>
+        </div>
+
+        <form id="form" novalidate>
+          <div class="field">
+            <label for="product_label">Nama produk (opsional)</label>
+            <input id="product_label" name="product_label" type="text" maxlength="120"
+              placeholder="Contoh: Kaos polos katun 30s">
+          </div>
+
+          <div class="grid-2 field-row">
+            <div class="field">
+              <label for="unit_cost">HPP per pcs (Rp)</label>
+              <input id="unit_cost" name="unit_cost" type="number" min="1" step="1"
+                inputmode="numeric" required>
+              <span class="hint">Bahan, tenaga kerja, dan overhead per unit.</span>
+            </div>
+            <div class="field">
+              <label for="retail_price">Harga eceran per pcs (Rp)</label>
+              <input id="retail_price" name="retail_price" type="number" min="1" step="1"
+                inputmode="numeric" required>
+              <span class="hint">Harga normal sebelum diskon grosir.</span>
+            </div>
+          </div>
+
+          <div class="grid-2 field-row">
+            <div class="field">
+              <label for="marketplace_fee_pct">Biaya platform (%)</label>
+              <input id="marketplace_fee_pct" name="marketplace_fee_pct" type="number"
+                min="0" max="40" step="0.1" inputmode="decimal" required>
+              <span class="hint">Komisi dan biaya transaksi, dihitung dari omzet.</span>
+            </div>
+            <div class="field">
+              <label for="target_margin_pct">Target margin bersih (%)</label>
+              <input id="target_margin_pct" name="target_margin_pct" type="number"
+                min="0" max="90" step="0.1" inputmode="decimal" required>
+              <span class="hint">Margin terhadap omzet, bukan markup terhadap HPP.</span>
+            </div>
+          </div>
+
+          <h3>Biaya per pesanan</h3>
+          <div class="grid-3">
+            <div class="field">
+              <label for="fixed_fee_per_order">Biaya tetap (Rp)</label>
+              <input id="fixed_fee_per_order" name="fixed_fee_per_order" type="number"
+                min="0" step="1" inputmode="numeric" required>
+              <span class="hint">Admin atau proses pesanan.</span>
+            </div>
+            <div class="field">
+              <label for="packaging_cost_per_order">Kemasan (Rp)</label>
+              <input id="packaging_cost_per_order" name="packaging_cost_per_order"
+                type="number" min="0" step="1" inputmode="numeric" required>
+              <span class="hint">Box, bubble wrap, dan label.</span>
+            </div>
+            <div class="field">
+              <label for="shipping_subsidy_per_order">Subsidi ongkir (Rp)</label>
+              <input id="shipping_subsidy_per_order" name="shipping_subsidy_per_order"
+                type="number" min="0" step="1" inputmode="numeric" required>
+              <span class="hint">Ongkir yang Anda tanggung.</span>
+            </div>
+          </div>
+
+          <div class="grid-2 field-row">
+            <div class="field">
+              <label for="rounding_step">Pembulatan harga</label>
+              <select id="rounding_step" name="rounding_step"></select>
+              <span class="hint">Harga grosir dibulatkan ke langkah ini.</span>
+            </div>
+            <div class="field">
+              <label for="orders_per_month">Pesanan grosir per bulan</label>
+              <input id="orders_per_month" name="orders_per_month" type="number" min="0"
+                step="1" inputmode="numeric" required>
+              <span class="hint">Dipakai untuk proyeksi profit bulanan.</span>
+            </div>
+          </div>
+
+          <div class="tier-head">
+            <div>
+              <h3>Tangga harga grosir</h3>
+              <p class="sub">Isi minimal pcs dan diskon dari harga eceran. Maksimal 8 tier.</p>
+            </div>
+            <button class="btn ghost small" id="add-tier-btn" type="button">Tambah tier</button>
+          </div>
+          <div class="tier-rows" id="tier-rows"></div>
+
+          <div class="actions">
+            <button class="btn primary" id="analyze-btn" type="submit">Hitung harga grosir</button>
+            <button class="btn ghost" id="example-btn" type="button">Muat contoh</button>
+            <button class="btn ghost" id="csv-btn" type="button" disabled>Unduh CSV</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card raised">
+        <div class="verdict muted" id="verdict" aria-live="polite">
+          <div class="verdict-label" id="verdict-label">Belum dihitung</div>
+          <div class="verdict-note" id="verdict-note">Isi data lalu tekan Hitung harga grosir.</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="k">Tier aman</div>
+            <div class="v" id="stat-safe">0 / 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Margin tertinggi</div>
+            <div class="v" id="stat-margin">0%</div>
+          </div>
+          <div class="stat">
+            <div class="k">Profit tier aman</div>
+            <div class="v" id="stat-profit">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Proyeksi tier aman</div>
+            <div class="v" id="stat-monthly">Rp 0</div>
+          </div>
+        </div>
+
+        <h3>Ringkasan tier</h3>
+        <div class="tier-list" id="tier-list">
+          <p class="hint">Hasil per tier muncul di sini setelah dihitung.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Arti status</h2>
+        <div class="list">
+          <div class="list-item"><span class="dot ok"></span>
+            <span><strong>Margin aman.</strong> Margin memenuhi atau melewati target.</span></div>
+          <div class="list-item"><span class="dot warn"></span>
+            <span><strong>Di bawah target.</strong> Masih untung, tetapi belum mencapai target.</span></div>
+          <div class="list-item"><span class="dot bad"></span>
+            <span><strong>Rugi per pesanan.</strong> Omzet tidak menutup HPP, biaya platform,
+              dan biaya pesanan.</span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card">
+    <h2>Rekomendasi</h2>
+    <p class="sub">Angka yang bisa langsung dipakai saat menawar dengan reseller.</p>
+    <div class="list" id="recommendations"></div>
+  </section>
+
+  <section class="card" id="warnings-card" hidden>
+    <h2>Peringatan</h2>
+    <p class="sub">Hal yang perlu dicek sebelum harga diumumkan.</p>
+    <div class="list" id="warnings"></div>
+  </section>
+
+  <section class="card table-card">
+    <div class="section-head">
+      <div>
+        <h2>Tangga harga grosir</h2>
+        <p class="sub">Semua angka per pesanan grosir, kecuali kolom yang ditandai.</p>
+      </div>
+      <button class="btn ghost small" id="csv-btn-2" type="button" disabled>Unduh CSV</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>MOQ</th>
+            <th class="num">Harga / pcs</th>
+            <th class="num">Diskon</th>
+            <th class="num">Omzet</th>
+            <th class="num">Total biaya</th>
+            <th class="num">Profit</th>
+            <th class="num">Margin</th>
+            <th class="num">Harga min target</th>
+            <th class="num">vs eceran</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tier-body">
+          <tr><td colspan="10" class="muted">Belum ada hasil.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" id="table-note">Isi data untuk melihat perbandingan tiap tier.</p>
+  </section>
+
+  <section class="card">
+    <h2>Catatan perhitungan</h2>
+    <div class="list" id="assumptions"></div>
+  </section>
+
+  <p class="footer" id="footer-note"></p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var MAX_TIERS = 8;
+
+  var FALLBACK_META = {
+    rounding_steps: [
+      { id: 1, label: '1 rupiah' },
+      { id: 50, label: '50 rupiah' },
+      { id: 100, label: '100 rupiah' },
+      { id: 500, label: '500 rupiah' },
+      { id: 1000, label: '1.000 rupiah' }
+    ],
+    assumptions: [
+      'HPP per pcs sudah mencakup bahan, tenaga kerja, dan overhead per unit.',
+      'Biaya platform dihitung dari omzet setelah diskon grosir.',
+      'Biaya admin, kemasan, dan subsidi ongkir dihitung satu kali per pesanan grosir.',
+      'Target margin adalah margin bersih terhadap omzet, bukan markup terhadap HPP.',
+      'Belum termasuk pajak, iklan, biaya retur, dan biaya penyimpanan.',
+      'Tier adalah skenario alternatif, bukan akumulasi penjualan.'
+    ],
+    scope_note: 'Tool membantu menyusun tangga harga grosir dan memeriksa margin tiap tier.',
+    disclaimer: 'Angka adalah estimasi dari input Anda, bukan laporan laba resmi.'
+  };
+
+  var FALLBACK_EXAMPLE = {
+    product_label: 'Kaos polos katun 30s',
+    unit_cost: 110000,
+    retail_price: 150000,
+    marketplace_fee_pct: 8,
+    fixed_fee_per_order: 1250,
+    packaging_cost_per_order: 2000,
+    shipping_subsidy_per_order: 5000,
+    target_margin_pct: 12,
+    rounding_step: 100,
+    orders_per_month: 30,
+    tiers: [
+      { quantity: 3, discount_pct: 3 },
+      { quantity: 6, discount_pct: 10 },
+      { quantity: 12, discount_pct: 15 },
+      { quantity: 24, discount_pct: 22 }
+    ]
+  };
+
+  var state = {
+    result: null,
+    meta: null,
+    example: null,
+    toastTimer: null
+  };
+
+  var tierIdCounter = 0;
+
+  function $(id) { return document.getElementById(id); }
+
+  function formatNumber(value) {
+    return new Intl.NumberFormat('id-ID').format(Math.round(Number(value) || 0));
+  }
+
+  function formatRupiah(value) {
+    var number = Number(value) || 0;
+    var sign = number < 0 ? '-Rp ' : 'Rp ';
+    return sign + formatNumber(Math.abs(number));
+  }
+
+  function formatSignedRupiah(value) {
+    var number = Number(value) || 0;
+    if (number > 0) return '+' + formatRupiah(number);
+    return formatRupiah(number);
+  }
+
+  function formatPercent(value) {
+    return new Intl.NumberFormat('id-ID', {
+      maximumFractionDigits: 2
+    }).format(Number(value) || 0) + '%';
+  }
+
+  function statusClass(status) {
+    if (status === 'ok') return 'good';
+    if (status === 'loss') return 'bad';
+    return 'warn';
+  }
+
+  function showToast(message) {
+    var toast = $('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    if (state.toastTimer) clearTimeout(state.toastTimer);
+    state.toastTimer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 3200);
+  }
+
+  function setVerdict(level, label, note) {
+    var box = $('verdict');
+    box.className = 'verdict ' + level;
+    $('verdict-label').textContent = label;
+    $('verdict-note').textContent = note;
+  }
+
+  function renderList(container, items, dotClass) {
+    container.textContent = '';
+    items.forEach(function (text) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var dot = document.createElement('span');
+      dot.className = 'dot' + (dotClass ? ' ' + dotClass : '');
+      var span = document.createElement('span');
+      span.textContent = text;
+      row.appendChild(dot);
+      row.appendChild(span);
+      container.appendChild(row);
+    });
+  }
+
+  function setValue(id, value) {
+    $(id).value = value === null || value === undefined ? '' : value;
+  }
+
+  function addTier(quantity, discount) {
+    var container = $('tier-rows');
+    if (container.children.length >= MAX_TIERS) {
+      showToast('Maksimal ' + MAX_TIERS + ' tier.');
+      return;
+    }
+
+    var row = document.createElement('div');
+    row.className = 'tier-row';
+
+    var quantityField = document.createElement('div');
+    quantityField.className = 'field';
+    var quantityId = 'tier-quantity-' + (tierIdCounter += 1);
+    var quantityLabel = document.createElement('label');
+    quantityLabel.textContent = 'Minimal pcs';
+    quantityLabel.htmlFor = quantityId;
+    var quantityInput = document.createElement('input');
+    quantityInput.id = quantityId;
+    quantityInput.type = 'number';
+    quantityInput.min = '1';
+    quantityInput.step = '1';
+    quantityInput.inputMode = 'numeric';
+    quantityInput.className = 'tier-quantity';
+    quantityInput.required = true;
+    quantityInput.value = quantity === undefined ? '' : quantity;
+    quantityField.appendChild(quantityLabel);
+    quantityField.appendChild(quantityInput);
+
+    var discountField = document.createElement('div');
+    discountField.className = 'field';
+    var discountId = 'tier-discount-' + tierIdCounter;
+    var discountLabel = document.createElement('label');
+    discountLabel.textContent = 'Diskon (%)';
+    discountLabel.htmlFor = discountId;
+    var discountInput = document.createElement('input');
+    discountInput.id = discountId;
+    discountInput.type = 'number';
+    discountInput.min = '0';
+    discountInput.max = '90';
+    discountInput.step = '0.1';
+    discountInput.inputMode = 'decimal';
+    discountInput.className = 'tier-discount';
+    discountInput.required = true;
+    discountInput.value = discount === undefined ? '' : discount;
+    discountField.appendChild(discountLabel);
+    discountField.appendChild(discountInput);
+
+    var remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'btn ghost small remove-btn';
+    remove.textContent = 'Hapus';
+    remove.setAttribute('aria-label', 'Hapus tier ini');
+    remove.addEventListener('click', function () {
+      if (container.children.length <= 1) {
+        showToast('Minimal satu tier harus ada.');
+        return;
+      }
+      row.remove();
+      updateTierButtons();
+    });
+
+    row.appendChild(quantityField);
+    row.appendChild(discountField);
+    row.appendChild(remove);
+    container.appendChild(row);
+    updateTierButtons();
+  }
+
+  function updateTierButtons() {
+    var count = $('tier-rows').children.length;
+    $('add-tier-btn').disabled = count >= MAX_TIERS;
+    Array.prototype.forEach.call(
+      document.querySelectorAll('.remove-btn'),
+      function (button) {
+        button.disabled = count <= 1;
+      }
+    );
+  }
+
+  function fillRounding(meta) {
+    var select = $('rounding_step');
+    select.textContent = '';
+    var steps = meta && meta.rounding_steps ? meta.rounding_steps : FALLBACK_META.rounding_steps;
+    steps.forEach(function (step) {
+      var option = document.createElement('option');
+      option.value = step.id;
+      option.textContent = step.label;
+      select.appendChild(option);
+    });
+    select.value = '100';
+  }
+
+  function fillForm(data) {
+    setValue('product_label', data.product_label);
+    setValue('unit_cost', data.unit_cost);
+    setValue('retail_price', data.retail_price);
+    setValue('marketplace_fee_pct', data.marketplace_fee_pct);
+    setValue('fixed_fee_per_order', data.fixed_fee_per_order);
+    setValue('packaging_cost_per_order', data.packaging_cost_per_order);
+    setValue('shipping_subsidy_per_order', data.shipping_subsidy_per_order);
+    setValue('target_margin_pct', data.target_margin_pct);
+    setValue('rounding_step', data.rounding_step);
+    setValue('orders_per_month', data.orders_per_month);
+
+    var container = $('tier-rows');
+    container.textContent = '';
+    var tiers = Array.isArray(data.tiers) ? data.tiers : [];
+    tiers.forEach(function (tier) {
+      addTier(tier.quantity, tier.discount_pct);
+    });
+    if (!tiers.length) addTier(3, 0);
+    updateTierButtons();
+  }
+
+  function readTiers() {
+    var quantities = document.querySelectorAll('.tier-quantity');
+    var discounts = document.querySelectorAll('.tier-discount');
+    var tiers = [];
+    for (var index = 0; index < quantities.length; index += 1) {
+      tiers.push({
+        quantity: quantities[index].value,
+        discount_pct: discounts[index].value
+      });
+    }
+    return tiers;
+  }
+
+  function readForm() {
+    return {
+      product_label: $('product_label').value,
+      unit_cost: $('unit_cost').value,
+      retail_price: $('retail_price').value,
+      marketplace_fee_pct: $('marketplace_fee_pct').value,
+      fixed_fee_per_order: $('fixed_fee_per_order').value,
+      packaging_cost_per_order: $('packaging_cost_per_order').value,
+      shipping_subsidy_per_order: $('shipping_subsidy_per_order').value,
+      target_margin_pct: $('target_margin_pct').value,
+      rounding_step: $('rounding_step').value,
+      orders_per_month: $('orders_per_month').value,
+      tiers: readTiers()
+    };
+  }
+
+  function requestJson(url, options) {
+    return fetch(url, options).then(function (response) {
+      return response.json().then(function (body) {
+        if (!response.ok) {
+          throw new Error(body && body.error ? body.error : 'Permintaan gagal.');
+        }
+        return body;
+      });
+    });
+  }
+
+  function renderStats(result) {
+    var safe = $('stat-safe');
+    safe.textContent = result.safe_count + ' / ' + result.tier_count;
+    safe.className = 'v ' + (result.loss_count > 0 ? 'bad' :
+      (result.thin_count > 0 ? 'warn' : 'good'));
+
+    var margin = $('stat-margin');
+    margin.textContent = formatPercent(result.best_margin_tier.margin_pct);
+    margin.className = 'v ' + statusClass(result.best_margin_tier.status);
+
+    var profit = $('stat-profit');
+    if (result.best_safe_tier) {
+      profit.textContent = formatRupiah(result.best_safe_tier.profit);
+      profit.className = 'v good';
+    } else {
+      profit.textContent = 'Belum ada';
+      profit.className = 'v bad';
+    }
+
+    var monthly = $('stat-monthly');
+    if (result.best_safe_tier && result.input.orders_per_month > 0) {
+      var best = result.tiers.find(function (tier) {
+        return tier.quantity === result.best_safe_tier.quantity;
+      });
+      monthly.textContent = formatRupiah(best.monthly_profit);
+      monthly.className = 'v good';
+    } else {
+      monthly.textContent = 'Isi pesanan';
+      monthly.className = 'v muted';
+    }
+  }
+
+  function renderTierList(result) {
+    var list = $('tier-list');
+    list.textContent = '';
+    result.tiers.forEach(function (tier, index) {
+      var item = document.createElement('div');
+      item.className = 'tier-item';
+      item.style.animationDelay = (index * 60) + 'ms';
+
+      var head = document.createElement('div');
+      head.className = 'tier-item__head';
+      var titleBox = document.createElement('div');
+      var title = document.createElement('div');
+      title.className = 'tier-item__title';
+      title.textContent = tier.quantity + ' pcs';
+      var price = document.createElement('div');
+      price.className = 'tier-item__price';
+      price.textContent = formatRupiah(tier.unit_price) + ' / pcs';
+      titleBox.appendChild(title);
+      titleBox.appendChild(price);
+
+      var badge = document.createElement('span');
+      badge.className = 'badge ' + statusClass(tier.status);
+      badge.textContent = tier.status_label;
+
+      head.appendChild(titleBox);
+      head.appendChild(badge);
+
+      var meta = document.createElement('div');
+      meta.className = 'tier-item__meta';
+      meta.textContent = 'Diskon ' + formatPercent(tier.discount_pct) +
+        ' - margin ' + formatPercent(tier.margin_pct) +
+        ' - profit ' + formatRupiah(tier.profit) + ' per pesanan';
+
+      var meter = document.createElement('div');
+      meter.className = 'meter';
+      var meterTop = document.createElement('div');
+      meterTop.className = 'meter-top';
+      var meterLabel = document.createElement('span');
+      meterLabel.textContent = 'Margin terhadap target ' +
+        formatPercent(result.input.target_margin_pct);
+      var meterValue = document.createElement('strong');
+      meterValue.textContent = formatPercent(tier.margin_pct);
+      meterTop.appendChild(meterLabel);
+      meterTop.appendChild(meterValue);
+      var track = document.createElement('div');
+      track.className = 'track';
+      var fill = document.createElement('div');
+      fill.className = 'fill ' + statusClass(tier.status);
+      var target = Math.max(1, result.input.target_margin_pct);
+      fill.style.width = Math.max(0, Math.min(100, (tier.margin_pct / target) * 100)) + '%';
+      track.appendChild(fill);
+      meter.appendChild(meterTop);
+      meter.appendChild(track);
+
+      var note = document.createElement('div');
+      note.className = 'tier-item__note';
+      if (tier.status === 'loss') {
+        note.textContent = 'Rugi ' + formatRupiah(Math.abs(tier.profit)) +
+          ' per pesanan. Harga minimum di target ' +
+          formatPercent(result.input.target_margin_pct) + ' adalah ' +
+          formatRupiah(tier.minimum_unit_price) + ' per pcs.';
+      } else if (tier.status === 'thin') {
+        var gap = result.input.target_margin_pct - tier.margin_pct;
+        note.textContent = 'Kurang ' + formatPercent(gap) + ' dari target. Harga minimum ' +
+          formatRupiah(tier.minimum_unit_price) + ' per pcs atau diskon maksimal ' +
+          formatPercent(tier.max_discount_at_target_pct) + '.';
+      } else {
+        note.textContent = 'Memenuhi target. Harga masih ' +
+          formatRupiah(Math.max(0, tier.price_gap)) + ' di atas harga minimum.';
+      }
+
+      if (tier.profit_vs_retail > 0) {
+        note.textContent += ' Lebih untung ' +
+          formatRupiah(tier.profit_vs_retail) + ' dari penjualan eceran.';
+      } else if (tier.profit_vs_retail < 0) {
+        note.textContent += ' Lebih rendah ' +
+          formatRupiah(Math.abs(tier.profit_vs_retail)) + ' dari penjualan eceran.';
+      } else {
+        note.textContent += ' Sama dengan penjualan eceran.';
+      }
+
+      item.appendChild(head);
+      item.appendChild(meta);
+      item.appendChild(meter);
+      item.appendChild(note);
+      list.appendChild(item);
+    });
+  }
+
+  function appendCell(row, text, className) {
+    var cell = document.createElement('td');
+    if (className) cell.className = className;
+    cell.textContent = text;
+    row.appendChild(cell);
+    return cell;
+  }
+
+  function renderTable(result) {
+    var body = $('tier-body');
+    body.textContent = '';
+    result.tiers.forEach(function (tier) {
+      var row = document.createElement('tr');
+      appendCell(row, tier.quantity + ' pcs');
+      appendCell(row, formatRupiah(tier.unit_price), 'num');
+      appendCell(row, formatPercent(tier.effective_discount_pct), 'num');
+      appendCell(row, formatRupiah(tier.revenue), 'num');
+      appendCell(row, formatRupiah(tier.total_cost), 'num');
+      appendCell(row, formatRupiah(tier.profit), 'num ' + statusClass(tier.status));
+      appendCell(row, formatPercent(tier.margin_pct), 'num ' + statusClass(tier.status));
+      appendCell(row, formatRupiah(tier.minimum_unit_price), 'num');
+      var retailClass = tier.profit_vs_retail > 0 ? 'good' :
+        (tier.profit_vs_retail < 0 ? 'bad' : '');
+      appendCell(row, formatSignedRupiah(tier.profit_vs_retail),
+        ('num ' + retailClass).trim());
+      var status = document.createElement('td');
+      var badge = document.createElement('span');
+      badge.className = 'badge ' + statusClass(tier.status);
+      badge.textContent = tier.status_label;
+      status.appendChild(badge);
+      row.appendChild(status);
+      body.appendChild(row);
+    });
+
+    var note = 'Profit dan biaya di tabel adalah per pesanan grosir. ';
+    if (result.input.orders_per_month > 0) {
+      note += 'Proyeksi di ringkasan memakai ' + result.input.orders_per_month +
+        ' pesanan grosir per bulan.';
+    } else {
+      note += 'Isi jumlah pesanan per bulan untuk melihat proyeksi.';
+    }
+    $('table-note').textContent = note;
+  }
+
+  function render(result) {
+    state.result = result;
+    $('csv-btn').disabled = false;
+    $('csv-btn-2').disabled = false;
+    setVerdict(result.verdict.level, result.verdict.label, result.verdict.note);
+    renderStats(result);
+    renderTierList(result);
+    renderTable(result);
+    renderList($('recommendations'), result.recommendations, 'ok');
+
+    var warningCard = $('warnings-card');
+    if (result.warnings.length > 0) {
+      warningCard.hidden = false;
+      renderList($('warnings'), result.warnings, 'bad');
+    } else {
+      warningCard.hidden = true;
+      $('warnings').textContent = '';
+    }
+
+    $('footer-note').textContent = result.scope_note + ' ' + result.disclaimer;
+  }
+
+  function runAnalysis() {
+    var button = $('analyze-btn');
+    button.disabled = true;
+    button.textContent = 'Menghitung...';
+
+    return requestJson('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(readForm())
+    }).then(function (result) {
+      render(result);
+    }).catch(function (error) {
+      setVerdict('ember', 'Periksa input', error.message);
+      showToast(error.message);
+    }).finally(function () {
+      button.disabled = false;
+      button.textContent = 'Hitung harga grosir';
+    });
+  }
+
+  function downloadCsv() {
+    var buttons = [$('csv-btn'), $('csv-btn-2')];
+    buttons.forEach(function (button) { button.disabled = true; });
+
+    fetch('/api/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(readForm())
+    }).then(function (response) {
+      if (!response.ok) {
+        return response.json().then(function (body) {
+          throw new Error(body && body.error ? body.error : 'Ekspor gagal.');
+        });
+      }
+      return response.blob();
+    }).then(function (blob) {
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = 'kalkulator-harga-grosir.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast('CSV berhasil diunduh.');
+    }).catch(function (error) {
+      showToast(error.message);
+    }).finally(function () {
+      buttons.forEach(function (button) { button.disabled = !state.result; });
+    });
+  }
+
+  function renderAssumptions(meta) {
+    var items = meta && meta.assumptions ? meta.assumptions : FALLBACK_META.assumptions;
+    renderList($('assumptions'), items, '');
+    if (meta && meta.scope_note && meta.disclaimer) {
+      $('footer-note').textContent = meta.scope_note + ' ' + meta.disclaimer;
+    }
+  }
+
+  function loadMeta() {
+    return requestJson('/api/meta').then(function (meta) {
+      state.meta = meta;
+      fillRounding(meta);
+      renderAssumptions(meta);
+    }).catch(function () {
+      state.meta = FALLBACK_META;
+      fillRounding(FALLBACK_META);
+      renderAssumptions(FALLBACK_META);
+    });
+  }
+
+  function loadExample() {
+    return requestJson('/api/example').then(function (data) {
+      state.example = data;
+      fillForm(data);
+    }).catch(function () {
+      state.example = FALLBACK_EXAMPLE;
+      fillForm(FALLBACK_EXAMPLE);
+    });
+  }
+
+  $('theme-btn').addEventListener('click', function () {
+    var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (error) {}
+  });
+
+  $('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    runAnalysis();
+  });
+
+  $('add-tier-btn').addEventListener('click', function () {
+    var rows = document.querySelectorAll('.tier-row');
+    var lastDiscount = rows.length ? rows[rows.length - 1].querySelector('.tier-discount').value : 0;
+    var lastQuantity = rows.length ? rows[rows.length - 1].querySelector('.tier-quantity').value : 0;
+    var nextQuantity = Math.max(1, Number(lastQuantity) || 0) + 3;
+    var nextDiscount = Math.max(0, (Number(lastDiscount) || 0));
+    addTier(nextQuantity, nextDiscount);
+  });
+
+  $('example-btn').addEventListener('click', function () {
+    fillForm(state.example || FALLBACK_EXAMPLE);
+    runAnalysis();
+    showToast('Contoh dimuat.');
+  });
+
+  $('csv-btn').addEventListener('click', downloadCsv);
+  $('csv-btn-2').addEventListener('click', downloadCsv);
+
+  loadMeta().then(loadExample).then(function () {
+    return runAnalysis();
+  });})();
+</script>
+</body>
+</html>

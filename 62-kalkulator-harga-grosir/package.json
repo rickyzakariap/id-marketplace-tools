@@ -1,0 +1,14 @@
+{
+  "name": "kalkulator-harga-grosir",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Susun tangga harga grosir, periksa margin tiap tier, dan bandingkan dengan penjualan eceran",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
