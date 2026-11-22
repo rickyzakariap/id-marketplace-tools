@@ -69,6 +69,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 61 | [61-pemantau-tenggat-kirim](61-pemantau-tenggat-kirim/) | Extension | Manifest V3 | Monitor marketplace order dispatch deadlines with countdown, risk status, packing start time, penalty estimate, CSV import and export, and toolbar badge |
 | 62 | [62-kalkulator-harga-grosir](62-kalkulator-harga-grosir/) | Web | Node.js + Express | Build tiered wholesale prices with per-tier margin, minimum target price, break-even quantity, and retail comparison |
 | 63 | [63-kalkulator-biaya-cicilan](63-kalkulator-biaya-cicilan/) | CLI | Go | Calculate seller-borne installment and paylater fees per payment method with net profit, margin, and required price |
+| 64 | [64-kalkulator-harga-bundling](64-kalkulator-harga-bundling/) | CLI | Python | Calculate bundle profit, minimum price, per-item contribution, and comparison with selling separately |
 
 ## Checks
 
