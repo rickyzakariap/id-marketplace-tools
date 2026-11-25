@@ -71,6 +71,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 63 | [63-kalkulator-biaya-cicilan](63-kalkulator-biaya-cicilan/) | CLI | Go | Calculate seller-borne installment and paylater fees per payment method with net profit, margin, and required price |
 | 64 | [64-kalkulator-harga-bundling](64-kalkulator-harga-bundling/) | CLI | Python | Calculate bundle profit, minimum price, per-item contribution, and comparison with selling separately |
 | 65 | [65-kalkulator-biaya-live-selling](65-kalkulator-biaya-live-selling/) | Web | Node.js + Express | Calculate live selling session profit after host, affiliate, ads, samples, HPP, and platform fees |
+| 66 | [66-kalkulator-hpp-produksi](66-kalkulator-hpp-produksi/) | CLI | Go | Calculate production cost per unit from recipe ingredients, waste, batch yield, labor, overhead, packaging, margin, and recommended price |
 
 ## Checks
 
