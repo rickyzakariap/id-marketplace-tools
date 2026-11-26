@@ -72,6 +72,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 64 | [64-kalkulator-harga-bundling](64-kalkulator-harga-bundling/) | CLI | Python | Calculate bundle profit, minimum price, per-item contribution, and comparison with selling separately |
 | 65 | [65-kalkulator-biaya-live-selling](65-kalkulator-biaya-live-selling/) | Web | Node.js + Express | Calculate live selling session profit after host, affiliate, ads, samples, HPP, and platform fees |
 | 66 | [66-kalkulator-hpp-produksi](66-kalkulator-hpp-produksi/) | CLI | Go | Calculate production cost per unit from recipe ingredients, waste, batch yield, labor, overhead, packaging, margin, and recommended price |
+| 67 | [67-kalkulator-ambang-gratis-ongkir](67-kalkulator-ambang-gratis-ongkir/) | CLI | Python | Calculate the minimum free shipping threshold that keeps the margin target, with monthly program cost and shipping sensitivity |
 
 ## Checks
 
