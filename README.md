@@ -73,6 +73,7 @@ Tools for Indonesian marketplace sellers. Automated project builder powered by c
 | 65 | [65-kalkulator-biaya-live-selling](65-kalkulator-biaya-live-selling/) | Web | Node.js + Express | Calculate live selling session profit after host, affiliate, ads, samples, HPP, and platform fees |
 | 66 | [66-kalkulator-hpp-produksi](66-kalkulator-hpp-produksi/) | CLI | Go | Calculate production cost per unit from recipe ingredients, waste, batch yield, labor, overhead, packaging, margin, and recommended price |
 | 67 | [67-kalkulator-ambang-gratis-ongkir](67-kalkulator-ambang-gratis-ongkir/) | CLI | Python | Calculate the minimum free shipping threshold that keeps the margin target, with monthly program cost and shipping sensitivity |
+| 68 | [68-pelacak-kedaluwarsa-stok](68-pelacak-kedaluwarsa-stok/) | Extension | Manifest V3 | Track stock batch expiry dates, sell-through before expiry, potential loss, safe discount limit, and toolbar badge |
 
 ## Checks
 
