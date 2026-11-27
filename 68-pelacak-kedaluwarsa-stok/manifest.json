@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Pelacak Kedaluwarsa Stok",
+  "version": "1.0.0",
+  "description": "Pantau batch stok yang mendekati kedaluwarsa, hitung potensi rugi, dan tandai di icon extension.",
+  "permissions": ["storage", "alarms"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Pelacak Kedaluwarsa Stok"
+  }
+}
