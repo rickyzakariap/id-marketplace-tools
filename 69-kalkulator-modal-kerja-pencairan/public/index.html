@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Modal Kerja Pencairan</title>
+<script>
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-rgb: 23, 24, 26;
+
+  --bg: #ffffff;
+  --surface: #f7f7f6;
+  --surface-2: #f1f1f0;
+  --surface-3: #ecebe7;
+  --elev: #ffffff;
+
+  --ink: #17181a;
+  --ink-2: #3c3b37;
+  --ink-3: #5c5b56;
+  --ink-4: #6f6e68;
+  --ink-5: #85847e;
+
+  --wash: rgba(23, 24, 26, 0.06);
+  --wash-hover: rgba(23, 24, 26, 0.09);
+  --rule: rgba(23, 24, 26, 0.16);
+  --line: rgba(23, 24, 26, 0.08);
+
+  --signal: #2231dd;
+  --ember: #b8431c;
+  --ok: #15803d;
+  --on-slab: #ffffff;
+  --slab: var(--ink);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --font-head: "Google Sans", var(--font-ui);
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-pop: cubic-bezier(0.3, 1.12, 0.4, 1);
+}
+
+html[data-theme="dark"] {
+  --ink-rgb: 255, 255, 255;
+
+  --bg: #000000;
+  --surface: #0f0f0f;
+  --surface-2: #181818;
+  --surface-3: #202020;
+  --elev: #202020;
+
+  --ink: #ffffff;
+  --ink-2: #b4b4b4;
+  --ink-3: #9a9a9a;
+  --ink-4: #828282;
+  --ink-5: #6b6b6b;
+
+  --wash: rgba(255, 255, 255, 0.06);
+  --wash-hover: rgba(255, 255, 255, 0.1);
+  --rule: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.08);
+
+  --signal: #3aa9ff;
+  --ember: #ff7a4d;
+  --ok: #34d17a;
+  --on-slab: #000000;
+  --slab: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 28px 20px 64px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1180px; margin: 0 auto; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.brand { display: flex; gap: 16px; align-items: flex-start; }
+
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--slab);
+  color: var(--on-slab);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  flex: none;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+h1 {
+  font-family: var(--font-head);
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  color: var(--ink-3);
+  max-width: 760px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.theme {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 140ms var(--ease-pop), transform 140ms var(--ease-pop);
+}
+.theme:hover { background: var(--wash-hover); transform: scale(1.04); }
+.theme:active { transform: scale(0.96); }
+.theme svg { width: 17px; height: 17px; }
+.theme .moon { display: none; }
+html[data-theme="dark"] .theme .sun { display: none; }
+html[data-theme="dark"] .theme .moon { display: block; }
+
+.card {
+  background: var(--wash);
+  border-radius: 28px;
+  padding: 24px;
+  animation: rise 0.62s var(--ease-out) both;
+}
+.card + .card { margin-top: 18px; }
+.card.raised {
+  background:
+    radial-gradient(58% 52% at 18% 24%, rgba(var(--ink-rgb), 0.085), transparent 62%),
+    radial-gradient(66% 50% at 54% 88%, rgba(var(--ink-rgb), 0.075), transparent 64%),
+    var(--wash);
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.intro p { color: var(--ink-2); font-size: 14px; margin-top: 8px; }
+.intro strong { color: var(--ink); font-weight: 500; }
+.intro-note {
+  background: var(--surface-2);
+  border-radius: 20px;
+  padding: 16px;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.intro-note strong { color: var(--ink); font-weight: 500; }
+.formula {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 9px 11px;
+  margin-top: 10px;
+  color: var(--ink-2);
+  overflow-x: auto;
+}
+.scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.scope-chip {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+.scope-chip.in { color: var(--ok); }
+.scope-chip.out { color: var(--ember); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+h2 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-top: 18px;
+}
+.sub { color: var(--ink-4); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--ink-4); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field.span-2 { grid-column: span 2; }
+.field.span-3 { grid-column: span 3; }
+.field-row { margin-top: 12px; }
+
+label {
+  color: var(--ink-4);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+input, select {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  padding: 9px 11px;
+  outline: none;
+}
+input:focus, select:focus {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.hint { color: var(--ink-5); font-size: 12px; line-height: 1.45; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip {
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: var(--surface-2);
+  color: var(--ink-3);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 140ms var(--ease-pop), color 140ms var(--ease-pop),
+    transform 140ms var(--ease-pop);
+}
+.chip:hover { background: var(--wash-hover); }
+.chip:active { transform: scale(0.96); }
+.chip.active { background: var(--slab); color: var(--on-slab); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.btn {
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 140ms var(--ease-pop), background 140ms var(--ease-pop);
+}
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn:focus-visible, .theme:focus-visible, .chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(var(--ink-rgb), 0.35);
+}
+.btn.primary { background: var(--slab); color: var(--on-slab); }
+.btn.ghost { background: var(--surface-2); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--wash-hover); }
+.btn.small { padding: 7px 12px; font-size: 13px; }
+
+.verdict {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--ink-4);
+}
+.verdict.ok { border-left-color: var(--ok); }
+.verdict.signal { border-left-color: var(--signal); }
+.verdict.ember { border-left-color: var(--ember); }
+.verdict.muted { border-left-color: var(--ink-4); }
+.verdict-label {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.verdict-note { color: var(--ink-3); font-size: 13.5px; margin-top: 6px; }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+.stat .k { color: var(--ink-4); font-size: 12px; }
+.stat .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+.stat .v.good { color: var(--ok); }
+.stat .v.bad { color: var(--ember); }
+.stat .v.warn { color: var(--signal); }
+.stat .v.muted { color: var(--ink-4); }
+
+.mini { margin-top: 14px; }
+.mini-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.mini-row:last-child { border-bottom: 0; }
+.mini-row .k { color: var(--ink-4); }
+.mini-row .v {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  text-align: right;
+}
+
+.table-card { margin-top: 18px; }
+.table-wrap { overflow-x: auto; margin-top: 10px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  color: var(--ink-4);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+td {
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  white-space: nowrap;
+}
+td.num, th.num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+td.good { color: var(--ok); }
+td.bad { color: var(--ember); }
+td.warn { color: var(--signal); }
+tr:last-child td { border-bottom: 0; }
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+  background: var(--surface-3);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.badge.good { color: var(--ok); }
+.badge.bad { color: var(--ember); }
+.badge.warn { color: var(--signal); }
+
+.list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.list-item {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ink-4);
+  margin-top: 7px;
+  flex: none;
+}
+.dot.ok { background: var(--ok); }
+.dot.warn { background: var(--signal); }
+.dot.bad { background: var(--ember); }
+
+.footer {
+  color: var(--ink-5);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 24px;
+  max-width: 900px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--slab);
+  color: var(--on-slab);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-pop), transform 160ms var(--ease-pop);
+  z-index: 20;
+  max-width: calc(100vw - 32px);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 980px) {
+  .intro, .layout { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .field.span-3 { grid-column: span 2; }
+}
+
+@media (max-width: 620px) {
+  body { padding: 20px 14px 48px; }
+  .grid-2, .grid-3, .stats { grid-template-columns: 1fr; }
+  .field.span-2, .field.span-3 { grid-column: span 1; }
+  header { align-items: flex-start; }
+  .brand { flex: 1; min-width: 0; flex-direction: column; gap: 10px; }
+  .brand > div:last-child { width: 100%; }
+  .mark { width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark">69</div>
+      <div>
+        <div class="eyebrow">Tool 69</div>
+        <h1>Kalkulator Modal Kerja Pencairan</h1>
+        <p class="lede">Hitung berapa kas yang tertahan karena jeda pencairan marketplace.
+          Lihat modal kerja minimum, kas yang disarankan, volume aman, dan skenario jeda
+          pencairan sebelum uang restock habis di tengah jalan.</p>
+      </div>
+    </div>
+    <button class="theme" id="theme-btn" type="button" aria-label="Ganti tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <section class="card intro">
+    <div>
+      <h2>Untung di laporan, kas habis di rekening</h2>
+      <p>Marketplace membayar setelah paket diterima dan masa pencairan lewat. Sementara itu
+        HPP, kemasan, subsidi ongkir, iklan, dan biaya tetap sudah keluar lebih dulu. Tool ini
+        memisahkan <strong>piutang pencairan</strong> dari <strong>buffer stok</strong>, lalu
+        membandingkannya dengan kas yang Anda pegang hari ini.</p>
+      <div class="formula">modal kerja = kas keluar harian x (kirim + payout)
+        + HPP x stok lead time</div>
+      <div class="scope-grid">
+        <span class="scope-chip in">Masuk: jeda pencairan</span>
+        <span class="scope-chip in">Masuk: HPP dan biaya harian</span>
+        <span class="scope-chip in">Masuk: buffer stok dan kas</span>
+        <span class="scope-chip out">Di luar: pajak dan retur</span>
+        <span class="scope-chip out">Di luar: bunga pinjaman</span>
+      </div>
+    </div>
+    <div class="intro-note">
+      <strong>Jeda pencairan bukan biaya, tetapi menahan kas.</strong> Seller bisa terlihat
+      untung di laporan bulanan sambil kehabisan uang untuk restock. Angka jeda di tool ini
+      berasal dari input Anda. Cocokkan dengan riwayat payout di seller center.    </div>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2>Data operasional</h2>
+            <p class="sub">Isi angka harian dan waktu pencairan yang benar-benar Anda alami.</p>
+          </div>
+          <span class="badge">Estimasi</span>
+        </div>
+
+        <form id="form" novalidate>
+          <div class="field">
+            <label for="store_label">Nama toko (opsional)</label>
+            <input id="store_label" name="store_label" type="text" maxlength="120"
+              placeholder="Contoh: Toko kaos harian">
+          </div>
+
+          <h3>Penjualan harian</h3>
+          <div class="grid-3">
+            <div class="field">
+              <label for="daily_orders">Pesanan per hari</label>
+              <input id="daily_orders" name="daily_orders" type="number" min="0" step="1"
+                inputmode="numeric" required>
+              <span class="hint">Rata-rata pesanan yang dikirim per hari.</span>
+            </div>
+            <div class="field">
+              <label for="avg_price">Harga rata-rata (Rp)</label>
+              <input id="avg_price" name="avg_price" type="number" min="1" step="1"
+                inputmode="numeric" required>
+              <span class="hint">Setelah diskon dan voucher.</span>
+            </div>
+            <div class="field">
+              <label for="target_margin_pct">Target margin (%)</label>
+              <input id="target_margin_pct" name="target_margin_pct" type="number" min="0"
+                max="90" step="0.1" inputmode="decimal" required>
+              <span class="hint">Margin bersih terhadap omzet.</span>
+            </div>
+          </div>
+
+          <h3>Biaya per pesanan</h3>
+          <div class="grid-2">
+            <div class="field">
+              <label for="unit_cost">HPP per pesanan (Rp)</label>
+              <input id="unit_cost" name="unit_cost" type="number" min="0" step="1"
+                inputmode="numeric" required>
+              <span class="hint">Bahan, produksi, dan ongkir masuk gudang.</span>
+            </div>
+            <div class="field">
+              <label for="marketplace_fee_pct">Komisi platform (%)</label>
+              <input id="marketplace_fee_pct" name="marketplace_fee_pct" type="number"
+                min="0" max="40" step="0.1" inputmode="decimal" required>
+              <span class="hint">Komisi dan biaya transaksi dari omzet.</span>
+            </div>
+            <div class="field">
+              <label for="packaging_per_order">Kemasan (Rp)</label>
+              <input id="packaging_per_order" name="packaging_per_order" type="number"
+                min="0" step="1" inputmode="numeric" required>
+              <span class="hint">Box, bubble wrap, dan label.</span>
+            </div>
+            <div class="field">
+              <label for="shipping_subsidy_per_order">Subsidi ongkir (Rp)</label>
+              <input id="shipping_subsidy_per_order" name="shipping_subsidy_per_order"
+                type="number" min="0" step="1" inputmode="numeric" required>
+              <span class="hint">Ongkir yang Anda tanggung per pesanan.</span>
+            </div>
+          </div>
+
+          <h3>Biaya harian</h3>
+          <div class="grid-2">
+            <div class="field">
+              <label for="ads_spend_per_day">Iklan per hari (Rp)</label>
+              <input id="ads_spend_per_day" name="ads_spend_per_day" type="number" min="0"
+                step="1" inputmode="numeric" required>
+              <span class="hint">Belanja iklan rata-rata per hari.</span>
+            </div>
+            <div class="field">
+              <label for="fixed_cost_per_day">Biaya tetap per hari (Rp)</label>
+              <input id="fixed_cost_per_day" name="fixed_cost_per_day" type="number" min="0"
+                step="1" inputmode="numeric" required>
+              <span class="hint">Gaji, sewa, listrik, dan langganan.</span>
+            </div>
+          </div>
+
+          <h3>Waktu dan kas</h3>
+          <div class="grid-2">
+            <div class="field">
+              <label for="delivery_days">Waktu kirim (hari)</label>
+              <input id="delivery_days" name="delivery_days" type="number" min="0" max="60"
+                step="1" inputmode="numeric" required>
+              <span class="hint">Dari pesanan diproses sampai paket diterima.</span>
+            </div>
+            <div class="field">
+              <label for="payout_delay_days">Jeda pencairan (hari)</label>
+              <input id="payout_delay_days" name="payout_delay_days" type="number" min="0"
+                max="60" step="1" inputmode="numeric" required>
+              <span class="hint">Dari paket diterima sampai dana bisa ditarik.</span>
+            </div>
+            <div class="field">
+              <label for="restock_lead_days">Lead time restock (hari)</label>
+              <input id="restock_lead_days" name="restock_lead_days" type="number" min="0"
+                max="180" step="1" inputmode="numeric" required>
+              <span class="hint">Dari pesanan ke supplier sampai stok siap jual.</span>
+            </div>
+            <div class="field">
+              <label for="safety_buffer_days">Buffer kas (hari)</label>
+              <input id="safety_buffer_days" name="safety_buffer_days" type="number" min="0"
+                max="60" step="1" inputmode="numeric" required>
+              <span class="hint">Cadangan untuk keterlambatan pencairan.</span>
+            </div>
+          </div>
+
+          <div class="grid-2 field-row">
+            <div class="field">
+              <label for="current_cash">Kas saat ini (Rp)</label>
+              <input id="current_cash" name="current_cash" type="number" min="0" step="1"
+                inputmode="numeric" required>
+              <span class="hint">Saldo yang benar-benar bisa dipakai hari ini.</span>
+            </div>
+            <div class="field">
+              <label>Jeda pencairan cepat</label>
+              <div class="chips" role="group" aria-label="Pilih jeda pencairan">
+                <button class="chip" type="button" data-delay="3">3 hari</button>
+                <button class="chip" type="button" data-delay="7">7 hari</button>
+                <button class="chip" type="button" data-delay="14">14 hari</button>
+                <button class="chip" type="button" data-delay="21">21 hari</button>
+              </div>
+              <span class="hint">Mengisi kolom jeda pencairan lalu menghitung ulang.</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="analyze-btn" type="submit">Hitung modal kerja</button>
+            <button class="btn ghost" id="example-btn" type="button">Muat contoh</button>
+            <button class="btn ghost" id="csv-btn" type="button" disabled>Unduh CSV</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <aside>
+      <section class="card raised">
+        <div class="verdict muted" id="verdict" aria-live="polite">
+          <div class="verdict-label" id="verdict-label">Belum dihitung</div>
+          <div class="verdict-note" id="verdict-note">Isi data lalu tekan Hitung modal kerja.</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="k">Modal kerja minimum</div>
+            <div class="v" id="stat-min">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Kas disarankan</div>
+            <div class="v" id="stat-rec">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Selisih vs disarankan</div>
+            <div class="v" id="stat-gap">Rp 0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Hari kas terikat</div>
+            <div class="v" id="stat-lag">0 hari</div>
+          </div>
+        </div>
+
+        <div class="mini" id="daily-mini">
+          <div class="mini-row">
+            <span class="k">Omzet harian</span>
+            <span class="v" id="mini-revenue">Rp 0</span>
+          </div>
+          <div class="mini-row">
+            <span class="k">Profit harian</span>
+            <span class="v" id="mini-profit">Rp 0</span>
+          </div>
+          <div class="mini-row">
+            <span class="k">Margin harian</span>
+            <span class="v" id="mini-margin">0%</span>
+          </div>
+          <div class="mini-row">
+            <span class="k">Piutang tertahan</span>
+            <span class="v" id="mini-receivable">Rp 0</span>
+          </div>
+          <div class="mini-row">
+            <span class="k">Volume aman</span>
+            <span class="v" id="mini-orders">0 pesanan</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Arti status kas</h2>
+        <div class="list">
+          <div class="list-item"><span class="dot ok"></span>
+            <span><strong>Kas aman.</strong> Kas memenuhi modal kerja minimum ditambah
+              buffer.</span></div>
+          <div class="list-item"><span class="dot warn"></span>
+            <span><strong>Kas ketat.</strong> Modal kerja tertutup, tetapi buffer belum
+              penuh.</span></div>
+          <div class="list-item"><span class="dot bad"></span>
+            <span><strong>Kas kurang.</strong> Kas belum menutup modal kerja minimum.</span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card">
+    <h2>Rekomendasi</h2>
+    <p class="sub">Angka yang bisa langsung dipakai untuk mengatur restock dan kas.</p>
+    <div class="list" id="recommendations"></div>
+  </section>
+
+  <section class="card" id="warnings-card" hidden>
+    <h2>Peringatan</h2>
+    <p class="sub">Hal yang perlu dicek sebelum menambah volume atau restock.</p>
+    <div class="list" id="warnings"></div>
+  </section>
+
+  <section class="card table-card">
+    <div class="section-head">
+      <div>
+        <h2>Skenario jeda pencairan</h2>
+        <p class="sub">Input lain tetap. Hanya jeda pencairan yang diubah.</p>
+      </div>
+      <button class="btn ghost small" id="csv-btn-2" type="button" disabled>Unduh CSV</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Jeda payout</th>
+            <th class="num">Total lag</th>
+            <th class="num">Piutang tertahan</th>
+            <th class="num">Modal kerja</th>
+            <th class="num">Kas disarankan</th>
+            <th class="num">Selisih kas</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="scenario-body">
+          <tr><td colspan="7" class="muted">Belum ada hasil.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" id="table-note">Isi data untuk melihat perbandingan setiap skenario.</p>
+  </section>
+
+  <section class="card table-card">
+    <div class="section-head">
+      <div>
+        <h2>Rincian biaya harian</h2>
+        <p class="sub">Semua angka per hari pada volume yang diisi.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Komponen</th>
+            <th class="num">Nilai</th>
+            <th>Catatan</th>
+          </tr>
+        </thead>
+        <tbody id="breakdown-body">
+          <tr><td colspan="3" class="muted">Belum ada hasil.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Catatan perhitungan</h2>
+    <div class="list" id="assumptions"></div>
+  </section>
+
+  <p class="footer" id="footer-note"></p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var FALLBACK_META = {
+    payout_scenarios: [3, 7, 14, 21],
+    assumptions: [
+      'Omzet harian dihitung dari pesanan per hari dikali harga rata-rata setelah diskon.',
+      'Komisi platform dihitung dari omzet dan mengurangi uang yang cair, bukan kas keluar.',
+      'Kas keluar harian mencakup HPP, kemasan, subsidi ongkir, iklan, dan biaya tetap.',
+      'Jeda pencairan dihitung setelah paket diterima, yaitu waktu kirim ditambah jeda payout.',
+      'Piutang tertahan adalah uang yang sudah menjadi omzet tetapi belum masuk rekening.',
+      'Buffer stok memakai HPP dikali pesanan per hari dikali lead time restock.',
+      'Jeda pencairan, waktu kirim, dan lead time restock adalah input seller, bukan tarif resmi.',
+      'Belum termasuk pajak, retur, refund, biaya pinjaman, dan biaya penyimpanan.',
+      'Skenario jeda pencairan adalah alternatif, bukan akumulasi.'
+    ],
+    scope_note: 'Tool membantu menghitung modal kerja yang tertahan karena jeda pencairan.',
+    disclaimer: 'Angka adalah estimasi dari input Anda, bukan laporan arus kas resmi.'
+  };
+
+  var FALLBACK_EXAMPLE = {
+    store_label: 'Toko kaos harian',
+    daily_orders: 12,
+    avg_price: 95000,
+    unit_cost: 55000,
+    marketplace_fee_pct: 8,
+    packaging_per_order: 2000,
+    shipping_subsidy_per_order: 3000,
+    ads_spend_per_day: 150000,
+    fixed_cost_per_day: 100000,
+    target_margin_pct: 10,
+    delivery_days: 2,
+    payout_delay_days: 7,
+    restock_lead_days: 7,
+    safety_buffer_days: 5,
+    current_cash: 15000000
+  };
+
+  var state = {
+    result: null,
+    meta: null,
+    example: null,
+    toastTimer: null
+  };
+
+  function $(id) { return document.getElementById(id); }
+
+  function formatNumber(value) {
+    return new Intl.NumberFormat('id-ID').format(Math.round(Number(value) || 0));
+  }
+
+  function formatRupiah(value) {
+    var number = Number(value) || 0;
+    var sign = number < 0 ? '-Rp ' : 'Rp ';
+    return sign + formatNumber(Math.abs(number));
+  }
+
+  function formatSignedRupiah(value) {
+    var number = Number(value) || 0;
+    if (number > 0) return '+' + formatRupiah(number);
+    return formatRupiah(number);
+  }
+
+  function formatPercent(value) {
+    return new Intl.NumberFormat('id-ID', {
+      maximumFractionDigits: 2
+    }).format(Number(value) || 0) + '%';
+  }
+
+  function cashClass(status) {
+    if (status === 'ok') return 'good';
+    if (status === 'short') return 'bad';
+    return 'warn';
+  }
+
+  function showToast(message) {
+    var toast = $('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    if (state.toastTimer) clearTimeout(state.toastTimer);
+    state.toastTimer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 3200);
+  }
+
+  function setVerdict(level, label, note) {
+    var box = $('verdict');
+    box.className = 'verdict ' + level;
+    $('verdict-label').textContent = label;
+    $('verdict-note').textContent = note;
+  }
+
+  function renderList(container, items, dotClass) {
+    container.textContent = '';
+    items.forEach(function (text) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var dot = document.createElement('span');
+      dot.className = 'dot' + (dotClass ? ' ' + dotClass : '');
+      var span = document.createElement('span');
+      span.textContent = text;
+      row.appendChild(dot);
+      row.appendChild(span);
+      container.appendChild(row);
+    });
+  }
+
+  function setValue(id, value) {
+    $(id).value = value === null || value === undefined ? '' : value;
+  }
+
+  function fillForm(data) {
+    setValue('store_label', data.store_label);
+    setValue('daily_orders', data.daily_orders);
+    setValue('avg_price', data.avg_price);
+    setValue('unit_cost', data.unit_cost);
+    setValue('marketplace_fee_pct', data.marketplace_fee_pct);
+    setValue('packaging_per_order', data.packaging_per_order);
+    setValue('shipping_subsidy_per_order', data.shipping_subsidy_per_order);
+    setValue('ads_spend_per_day', data.ads_spend_per_day);
+    setValue('fixed_cost_per_day', data.fixed_cost_per_day);
+    setValue('target_margin_pct', data.target_margin_pct);
+    setValue('delivery_days', data.delivery_days);
+    setValue('payout_delay_days', data.payout_delay_days);
+    setValue('restock_lead_days', data.restock_lead_days);
+    setValue('safety_buffer_days', data.safety_buffer_days);
+    setValue('current_cash', data.current_cash);
+    updateChips(data.payout_delay_days);
+  }
+
+  function readForm() {
+    return {
+      store_label: $('store_label').value,
+      daily_orders: $('daily_orders').value,
+      avg_price: $('avg_price').value,
+      unit_cost: $('unit_cost').value,
+      marketplace_fee_pct: $('marketplace_fee_pct').value,
+      packaging_per_order: $('packaging_per_order').value,
+      shipping_subsidy_per_order: $('shipping_subsidy_per_order').value,
+      ads_spend_per_day: $('ads_spend_per_day').value,
+      fixed_cost_per_day: $('fixed_cost_per_day').value,
+      target_margin_pct: $('target_margin_pct').value,
+      delivery_days: $('delivery_days').value,
+      payout_delay_days: $('payout_delay_days').value,
+      restock_lead_days: $('restock_lead_days').value,
+      safety_buffer_days: $('safety_buffer_days').value,
+      current_cash: $('current_cash').value
+    };
+  }
+
+  function requestJson(url, options) {
+    return fetch(url, options).then(function (response) {
+      return response.json().then(function (body) {
+        if (!response.ok) {
+          throw new Error(body && body.error ? body.error : 'Permintaan gagal.');
+        }
+        return body;
+      });
+    });
+  }
+
+  function updateChips(delay) {
+    var chips = document.querySelectorAll('.chip');
+    Array.prototype.forEach.call(chips, function (chip) {
+      chip.classList.toggle('active', Number(chip.dataset.delay) === Number(delay));
+    });
+  }
+
+  function renderStats(result) {
+    var cash = result.cash;
+    var min = $('stat-min');
+    min.textContent = formatRupiah(cash.minimum_working_capital);
+    min.className = 'v ' + cashClass(cash.status);
+
+    var rec = $('stat-rec');
+    rec.textContent = formatRupiah(cash.recommended_cash);
+    rec.className = 'v';
+
+    var gap = $('stat-gap');
+    gap.textContent = formatSignedRupiah(cash.surplus_over_recommended);
+    gap.className = 'v ' + (cash.surplus_over_recommended >= 0 ? 'good' : 'bad');
+
+    $('stat-lag').textContent = cash.lag_days + ' hari';
+
+    $('mini-revenue').textContent = formatRupiah(result.volume.revenue);
+    var profit = $('mini-profit');
+    profit.textContent = formatRupiah(result.volume.profit);
+    profit.className = 'v ' + (result.volume.profit >= 0 ? 'good' : 'bad');
+    $('mini-margin').textContent = formatPercent(result.volume.margin_pct);
+    $('mini-receivable').textContent = formatRupiah(cash.settlement_receivable);
+    $('mini-orders').textContent = result.limits.max_orders_at_current_cash === null
+      ? 'Tidak terbatas'
+      : result.limits.max_orders_at_current_cash + ' pesanan';
+  }
+
+  function appendCell(row, text, className) {
+    var cell = document.createElement('td');
+    if (className) cell.className = className;
+    cell.textContent = text;
+    row.appendChild(cell);
+    return cell;
+  }
+
+  function renderScenarios(result) {
+    var body = $('scenario-body');
+    body.textContent = '';
+    result.scenarios.forEach(function (scenario) {
+      var row = document.createElement('tr');
+      appendCell(row, scenario.payout_delay_days + ' hari');
+      appendCell(row, scenario.lag_days + ' hari', 'num');
+      appendCell(row, formatRupiah(scenario.receivable_gap), 'num');
+      appendCell(row, formatRupiah(scenario.minimum_working_capital), 'num');
+      appendCell(row, formatRupiah(scenario.recommended_cash), 'num');
+      appendCell(row, formatSignedRupiah(scenario.surplus_over_recommended),
+        'num ' + (scenario.surplus_over_recommended >= 0 ? 'good' : 'bad'));
+      var status = document.createElement('td');
+      var badge = document.createElement('span');
+      badge.className = 'badge ' + cashClass(scenario.status);
+      badge.textContent = scenario.status_label;
+      status.appendChild(badge);
+      row.appendChild(status);
+      body.appendChild(row);
+    });
+
+    $('table-note').textContent = 'Kas saat ini ' +
+      formatRupiah(result.input.current_cash) + '. Selisih kas adalah kas saat ini ' +
+      'dikurangi kas disarankan pada skenario tersebut.';
+  }
+
+  function renderBreakdown(result) {
+    var volume = result.volume;
+    var rows = [
+      ['Omzet', formatRupiah(volume.revenue), 'Pesanan x harga rata-rata'],
+      ['Komisi platform', formatRupiah(volume.platform_fee),
+        result.input.marketplace_fee_pct + '% dari omzet'],
+      ['HPP', formatRupiah(volume.product_cost), 'Pesanan x HPP per pesanan'],
+      ['Kemasan', formatRupiah(volume.packaging_cost), 'Pesanan x kemasan'],
+      ['Subsidi ongkir', formatRupiah(volume.shipping_cost), 'Ongkir yang Anda tanggung'],
+      ['Iklan', formatRupiah(result.input.ads_spend_per_day), 'Biaya harian'],
+      ['Biaya tetap', formatRupiah(result.input.fixed_cost_per_day), 'Biaya harian'],
+      ['Profit harian', formatRupiah(volume.profit),
+        'Margin ' + formatPercent(volume.margin_pct)],
+      ['Kontribusi per pesanan', formatRupiah(volume.contribution_per_order),
+        'Setelah komisi, HPP, kemasan, dan ongkir'],
+      ['Kas keluar harian', formatRupiah(volume.daily_cash_out),
+        'Dipakai untuk menghitung modal kerja']
+    ];
+
+    var body = $('breakdown-body');
+    body.textContent = '';
+    rows.forEach(function (item) {
+      var row = document.createElement('tr');
+      appendCell(row, item[0]);
+      appendCell(row, item[1], 'num');
+      appendCell(row, item[2]);
+      body.appendChild(row);
+    });
+  }
+
+  function render(result) {
+    state.result = result;
+    $('csv-btn').disabled = false;
+    $('csv-btn-2').disabled = false;
+    setVerdict(result.verdict.level, result.verdict.label, result.verdict.note);
+    renderStats(result);
+    renderScenarios(result);
+    renderBreakdown(result);
+    renderList($('recommendations'), result.recommendations, 'ok');
+    updateChips(result.input.payout_delay_days);
+
+    var warningCard = $('warnings-card');
+    if (result.warnings.length > 0) {
+      warningCard.hidden = false;
+      renderList($('warnings'), result.warnings, 'bad');
+    } else {
+      warningCard.hidden = true;
+      $('warnings').textContent = '';
+    }
+
+    $('footer-note').textContent = result.scope_note + ' ' + result.disclaimer;
+  }
+
+  function runAnalysis() {
+    var button = $('analyze-btn');
+    button.disabled = true;
+    button.textContent = 'Menghitung...';
+
+    return requestJson('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(readForm())
+    }).then(function (result) {
+      render(result);
+    }).catch(function (error) {
+      setVerdict('ember', 'Periksa input', error.message);
+      showToast(error.message);
+    }).finally(function () {
+      button.disabled = false;
+      button.textContent = 'Hitung modal kerja';
+    });
+  }
+
+  function downloadCsv() {
+    var buttons = [$('csv-btn'), $('csv-btn-2')];
+    buttons.forEach(function (button) { button.disabled = true; });
+
+    fetch('/api/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(readForm())
+    }).then(function (response) {
+      if (!response.ok) {
+        return response.json().then(function (body) {
+          throw new Error(body && body.error ? body.error : 'Ekspor gagal.');
+        });
+      }
+      return response.blob();
+    }).then(function (blob) {
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = 'kalkulator-modal-kerja-pencairan.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast('CSV berhasil diunduh.');
+    }).catch(function (error) {
+      showToast(error.message);
+    }).finally(function () {
+      buttons.forEach(function (button) { button.disabled = !state.result; });
+    });
+  }
+
+  function renderAssumptions(meta) {
+    var items = meta && meta.assumptions ? meta.assumptions : FALLBACK_META.assumptions;
+    renderList($('assumptions'), items, '');
+    if (meta && meta.scope_note && meta.disclaimer) {
+      $('footer-note').textContent = meta.scope_note + ' ' + meta.disclaimer;
+    }
+  }
+
+  function loadMeta() {
+    return requestJson('/api/meta').then(function (meta) {
+      state.meta = meta;
+      renderAssumptions(meta);
+    }).catch(function () {
+      state.meta = FALLBACK_META;
+      renderAssumptions(FALLBACK_META);
+    });
+  }
+
+  function loadExample() {
+    return requestJson('/api/example').then(function (data) {
+      state.example = data;
+      fillForm(data);
+    }).catch(function () {
+      state.example = FALLBACK_EXAMPLE;
+      fillForm(FALLBACK_EXAMPLE);
+    });
+  }
+
+  $('theme-btn').addEventListener('click', function () {
+    var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (error) {}
+  });
+
+  $('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    runAnalysis();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (chip) {
+    chip.addEventListener('click', function () {
+      $('payout_delay_days').value = chip.dataset.delay;
+      updateChips(chip.dataset.delay);
+      runAnalysis();
+    });
+  });
+
+  $('example-btn').addEventListener('click', function () {
+    fillForm(state.example || FALLBACK_EXAMPLE);
+    runAnalysis();
+    showToast('Contoh dimuat.');
+  });
+
+  $('csv-btn').addEventListener('click', downloadCsv);
+  $('csv-btn-2').addEventListener('click', downloadCsv);
+
+  loadMeta().then(loadExample).then(function () {
+    return runAnalysis();
+  });
+})();
+</script>
+</body>
+</html>
